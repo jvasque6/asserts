@@ -21,9 +21,29 @@ regex = {
 def __get_request(url, auth = None):
 	try:
 		return requests.get(url, verify=False, auth = auth)
-	except ConnectionError, e:
+	except ConnectionError:
 		logging.error('Sin acceso a %s , %s', url, 'ERROR')	
 
+def __post_request(url, data = ""):
+	try:
+		return requests.post(url, verify=False, data=data)
+	except ConnectionError:
+		logging.error('Sin acceso a %s , %s', url, 'ERROR')	
+		
+def formauth_by_statuscode(url, code,**formargs):
+	http_req = __post_request(url,formargs)
+	if http_req.status_code == code:
+		logging.info('POST Authentication %s, Details=%s, %s', url, "Success with "+str(formargs), "OPEN") 
+	else:
+		logging.info('POST Authentication %s, Details=%s, %s', url, "Error code ("+str(http_req.status_code)+") " + str(formargs), "CLOSE") 
+
+def formauth_by_response(url, text,**formargs):
+	http_req = __post_request(url,formargs)
+	if http_req.text.find(text) >= 0:
+		logging.info('POST Authentication %s, Details=%s, %s', url, "Success with "+str(formargs), "OPEN") 
+	else:
+		logging.info('POST Authentication %s, Details=%s, %s', url, "Error text ("+http_req.text+") " + str(formargs), "CLOSE") 
+	
 def basic_auth(url, user, passw):
 	r = __get_request(url, (user,passw))
 	if __get_request(url).status_code == 401:
@@ -103,7 +123,6 @@ def has_header_pragma(url):
 	headers_info = __get_request(url).headers
 	if 'pragma' in headers_info:
 		value = headers_info['pragma']
-		print value
 		state = (lambda val: 'CLOSE' if re.match(regex['pragma'],val) != None else 'OPEN')(value)
 		logging.info('%s HTTP header %s, Details=%s, %s', 'pragma', url, value, state)
 	else:
