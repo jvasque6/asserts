@@ -1,0 +1,47 @@
+
+Para un sistema:
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.4 LTS
+Release:	14.04
+Codename:	trusty
+
+Instalar sistemas de tareas en python
+
+$ sudo pip install invoke
+
+Instalar el entorno de virtual de python
+
+$ sudo apt-get install python3.4-venv
+
+Descargar el codigo de la aplicacion de git
+
+$ git clone https://ralvarezatfluid@bitbucket.org/fluidsignal/fluid-asserts.git
+
+Ingresar a la carpeta del codigo
+
+$ cd fluid-asserts
+
+Las tareas de la herramienta de construcción son:
+
+$ invoke --list
+Available tasks:
+
+  build
+  clean
+  clean_build
+  clean_pyc
+  deps
+  install
+  test
+  venv
+
+Para limpiar por completo el repositorio
+
+$ invoke clean
+
+Para construir y ejecutar las pruebas se puede ejecutar directamente:
+
+$ invoke test
