@@ -1,33 +1,33 @@
 import logging 
-from pyPdf import PdfFileReader
+from PyPDF2 import PdfFileReader
 
 def __has_attribute(filename, metaname):
-    pdf_toread = PdfFileReader(open(filename, "rb"))
-    pdf_info = pdf_toread.getDocumentInfo()
-    try:
-        metavalue = pdf_info[metaname]
+    input_pdf = PdfFileReader(open(filename, "rb"))
+    pdf_docinfo = input_pdf.getDocumentInfo()
+    metavalue = getattr(pdf_docinfo, metaname)
+    if metavalue != None:
         logging.info('%s metadata in %s, Details=%s, %s', metaname, filename, metavalue, 'OPEN')
-    except KeyError, e:
+    else:
         logging.info('%s metadata in %s, Details=%s, %s', metaname, filename, '', 'CLOSE')
 
 def has_creator(filename):
-    __has_attribute(filename, "/Creator")
+    __has_attribute(filename, 'creator')
 
 def has_producer(filename):
-    __has_attribute(filename, "/Producer")
+    __has_attribute(filename, 'producer')
 
 def has_author(filename):
-    __has_attribute(filename, "/Author")
+    __has_attribute(filename, 'author')
 
-def has_create_date(filename):
-    __has_attribute(filename, "/Create Date")
+#def has_create_date(filename):
+#    __has_attribute(filename, "/Create Date")
 
-def has_modify_date(filename):
-    __has_attribute(filename, "/Modify Date")
+#def has_modify_date(filename):
+#    __has_attribute(filename, "/Modify Date")
 
-def has_tagged(filename):
-    __has_attribute(filename, "/Tagged PDF")
+#def has_tagged(filename):
+#    __has_attribute(filename, "/Tagged PDF")
 
-def has_language(filename):
-    __has_attribute(filename, "/Language")
+#def has_language(filename):
+#    __has_attribute(filename, "/Language")
 
