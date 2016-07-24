@@ -45,3 +45,34 @@ $ invoke clean
 Para construir y ejecutar las pruebas se puede ejecutar directamente:
 
 $ invoke test
+
+Para añadir nuevos modulos de soporte el formato es el siguiente:
+   * fluidasserts/{formato}.py
+   * fluidasserts/{protocolo}.py
+
+Ejemplo:
+
+   * touch fluidasserts/js.py
+   * touch fluidasserts/html.py
+   * touch fluidasserts/smtp.py
+   * touch fluidasserts/ftp.py
+   * touch fluidasserts/snmp.py
+
+Dentro de cada modulo correspondiente se deben crear funciones tipo predicado,
+es decir que hagan una pregunta que se responda verdadero o falso.  Ejemplos:
+
+   * has_XXXX?
+   * is_open?
+   * is_close?
+   * contains_XXX?
+
+Siempre el nombre de las funciones debe ser en ingles y seguir la convencion
+de nombres de python.  De esta forma desde un proyecto se podra usar asi:
+
+from fluidasserts import js
+js.is_obfuscated('Admin.js')
+
+Notese que el metodo solo debe preocuparse por el formato del archivo, no
+por su ubicación, pues de esto se encargaran los decoradores.
+
+
