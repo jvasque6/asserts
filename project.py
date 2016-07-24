@@ -1,8 +1,7 @@
-##from fluidasserts import pdf
+from fluidasserts import pdf
 ##from fluidasserts import http
 ##from fluidasserts import cookie
-from fluidasserts import smtp
-"""
+
 pdf.has_author('tests/data/vulnerable.pdf')
 pdf.has_creator('tests/data/vulnerable.pdf')
 pdf.has_producer('tests/data/vulnerable.pdf')
@@ -45,6 +44,3 @@ pdf.has_producer('tests/data/non-vulnerable.pdf')
 #cookie.has_http_only("http://challengeland.co","ci_session")
 #http.basic_auth("http://localhost/fluidopens/BasicAuth/","root","1234")
 #http.basic_auth("http://localhost/fluidopens/BasicAuth/","Admin","1234")
-"""
-smtp.has_vrfy('127.0.0.1', 25)
-smtp.is_open('127.0.0.1')
