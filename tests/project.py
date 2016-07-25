@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+###<<<<<<< HEAD
 ##from fluidasserts import pdf
 ##from fluidasserts import http
 ##from fluidasserts import cookie
@@ -56,7 +56,6 @@ pdf.has_producer('tests/data/non-vulnerable.pdf')
 """
 smtp.has_vrfy('127.0.0.1', 25)
 smtp.is_open('127.0.0.1')
-=======
 
 
 # javascript module
@@ -107,4 +106,4 @@ smtp.is_open('127.0.0.1')
 # dns.zone_transfer()
 
 # voip??
->>>>>>> d3ff5727445c68be9e920574b9429dd84a392a51
+##>>>>>>> d3ff5727445c68be9e920574b9429dd84a392a51
