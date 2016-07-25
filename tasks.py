@@ -36,7 +36,7 @@ def clean_pyc(context):
 @task(clean_pyc, clean_build)
 def clean(context):
     print('Cleaning everything')
-
+	
 @task(build)
 def install(context):
     print('Installing FLUIDAsserts in build_dir')
@@ -46,3 +46,13 @@ def install(context):
 def test(context):
     print('Testing library')
     context.run('%s/venv/bin/python tests/project.py' % (build_dir))
+
+@task
+def mock(context):
+	import smtpd
+	import asyncore
+
+	server = smtpd.SMTPServer(('127.0.0.1', 25), None)
+
+	asyncore.loop()
+

@@ -1,5 +1,6 @@
 #!usr/bin/python
 import smtplib
+import logging
 from fluidasserts import tcp
 
 
@@ -12,11 +13,9 @@ def has_vrfy(ip, port):
 	server= smtplib.SMTP(ip, port)
 	vrfy=server.verify('Admin')
 	if str('250') in vrfy:
-		print ("The vulnerability Is Open")
+		logging.info('SMTP "VRFY" method, Details=%s, %s', ip +":"+ str(port) , 'OPEN')
 	else:
-		print ("The vulnerability Is Close")
+		logging.info('SMTP "VRFY" method, Details=%s, %s', ip +":"+ str(port) , 'CLOSE')
 
 	server.quit()
 
-def is_open(ip, port = 25):
-	tcp.openport(ip, port)

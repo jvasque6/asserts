@@ -55,7 +55,6 @@ pdf.has_producer('tests/data/non-vulnerable.pdf')
 <<<<<<< HEAD
 """
 smtp.has_vrfy('127.0.0.1', 25)
-smtp.is_open('127.0.0.1')
 
 
 # javascript module
