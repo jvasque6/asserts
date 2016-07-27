@@ -14,19 +14,22 @@ regex = {
 	'strict-transport-security' : '^\\s*max\\-age=\\s*\\d+\\s.*',
 	'x-content-type-options' : '^\\s*nosniff\\s*$',
 	'x-frame-options' : '^\\s*(deny|allow-from|sameorigin).*$',
+	'server' : '^.*[0-9]+\\.[0-9]+.*$',
 	'x-permitted-cross-domain-policies' : '^\\s*master\\-only\\s*$',
 	'x-xss-protection' : '^1(; mode=block)?$'
 }
 
 def __get_request(url, auth = None):
 	try:
-		return requests.get(url, verify=False, auth = auth)
+		headers= {"user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)"}
+		return requests.get(url, verify=False, auth = auth, headers=headers)
 	except ConnectionError:
 		logging.error('Sin acceso a %s , %s', url, 'ERROR')	
 
 def __post_request(url, data = ""):
 	try:
-		return requests.post(url, verify=False, data=data)
+		headers= {"user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)"}
+		return requests.post(url, verify=False, data=data, headers=headers, allow_redirects=False)
 	except ConnectionError:
 		logging.error('Sin acceso a %s , %s', url, 'ERROR')	
 		
@@ -74,6 +77,15 @@ def basic_auth(url, user, passw):
 	else:
 		logging.info('HTTP Basic Auth %s, Details=%s, %s', url, "HTTPBasicAuth Not present", "CLOSE")
 				
+def has_header_x_asp_net_version(url):
+	headers_info = __get_request(url).headers
+	if 'x-aspnet-version' in headers_info:
+		value = headers_info['x-aspnet-version']
+		state = (lambda val: 'OPEN' if re.match(regex['server'],value) != None else 'CLOSE')(value)
+		logging.info('%s HTTP header %s, Details=%s, %s', 'x-aspnet-version', url, value, state)
+	else:
+		logging.info('%s HTTP header %s, Details=%s, %s', 'x-aspnet-version', url, "Not Present", 'OPEN')
+		
 def has_header_access_control_allow_origin(url):
 	headers_info = __get_request(url).headers
 	if 'access-control-allow-origin' in headers_info:
@@ -127,6 +139,23 @@ def has_header_pragma(url):
 		logging.info('%s HTTP header %s, Details=%s, %s', 'pragma', url, value, state)
 	else:
 		logging.info('%s HTTP header %s, Details=%s, %s', 'pragma', url, "Not Present", 'OPEN')
+
+def has_header_server(url):
+	headers_info = __get_request(url).headers
+	if 'server' in headers_info:
+		value = headers_info['server']
+		state = (lambda val: 'OPEN' if re.match(regex['server'],value) != None else 'CLOSE')(value)
+		logging.info('%s HTTP header %s, Details=%s, %s', 'server', url, value, state)
+	else:
+		logging.info('%s HTTP header %s, Details=%s, %s', 'server', url, "Not Present", 'OPEN')
+		
+def has_header_x_powered_by(url):
+	headers_info = __get_request(url).headers
+	if 'x-powered-by' in headers_info:
+		value = headers_info['x-powered-by']
+		logging.info('%s HTTP header %s, Details=%s, %s', 'server', url, value, 'OPEN')
+	else:
+		logging.info('%s HTTP header %s, Details=%s, %s', 'server', url, "Not Present", 'CLOSE')
 		
 def has_header_x_content_type_options(url):
 	headers_info = __get_request(url).headers
@@ -163,3 +192,12 @@ def has_header_x_xxs_protection(url):
 		logging.info('%s HTTP header %s, Details=%s, %s', 'x-xss-protection', url, value, state)
 	else:
 		logging.info('%s HTTP header %s, Details=%s, %s', 'x-xss-protection', url, "Not Present", 'OPEN')
+
+def has_header_x_asp_net_version(url):
+	headers_info = __get_request(url).headers
+	if 'x-aspnet-version' in headers_info:
+		value = headers_info['x-aspnet-version']
+		state = (lambda val: 'OPEN' if re.match(regex['server'],value) != None else 'CLOSE')(value)
+		logging.info('%s HTTP header %s, Details=%s, %s', 'x-aspnet-version', url, value, state)
+	else:
+		logging.info('%s HTTP header %s, Details=%s, %s', 'x-aspnet-version', url, "Not Present", 'OPEN')

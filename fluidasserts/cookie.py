@@ -29,4 +29,3 @@ def has_secure(url, cookie_name):
 		logging.info('%s HTTP cookie %s, Details=%s, %s', cookie_name, url, cookielist[cookie_name], result)
 	else:
 		logging.info('%s HTTP cookie %s, Details=%s, %s', cookie_name, url, "Not Present", 'OPEN')
-	

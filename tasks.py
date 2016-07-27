@@ -1,4 +1,4 @@
-import os
+from multiprocessing import Process
 import shutil
 from invoke import task
 
@@ -47,12 +47,15 @@ def test(context):
     print('Testing library')
     context.run('%s/venv/bin/python tests/project.py' % (build_dir))
 
+def test():
+	print "WOOO"
+	
 @task
 def mock(context):
-	import smtpd
-	import asyncore
-
-	server = smtpd.SMTPServer(('127.0.0.1', 25), None)
-
-	asyncore.loop()
-
+	from mock import httpserver
+	p = Process(target=httpserver.start(), name="MockHTTPServer")
+	p.start()
+	#pid = os.fork()	
+	#httpserv = threading.Thread(target=httpserver.start(), name="MOCK HTTP Server")
+	#httpserv.setDaemon(True)
+	#httpserv.start()

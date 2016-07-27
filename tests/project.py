@@ -54,7 +54,7 @@ pdf.has_producer('tests/data/non-vulnerable.pdf')
 #http.basic_auth("http://localhost/fluidopens/BasicAuth/","Admin","1234")
 <<<<<<< HEAD
 """
-smtp.has_vrfy('127.0.0.1', 25)
+#smtp.has_vrfy('127.0.0.1', 25)
 
 
 # javascript module
