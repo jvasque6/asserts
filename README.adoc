@@ -1,5 +1,5 @@
 
-Para un sistema:
+Estas instrucciones estan validadas para los siguientes SO:
 
 $ lsb_release -a
 No LSB modules are available.
@@ -7,6 +7,13 @@ Distributor ID:	Ubuntu
 Description:	Ubuntu 14.04.4 LTS
 Release:	14.04
 Codename:	trusty
+
+$ lsb_release -a
+No LSB modules are available.
+Distributor ID:    Kali
+Description:    Kali GNU/Linux 2.0
+Release:    2.0
+Codename:    sana
 
 Instalar sistemas de tareas en python
 
@@ -18,7 +25,7 @@ $ sudo apt-get install python3.4-venv
 
 Descargar el codigo de la aplicacion de git
 
-$ git clone https://ralvarezatfluid@bitbucket.org/fluidsignal/fluid-asserts.git
+$ git clone https://(USERNAME)@bitbucket.org/fluidsignal/fluid-asserts.git
 
 Ingresar a la carpeta del codigo
 
@@ -73,6 +80,22 @@ from fluidasserts import js
 js.is_obfuscated('Admin.js')
 
 Notese que el metodo solo debe preocuparse por el formato del archivo, no
-por su ubicación, pues de esto se encargaran los decoradores.
+por su ubicación, pues de esto se encargaran los decoradores.  
 
+Los decoradores son funciones que permiten separar la logica de la ubicación
+de la logica de verificación de un formato.  La idea inicial es la siguiente:
 
+@http_location('http://www.holacomoestas.com/ruta/')
+js.is_obfuscated('Admin.js')
+
+Esta estructura verificara si el archivo Admin.js esta ofuscado independiente
+de donde este almacenado.  Asi por ejemplo si el archivo JS esta en un FTP,
+solo debemos crear un decorador sin afectar la funcion js.is_obfuscated:
+
+@ftp_location(10.1.1.1, '/hola/')
+js.is_obfuscated('Admin.js')
+
+Si por ejemplo el archivo esta en una carpeta compartida de Windows, solo
+debemos crear el decorador:
+
+@smb_location ....

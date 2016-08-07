@@ -14,6 +14,9 @@ pdf.has_producer('tests/data/vulnerable.pdf')
 pdf.has_author('tests/data/non-vulnerable.pdf')
 pdf.has_creator('tests/data/non-vulnerable.pdf')
 pdf.has_producer('tests/data/non-vulnerable.pdf')
+
+smtp.is_vrfy(10.1.1.1, 25)
+smtp.is_vrfy(10.1.1.2, 25)
 # pendiente incluir soporte de metadata xdf
 #pdf.has_create_date('test/non-vulnerable.pdf')
 #pdf.has_modify_date('test/non-vulnerable.pdf')
@@ -92,5 +95,6 @@ pdf.has_producer('tests/data/non-vulnerable.pdf')
 # dns module
 # dns.is_open()
 # dns.zone_transfer()
+# dns.cache_snoop_enabled()
 
 # voip??
