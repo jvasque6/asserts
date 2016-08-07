@@ -1,4 +1,4 @@
-import os
+from multiprocessing import Process
 import shutil
 from invoke import task
 
@@ -36,7 +36,7 @@ def clean_pyc(context):
 @task(clean_pyc, clean_build)
 def clean(context):
     print('Cleaning everything')
-
+	
 @task(build)
 def install(context):
     print('Installing FLUIDAsserts in build_dir')
@@ -46,3 +46,16 @@ def install(context):
 def test(context):
     print('Testing library')
     context.run('%s/venv/bin/python tests/project.py' % (build_dir))
+
+def test():
+	print "WOOO"
+	
+@task
+def mock(context):
+	from mock import httpserver
+	p = Process(target=httpserver.start(), name="MockHTTPServer")
+	p.start()
+	#pid = os.fork()	
+	#httpserv = threading.Thread(target=httpserver.start(), name="MOCK HTTP Server")
+	#httpserv.setDaemon(True)
+	#httpserv.start()

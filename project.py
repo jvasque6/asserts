@@ -1,15 +1,7 @@
-###<<<<<<< HEAD
-##from fluidasserts import pdf
+from fluidasserts import pdf
 ##from fluidasserts import http
 ##from fluidasserts import cookie
-from fluidasserts import smtp
-"""
-=======
-from fluidasserts import pdf
-#from fluidasserts import http
-#from fluidasserts import cookie
 
->>>>>>> d3ff5727445c68be9e920574b9429dd84a392a51
 pdf.has_author('tests/data/vulnerable.pdf')
 pdf.has_creator('tests/data/vulnerable.pdf')
 pdf.has_producer('tests/data/vulnerable.pdf')
@@ -22,9 +14,6 @@ pdf.has_producer('tests/data/vulnerable.pdf')
 pdf.has_author('tests/data/non-vulnerable.pdf')
 pdf.has_creator('tests/data/non-vulnerable.pdf')
 pdf.has_producer('tests/data/non-vulnerable.pdf')
-
-smtp.is_vrfy(10.1.1.1, 25)
-smtp.is_vrfy(10.1.1.2, 25)
 # pendiente incluir soporte de metadata xdf
 #pdf.has_create_date('test/non-vulnerable.pdf')
 #pdf.has_modify_date('test/non-vulnerable.pdf')
@@ -55,58 +44,3 @@ smtp.is_vrfy(10.1.1.2, 25)
 #cookie.has_http_only("http://challengeland.co","ci_session")
 #http.basic_auth("http://localhost/fluidopens/BasicAuth/","root","1234")
 #http.basic_auth("http://localhost/fluidopens/BasicAuth/","Admin","1234")
-<<<<<<< HEAD
-"""
-#smtp.has_vrfy('127.0.0.1', 25)
-
-
-# javascript module
-#js.is_obfuscated('Admin.js')
-
-# html module
-# using elementtree 
-# http://stackoverflow.com/questions/8692/how-to-use-xpath-in-python 
-# http://effbot.org/zone/element-xpath.htm
-#html.no_autocomplete('Archivo.html', 'dom.location.dsdf.sd.fdf')
-
-# ssl module or x509 module?
-# using twisted
-# http://stackoverflow.com/questions/1087227/validate-ssl-certificates-with-python
-# http://stackoverflow.com/questions/16899247/how-can-i-decode-a-ssl-certificate-using-python
-# http://pyopenssl.sourceforge.net/pyOpenSSL.html/openssl-x509.html
-# https://www.sslshopper.com/ssl-checker.html#hostname=https://fluid.la
-# ssl.is_self_signed()
-# ssl.has_expired()
-# ssl.expires_soon(asdsd, days)
-# ssl.resolved_accordinly 
-
-# http module
-# pruebas asimetricas
-# http.response_is_stable(seconds, URL, repeat)
-
-# tcp.is_open(ip, port)
-
-# ssh module
-# ssh.has_advisory()
-# ssh.is_open()
-# ssh.
-
-# ldap module
-# ldap.is_open(ip)
-# ldap.supports_anonymous_connection()
-
-# ftp module
-# ftp.is_open(ip)
-# ftp.supports_anonymous_connection(ip)
-
-# smtp module
-# smtp.is_open()
-# smtp.supports_anonymous_connection(ip)
-
-# dns module
-# dns.is_open()
-# dns.zone_transfer()
-# dns.cache_snoop_enabled()
-
-# voip??
-##>>>>>>> d3ff5727445c68be9e920574b9429dd84a392a51

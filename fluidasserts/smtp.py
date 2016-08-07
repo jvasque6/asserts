@@ -1,22 +1,20 @@
-
 #!usr/bin/python
-import socket
-import sys
+import smtplib
+import logging
+from fluidasserts import tcp
 
-if len(sys.argv) !=2:
-	print "Use vrfy.py <username>"
-	sys.exit(0)
 
-#socket
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#Conectar al servidor
-conexion=s.connect(('190.248.14.54', 25))
-#Recibimos el banner
-banner=s.recv(1024)
-print banner
-#Comando VRFY 
-s.send('VRFY ' + sys.argv[1] + '\r\n')
-result=s.recv(1024)
-print result
-s.close()
+"""
+Alexander Botero - Redexel
+"""
 
+def has_vrfy(ip, port):
+	
+	server= smtplib.SMTP(ip, port)
+	vrfy=server.verify('Admin')
+	if str('250') in vrfy:
+		logging.info('SMTP "VRFY" method, Details=%s, %s', ip +":"+ str(port) , 'OPEN')
+	else:
+		logging.info('SMTP "VRFY" method, Details=%s, %s', ip +":"+ str(port) , 'CLOSE')
+
+	server.quit()
