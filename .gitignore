@@ -4,3 +4,4 @@ Exploiting/
 results.log
 build
 .cache/
+.coverage

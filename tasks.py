@@ -55,8 +55,12 @@ def install(context):
 @task(install)
 def test(context):
     print('Testing library')
-    context.run('%s/venv/bin/py.test --junitxml=%s/test-results.xml \
-                                     --resultlog=%s/test-results.txt \
-                                     test/test_pdf.py \
-                                     test/test_http.py' \
-                                     % (build_dir, build_dir, build_dir))
+    context.run('{dir}/venv/bin/py.test --cov=fluidasserts \
+                                        --cov-report term-missing \
+                                        --cov-report html:{dir}/coverage/html \
+                                        --cov-report xml:{dir}/coverage/results.xml \
+                                        --cov-report annotate:{dir}/coverage/annotate \
+                                        --junitxml={dir}/test/results.xml \
+                                        --resultlog={dir}/test/results.txt \
+                                        test/test_pdf.py \
+                                        test/test_http.py'.format(dir=build_dir))

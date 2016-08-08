@@ -4,10 +4,12 @@
 
 general:
   artifacts:
-    - "results.log"
-    - "build/test-results.txt"
+    - results.log
+    - build/test/
+    - build/coverage/
 
 machine:
+  timezone: America/Bogota
   python:
     version: 3.4.4
 
@@ -19,4 +21,4 @@ test:
   override:
     - invoke test
   post:
-    - cp build/test-results.* $CIRCLE_TEST_REPORTS
+    - cp build/test/results.* $CIRCLE_TEST_REPORTS
