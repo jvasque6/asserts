@@ -2,6 +2,10 @@
 # Archivo de configuracion del servicio de integración continua circleci
 #
 
+machine:
+  python:
+    - version: 3.4.4
+
 dependencies:
   pre:
     - sudo apt-get install python3.4-venv
