@@ -1,5 +1,6 @@
 # FLUIDAsserts 
-build
+build/
+dist/
 results.log
 
 # Coverage files
