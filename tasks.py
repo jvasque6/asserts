@@ -18,31 +18,47 @@ def deps(context):
 
 @task(venv, deps)
 def build(context):
-    print('Builing from source')
+    print('Building from source')
+
+@task(build)
+def dist(context):
+    print('Packaging')
+    context.run('%s/venv/bin/python setup.py sdist --formats=zip,bztar' % (build_dir))
+    context.run('%s/venv/bin/python setup.py bdist --formats=zip,bztar' % (build_dir))
 
 @task
-def clean_build(context):
+def clean(context):
     print('Cleaning build directory')
     if os.path.exists(build_dir):
        shutil.rmtree(build_dir)
 
-@task
-def clean_dist(context):
     print('Cleaning dist directory')
     if os.path.exists(dist_dir):
        shutil.rmtree(dist_dir)
 
-@task
-def clean_pyc(context):
-    print('Cleaning compiled files (pyc)')
-    import fnmatch
-    for root, dirnames, filenames in os.walk('.'):
-        for filename in fnmatch.filter(filenames, '*.py[cod]'):
-            os.remove(os.path.join(root, filename))
+    print('Cleaning python coverage file')
+    coverage_file = '.coverage' 
+    if os.path.exists(coverage_file):
+        os.remove(coverage_file)
 
-@task(clean_pyc, clean_build, clean_dist)
-def clean(context):
-    print('Cleaning everything')
+    print('Cleaning FLUIDAsserts log')
+    fluidasserts_log = 'results.log' 
+    if os.path.exists(fluidasserts_log):
+        os.remove(fluidasserts_log)
+
+    print('Cleaning MANIFEST created by distutils')
+    manifest_file = 'MANIFEST' 
+    if os.path.exists(manifest_file):
+        os.remove(manifest_file)
+
+    # Unknown dir created from time to time
+    print('Cleaning .cache directory')
+    cache_dir = '.cache'
+    if os.path.exists(cache_dir):
+       shutil.rmtree(cache_dir)
+
+    print('Cleaning Python compiled files')
+    context.run('py3clean .')
 	
 @task(build)
 def install(context):

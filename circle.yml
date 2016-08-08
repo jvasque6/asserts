@@ -2,12 +2,6 @@
 # Archivo de configuracion del servicio de integración continua circleci
 #
 
-#general:
-#  artifacts:
-#    - results.log
-#    - build/test/
-#    - build/coverage/
-
 machine:
   timezone: America/Bogota
   python:
@@ -23,5 +17,6 @@ test:
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp results.log $CIRCLE_ARTIFACTS
-    - cp -r build/test $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
+    - invoke dist
+    - cp -r dist $CIRCLE_ARTIFACTS
