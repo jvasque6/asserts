@@ -4,8 +4,8 @@
 
 general:
   artifacts:
-    - results.log
-    - build/test-results.txt
+    - "results.log"
+    - "build/test-results.txt"
 
 machine:
   python:
