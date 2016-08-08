@@ -9,7 +9,7 @@ general:
     - build/coverage/
 
 machine:
-#  timezone: America/Bogota
+  timezone: America/Bogota
   python:
     version: 3.4.4
 
