@@ -1,3 +1,7 @@
+dependencies:
+  pre:
+    - sudo apt-get install python3.4-venv
+
 test:
   override:
     - invoke test
