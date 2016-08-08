@@ -7,17 +7,21 @@ def __has_attribute(filename, metaname):
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue != None:
         logging.info('%s metadata in %s, Details=%s, %s', metaname, filename, metavalue, 'OPEN')
+        result = True
     else:
         logging.info('%s metadata in %s, Details=%s, %s', metaname, filename, '', 'CLOSE')
+        result = False
+    return result
 
 def has_creator(filename):
-    __has_attribute(filename, 'creator')
+    return __has_attribute(filename, 'creator')
 
 def has_producer(filename):
-    __has_attribute(filename, 'producer')
+    return __has_attribute(filename, 'producer')
 
 def has_author(filename):
-    __has_attribute(filename, 'author')
+    return __has_attribute(filename, 'author')
+
 
 #def has_create_date(filename):
 #    __has_attribute(filename, "/Create Date")

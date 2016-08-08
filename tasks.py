@@ -1,9 +1,10 @@
-from multiprocessing import Process
+import os
 import shutil
 from invoke import task
 
 venv_cmd = 'pyvenv-3.4'
 build_dir = 'build'
+dist_dir = 'dist'
 
 @task
 def venv(context):
@@ -26,6 +27,12 @@ def clean_build(context):
        shutil.rmtree(build_dir)
 
 @task
+def clean_dist(context):
+    print('Cleaning dist directory')
+    if os.path.exists(dist_dir):
+       shutil.rmtree(dist_dir)
+
+@task
 def clean_pyc(context):
     print('Cleaning compiled files (pyc)')
     import fnmatch
@@ -33,29 +40,19 @@ def clean_pyc(context):
         for filename in fnmatch.filter(filenames, '*.py[cod]'):
             os.remove(os.path.join(root, filename))
 
-@task(clean_pyc, clean_build)
+@task(clean_pyc, clean_build, clean_dist)
 def clean(context):
     print('Cleaning everything')
 	
 @task(build)
 def install(context):
-    print('Installing FLUIDAsserts in build_dir')
-    shutil.copytree('fluidasserts', 'build/venv/lib/python3.4/site-packages/fluidasserts')
+    print('Installing FLUIDAsserts in build_dir by symlink')
+    current_dir = os.getcwd()
+    destination_dir = '%s/build/venv/lib/python3.4/site-packages/fluidasserts' % (current_dir)
+    if not os.path.exists(destination_dir):
+        os.symlink('%s/fluidasserts' % (current_dir), destination_dir)
 
 @task(install)
 def test(context):
     print('Testing library')
-    context.run('%s/venv/bin/python tests/project.py' % (build_dir))
-
-def test():
-	print "WOOO"
-	
-@task
-def mock(context):
-	from mock import httpserver
-	p = Process(target=httpserver.start(), name="MockHTTPServer")
-	p.start()
-	#pid = os.fork()	
-	#httpserv = threading.Thread(target=httpserver.start(), name="MOCK HTTP Server")
-	#httpserv.setDaemon(True)
-	#httpserv.start()
+    context.run('%s/venv/bin/py.test tests/test_pdf.py tests/test_http.py' % (build_dir))

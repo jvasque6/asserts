@@ -87,22 +87,28 @@ def has_header_x_asp_net_version(url):
 		logging.info('%s HTTP header %s, Details=%s, %s', 'x-aspnet-version', url, "Not Present", 'OPEN')
 		
 def has_header_access_control_allow_origin(url):
-	headers_info = __get_request(url).headers
-	if 'access-control-allow-origin' in headers_info:
-		value = headers_info['access-control-allow-origin']
-		state = (lambda val: 'CLOSE' if re.match(regex['access-control-allow-origin'],val) != None else 'OPEN')(value)
-		logging.info('%s HTTP header %s, Details=%s, %s', 'access-control-allow-origin', url, value, state)
-	else:
-		logging.info('%s HTTP header %s, Details=%s, %s', 'access-control-allow-origin', url, "Not Present", 'OPEN')
+    result = True
+    headers_info = __get_request(url).headers
+    if 'access-control-allow-origin' in headers_info:
+        value = headers_info['access-control-allow-origin']
+        result = (lambda val: False if re.match(regex['access-control-allow-origin'],val) != None else True)(value)
+        state = 'OPEN' if result else 'CLOSE'
+        logging.info('%s HTTP header %s, Details=%s, %s', 'access-control-allow-origin', url, value, state)
+    else:
+        logging.info('%s HTTP header %s, Details=%s, %s', 'access-control-allow-origin', url, "Not Present", 'OPEN')
+    return result
 		
 def has_header_cache_control(url):
-	headers_info = __get_request(url).headers
-	if 'cache-control' in headers_info:
-		value = headers_info['cache-control']
-		state = (lambda val: 'CLOSE' if re.match(regex['cache-control'],val) != None else 'OPEN')(value)
-		logging.info('%s HTTP header %s, Details=%s, %s', 'cache-control', url, value, state)
-	else:
-		logging.info('%s HTTP header %s, Details=%s, %s', 'cache-control', url, "Not Present", 'OPEN')
+    result = True
+    headers_info = __get_request(url).headers
+    if 'cache-control' in headers_info:
+        value = headers_info['cache-control']
+        result = (lambda val: False if re.match(regex['cache-control'],val) != None else True)(value)
+        state = 'OPEN' if result else 'CLOSE'
+        logging.info('%s HTTP header %s, Details=%s, %s', 'cache-control', url, value, state)
+    else:
+        logging.info('%s HTTP header %s, Details=%s, %s', 'cache-control', url, "Not Present", 'OPEN')
+    return result
 		
 def has_header_content_security_policy(url):
 	headers_info = __get_request(url).headers

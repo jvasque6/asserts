@@ -1,5 +1,5 @@
 
-Estas instrucciones estan validadas para los siguientes SO:
+* Estas instrucciones fueron validadas para los siguientes SO:
 
 $ lsb_release -a
 No LSB modules are available.
@@ -15,45 +15,36 @@ Description:    Kali GNU/Linux 2.0
 Release:    2.0
 Codename:    sana
 
-Instalar sistemas de tareas en python
+* Instalar sistemas de tareas en python
 
 $ sudo pip install invoke
 
-Instalar el entorno de virtual de python
+* Instalar el entorno de virtual de python
 
 $ sudo apt-get install python3.4-venv
 
-Descargar el codigo de la aplicacion de git
+* Descargar el codigo de la aplicacion de git
 
 $ git clone https://(USERNAME)@bitbucket.org/fluidsignal/fluid-asserts.git
 
-Ingresar a la carpeta del codigo
+* Ingresar a la carpeta del codigo
 
 $ cd fluid-asserts
 
-Las tareas de la herramienta de construcción son:
+* Las tareas de la herramienta de construcción son:
 
 $ invoke --list
-Available tasks:
-
-  build
-  clean
-  clean_build
-  clean_pyc
-  deps
-  install
-  test
-  venv
 
 Para limpiar por completo el repositorio
 
 $ invoke clean
 
-Para construir y ejecutar las pruebas se puede ejecutar directamente:
+* Para construir y ejecutar las pruebas se puede ejecutar directamente:
 
 $ invoke test
 
-Para añadir nuevos modulos de soporte el formato es el siguiente:
+* Para añadir nuevos modulos de soporte el formato es el siguiente:
+
    * fluidasserts/{formato}.py
    * fluidasserts/{protocolo}.py
 
@@ -72,6 +63,12 @@ es decir que hagan una pregunta que se responda verdadero o falso.  Ejemplos:
    * is_open?
    * is_close?
    * contains_XXX?
+
+Los metodos al ser predicados siempre deben retornar True o False:
+
+   * True si la vulnerabilidad esta abierta
+   * False si la vulnerabilidad esta cerrada
+   * True debe ser el valor por defecto de retorno ante cualquier duda
 
 Siempre el nombre de las funciones debe ser en ingles y seguir la convencion
 de nombres de python.  De esta forma desde un proyecto se podra usar asi:
