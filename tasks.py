@@ -55,4 +55,4 @@ def install(context):
 @task(install)
 def test(context):
     print('Testing library')
-    context.run('%s/venv/bin/py.test tests/test_pdf.py tests/test_http.py' % (build_dir))
+    context.run('%s/venv/bin/py.test test/test_pdf.py test/test_http.py' % (build_dir))
