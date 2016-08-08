@@ -13,3 +13,5 @@ dependencies:
 test:
   override:
     - invoke test
+  post:
+    - cp build/test-results.* $CIRCLE_TEST_REPORTS
