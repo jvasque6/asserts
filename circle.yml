@@ -2,12 +2,6 @@
 # Archivo de configuracion del servicio de integración continua circleci
 #
 
-general:
-  artifacts:
-    - results.log
-    - build/test/
-    - build/coverage/
-
 machine:
   timezone: America/Bogota
   python:
@@ -15,10 +9,22 @@ machine:
 
 dependencies:
   pre:
+    - sudo pip install invoke
     - sudo apt-get install python3.4-venv
+  override:
+    - invoke deps
 
 test:
+  pre:
+    - invoke lint
   override:
     - invoke test
+    - invoke dist
+    - invoke docs
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
+    - cp results.log $CIRCLE_ARTIFACTS
+    - cp -r build/coverage $CIRCLE_ARTIFACTS
+    - cp -r build/lint $CIRCLE_ARTIFACTS
+    - cp -r build/docs $CIRCLE_ARTIFACTS
+    - cp -r dist $CIRCLE_ARTIFACTS

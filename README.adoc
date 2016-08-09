@@ -96,3 +96,55 @@ Si por ejemplo el archivo esta en una carpeta compartida de Windows, solo
 debemos crear el decorador:
 
 @smb_location ....
+
+
+* Adicionar nuevas caracteristicas:
+
+El modelo de versionamiento que se utiliza el workflow GIT:
+
+https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow
+
+tambien explicado en:
+
+http://nvie.com/posts/a-successful-git-branching-model/
+http://blog.javascripting.com/2014/12/05/continuous-deployment-with-github-circleci-heroku/
+
+En este modelo basicamente tenemos las siguientes ramas:
+
+   - master: codigo en producción y estable (en origin)
+   - develop: codigo para integración de todo el desarrollo (en origin)
+   - feature-XXXX: codigo del desarrollador 
+
+Para comenzar a desarrollar una nueva caracteristica, se debe comenzar desde la rama
+de develop
+
+$ git checkout -b feature-XXX develop
+
+Una vez finalizada la nueva caracteristica los cambios deben integrarse (merged) a develop:
+
+$ git checkout develop            # Cambiar a la rama de desarrollo
+$ git merge --no-ff feature-XXX   # Integrar la nueva caraceristica con la rama local de desarrollo
+$ git branch -d feature-XXX       # Eliminar la rama local de la nueva caracteristica
+$ git push origin develop         # Enviar a la rama central de desarrollo los cambios fusionados
+
+
+Respecto a las reglas de estilo se debe usar las siguientes normas de estilo:
+
+http://docs.openstack.org/developer/hacking/
+https://www.python.org/dev/peps/pep-0008/
+http://docs.python-guide.org/en/latest/writing/style/
+http://dolphm.com/pep257-good-python-docstrings-by-example/
+http://blog.sideci.com/2015/12/14/style-guide-of-python-and-lint-tool/
+http://google.github.io/styleguide/pyguide.html
+https://www.python.org/dev/peps/pep-0257/
+
+Por este motivo durante la compilación se tienen previstas herramientas
+de analisis de codigo sintactico que hacen que la sintaxis de nombres
+se respete estrictamente. Esto es:
+
+pylint
+pep3
+flake8
+pyflakes
+hacking
+

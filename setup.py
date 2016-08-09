@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from distutils.core import setup
 
 setup(name='FLUIDAsserts',
@@ -8,4 +6,4 @@ setup(name='FLUIDAsserts',
       url='https://fluid.la/',
       author='FLUID Engineering Team',
       author_email='engineering@fluid.la',
-     )
+      )

@@ -1,7 +1,20 @@
-*.swp
-*.pyc
-Exploiting/
+# FLUIDAsserts 
+build/
+dist/
 results.log
-build
-.cache/
+
+# Coverage files
 .coverage
+
+# Python bytecode
+*.py[cod]
+__pycache__/
+
+# ditutils generated
+MANIFEST
+
+# Vim cache 
+*.swp
+
+# Compatibilidad hacia atras
+Exploiting/
