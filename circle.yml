@@ -10,14 +10,17 @@ machine:
 dependencies:
   pre:
     - sudo apt-get install python3.4-venv
+  override:
+    - invoke deps
 
 test:
+  pre:
+    - invoke static
   override:
     - invoke test
+    - invoke dist
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
-    - invoke dist
     - cp -r dist $CIRCLE_ARTIFACTS
-    - invoke static
