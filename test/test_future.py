@@ -1,9 +1,9 @@
 # javascript module
-#js.is_obfuscated('Admin.js')
+# js.is_obfuscated('Admin.js')
 
 # html module
-# using elementtree 
-# http://stackoverflow.com/questions/8692/how-to-use-xpath-in-python 
+# using elementtree
+# http://stackoverflow.com/questions/8692/how-to-use-xpath-in-python
 # http://effbot.org/zone/element-xpath.htm
 #html.no_autocomplete('Archivo.html', 'dom.location.dsdf.sd.fdf')
 
@@ -16,7 +16,7 @@
 # ssl.is_self_signed()
 # ssl.has_expired()
 # ssl.expires_soon(asdsd, days)
-# ssl.resolved_accordinly 
+# ssl.resolved_accordinly
 
 # http module
 # pruebas asimetricas

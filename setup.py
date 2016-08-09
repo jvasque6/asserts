@@ -6,4 +6,4 @@ setup(name='FLUIDAsserts',
       url='https://fluid.la/',
       author='FLUID Engineering Team',
       author_email='engineering@fluid.la',
-     )
+      )

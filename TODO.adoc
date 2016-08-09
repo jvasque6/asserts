@@ -1,8 +1,4 @@
 
-* En los artefactos tanto como en la salida del build 
-  dejar los resultados del analisis estatico
-* Aplicar el autopep8 una vez esten el branch de development
-  integrado a master
 * Analizar frosted vs pyflakes
 * Crear estructura basica para la generación de documentacion
 * Convertir README a asciidoc y generar README.txt y PDF
