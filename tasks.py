@@ -4,17 +4,19 @@ from invoke import task
 
 venv_cmd = 'pyvenv-3.4'
 build_dir = 'build'
+venv_dir = build_dir + '/venv'
+path_dir = venv_dir + '/bin'
 dist_dir = 'dist'
 
 @task
 def venv(context):
     print('Creating virtual environment')
-    context.run('%s %s/venv' % (venv_cmd, build_dir))
+    context.run('pyvenv-3.4 {venv}'.format(venv=venv_dir))
 
 @task(venv)
 def deps(context):
     print('Installing dependencies')
-    context.run('%s/venv/bin/pip install -r requirements.txt' % (build_dir))
+    context.run('{path}/pip install -r requirements.txt'.format(path=path_dir))
 
 @task(deps)
 def build(context):
@@ -23,8 +25,8 @@ def build(context):
 @task(build)
 def dist(context):
     print('Packaging')
-    context.run('%s/venv/bin/python setup.py sdist --formats=zip,bztar' % (build_dir))
-    context.run('%s/venv/bin/python setup.py bdist --formats=zip,bztar' % (build_dir))
+    context.run('{path}/python setup.py sdist --formats=zip,bztar'.format(path=path_dir))
+    context.run('{path}/python setup.py bdist --formats=zip,bztar'.format(path=path_dir))
 
 @task
 def clean(context):
@@ -64,26 +66,39 @@ def clean(context):
 def install(context):
     print('Installing FLUIDAsserts in build_dir by symlink')
     current_dir = os.getcwd()
-    destination_dir = '%s/build/venv/lib/python3.4/site-packages/fluidasserts' % (current_dir)
+    destination_dir = '{venv}/lib/python3.4/site-packages/fluidasserts'.format(venv=venv_dir)
     if not os.path.exists(destination_dir):
         os.symlink('%s/fluidasserts' % (current_dir), destination_dir)
 
 @task(install)
 def test(context):
     print('Testing library')
-    context.run('{dir}/venv/bin/py.test --cov=fluidasserts \
-                                        --cov-report term-missing \
-                                        --cov-report html:{dir}/coverage/html \
-                                        --cov-report xml:{dir}/coverage/results.xml \
-                                        --cov-report annotate:{dir}/coverage/annotate \
-                                        --junitxml={dir}/test/results.xml \
-                                        --resultlog={dir}/test/results.txt \
-                                        test/test_pdf.py \
-                                        test/test_http.py'.format(dir=build_dir))
+    context.run('{path}/py.test --cov=fluidasserts \
+                                --cov-report term-missing \
+                                --cov-report html:{build}/coverage/html \
+                                --cov-report xml:{build}/coverage/results.xml \
+                                --cov-report annotate:{build}/coverage/annotate \
+                                --junitxml={build}/test/results.xml \
+                                --resultlog={build}/test/results.txt \
+                                test/test_pdf.py \
+                                test/test_http.py'.format(path=path_dir,
+                                                          build=build_dir))
 
 @task(deps)
-def static(context):
-    print('Static analysis with flake8')
-    context.run('%s/venv/bin/flake8 --statistics --count fluidasserts test' % (build_dir), warn=True)
-    print('Static analysis with pylint')
-    context.run('%s/venv/bin/pylint fluidasserts test' % (build_dir), warn=True)
+def lint(context):
+    lint_dir = build_dir + '/lint'
+    if not os.path.exists(lint_dir):
+        os.makedirs(lint_dir)     
+    print('Linting with flake8')
+    context.run('{path}/flake8 --statistics \
+                               --count \
+                               --output-file={lint}/results.flake8 \
+                               fluidasserts test'.format(path=path_dir, 
+                                                         lint=lint_dir), 
+                 warn=True)
+    context.run('cat {lint}/results.flake8'.format(lint=lint_dir))
+    print('Linting with pylint')
+    context.run('{path}/pylint fluidasserts test > {lint}/results.pylint'.format(path=path_dir, 
+                                                                                 lint=lint_dir), 
+                warn=True)
+    context.run('cat {lint}/results.pylint'.format(lint=lint_dir))
