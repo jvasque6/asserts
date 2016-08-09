@@ -127,3 +127,21 @@ $ git merge --no-ff feature-XXX   # Integrar la nueva caraceristica con la rama 
 $ git branch -d feature-XXX       # Eliminar la rama local de la nueva caracteristica
 $ git push origin develop         # Enviar a la rama central de desarrollo los cambios fusionados
 
+
+Respecto a las reglas de estilo se debe usar las siguientes normas de estilo:
+
+http://docs.openstack.org/developer/hacking/
+https://www.python.org/dev/peps/pep-0008/
+http://docs.python-guide.org/en/latest/writing/style/
+http://blog.sideci.com/2015/12/14/style-guide-of-python-and-lint-tool/
+
+Por este motivo durante la compilación se tienen previstas herramientas
+de analisis de codigo sintactico que hacen que la sintaxis de nombres
+se respete estrictamente. Esto es:
+
+pylint
+pep3
+flake8
+pyflakes
+hacking
+

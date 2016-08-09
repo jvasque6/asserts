@@ -12,6 +12,8 @@ dependencies:
     - sudo apt-get install python3.4-venv
 
 test:
+  pre:
+    - invoke static
   override:
     - invoke test
   post:

@@ -80,3 +80,10 @@ def test(context):
                                         --resultlog={dir}/test/results.txt \
                                         test/test_pdf.py \
                                         test/test_http.py'.format(dir=build_dir))
+
+@task
+def static(context):
+    print('Static analysis with flake8')
+    context.run('%s/venv/bin/flake8 --statistics --count fluidasserts test' % (build_dir), warn=True)
+    print('Static analysis with pylint')
+    context.run('%s/venv/bin/pylint fluidasserts test' % (build_dir), warn=True)
