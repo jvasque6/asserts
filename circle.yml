@@ -12,8 +12,6 @@ dependencies:
     - sudo apt-get install python3.4-venv
 
 test:
-  pre:
-    - invoke static
   override:
     - invoke test
   post:
@@ -22,3 +20,4 @@ test:
     - cp -r build/coverage $CIRCLE_ARTIFACTS
     - invoke dist
     - cp -r dist $CIRCLE_ARTIFACTS
+    - invoke static

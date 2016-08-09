@@ -11,12 +11,12 @@ def venv(context):
     print('Creating virtual environment')
     context.run('%s %s/venv' % (venv_cmd, build_dir))
 
-@task
+@task(venv)
 def deps(context):
     print('Installing dependencies')
     context.run('%s/venv/bin/pip install -r requirements.txt' % (build_dir))
 
-@task(venv, deps)
+@task(deps)
 def build(context):
     print('Building from source')
 
@@ -81,7 +81,7 @@ def test(context):
                                         test/test_pdf.py \
                                         test/test_http.py'.format(dir=build_dir))
 
-@task
+@task(deps)
 def static(context):
     print('Static analysis with flake8')
     context.run('%s/venv/bin/flake8 --statistics --count fluidasserts test' % (build_dir), warn=True)
