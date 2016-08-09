@@ -1,6 +1,14 @@
-import requests
-import logging
+# -*- coding: utf-8 -*-
+
+"""Modulo para verificaciones de Cookies HTTP.
+
+Este modulo deberia considerarse su anexion al verificador de http.py
+pues como tal las cookies son parte de dicho protocolo.
+"""
+
 from http.cookies import BaseCookie
+import logging
+import requests
 
 
 def __get_request(url):

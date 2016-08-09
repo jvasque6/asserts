@@ -1,7 +1,23 @@
-from ftplib import FTP_TLS
-from ftplib import error_perm
-from fluidasserts import tcp
+# -*- coding: utf-8 -*-
+
+"""Modulo para verificación del protocolo FTP.
+
+Este modulo permite verificar vulnerabilidades propias de FTP como:
+
+    * Transporte de información de forma plana,
+    * Conexión al servicio de forma anonima.
+    * Servicio FTP activado
+"""
+
+# standard imports
 import logging
+
+# 3rd party imports
+from ftplib import error_perm
+from ftplib import FTP_TLS
+
+# local imports
+from fluidasserts import tcp
 
 
 def __auth(ip, port, username, password):

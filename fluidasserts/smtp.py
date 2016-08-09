@@ -1,7 +1,21 @@
-#!usr/bin/python
-import smtplib
+# -*- coding: utf-8 -*-
+
+"""Modulo para verificación del protocolo SMTP.
+
+Este modulo permite verificar vulnerabilidades propias de SMTP como:
+
+    * Comando VRFY activo,
+"""
+
+# standard imports
 import logging
-from fluidasserts import tcp
+import smtplib
+
+# 3rd party imports
+# none
+
+# local imports
+# none
 
 
 """

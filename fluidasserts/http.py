@@ -1,8 +1,24 @@
-import requests
-from requests.auth import HTTPDigestAuth
-from requests_oauthlib import OAuth1
+# -*- coding: utf-8 -*-
+
+"""Modulo para verificación del protocolo HTTP.
+
+Este modulo permite verificar vulnerabilidades propias de HTTP como:
+
+    * Transporte plano de información,
+    * Headers de seguridad no establecidos,
+    * Cookies no generadas de forma segura,
+"""
+
+# standard imports
 import logging
 import re
+import requests
+
+# 3rd party imports
+from requests_oauthlib import OAuth1
+
+# local imports
+# none
 
 regex = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
@@ -97,23 +113,6 @@ def oauth_auth(url, user, passw):
     else:
         logging.info('HTTPOAuth %s, Details=%s, %s', url,
                      "HTTPOAuth Not present", "CLOSE")
-
-
-def basic_auth(url, user, passw):
-    r = __get_request(url, (user, passw))
-    if __get_request(url).status_code == 401:
-        if r.status_code == 200:
-            logging.info(
-                'HTTP Basic Auth %s, Details=%s, %s',
-                url,
-                "Success with [ " + user + " : " + passw + " ]",
-                "OPEN")
-        else:
-            logging.info('HTTP Basic Auth %s, Details=%s, %s', url,
-                         "Fail with [ " + user + " : " + passw + " ]", "CLOSE")
-    else:
-        logging.info('HTTP Basic Auth %s, Details=%s, %s',
-                     url, "HTTPBasicAuth Not present", "CLOSE")
 
 
 def has_header_x_asp_net_version(url):
@@ -299,16 +298,3 @@ def has_header_x_xxs_protection(url):
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-xss-protection', url, "Not Present", 'OPEN')
-
-
-def has_header_x_asp_net_version(url):
-    headers_info = __get_request(url).headers
-    if 'x-aspnet-version' in headers_info:
-        value = headers_info['x-aspnet-version']
-        state = (lambda val: 'OPEN' if re.match(
-            regex['server'], value) is not None else 'CLOSE')(value)
-        logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-aspnet-version', url, value, state)
-    else:
-        logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-aspnet-version', url, "Not Present", 'OPEN')

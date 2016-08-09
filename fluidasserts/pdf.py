@@ -1,8 +1,25 @@
+# -*- coding: utf-8 -*-
+
+"""Modulo para verificación del formato PDF.
+
+Este modulo permite verificar vulnerabilidades que se encuentran en un archivo
+con formato PDF.  Algunas de ellas son:
+
+    * Metadatos docinfo,
+    * Metadatos XDF.
+"""
+
+# standard imports
 import logging
+
+# 3rd party imports
 from PyPDF2 import PdfFileReader
+
+# local imports
 
 
 def __has_attribute(filename, metaname):
+    """Verifica si un atributo docinfo se encuentra en el PDF"""
     input_pdf = PdfFileReader(open(filename, "rb"))
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
@@ -18,14 +35,17 @@ def __has_attribute(filename, metaname):
 
 
 def has_creator(filename):
+    """Verifica si el PDF tiene el atributo creator en la sección docinfo"""
     return __has_attribute(filename, 'creator')
 
 
 def has_producer(filename):
+    """Verifica si el PDF tiene el atributo producer en la sección docinfo"""
     return __has_attribute(filename, 'producer')
 
 
 def has_author(filename):
+    """Verifica si el PDF tiene el atributo author en la sección docinfo"""
     return __has_attribute(filename, 'author')
 
 

@@ -133,7 +133,10 @@ Respecto a las reglas de estilo se debe usar las siguientes normas de estilo:
 http://docs.openstack.org/developer/hacking/
 https://www.python.org/dev/peps/pep-0008/
 http://docs.python-guide.org/en/latest/writing/style/
+http://dolphm.com/pep257-good-python-docstrings-by-example/
 http://blog.sideci.com/2015/12/14/style-guide-of-python-and-lint-tool/
+http://google.github.io/styleguide/pyguide.html
+https://www.python.org/dev/peps/pep-0257/
 
 Por este motivo durante la compilación se tienen previstas herramientas
 de analisis de codigo sintactico que hacen que la sintaxis de nombres

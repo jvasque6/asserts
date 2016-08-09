@@ -1,8 +1,20 @@
-"""Servidor HTTP basado en Flask para exponer los mock de prueba
-   Consultas con:
-	- geloma <glopez@fluid.la>"""
+# -*- coding: utf-8 -*-
+
+"""Servidor HTTP basado en Flask para exponer los mock HTTP
+
+Consultas con: - geloma <glopez@fluid.la>
+"""
+
+# standard imports
+# none
+
+# 3rd party imports
 from flask import Flask
 from flask import Response
+
+# local imports
+# none
+
 
 app = Flask(__name__)
 
@@ -30,7 +42,8 @@ def access_control_allow_origin_fail():
 def cache_control_ok():
     resp = Response("Cache-Control OK")
     resp.headers[
-        'Cache-Control'] = 'private, no-cache, no-store, max-age=0, no-transform'
+        'Cache-Control'] = ('private, no-cache, no-store, max-age=0, '
+                            'no-transform')
     return resp
 
 
@@ -45,7 +58,8 @@ def cache_control_fail():
 def content_security_policy_ok():
     resp = Response("content-security-policy OK")
     resp.headers[
-        'content-security-policy'] = 'private, no-cache, no-store, max-age=0, no-transform'
+        'content-security-policy'] = ('private, no-cache, no-store, '
+                                      'max-age=0, no-transform')
     return resp
 
 

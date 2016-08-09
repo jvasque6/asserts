@@ -20,9 +20,11 @@ test:
   override:
     - invoke test
     - invoke dist
+    - invoke docs
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
     - cp -r build/lint $CIRCLE_ARTIFACTS
+    - cp -r build/docs $CIRCLE_ARTIFACTS
     - cp -r dist $CIRCLE_ARTIFACTS

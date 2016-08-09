@@ -118,3 +118,8 @@ def lint(context):
 def style(context):
     print('Correcting style with autopep8')
     context.run('{path}/autopep8 -vv --recursive --in-place fluidasserts test'.format(path=path_dir))
+
+@task(deps)
+def docs(context):
+    print('Generating documentation')
+    context.run('{path}/pdoc --html --html-dir build/docs --all-submodules --overwrite fluidasserts'.format(path=path_dir))

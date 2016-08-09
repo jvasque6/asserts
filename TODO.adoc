@@ -1,20 +1,27 @@
 
-* Analizar frosted vs pyflakes
-* Crear estructura basica para la generación de documentacion
-* Convertir README a asciidoc y generar README.txt y PDF
-* Resolver los warnings de compilación de YAML (quitar YAML?)
+* Reducir los errores de pylint 
 * Precommit hooks
   https://pypi.python.org/pypi/git-pre-commit-hook
   http://githooks.com/
+* Cual es formato para el tema de author
+* Cual es el archivo de licencia
+* Crear estructura basica para la generación de documentacion
+* Convertir README a asciidoc y generar README.txt y PDF
+* Resolver los warnings de compilación de YAML (quitar YAML?)
   https://www.atlassian.com/git/tutorials/git-hooks/
 * Deploy a heroku
 * En heroku prender maquinas vulnerables y no vulnerables
 * O con docker compose:
   http://www.heavybit.com/library/blog/opinionated-tour-of-testing-tools/
 * Añadir soporte de Wheel
+* Analizar cambio en la arquitectura de linters:
+  frosted vs pyflakes
+  https://github.com/klen/pylama
 * Volver a revisar tox o doit como herramientas de integracion
 * Revisar la pertinencia del API de Mocks
   https://docs.python.org/dev/library/unittest.mock.html
 * Revisar el mock de http con:
   https://github.com/gabrielfalcao/HTTPretty (problemas con python3)
-
+* Revisar si el formato estandar sera ascii o utf-8
+  https://docs.python.org/2.3/whatsnew/section-encodings.html
+  https://docs.python.org/3/howto/unicode.html

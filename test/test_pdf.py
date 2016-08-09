@@ -1,29 +1,53 @@
-import pytest
+# -*- coding: utf-8 -*-
+
+"""Modulo para pruebas de PDF.
+
+Este modulo contiene las funciones necesarias para probar si el modulo de
+PDF se encuentra adecuadamente implementado.
+
+El mock en este caso son archivos PDF intencionalmente construidos para
+reflejar las vulnerabilidades y/o correcciones propias de un archivo
+PDF.
+"""
+
+# standard imports
+# none
+
+# 3rd party imports
+# none
+
+# local imports
 from fluidasserts import pdf
 
 
 def test_pdf_has_author_open():
-    assert True == pdf.has_author('test/data/vulnerable.pdf')
+    """PDF tiene metados de autor en el docinfo?"""
+    assert pdf.has_author('test/data/vulnerable.pdf')
 
 
 def test_pdf_has_creator_open():
-    assert True == pdf.has_creator('test/data/vulnerable.pdf')
+    """PDF tiene metados de creador en el docinfo?"""
+    assert pdf.has_creator('test/data/vulnerable.pdf')
 
 
 def test_pdf_has_producer_open():
-    assert True == pdf.has_producer('test/data/vulnerable.pdf')
+    """PDF tiene metados de productor en el docinfo?"""
+    assert pdf.has_producer('test/data/vulnerable.pdf')
 
 
 def test_pdf_has_author_close():
-    assert False == pdf.has_author('test/data/non-vulnerable.pdf')
+    """PDF no tiene metados de autor en el docinfo?"""
+    assert not pdf.has_author('test/data/non-vulnerable.pdf')
 
 
 def test_pdf_has_creator_close():
-    assert False == pdf.has_creator('test/data/non-vulnerable.pdf')
+    """PDF no tiene metados de creador en el docinfo?"""
+    assert not pdf.has_creator('test/data/non-vulnerable.pdf')
 
 
 def test_pdf_has_producer_close():
-    assert False == pdf.has_producer('test/data/non-vulnerable.pdf')
+    """PDF no tiene metados de productor en el docinfo?"""
+    assert not pdf.has_producer('test/data/non-vulnerable.pdf')
 
 # pendiente incluir soporte de metadata xdf
 # pdf.has_create_date('test/vulnerable.pdf')
