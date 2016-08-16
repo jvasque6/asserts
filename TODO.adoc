@@ -3,6 +3,9 @@
 * Precommit hooks
   https://pypi.python.org/pypi/git-pre-commit-hook
   http://githooks.com/
+* Crear una imagen docker de FLUIDAsserts
+* Revisar build en CI de los pull-request
+  https://circleci.com/docs/fork-pr-builds/
 * Cual es formato para el tema de author
 * Cual es el archivo de licencia
 * Crear estructura basica para la generación de documentacion

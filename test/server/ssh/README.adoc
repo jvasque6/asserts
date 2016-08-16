@@ -1,0 +1,8 @@
+
+Algunas referencias utiles
+
+https://github.com/sickp/docker-alpine-sshd
+https://github.com/macropin/docker-sshd
+https://github.com/danielguerra69/alpine-sshd
+
+

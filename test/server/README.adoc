@@ -1,0 +1,44 @@
+
+Enviar imagenes al repositorio
+
+$ sudo docker login
+
+Marcar imagen local para ser enviada a repositorio remoto:
+
+$ sudo docker tag local-image:tagname fluidsignal/containers:tagname
+
+Ejemplo
+
+$ sudo docker tag fluidsignal/ssh fluidsignal/containers:ssh
+
+Enviar imagen a repositorio:
+
+$ sudo docker push fluidsignal/containers:tagname
+
+Ejemplo:
+
+$ sudo docker push fluidsignal/containers:ssh
+
+Una vez subidas al repositorio las imagenes pueden verse en:
+
+https://hub.docker.com/r/fluidsignal/containers/
+https://hub.docker.com/r/fluidsignal/containers/tags/
+
+Convenciones
+
+Por convencion se utilizara para los mocks de servicio docker.
+
+https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/
+http://blog.labianchin.me/2016/02/15/docker-tips-and-tricks
+
+Tambien se define la siguiente convencion para ejecutar los servicios:
+   * La red de servidores mocks estara en 172.18.0.0
+   * Para cada servicio se utilizara la red 172.18.XXX.0, donde XXX:
+     - Son el numero del puerto del servicio estandar correspondiente
+     - Si el puerto es mayor a 254, se tomaron los primeros 2 digitos.
+   * El host que ejecuta los servicios vulnerables sera el 172.18.XXX.66
+   * El host que ejecuta los servicios no vulnerables sera el 172.18.XXX.77
+   * El host que se utilizará para pruebas interactivas sera el 172.18.XXX.55
+
+De esta forma los servicios nunca se exponen al exterior y ademas pueden
+ejecutarse en su puerto original.

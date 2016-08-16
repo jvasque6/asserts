@@ -1,0 +1,4 @@
+
+Algunas referencias utiles
+
+https://github.com/packeteer/alpine-openldap
