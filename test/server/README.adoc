@@ -1,7 +1,9 @@
 
 Enviar imagenes al repositorio
 
-$ sudo docker login
+$ sudo docker login -u fluidsignal
+Password: 
+Login Succeeded
 
 Marcar imagen local para ser enviada a repositorio remoto:
 

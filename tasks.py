@@ -80,6 +80,8 @@ def install(context):
         os.symlink('%s/fluidasserts' % (current_dir), destination_dir)
 
 
+# TODO(ralvarez): Aun no invoca FTP pues circle.yml le falta llamar docker
+# TODO(ralvarez): Hacer task parametrizable para ejecutar solo una suite
 @task(install)
 def test(context):
     print('Testing library')

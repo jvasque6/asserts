@@ -6,14 +6,23 @@ FROM alpine:3.4
 # ENV FLAVOR vulnerable # Inicia el servicio con configuracion vulnerable
 ENV FLAVOR hardened
 
+# TODO(ralvarez) Dado que el estado de los usuarios debe cambiar
+# segun el rol del servidor, estos deberian configurarse en el entrypoint
+# y no en el setup de la imagen.
+# TODO(ralvarez) Luego uno de los puntos posteriores es invocarlo desde
+# ansible dinamicamente antes de cada test, y no fijo en el mock
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache vsftpd \
     && rm -rf /var/cache/apk/* \
     && adduser -D ftpsecure \
     && echo "root:root123" | chpasswd \
+    && adduser -D -s /bin/ash freddy \
+    && echo "freddy:MiGhu2qu" | chpasswd \
     && adduser -D -s /bin/ash faustino \
-    && echo "faustino:faustino123" | chpasswd
+    && echo "faustino:faustino123" | chpasswd \
+    && adduser -D -s /bin/ash dario \
+    && echo "dario:" | chpasswd
 
 # Expone el puerto del servicio en cuestion
 EXPOSE 21 21000-21009
