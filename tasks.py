@@ -122,6 +122,6 @@ def style(context):
     context.run('{path}/autopep8 -vv --recursive --in-place fluidasserts test'.format(path=path_dir))
 
 @task(deps)
-def docs(context):
+def doc(context):
     print('Generating documentation')
-    context.run('{path}/pdoc --html --html-dir build/docs --all-submodules --overwrite fluidasserts'.format(path=path_dir))
+    context.run('{path}/pdoc --html --html-dir build/doc --all-submodules --overwrite fluidasserts'.format(path=path_dir))

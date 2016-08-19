@@ -11,7 +11,7 @@ fi
 
 if [ -z ${2+x} ]; then 
   echo "Directorio de construcción no especificado"; 
-  BUILDDIR="../build/docs/asciidoc"
+  BUILDDIR="../build/doc/"
 else 
   BUILDDIR=$2
 fi
