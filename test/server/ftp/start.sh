@@ -1,5 +1,7 @@
 #!/bin/bash -x
 
+# todo hoy solo funciona si se llama ./start.sh
+# si se invoca desde CWD diferente a . no funciona
 source conf.sh
 
 sudo docker network create \

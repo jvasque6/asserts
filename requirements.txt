@@ -1,13 +1,40 @@
-PyPDF2==1.26.0
-PyYAML==3.11
-invoke==0.13.0
-Flask==0.11.1
-requests==2.10.0
-requests-oauthlib==0.6.2
-pytest==2.9.2
-pytest-cov==2.3.1
-hacking==0.11.0
-pylint==1.6.4
-flake8==2.5.5
-autopep8==1.2.4
-pdoc==0.3.2
+#
+# Archivo que contiene las dependencias RAIZ del software en cuestion
+# 
+# Una guia sobre la sintaxis ideal de este archivo se encuentra aqui
+# http://nvie.com/posts/better-package-management/
+#
+# 1. En particular no debe ponerse la salida tal cual de $ pip freeze debe 
+#    registrarse sola la dependencia raiz
+# 2. Debe indicarse la version exacta == no un rango de version
+# 3. Debe indicarse como comentario al final de cada dependencia e indentado 
+#    alineado, el paquete que origina dicha dependencia con un comentario al 
+#    final de la linea.  Esto puede obtenerse de los logs de lint:
+#    $ awk '/External dep/,/Raw/' build/lint/pylint.txt
+# 4. Agrupar las dependencias por la biblioteca que las requiere y separar los
+#    grupos por cambio de linea.
+# 5. Ordenar los grupos jerarquicamente (build, raiz, paquete)
+# 6. Al final dejar las dependencias que no se sabe para que se necesitan y que
+#    posiblemente seran eliminadas
+#
+# Especificaciones oficiales de este archivo pueden encontrarse en:
+#    https://pip.readthedocs.io/en/1.1/requirements.html
+# 
+
+invoke==0.13.0			# tasks.py
+pylint==1.6.4			# tasks.py
+flake8==2.5.5			# tasks.py
+autopep8==1.2.4			# tasks.py
+pdoc==0.3.2			# tasks.py
+
+PyYAML==3.11			# fluidasserts
+
+PyPDF2==1.26.0			# fluidasserts.pdf
+Flask==0.11.1			# fluidasserts.http
+requests==2.10.0		# fluidasserts.http
+requests-oauthlib==0.6.2	# fluidasserts.http
+
+pytest==2.9.2			# test
+pytest-cov==2.3.1		# test
+
+hacking==0.11.0			# Candidate to erase
