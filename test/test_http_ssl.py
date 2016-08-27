@@ -13,11 +13,11 @@ SSL se encuentra adecuadamente implementado.
 # none
 
 # local imports
-from fluidasserts import http_ssl 
+from fluidasserts import http_ssl
 
 
-def test_ssl_is_cert_cn_equal_to_site():
+def test_http_ssl_is_cert_cn_equal_to_site():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert ssl.is_cert_cn_equal_to_site('fluid.la')
+    assert http_ssl.is_cert_cn_equal_to_site('fluid.la')
 
 # Pendente implementar resto de metodos
