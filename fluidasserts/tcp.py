@@ -18,15 +18,23 @@ import socket
 # none
 
 
-def openport(ip, port):
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    result = sock.connect_ex((ip, port))
+def is_port_open(ip, port):
     status = "CLOSE"
+    result = True
+	try:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		result = sock.connect_ex((ip, port))
+	except Exception:
+		result = False
+		status = "CLOSE"
     if result == 0:
         status = "OPEN"
+        result = True
+    else:
+		result = False
+	sock.close()
     logging.info('Checking port, Details=%s, %s', ip + ":" + str(port), status)
-    sock.close()
-
+    return result
 
 def getbanner(ip, port):
     try:
