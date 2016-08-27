@@ -1,1 +1,1 @@
-../ftp/stop.sh
+../skel/stop.sh

@@ -20,7 +20,7 @@ from PyPDF2 import PdfFileReader
 
 def __has_attribute(filename, metaname):
     """Verifica si un atributo docinfo se encuentra en el PDF"""
-    input_pdf = PdfFileReader(open(filename, "rb"))
+    input_pdf = PdfFileReader(open(filename, 'rb'))
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:

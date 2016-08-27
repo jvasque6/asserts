@@ -17,10 +17,8 @@ Futuras funciones incluyen:
 
 # standard imports
 import logging
-
 # 3rd party imports
-from ftplib import error_perm
-from ftplib import FTP
+from ftplib import FTP, error_perm
 
 # local imports
 # None
@@ -43,10 +41,10 @@ def is_a_valid_user(ip, username, password, port=PORT):
         ftp.quit()
         result = True
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ":" + password, "OPEN")
+                     ip, username + ':' + password, 'OPEN')
     except error_perm:
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ":" + password, "CLOSE")
+                     ip, username + ':' + password, 'CLOSE')
         result = False
     return result
 

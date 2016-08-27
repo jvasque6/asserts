@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# Actualiza los hooks de precommit que evitan codigo basura.""" -*-
+# coding: utf-8 -*-
 
 """Makefile ala Python
 
@@ -43,6 +45,15 @@ def self(context):
     context.run('pip show invoke')
     log('Running $ whereis pyvenv-3.4')
     context.run('whereis {cmd}'.format(cmd=VENV_CMD))
+
+
+@task
+def precommit(context):
+    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)"""
+    log('Updating hooks')
+    log('Running $ pre-commit run --verbose --all-files')
+    context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
+                pty=True)
 
 
 @task
@@ -173,6 +184,7 @@ def lint(context):
     if not os.path.exists(lint_dir):
         os.makedirs(lint_dir)
 
+    # linting with flake8
     log('Linting with flake8')
     context.run('{pth}/flake8 --statistics \
                                --count \
@@ -180,14 +192,23 @@ def lint(context):
                                fluidasserts test *.py'.format(pth=PATH_DIR,
                                                               dir=lint_dir),
                 warn=True)
-
     context.run('cat {dir}/flake8.txt'.format(dir=lint_dir))
+
+    # linting with pylint
     log('Linting with pylint')
     context.run('{pth}/pylint fluidasserts test *.py \
                               > {dir}/pylint.txt'.format(pth=PATH_DIR,
                                                          dir=lint_dir),
                 warn=True)
     context.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
+
+    # linting with pydocstyle
+    log('Linting with pydocstyle')
+    context.run('{pth}/pydocstyle --count -e -v -d fluidasserts test *.py \
+                              > {dir}/pydocstyle.txt'.format(pth=PATH_DIR,
+                                                             dir=lint_dir),
+                warn=True)
+    context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
 
 
 @task(deps)

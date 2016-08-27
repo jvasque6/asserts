@@ -1,1 +1,1 @@
-../ftp/build.sh
+../skel/build.sh

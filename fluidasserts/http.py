@@ -39,16 +39,16 @@ regex = {
 def __get_request(url, auth=None):
     try:
         headers = {
-            "user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)"}
+            'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
         return requests.get(url, verify=False, auth=auth, headers=headers)
     except ConnectionError:
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 
-def __post_request(url, data=""):
+def __post_request(url, data=''):
     try:
         headers = {
-            "user-agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)"}
+            'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
         return requests.post(url, verify=False, data=data,
                              headers=headers, allow_redirects=False)
     except ConnectionError:
@@ -59,26 +59,26 @@ def formauth_by_statuscode(url, code, **formargs):
     http_req = __post_request(url, formargs)
     if http_req.status_code == code:
         logging.info('POST Authentication %s, Details=%s, %s',
-                     url, "Success with " + str(formargs), "OPEN")
+                     url, 'Success with ' + str(formargs), 'OPEN')
     else:
         logging.info('POST Authentication %s, Details=%s, %s',
                      url,
-                     "Error code (" + str(http_req.status_code) +
-                     ") " + str(formargs),
-                     "CLOSE")
+                     'Error code (' + str(http_req.status_code) +
+                     ') ' + str(formargs),
+                     'CLOSE')
 
 
 def formauth_by_response(url, text, **formargs):
     http_req = __post_request(url, formargs)
     if http_req.text.find(text) >= 0:
         logging.info('POST Authentication %s, Details=%s, %s',
-                     url, "Success with " + str(formargs), "OPEN")
+                     url, 'Success with ' + str(formargs), 'OPEN')
     else:
         logging.info(
             'POST Authentication %s, Details=%s, %s',
             url,
-            "Error text (" + http_req.text + ") " + str(formargs),
-            "CLOSE")
+            'Error text (' + http_req.text + ') ' + str(formargs),
+            'CLOSE')
 
 
 def basic_auth(url, user, passw):
@@ -88,14 +88,14 @@ def basic_auth(url, user, passw):
             logging.info(
                 'HTTPBasicAuth %s, Details=%s, %s',
                 url,
-                "Success with [ " + user + " : " + passw + " ]",
-                "OPEN")
+                'Success with [ ' + user + ' : ' + passw + ' ]',
+                'OPEN')
         else:
             logging.info('HTTPBasicAuth %s, Details=%s, %s', url,
-                         "Fail with [ " + user + " : " + passw + " ]", "CLOSE")
+                         'Fail with [ ' + user + ' : ' + passw + ' ]', 'CLOSE')
     else:
         logging.info('HTTPBasicAuth %s, Details=%s, %s', url,
-                     "HTTPBasicAuth Not present", "CLOSE")
+                     'HTTPBasicAuth Not present', 'CLOSE')
 
 
 def oauth_auth(url, user, passw):
@@ -105,14 +105,14 @@ def oauth_auth(url, user, passw):
             logging.info(
                 'HTTPOAuth %s, Details=%s, %s',
                 url,
-                "Success with [ " + user + " : " + passw + " ]",
-                "OPEN")
+                'Success with [ ' + user + ' : ' + passw + ' ]',
+                'OPEN')
         else:
             logging.info('HTTPOAuth %s, Details=%s, %s', url,
-                         "Fail with [ " + user + " : " + passw + " ]", "CLOSE")
+                         'Fail with [ ' + user + ' : ' + passw + ' ]', 'CLOSE')
     else:
         logging.info('HTTPOAuth %s, Details=%s, %s', url,
-                     "HTTPOAuth Not present", "CLOSE")
+                     'HTTPOAuth Not present', 'CLOSE')
 
 
 def has_header_x_asp_net_version(url):
@@ -125,7 +125,7 @@ def has_header_x_asp_net_version(url):
                      'x-aspnet-version', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-aspnet-version', url, "Not Present", 'OPEN')
+                     'x-aspnet-version', url, 'Not Present', 'OPEN')
 
 
 def has_header_access_control_allow_origin(url):
@@ -142,7 +142,7 @@ def has_header_access_control_allow_origin(url):
                      'access-control-allow-origin', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'access-control-allow-origin', url, "Not Present", 'OPEN')
+                     'access-control-allow-origin', url, 'Not Present', 'OPEN')
     return result
 
 
@@ -158,7 +158,7 @@ def has_header_cache_control(url):
                      'cache-control', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'cache-control', url, "Not Present", 'OPEN')
+                     'cache-control', url, 'Not Present', 'OPEN')
     return result
 
 
@@ -174,7 +174,7 @@ def has_header_content_security_policy(url):
                      'content-security-policy', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'content-security-policy', url, "Not Present", 'OPEN')
+                     'content-security-policy', url, 'Not Present', 'OPEN')
 
 
 def has_header_content_type(url):
@@ -187,7 +187,7 @@ def has_header_content_type(url):
                      'content-type', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'content-type', url, "Not Present", 'OPEN')
+                     'content-type', url, 'Not Present', 'OPEN')
 
 
 def has_header_expires(url):
@@ -200,7 +200,7 @@ def has_header_expires(url):
                      'expires', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'expires', url, "Not Present", 'OPEN')
+                     'expires', url, 'Not Present', 'OPEN')
 
 
 def has_header_pragma(url):
@@ -213,7 +213,7 @@ def has_header_pragma(url):
                      'pragma', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'pragma', url, "Not Present", 'OPEN')
+                     'pragma', url, 'Not Present', 'OPEN')
 
 
 def has_header_server(url):
@@ -226,7 +226,7 @@ def has_header_server(url):
                      'server', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'server', url, "Not Present", 'OPEN')
+                     'server', url, 'Not Present', 'OPEN')
 
 
 def has_header_x_powered_by(url):
@@ -237,7 +237,7 @@ def has_header_x_powered_by(url):
                      'server', url, value, 'OPEN')
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'server', url, "Not Present", 'CLOSE')
+                     'server', url, 'Not Present', 'CLOSE')
 
 
 def has_header_x_content_type_options(url):
@@ -252,7 +252,7 @@ def has_header_x_content_type_options(url):
                      'x-content-type-options', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-content-type-options', url, "Not Present", 'OPEN')
+                     'x-content-type-options', url, 'Not Present', 'OPEN')
 
 
 def has_header_x_frame_options(url):
@@ -265,7 +265,7 @@ def has_header_x_frame_options(url):
                      'x-frame-options', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-frame-options', url, "Not Present", 'OPEN')
+                     'x-frame-options', url, 'Not Present', 'OPEN')
 
 
 def has_header_x_permitted_cross_domain_policies(url):
@@ -283,7 +283,7 @@ def has_header_x_permitted_cross_domain_policies(url):
             '%s HTTP header %s, Details=%s, %s',
             'x-permitted-cross-domain-policies',
             url,
-            "Not Present",
+            'Not Present',
             'OPEN')
 
 
@@ -297,4 +297,4 @@ def has_header_x_xxs_protection(url):
                      'x-xss-protection', url, value, state)
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
-                     'x-xss-protection', url, "Not Present", 'OPEN')
+                     'x-xss-protection', url, 'Not Present', 'OPEN')
