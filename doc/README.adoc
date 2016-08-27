@@ -31,17 +31,10 @@ $ git clone https://(USERNAME)@bitbucket.org/fluidsignal/fluid-asserts.git
 
 $ cd fluid-asserts
 
-* Las tareas de la herramienta de construcción son:
+* Las tareas que pueden realizarse desde los scripts de construcción
+  se pueden listar con:
 
 $ invoke --list
-
-Para limpiar por completo el repositorio
-
-$ invoke clean
-
-* Para construir y ejecutar las pruebas se puede ejecutar directamente:
-
-$ invoke test
 
 * Para añadir nuevos modulos de soporte el formato es el siguiente:
 

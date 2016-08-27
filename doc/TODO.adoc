@@ -1,4 +1,10 @@
-
+* Incoportar en la suite de integracion las pruebas que hacen
+  funcionar docker y ansible
+* Solucionar los problemas de compilacion de YAML
+  en CircleCI no ocurren, pero en los ambientes normales si
+* Simplificar el workflow de Git solo a master??
+* Definir commandos para commit, pull request, etc en 
+  los archivos de construccion??
 * https://hub.docker.com/r/generik/ansible/ 
   Revisar la configuracio de las imagenes desde Ansible
 * Utilizar el API de ansible para hacer test de asserts

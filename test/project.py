@@ -11,7 +11,7 @@ pdf.has_creator(PDF_VULNERABLE)
 pdf.has_producer(PDF_HARDENED)
 pdf.has_producer(PDF_VULNERABLE)
 
-# FTP 
+# FTP
 FTP_HARDENED = '172.18.21.77'
 FTP_VULNERABLE = '172.18.21.66'
 ftp.is_admin_enabled(FTP_HARDENED, 'root1234')
