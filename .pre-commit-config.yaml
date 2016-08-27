@@ -40,10 +40,10 @@
 # $ sudo apt-get install cabal-install # package mananger de haskell
 # $ cabal install shellcheck  # descargar y compilar el linter de bash
 #
--   repo: git://github.com/detailyang/pre-commit-shell
-    sha: 1.0.0
-    hooks:
-    - id: shell-lint
+#-   repo: git://github.com/detailyang/pre-commit-shell
+#    sha: 1.0.0
+#    hooks:
+#    - id: shell-lint
 
 # saca error en la instalacion, ambiente virtual? o python3?
 #
