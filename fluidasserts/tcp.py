@@ -18,33 +18,39 @@ import socket
 # none
 
 
-def is_port_open(ip, port):
+def is_port_open(ipaddress, port):
+    """
+    Check if a given port on an IP address is open
+    """
     status = "CLOSE"
     result = True
-	try:
-		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		result = sock.connect_ex((ip, port))
-	except Exception:
-		result = False
-		status = "CLOSE"
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex((ipaddress, port))
+    except ConnectionRefusedError:
+        result = False
+        status = "CLOSE"
     if result == 0:
         status = "OPEN"
         result = True
     else:
-		result = False
-	sock.close()
-    logging.info('Checking port, Details=%s, %s', ip + ":" + str(port), status)
+        result = False
+    sock.close()
+    logging.info('Checking port, Details=%s, %s', ipaddress + ":" + str(port), status)
     return result
 
-def getbanner(ip, port):
+def getbanner(ipaddress, port):
+    """
+    Gets the banner of the service on a given port of an IP address
+    """
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((ip, port))
-#        result = sock.connect_ex((ip, port))
-        logging.info('Banner %s, Details=%s, %s', ip + ":" +
+        sock.connect((ipaddress, port))
+#        result = sock.connect_ex((ipaddress, port))
+        logging.info('Banner %s, Details=%s, %s', ipaddress + ":" +
                      str(port), sock.recv(2048), "OPEN")
     except ConnectionRefusedError:
         logging.info('Checking port, Details=%s, %s',
-                     ip + ":" + str(port), "CLOSE")
+                     ipaddress + ":" + str(port), "CLOSE")
     finally:
         sock.close()
