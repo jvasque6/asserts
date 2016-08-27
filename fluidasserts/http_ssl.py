@@ -19,7 +19,7 @@ PORT = 443
 
 def is_cert_cn_equal_to_site(site, port=PORT):
     """
-    Function to check wether cert cn is equal to site
+    Function to check whether cert cn is equal to site
     """
     result = True
     cert = str(ssl.get_server_certificate((site, port)))
