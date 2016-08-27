@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-# Actualiza los hooks de precommit que evitan codigo basura.""" -*-
-# coding: utf-8 -*-
 
-"""Makefile ala Python
+"""Makefile ala Python.
 
 Este modulo permite construir software en Python, en diferentes sistemas
 operativos y mantener solo una sintaxis y lenguaje de programación para
@@ -49,7 +47,7 @@ def self(context):
 
 @task
 def precommit(context):
-    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)"""
+    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)."""
     log('Updating hooks')
     log('Running $ pre-commit run --verbose --all-files')
     context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
@@ -109,7 +107,6 @@ def dist(context):
 @task
 def clean(context):
     """Borra todos los archivos intermedios generados."""
-
     log('Cleaning build directory')
     if os.path.exists(BUILD_DIR):
         shutil.rmtree(BUILD_DIR)
@@ -179,7 +176,6 @@ def test(context):
 @task(deps)
 def lint(context):
     """Realiza los analisis de estilo."""
-
     lint_dir = BUILD_DIR + '/lint'
     if not os.path.exists(lint_dir):
         os.makedirs(lint_dir)
@@ -197,16 +193,16 @@ def lint(context):
     # linting with pylint
     log('Linting with pylint')
     context.run('{pth}/pylint fluidasserts test *.py \
-                              > {dir}/pylint.txt'.format(pth=PATH_DIR,
-                                                         dir=lint_dir),
+                              > {dir}/pylint.txt 2>&1'.format(pth=PATH_DIR,
+                                                              dir=lint_dir),
                 warn=True)
     context.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
 
     # linting with pydocstyle
     log('Linting with pydocstyle')
-    context.run('{pth}/pydocstyle --count -e -v -d fluidasserts test *.py \
-                              > {dir}/pydocstyle.txt'.format(pth=PATH_DIR,
-                                                             dir=lint_dir),
+    context.run('{pth}/pydocstyle --count fluidasserts test *.py \
+                            > {dir}/pydocstyle.txt 2>&1'.format(pth=PATH_DIR,
+                                                                dir=lint_dir),
                 warn=True)
     context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
 

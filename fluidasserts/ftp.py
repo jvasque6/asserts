@@ -50,15 +50,15 @@ def is_a_valid_user(ip, username, password, port=PORT):
 
 
 def user_without_password(ip, username):
-    """Determina si el usuario no tiene clave"""
+    """Determina si el usuario no tiene clave."""
     return is_a_valid_user(ip, username, password=NULL_PASSWORD)
 
 
 def is_anonymous_enabled(ip):
-    """Determina si un servidor FTP tiene habilitado conexión anonima"""
+    """Determina si un servidor FTP tiene habilitado conexión anonima."""
     return is_a_valid_user(ip, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
 def is_admin_enabled(ip, password, username=ADMIN_USERNAME):
-    """Determina si un servidor FTP permite autenticar al administrador"""
+    """Determina si un servidor FTP permite autenticar al administrador."""
     return is_a_valid_user(ip, username, password)

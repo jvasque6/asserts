@@ -1,5 +1,9 @@
 * Incoportar en la suite de integracion las pruebas que hacen
   funcionar docker y ansible
+* Precmmoit hooks in server side
+  https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
+* Tasks que manejen el workflow de gits
+* Tasks que manehen el deployment
 * Las dependencias de desarrollo deberian ser otras a las
   dependencias de ejecucion, por tal motivo deben existir
   dos archivos de requirements, uno para desarrollo y otro
