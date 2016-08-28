@@ -27,6 +27,22 @@ $ sudo apt-get install python3.4-venv
 
 $ git clone https://(USERNAME)@bitbucket.org/fluidsignal/fluid-asserts.git
 
+* Configurar como se registraran los cambios en el repositorio.
+
+$ git config --global user.name "Faustino Asprilla"
+$ git config --global user.email fasprilla@fluid.la
+
+* Para verificar que los cambios estan registrados se realizaria:
+
+$ git config --list
+
+$ git config --list
+user.email=ralvarez@fluid.la
+user.name=Rafael Alvarez
+alias.ahead=log origin/master..HEAD --oneline
+push.default=matching
+...
+
 * Ingresar a la carpeta del codigo
 
 $ cd fluid-asserts

@@ -17,7 +17,7 @@ dependencies:
 
 test:
   pre:
-    - invoke precommit
+    - invoke pre_commit
     - invoke lint
   override:
     - invoke test

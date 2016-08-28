@@ -46,12 +46,32 @@ def self(context):
 
 
 @task
-def precommit(context):
+def pre_commit(context):
     """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)."""
-    log('Updating hooks')
-    log('Running $ pre-commit run --verbose --all-files')
+    log('Running $ pre-commit run --all-files')
     context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
                 pty=True)
+
+
+@task
+def re_commit(context):
+    """Actualiza un commit reciente con otro commit con lo pendiente."""
+    log('Running $ git commit --amend')
+    context.run('git commit --amend', pty=True)
+
+
+@task
+def not_staged(context):
+    """Cambios pendientes pasar al area de stage."""
+    log('Running $ git diff')
+    context.run('git diff', pty=True)
+
+
+@task
+def not_commited(context):
+    """Cambios pendientes de pasar de stage a commited"""
+    log('Running $ git diff --staged')
+    context.run('git diff --staged', pty=True)
 
 
 @task
@@ -77,6 +97,14 @@ def deps(context):
     log('Installing dependencies')
     context.run('{pth}/pip install -r requirements.txt \
                                    --no-compile'.format(pth=PATH_DIR))
+
+
+@task(deps)
+def pre_commit_install(context):
+    """Instalar los hooks de precommit en el repositorio local."""
+    log('Running $ pre-commit install')
+    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR),
+                pty=True)
 
 
 @task(venv)
