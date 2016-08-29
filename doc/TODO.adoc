@@ -1,21 +1,30 @@
 * Incoportar en la suite de integracion las pruebas que hacen
   funcionar docker y ansible
+* Precmmoit hooks in server side
+  https://git-scm.com/book/en/v2/Customizing-Git-An-Example-Git-Enforced-Policy
+* Tasks que manejen el workflow de gits
+* Tasks que manehen el deployment
+* Las dependencias de desarrollo deberian ser otras a las
+  dependencias de ejecucion, por tal motivo deben existir
+  dos archivos de requirements, uno para desarrollo y otro
+  para ejecucion: requirements-dev.txt?
 * Solucionar los problemas de compilacion de YAML
   en CircleCI no ocurren, pero en los ambientes normales si
 * Simplificar el workflow de Git solo a master??
-* Definir commandos para commit, pull request, etc en 
+* Definir commandos para commit, pull request, etc en
   los archivos de construccion??
-* https://hub.docker.com/r/generik/ansible/ 
+* https://hub.docker.com/r/generik/ansible/
   Revisar la configuracio de las imagenes desde Ansible
 * Utilizar el API de ansible para hacer test de asserts
   propios al sistema operativo
 * o en su efecto utilizar TestInfra
   http://testinfra.readthedocs.io/en/latest/
 * Revisar la documentación generada por Sphinx a Alabaster
-* Reducir los errores de pylint 
+* Reducir los errores de pylint
 * Precommit hooks
   https://pypi.python.org/pypi/git-pre-commit-hook
   http://githooks.com/
+  http://pre-commit.com/
 * Crear una imagen docker de FLUIDAsserts
 * Revisar build en CI de los pull-request
   https://circleci.com/docs/fork-pr-builds/
@@ -44,3 +53,6 @@
 * http://dl.acm.org/citation.cfm?id=2896929
   Automatic web security unit testing: XSS vulnerability detection
 * Referencias sobre Security Unit Testing:
+* Historico de cobertura con: https://coveralls.io/
+* Historico de calidad de codigo: https://codeclimate.com/
+* Integracion continua en Windows: https://www.appveyor.com/

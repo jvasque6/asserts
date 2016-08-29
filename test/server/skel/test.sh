@@ -10,13 +10,13 @@ sudo docker network create \
 sudo docker run \
 		--tty \
 		--interactive \
-		--name="$SERVICE" \
-		--hostname="$SERVICE" \
+		--volume=/tmp:/backup \
+		--name="$SERVICE"-testing \
+		--hostname="$SERVICE"-testing \
 		--net "$NET_NAME" \
-		--ip "$IP" \
+		--ip "$TEST_IP" \
 		--publish-all \
                 --entrypoint=/bin/sh \
-		--volume=/tmp:/host/tmp \
 		fluidsignal/"$SERVICE"
 
-sudo docker rm "$SERVICE"
+sudo docker rm "$SERVICE"-testing

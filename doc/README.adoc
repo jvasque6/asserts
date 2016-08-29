@@ -70,7 +70,7 @@ from fluidasserts import js
 js.is_obfuscated('Admin.js')
 
 Notese que el metodo solo debe preocuparse por el formato del archivo, no
-por su ubicación, pues de esto se encargaran los decoradores.  
+por su ubicación, pues de esto se encargaran los decoradores.
 
 Los decoradores son funciones que permiten separar la logica de la ubicación
 de la logica de verificación de un formato.  La idea inicial es la siguiente:
@@ -106,7 +106,7 @@ En este modelo basicamente tenemos las siguientes ramas:
 
    - master: codigo en producción y estable (en origin)
    - develop: codigo para integración de todo el desarrollo (en origin)
-   - feature-XXXX: codigo del desarrollador 
+   - feature-XXXX: codigo del desarrollador
 
 Para comenzar a desarrollar una nueva caracteristica, se debe comenzar desde la rama
 de develop

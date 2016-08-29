@@ -31,7 +31,7 @@ def mock(request):
     import time
 
     """Inicia el servidor HTTP en background"""
-    mock = Process(target=httpserver.start, name="MockHTTPServer")
+    mock = Process(target=httpserver.start, name='MockHTTPServer')
     mock.daemon = True
     mock.start()
 

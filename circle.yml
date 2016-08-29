@@ -11,11 +11,13 @@ dependencies:
   pre:
     - sudo pip install invoke
     - sudo apt-get install python3.4-venv
+#    - cabal install shellcheck
   override:
     - invoke deps
 
 test:
   pre:
+    - invoke precommit
     - invoke lint
   override:
     - invoke test

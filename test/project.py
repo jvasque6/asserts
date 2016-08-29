@@ -1,5 +1,5 @@
-from fluidasserts import pdf
-from fluidasserts import ftp
+# -*- coding: utf-8 -*-
+from fluidasserts import ftp, pdf
 
 # PDF
 PDF_HARDENED = 'test/data/non-vulnerable.pdf'
