@@ -29,7 +29,7 @@ def is_cert_cn_equal_to_site(site, port=PORT):
         0].value
     wildcard_site = '*.' + site
     if site != cert_cn and wildcard_site != cert_cn:
-        logging.info('%s CN equals to site, Details=%s, %s',
+        logging.info('%s CN not equals to site, Details=%s, %s',
                      cert_cn, site, 'OPEN')
         result = True
     else:
@@ -38,8 +38,12 @@ def is_cert_cn_equal_to_site(site, port=PORT):
         result = False
     return result
 
+
 def is_pfs_enabled(site, port=PORT):
-    packet, reply = "<packet>SOME_DATA</packet>", ""
+    """
+    Function to check whether PFS is enabled
+    """
+    packet = "<packet>SOME_DATA</packet>"
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(10)
@@ -60,8 +64,12 @@ def is_pfs_enabled(site, port=PORT):
     try:
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet)
+        logging.info('PFS enabled on site, Details=%s, %s',
+                     site, 'CLOSE')
         result = False
     except SSLError:
+        logging.info('PFS not enabled on site, Details=%s, %s',
+                     site, 'OPEN')
         result = True
     finally:
         wrapped_socket.close()
