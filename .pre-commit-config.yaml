@@ -1,6 +1,19 @@
 # invocar el autopep desde aqui o desde el wrapper precommit?
 # por el momento lo dejamos aqui! que funciona bien y arregla
 # mucho problema antes de que se ejecuten el resto de linters
+#
+# 1. Evitar el uso del parametro exclude: en el hook.
+#    Preferiblemente usar el tag del linter que dentro del
+#    archivo en question inhibe su analisis.  De esta forma
+#    queda documentado el pendiente donde corresponde sin
+#    excepciones en archivos globales de configuracion
+
+#-   repo: git://github.com/pre-commit/mirrors-pylint
+#    sha: v1.5.5
+#    hooks:
+#    -   id: pylint
+#        args: [--rcfile=conf/pylintrc]
+
 -   repo: git://github.com/pre-commit/mirrors-autopep8
     sha: v1.2.2
     hooks:
@@ -30,10 +43,6 @@
 #    -   id: detect-private-key  # generar la clave a mano dinamicamente
 #    -   id: detect-aws-credentials  # crear archivo con las claves
 
-#-   repo: git://github.com/pre-commit/mirrors-pylint
-#    sha: v1.5.5
-#    hooks:
-#    -   id: pylint
 
 # en ubuntu no estan los repositorios de shellcheck
 # entonces toca hacer lo siguiente:

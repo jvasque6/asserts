@@ -2,11 +2,11 @@
 
 if [ -z "${1+x}" ]; then
   echo "Archivo AsciiDoc no especificado";
-  echo "Uso: '$0' DOCUMENT.adoc [BUILDDIR]";
+  echo "Uso: '$0' DOCUMENT.asc [BUILDDIR]";
   exit -1
 else
   DOCUMENT=$(echo "$1" | cut -d"." -f1)
-  echo "El archivo AsciiDoc: $DOCUMENT.adoc";
+  echo "El archivo AsciiDoc: $DOCUMENT.asc";
 fi
 
 if [ -z "${2+x}" ]; then
@@ -33,29 +33,29 @@ install_gem()
 }
 
 # AsciiDoc Processor Workflow
-# adoc file -> asciidoc processor -> output
+# asc file -> asciidoc processor -> output
 asciidoc_gen()
 {
   local doc="$1";
   local backend="$2"
   local ext="$3"
-  asciidoc -o "$BUILDDIR"/"$doc"-ad-"$backend"."$ext" -b "$backend" "$doc".adoc
+  asciidoc -o "$BUILDDIR"/"$doc"-ad-"$backend"."$ext" -b "$backend" "$doc".asc
 }
 
 # AsciiDoc-DocBook Processor Workflow
-# adoc file -> asciidoc processor -> docbook -> docbook processor -> output
+# asc file -> asciidoc processor -> docbook -> docbook processor -> output
 a2x_gen()
 {
   local doc="$1"
   local backend="$2"
   local ext="$3"
   local opts="$4"
-  a2x "$opts" -L -f "$backend" "$doc".adoc
+  a2x "$opts" -L -f "$backend" "$doc".asc
   mv "$doc"."$backend" "$BUILDDIR"/"$doc"-a2x-"$backend"."$ext"
 }
 
 # ASCIIDOCTOR-PDF PROCESSOR
-# adoc file -> asciidoctor-pdf processor -> output
+# asc file -> asciidoctor-pdf processor -> output
 adrpdf_gen()
 {
   local doc="$1"
@@ -65,7 +65,7 @@ adrpdf_gen()
 	          -a pdf-stylesdir="$localdir"/styles \
                   -a pdf-style=fluid \
                   -o "$BUILDDIR"/"$doc"-adr-pdf.pdf \
-                  "$doc".adoc
+                  "$doc".asc
 }
 
 # crea directorio de construccion sino esta creado

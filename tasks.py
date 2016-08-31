@@ -46,11 +46,12 @@ def self(context):
 
 
 @task
-def pre_commit(context):
-    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)."""
-    log('Running $ pre-commit run --all-files')
-    context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
-                pty=True)
+def sync(context):
+    """Descarga los cambios ocurridos en el repositorio remoto central."""
+    log('Running $ git remote -v')
+    context.run('git remote -v', pty=True)
+    log('Running $ git fetch -v origin')
+    context.run('git fetch -v origin', pty=True)
 
 
 @task
@@ -61,17 +62,17 @@ def re_commit(context):
 
 
 @task
-def not_staged(context):
-    """Cambios pendientes pasar al area de stage."""
+def not_cached(context):
+    """Cambios pendientes pasar al area de cache (stage)."""
     log('Running $ git diff')
     context.run('git diff', pty=True)
 
 
 @task
 def not_commited(context):
-    """Cambios pendientes de pasar de stage a commited"""
-    log('Running $ git diff --staged')
-    context.run('git diff --staged', pty=True)
+    """Cambios pendientes de pasar de cache (stage) a commited"""
+    log('Running $ git diff --cached')
+    context.run('git diff --cached', pty=True)
 
 
 @task
@@ -107,6 +108,14 @@ def pre_commit_install(context):
                 pty=True)
 
 
+@task(pre_commit_install)
+def pre_commit(context):
+    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)."""
+    log('Running $ pre-commit run --all-files')
+    context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
+                pty=True)
+
+
 @task(venv)
 def freeze(context):
     """Envoltura del comando pip freeze para cuidar las dependencias."""
@@ -116,6 +125,7 @@ def freeze(context):
     log('WARNING: Always edit manually following rules from requirements.txt')
 
 
+# pylint: disable=unused-argument
 @task(deps)
 def build(context):
     """Tarea que dispara las otras tareas."""
@@ -168,6 +178,7 @@ def clean(context):
     context.run('py3clean .')
 
 
+# pylint: disable=unused-argument
 @task(build)
 def install(context):
     """Instala el proyecto en el ambiente virtual local."""
@@ -208,6 +219,14 @@ def lint(context):
     if not os.path.exists(lint_dir):
         os.makedirs(lint_dir)
 
+    # linting with pydocstyle
+    log('Linting with pydocstyle')
+    context.run('{pth}/pydocstyle --count fluidasserts test *.py \
+                            > {dir}/pydocstyle.txt 2>&1'.format(pth=PATH_DIR,
+                                                                dir=lint_dir),
+                warn=True)
+    context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
+
     # linting with flake8
     log('Linting with flake8')
     context.run('{pth}/flake8 --statistics \
@@ -220,19 +239,12 @@ def lint(context):
 
     # linting with pylint
     log('Linting with pylint')
-    context.run('{pth}/pylint fluidasserts test *.py \
+    context.run('{pth}/pylint --rcfile=conf/pylintrc \
+                              fluidasserts test *.py \
                               > {dir}/pylint.txt 2>&1'.format(pth=PATH_DIR,
                                                               dir=lint_dir),
                 warn=True)
     context.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
-
-    # linting with pydocstyle
-    log('Linting with pydocstyle')
-    context.run('{pth}/pydocstyle --count fluidasserts test *.py \
-                            > {dir}/pydocstyle.txt 2>&1'.format(pth=PATH_DIR,
-                                                                dir=lint_dir),
-                warn=True)
-    context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
 
 
 @task(deps)
