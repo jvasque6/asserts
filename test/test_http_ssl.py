@@ -20,8 +20,4 @@ def test_http_ssl_is_cert_cn_equal_to_site():
     """CN del cert concuerda con el nombre del sitio?"""
     assert http_ssl.is_cert_cn_equal_to_site('fluid.la')
 
-
-def test_http_ssl_is_pfs_enabled():
-    """Esta Perfect Forward Secrecy habilitado en el sitio?"""
-    assert http_ssl.is_cert_cn_equal_to_site('fluid.la')
 # Pendente implementar resto de metodos
