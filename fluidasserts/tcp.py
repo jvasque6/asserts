@@ -27,7 +27,7 @@ def is_port_open(ipaddress, port):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         result = sock.connect_ex((ipaddress, port))
-    except ConnectionRefusedError:
+    except socket.error:
         result = False
         status = 'CLOSE'
     if result == 0:
@@ -48,10 +48,9 @@ def getbanner(ipaddress, port):
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((ipaddress, port))
-#        result = sock.connect_ex((ipaddress, port))
         logging.info('Banner %s, Details=%s, %s', ipaddress + ':' +
                      str(port), sock.recv(2048), 'OPEN')
-    except ConnectionRefusedError:
+    except socket.error:
         logging.info('Checking port, Details=%s, %s',
                      ipaddress + ':' + str(port), 'CLOSE')
     finally:
