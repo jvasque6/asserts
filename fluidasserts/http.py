@@ -18,9 +18,9 @@ import requests
 from requests_oauthlib import OAuth1
 
 # local imports
-# none
 
-regex = {
+
+HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
     'cache-control': 'private, no-cache, no-store, max-age=0, no-transform',
     'content-security-policy': '^([a-zA-Z]+\\-[a-zA-Z]+|sandbox).*$',
@@ -37,6 +37,7 @@ regex = {
 
 
 def __get_request(url, auth=None):
+    """Realiza una petición GET HTTP."""
     try:
         headers = {
             'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
@@ -46,9 +47,11 @@ def __get_request(url, auth=None):
 
 
 def __post_request(url, data=''):
+    """Realiza una petición POST HTTP."""
     try:
         headers = {
             'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
+        # TODO(glopez): El user agent debe ser de FLUIDAsserts y parametrizable
         return requests.post(url, verify=False, data=data,
                              headers=headers, allow_redirects=False)
     except ConnectionError:
@@ -56,6 +59,7 @@ def __post_request(url, data=''):
 
 
 def formauth_by_statuscode(url, code, **formargs):
+    """XXXXXXXXXXXXXX."""
     http_req = __post_request(url, formargs)
     if http_req.status_code == code:
         logging.info('POST Authentication %s, Details=%s, %s',
@@ -69,6 +73,7 @@ def formauth_by_statuscode(url, code, **formargs):
 
 
 def formauth_by_response(url, text, **formargs):
+    """XXXXXXXXXXXXXX."""
     http_req = __post_request(url, formargs)
     if http_req.text.find(text) >= 0:
         logging.info('POST Authentication %s, Details=%s, %s',
@@ -82,9 +87,10 @@ def formauth_by_response(url, text, **formargs):
 
 
 def basic_auth(url, user, passw):
-    r = __get_request(url, (user, passw))
+    """XXXXXXXXXXXXXX."""
+    resp = __get_request(url, (user, passw))
     if __get_request(url).status_code == 401:
-        if r.status_code == 200:
+        if resp.status_code == 200:
             logging.info(
                 'HTTPBasicAuth %s, Details=%s, %s',
                 url,
@@ -99,9 +105,10 @@ def basic_auth(url, user, passw):
 
 
 def oauth_auth(url, user, passw):
-    r = __get_request(url, OAuth1(user, passw))
+    """XXXXXXXXXXXXXX."""
+    resp = __get_request(url, OAuth1(user, passw))
     if __get_request(url).status_code == 401:
-        if r.status_code == 200:
+        if resp.status_code == 200:
             logging.info(
                 'HTTPOAuth %s, Details=%s, %s',
                 url,
@@ -116,11 +123,12 @@ def oauth_auth(url, user, passw):
 
 
 def has_header_x_asp_net_version(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-aspnet-version' in headers_info:
         value = headers_info['x-aspnet-version']
         state = (lambda val: 'OPEN' if re.match(
-            regex['server'], value) is not None else 'CLOSE')(value)
+            HDR_RGX['server'], value) is not None else 'CLOSE')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-aspnet-version', url, value, state)
     else:
@@ -129,13 +137,14 @@ def has_header_x_asp_net_version(url):
 
 
 def has_header_access_control_allow_origin(url):
+    """XXXXXXXXXXXXXX."""
     result = True
     headers_info = __get_request(url).headers
     if 'access-control-allow-origin' in headers_info:
         value = headers_info['access-control-allow-origin']
         result = (
             lambda val: False if re.match(
-                regex['access-control-allow-origin'],
+                HDR_RGX['access-control-allow-origin'],
                 val) is not None else True)(value)
         state = 'OPEN' if result else 'CLOSE'
         logging.info('%s HTTP header %s, Details=%s, %s',
@@ -147,12 +156,13 @@ def has_header_access_control_allow_origin(url):
 
 
 def has_header_cache_control(url):
+    """XXXXXXXXXXXXXX."""
     result = True
     headers_info = __get_request(url).headers
     if 'cache-control' in headers_info:
         value = headers_info['cache-control']
         result = (lambda val: False if re.match(
-            regex['cache-control'], val) is not None else True)(value)
+            HDR_RGX['cache-control'], val) is not None else True)(value)
         state = 'OPEN' if result else 'CLOSE'
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'cache-control', url, value, state)
@@ -163,12 +173,13 @@ def has_header_cache_control(url):
 
 
 def has_header_content_security_policy(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'content-security-policy' in headers_info:
         value = headers_info['content-security-policy']
         state = (
             lambda val: 'CLOSE' if re.match(
-                regex['content-security-policy'],
+                HDR_RGX['content-security-policy'],
                 val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'content-security-policy', url, value, state)
@@ -178,11 +189,12 @@ def has_header_content_security_policy(url):
 
 
 def has_header_content_type(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'content-type' in headers_info:
         value = headers_info['content-type']
         state = (lambda val: 'CLOSE' if re.match(
-            regex['content-type'], val) is not None else 'OPEN')(value)
+            HDR_RGX['content-type'], val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'content-type', url, value, state)
     else:
@@ -191,11 +203,12 @@ def has_header_content_type(url):
 
 
 def has_header_expires(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'expires' in headers_info:
         value = headers_info['expires']
         state = (lambda val: 'CLOSE' if re.match(
-            regex['expires'], val) is not None else 'OPEN')(value)
+            HDR_RGX['expires'], val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'expires', url, value, state)
     else:
@@ -204,11 +217,12 @@ def has_header_expires(url):
 
 
 def has_header_pragma(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'pragma' in headers_info:
         value = headers_info['pragma']
         state = (lambda val: 'CLOSE' if re.match(
-            regex['pragma'], val) is not None else 'OPEN')(value)
+            HDR_RGX['pragma'], val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'pragma', url, value, state)
     else:
@@ -217,11 +231,12 @@ def has_header_pragma(url):
 
 
 def has_header_server(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'server' in headers_info:
         value = headers_info['server']
         state = (lambda val: 'OPEN' if re.match(
-            regex['server'], value) is not None else 'CLOSE')(value)
+            HDR_RGX['server'], value) is not None else 'CLOSE')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'server', url, value, state)
     else:
@@ -230,6 +245,7 @@ def has_header_server(url):
 
 
 def has_header_x_powered_by(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-powered-by' in headers_info:
         value = headers_info['x-powered-by']
@@ -241,12 +257,13 @@ def has_header_x_powered_by(url):
 
 
 def has_header_x_content_type_options(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-content-type-options' in headers_info:
         value = headers_info['x-content-type-options']
         state = (
             lambda val: 'CLOSE' if re.match(
-                regex['x-content-type-options'],
+                HDR_RGX['x-content-type-options'],
                 val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-content-type-options', url, value, state)
@@ -256,11 +273,12 @@ def has_header_x_content_type_options(url):
 
 
 def has_header_x_frame_options(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-frame-options' in headers_info:
         value = headers_info['x-frame-options']
         state = (lambda val: 'CLOSE' if re.match(
-            regex['x-frame-options'], val) is not None else 'OPEN')(value)
+            HDR_RGX['x-frame-options'], val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-frame-options', url, value, state)
     else:
@@ -269,12 +287,13 @@ def has_header_x_frame_options(url):
 
 
 def has_header_x_permitted_cross_domain_policies(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-permitted-cross-domain-policies' in headers_info:
         value = headers_info['x-permitted-cross-domain-policies']
         state = (
             lambda val: 'CLOSE' if re.match(
-                regex['x-permitted-cross-domain-policies'],
+                HDR_RGX['x-permitted-cross-domain-policies'],
                 val) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-permitted-cross-domain-policies', url, value, state)
@@ -288,11 +307,12 @@ def has_header_x_permitted_cross_domain_policies(url):
 
 
 def has_header_x_xxs_protection(url):
+    """XXXXXXXXXXXXXX."""
     headers_info = __get_request(url).headers
     if 'x-xss-protection' in headers_info:
         value = headers_info['x-xss-protection']
         state = (lambda val: 'CLOSE' if re.match(
-            regex['x-xss-protection'], value) is not None else 'OPEN')(value)
+            HDR_RGX['x-xss-protection'], value) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      'x-xss-protection', url, value, state)
     else:

@@ -10,9 +10,17 @@ Este modulo permite verificar vulnerabilidades propias de SSH como:
     * Servicio activado innecesariamente,
 """
 
+# standard imports
+# none
+
+# 3rd party imports
 import paramiko
+
+# local imports
+# none
 
 
 def login(host, username, password):
+    """Autenticación usando método de credenciales."""
     ssh = paramiko.SSHClient()
     ssh.connect(host, username=username, password=password)

@@ -8,11 +8,11 @@
 #    queda documentado el pendiente donde corresponde sin
 #    excepciones en archivos globales de configuracion
 
-#-   repo: git://github.com/pre-commit/mirrors-pylint
-#    sha: v1.5.5
-#    hooks:
-#    -   id: pylint
-#        args: [--rcfile=conf/pylintrc]
+-   repo: git://github.com/pre-commit/mirrors-pylint
+    sha: v1.5.5
+    hooks:
+    -   id: pylint
+        args: [--rcfile=conf/pylintrc]
 
 -   repo: git://github.com/pre-commit/mirrors-autopep8
     sha: v1.2.2

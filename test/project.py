@@ -1,4 +1,21 @@
 # -*- coding: utf-8 -*-
+
+"""Ejemplo de script de explotación integrado que usa todas las funciones.
+
+Este script posiblemente no sea ejecute satisfactoriamente pues depende
+que todos los Mocks esten activos de forma simultanea, cuestion que solo
+funciona desde los fixtures, pero busca servir como ejemplo acumulativo
+aislado de los scripts de prueba, para visualizar como se invoca cada
+función.
+"""
+
+# standar imports
+# none
+
+# 3rd party imports
+# none
+
+# local imports (solo fluidasserts)
 from fluidasserts import ftp, pdf
 
 # PDF
