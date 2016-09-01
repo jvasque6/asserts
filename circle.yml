@@ -11,20 +11,22 @@ dependencies:
   pre:
     - sudo pip install invoke
     - sudo apt-get install python3.4-venv
+#    - cabal install shellcheck
   override:
     - invoke deps
 
 test:
   pre:
+    - invoke pre_commit
     - invoke lint
   override:
     - invoke test
     - invoke dist
-    - invoke docs
+    - invoke doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
     - cp -r build/lint $CIRCLE_ARTIFACTS
-    - cp -r build/docs $CIRCLE_ARTIFACTS
+    - cp -r build/doc $CIRCLE_ARTIFACTS
     - cp -r dist $CIRCLE_ARTIFACTS

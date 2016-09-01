@@ -2,16 +2,24 @@
 
 """Modulo para verificaciones de Cookies HTTP.
 
-Este modulo deberia considerarse su anexion al verificador de http.py
-pues como tal las cookies son parte de dicho protocolo.
+Este modulo deberia considerarse su anexion al verificador de http.py pues como
+tal las cookies son parte de dicho protocolo.
 """
 
-from http.cookies import BaseCookie
 import logging
+# standard imports
+from http.cookies import BaseCookie
+
 import requests
 
 
+# 3rd party imports
+
+# local imports
+
+
 def __get_request(url):
+    """Realiza una petición GET HTTP ."""
     try:
         return requests.get(url)
     except ConnectionError:
@@ -19,28 +27,30 @@ def __get_request(url):
 
 
 def has_http_only(url, cookie_name):
+    """Verifica si la cookie tiene el atributo httponly."""
     http_req = __get_request(url)
-    cookielist = BaseCookie(http_req.headers["set-cookie"])
+    cookielist = BaseCookie(http_req.headers['set-cookie'])
     if cookie_name in cookielist:
-        result = "OPEN"
-        if cookielist[cookie_name]["httponly"]:
-            result = "CLOSE"
+        result = 'OPEN'
+        if cookielist[cookie_name]['httponly']:
+            result = 'CLOSE'
         logging.info('%s HTTP cookie %s, Details=%s, %s',
                      cookie_name, url, cookielist[cookie_name], result)
     else:
         logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, "Not Present", 'OPEN')
+                     cookie_name, url, 'Not Present', 'OPEN')
 
 
 def has_secure(url, cookie_name):
+    """Verifica si la cookie tiene el atributo secure."""
     http_req = __get_request(url)
-    cookielist = BaseCookie(http_req.headers["set-cookie"])
+    cookielist = BaseCookie(http_req.headers['set-cookie'])
     if cookie_name in cookielist:
-        result = "OPEN"
-        if cookielist[cookie_name]["secure"]:
-            result = "CLOSE"
+        result = 'OPEN'
+        if cookielist[cookie_name]['secure']:
+            result = 'CLOSE'
         logging.info('%s HTTP cookie %s, Details=%s, %s',
                      cookie_name, url, cookielist[cookie_name], result)
     else:
         logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, "Not Present", 'OPEN')
+                     cookie_name, url, 'Not Present', 'OPEN')

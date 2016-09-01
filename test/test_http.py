@@ -4,10 +4,6 @@
 
 Este modulo contiene las funciones necesarias para probar si el modulo de
 HTTP se encuentra adecuadamente implementado.
-
-Adicionalmente es desde este modulo que se realiza el encendido y apagado
-del servicio MOCK que simula varios de los problemas y las correcciones
-propias de HTTP.
 """
 
 # standard imports
@@ -19,55 +15,35 @@ import pytest
 # local imports
 from fluidasserts import http
 
-
 BASE_URL = 'http://localhost:5000/http/headers'
 
-
-@pytest.fixture(scope='module')
-def mock(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba"""
-    from multiprocessing import Process
-    from test.mock import httpserver
-    import time
-
-    """Inicia el servidor HTTP en background"""
-    mock = Process(target=httpserver.start, name="MockHTTPServer")
-    mock.daemon = True
-    mock.start()
-
-    """Espera unos instantes a que inicie el servidor antes de empezar a
-    a recibir conexiones
-    """
-    time.sleep(0.1)
-
-    """Este metodo detiene el servidor HTTP cuando los tests han finalizado"""
-    def teardown():
-        mock.terminate()
-        request.addfinalizer(teardown)
+# mock_http definido en conftest.py
 
 
-def test_access_control_allow_origin_open(mock):
+@pytest.mark.usefixtures('mock_http')
+def test_access_control_allow_origin_open():
     """Header Access-Control-Allow-Origin no establecido?"""
     assert http.has_header_access_control_allow_origin(
         '%s/access_control_allow_origin/fail' % (BASE_URL))
 
 
-def test_access_control_allow_origin_close(mock):
+def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?"""
     assert not http.has_header_access_control_allow_origin(
         '%s/access_control_allow_origin/ok' % (BASE_URL))
 
 
-def test_cache_control_open(mock):
+def test_cache_control_open():
     """Header Cache-Control no establecido?"""
     assert http.has_header_cache_control(
         '%s/cache_control/fail' % (BASE_URL))
 
 
-def test_cache_control_close(mock):
+def test_cache_control_close():
     """Header Cache-Control establecido?"""
     assert not http.has_header_cache_control(
         '%s/cache_control/ok' % (BASE_URL))
+
 
 #
 # TODO(glopez) Functions in HTTP library

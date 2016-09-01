@@ -1,0 +1,1 @@
+../skel/test.sh

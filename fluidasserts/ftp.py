@@ -4,41 +4,60 @@
 
 Este modulo permite verificar vulnerabilidades propias de FTP como:
 
-    * Transporte de información de forma plana,
-    * Conexión al servicio de forma anonima.
-    * Servicio FTP activado
+    * is_a_valid_user: Usuario puede autenticarse,
+    * is_admin_enabled: Administrador puede autenticarse,
+    * is_anonymous_enabled: Conexión al servicio de forma anonima,
+    * user_without_password: Usuario sin clave puede autenticarse,
+
+Futuras funciones incluyen:
+
+    * is_encrypted: Transporte de información de forma plana,
+    * has_advisory: Tiene advisory de conexion ante login,
 """
 
 # standard imports
 import logging
-
 # 3rd party imports
-from ftplib import error_perm
-from ftplib import FTP_TLS
+from ftplib import FTP, error_perm
 
 # local imports
-from fluidasserts import tcp
 
 
-def __auth(ip, port, username, password):
+PORT = 21
+NULL_PASSWORD = ''
+ADMIN_USERNAME = 'root'
+ANONYMOUS_USERNAME = 'anonymous'
+ANONYMOUS_PASSWORD = 'anonymous'
+
+
+def is_a_valid_user(ip_address, username, password, port=PORT):
+    """Determina via FTP si un usuario es valido o no."""
+    result = False
     try:
-        ftp = FTP_TLS.connect(ip, port)
+        ftp = FTP()
+        ftp.connect(ip_address, port)
         ftp.login(username, password)
         ftp.quit()
+        result = True
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ":" + password, "OPEN")
+                     ip_address, username + ':' + password, 'OPEN')
     except error_perm:
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ":" + password, "CLOSE")
+                     ip_address, username + ':' + password, 'CLOSE')
+        result = False
+    return result
 
 
-def login(ip, username, password):
-    __auth(ip, username, password)
+def user_without_password(ip_address, username):
+    """Determina si el usuario no tiene clave."""
+    return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
-def supports_anonymous_connection(ip, port=21):
-    __auth(ip, port, "anonymous", "anonymous")
+def is_anonymous_enabled(ip_address):
+    """Determina si un servidor FTP tiene habilitado conexión anonima."""
+    return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
-def is_open(ip, port=21):
-    tcp.openport(ip, port)
+def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
+    """Determina si un servidor FTP permite autenticar al administrador."""
+    return is_a_valid_user(ip_address, username, password)

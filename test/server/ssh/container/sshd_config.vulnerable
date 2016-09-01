@@ -1,0 +1,10 @@
+# Esta imagen no soporte v1, sin embargo se deja el 
+# archivo de configuracion como se veria en caso de
+# soportarla
+Protocol 1,2
+Port 22
+AllowAgentForwarding yes
+AllowTcpForwarding yes
+GatewayPorts yes
+X11Forwarding yes
+PermitRootLogin yes
