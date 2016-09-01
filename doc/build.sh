@@ -87,8 +87,8 @@ asciidoc_gen "$DOCUMENT" slidy html
 asciidoc_gen "$DOCUMENT" docbook xml
 a2x_gen "$DOCUMENT" pdf pdf "--fop"
 a2x_gen "$DOCUMENT" text txt "--lynx"
-a2x_gen "$DOCUMENT" ps ps
-a2x_gen "$DOCUMENT" dvi dvi
+#a2x_gen "$DOCUMENT" ps ps
+#a2x_gen "$DOCUMENT" dvi dvi
 adrpdf_gen "$DOCUMENT"
 
 echo "Documentación generada: " "$BUILDDIR"

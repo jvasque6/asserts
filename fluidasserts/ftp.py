@@ -21,7 +21,6 @@ import logging
 from ftplib import FTP, error_perm
 
 # local imports
-# None
 
 
 PORT = 21
@@ -31,34 +30,34 @@ ANONYMOUS_USERNAME = 'anonymous'
 ANONYMOUS_PASSWORD = 'anonymous'
 
 
-def is_a_valid_user(ip, username, password, port=PORT):
+def is_a_valid_user(ip_address, username, password, port=PORT):
     """Determina via FTP si un usuario es valido o no."""
     result = False
     try:
         ftp = FTP()
-        ftp.connect(ip, port)
+        ftp.connect(ip_address, port)
         ftp.login(username, password)
         ftp.quit()
         result = True
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ':' + password, 'OPEN')
+                     ip_address, username + ':' + password, 'OPEN')
     except error_perm:
         logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip, username + ':' + password, 'CLOSE')
+                     ip_address, username + ':' + password, 'CLOSE')
         result = False
     return result
 
 
-def user_without_password(ip, username):
+def user_without_password(ip_address, username):
     """Determina si el usuario no tiene clave."""
-    return is_a_valid_user(ip, username, password=NULL_PASSWORD)
+    return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
-def is_anonymous_enabled(ip):
+def is_anonymous_enabled(ip_address):
     """Determina si un servidor FTP tiene habilitado conexión anonima."""
-    return is_a_valid_user(ip, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
+    return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
-def is_admin_enabled(ip, password, username=ADMIN_USERNAME):
+def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
     """Determina si un servidor FTP permite autenticar al administrador."""
-    return is_a_valid_user(ip, username, password)
+    return is_a_valid_user(ip_address, username, password)

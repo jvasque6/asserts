@@ -27,7 +27,7 @@ PRINT_POS = '.'
 
 
 def log(text):
-    """Permite imprimir un prefijo en todos los logs de consutruccion."""
+    """Imprime en consola con prefijo y sufijo parametrizado."""
     print('{pre}{txt}{pos}'.format(pre=PRINT_PRE,
                                    txt=text,
                                    pos=PRINT_POS))
@@ -35,19 +35,33 @@ def log(text):
 
 @task
 def self(context):
-    """Facilita la generacion de datos de contexto cuando hay errores."""
+    """Genera información de contexto para reporte de errores."""
     log('Data of who am I to report bugs')
+    print('-----PEGAR AL FINAL DE UN REPORTE DE ERROR-----')
     log('Running $ lsb_release -a')
     context.run('lsb_release -a')
     log('Running $ pip show invoke')
     context.run('pip show invoke')
     log('Running $ whereis pyvenv-3.4')
     context.run('whereis {cmd}'.format(cmd=VENV_CMD))
+    log('Running $ git --version')
+    context.run('git --version')
+    log('Running $ git config -l')
+    context.run('git config -l')
+    log('Running $ git log -1')
+    context.run('git --no-pager log -1')
+    log('Running $ git status')
+    context.run('git status')
+    log('Running $ git remote -v')
+    context.run('git remote -v')
+    log('Running $ git remote show origin')
+    context.run('git remote show origin', pty=True)
+    print('-----FIN DE INFORMACION DE SISTEMA DONDE ESTA EL ERROR-----')
 
 
 @task
 def sync(context):
-    """Descarga los cambios ocurridos en el repositorio remoto central."""
+    """Descarga cambios ocurridos en repositorio remoto central."""
     log('Running $ git remote -v')
     context.run('git remote -v', pty=True)
     log('Running $ git fetch -v origin')
@@ -56,35 +70,35 @@ def sync(context):
 
 @task
 def re_commit(context):
-    """Actualiza un commit reciente con otro commit con lo pendiente."""
+    """Actualiza ultimo commit con otros cambios a incluir en el."""
     log('Running $ git commit --amend')
     context.run('git commit --amend', pty=True)
 
 
 @task
 def not_cached(context):
-    """Cambios pendientes pasar al area de cache (stage)."""
+    """Cambios locales, pendientes por pasar a cache (stage)."""
     log('Running $ git diff')
     context.run('git diff', pty=True)
 
 
 @task
 def not_commited(context):
-    """Cambios pendientes de pasar de cache (stage) a commited"""
+    """Cambios en cache, pendientes por pasar a commit (local)."""
     log('Running $ git diff --cached')
     context.run('git diff --cached', pty=True)
 
 
 @task
 def venv(context):
-    """Crea un ambiente virtual de python independiente del SO."""
+    """Crea un ambiente virtual de Python independiente del SO."""
     log('Creating virtual environment')
     context.run('{cmd} {dir}'.format(cmd=VENV_CMD, dir=VENV_DIR))
 
 
 @task(venv)
 def shell(context):
-    """Crea una shell nueva dentro del ambiente virtual."""
+    """Ejecuta una shell nueva dentro del ambiente virtual."""
     log('Creating new child shell inside virtual environment')
     log('To exit CTRL+D or exit')
     context.run('bash --init-file {dir}/bin/activate'.format(dir=VENV_DIR),
@@ -94,23 +108,28 @@ def shell(context):
 
 @task(venv)
 def deps(context):
-    """Instala todas las dependencias requeridas en el ambiente virtual."""
+    """Instala dependencias requeridas en el ambiente virtual."""
     log('Installing dependencies')
     context.run('{pth}/pip install -r requirements.txt \
                                    --no-compile'.format(pth=PATH_DIR))
 
 
 @task(deps)
-def pre_commit_install(context):
-    """Instalar los hooks de precommit en el repositorio local."""
+def setup_dev(context):
+    """Configura entorno de dllo: pre-commit, commit-msg, etc."""
     log('Running $ pre-commit install')
-    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR),
-                pty=True)
+    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR), pty=True)
+    log('Running $ git config --global commit-template ...')
+    context.run('git config --global commit.template \
+                                     conf/commit-msg.txt', pty=True)
+    log('Running $ git config --global credential.helper ...')
+    context.run('git config --global credential.helper \
+                                     \'cache --timeout 3600\'', pty=True)
 
 
-@task(pre_commit_install)
+@task(setup_dev)
 def pre_commit(context):
-    """Ejecuta todos los hooks de pre-commit (descarga todo lo necesario)."""
+    """Ejecuta hooks de pre-commit (linters)."""
     log('Running $ pre-commit run --all-files')
     context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
                 pty=True)
@@ -118,7 +137,7 @@ def pre_commit(context):
 
 @task(venv)
 def freeze(context):
-    """Envoltura del comando pip freeze para cuidar las dependencias."""
+    """Envoltura de pip freeze para cuidar las dependencias."""
     log('Obtaining current dependencies')
     context.run('{pth}/pip freeze'.format(pth=PATH_DIR))
     log('WARNING: DONT REDIRECT OUTPUT to requirements.txt')
@@ -128,7 +147,7 @@ def freeze(context):
 # pylint: disable=unused-argument
 @task(deps)
 def build(context):
-    """Tarea que dispara las otras tareas."""
+    """Costruye el software con sus dependencias."""
     log('Building from source')
 
 
@@ -198,8 +217,9 @@ def test(context):
 #    log('Starting mocks')
 #    context.run('{dir}/test/server/ftp/start.sh'.format(dir=os.getcwd()))
     log('Testing library')
-    context.run('{pth}/py.test --cov=fluidasserts \
-                               --cov-report term-missing \
+    context.run('{pth}/py.test --verbose \
+                               --cov=fluidasserts \
+                               --cov-report term \
                                --cov-report html:{dir}/coverage/html \
                                --cov-report xml:{dir}/coverage/results.xml \
                                --cov-report annotate:{dir}/coverage/annotate \
@@ -207,14 +227,15 @@ def test(context):
                                --resultlog={dir}/test/results.txt \
                                test/test_pdf.py \
                                test/test_http.py'.format(pth=PATH_DIR,
-                                                         dir=BUILD_DIR))
+                                                         dir=BUILD_DIR),
+                pty=True)
 #    log('Stopings mocks')
 #    context.run('{dir}/test/server/ftp/stop.sh'.format(dir=os.getcwd()))
 
 
 @task(deps)
 def lint(context):
-    """Realiza los analisis de estilo."""
+    """Realiza analisis de estilo sobre todo el software."""
     lint_dir = BUILD_DIR + '/lint'
     if not os.path.exists(lint_dir):
         os.makedirs(lint_dir)
@@ -224,7 +245,7 @@ def lint(context):
     context.run('{pth}/pydocstyle --count fluidasserts test *.py \
                             > {dir}/pydocstyle.txt 2>&1'.format(pth=PATH_DIR,
                                                                 dir=lint_dir),
-                warn=True)
+                warn=True, pty=True)
     context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
 
     # linting with flake8
@@ -234,7 +255,7 @@ def lint(context):
                                --output-file={dir}/flake8.txt \
                                fluidasserts test *.py'.format(pth=PATH_DIR,
                                                               dir=lint_dir),
-                warn=True)
+                warn=True, pty=True)
     context.run('cat {dir}/flake8.txt'.format(dir=lint_dir))
 
     # linting with pylint
@@ -243,7 +264,7 @@ def lint(context):
                               fluidasserts test *.py \
                               > {dir}/pylint.txt 2>&1'.format(pth=PATH_DIR,
                                                               dir=lint_dir),
-                warn=True)
+                warn=True, pty=True)
     context.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
 
 
