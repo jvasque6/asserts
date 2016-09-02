@@ -15,8 +15,10 @@ import shutil
 from invoke import task
 
 # local imports
+# none
 
 
+PYTHON_VER = '3.4'
 VENV_CMD = 'pyvenv-3.4'
 BUILD_DIR = 'build'
 VENV_DIR = BUILD_DIR + '/venv'
@@ -38,11 +40,13 @@ def self(context):
     """Genera información de contexto para reporte de errores."""
     log('Data of who am I to report bugs')
     print('-----PEGAR AL FINAL DE UN REPORTE DE ERROR-----')
+    log('Running $ date')
+    context.run('date')
     log('Running $ lsb_release -a')
     context.run('lsb_release -a')
     log('Running $ pip show invoke')
     context.run('pip show invoke')
-    log('Running $ whereis pyvenv-3.4')
+    log('Running $ whereis {cmd}'.format(cmd=VENV_CMD))
     context.run('whereis {cmd}'.format(cmd=VENV_CMD))
     log('Running $ git --version')
     context.run('git --version')
@@ -56,7 +60,7 @@ def self(context):
     context.run('git remote -v')
     log('Running $ git remote show origin')
     context.run('git remote show origin', pty=True)
-    print('-----FIN DE INFORMACION DE SISTEMA DONDE ESTA EL ERROR-----')
+    print('-----FIN DE INFORMACION DE SISTEMA DONDE ESTA EL ERROR---')
 
 
 @task
@@ -66,6 +70,12 @@ def sync(context):
     context.run('git remote -v', pty=True)
     log('Running $ git fetch -v origin')
     context.run('git fetch -v origin', pty=True)
+    log('Running $ git branch')
+    context.run('git branch', pty=True)
+    log('Running $ git diff --stat HEAD..develop')
+    context.run('git diff --stat HEAD..develop', pty=True)
+#    log('Running $ git checkout develop')
+#    context.run('git checkout develop', pty=True)
 
 
 @task
@@ -76,17 +86,17 @@ def re_commit(context):
 
 
 @task
-def not_cached(context):
-    """Cambios locales, pendientes por pasar a cache (stage)."""
+def not_staged(context):
+    """Cambios locales, pendientes por pasar a stage."""
     log('Running $ git diff')
     context.run('git diff', pty=True)
 
 
 @task
 def not_commited(context):
-    """Cambios en cache, pendientes por pasar a commit (local)."""
-    log('Running $ git diff --cached')
-    context.run('git diff --cached', pty=True)
+    """Cambios en stage, pendientes por pasar a commit (local)."""
+    log('Running $ git diff --staged')
+    context.run('git diff --staged', pty=True)
 
 
 @task
@@ -101,7 +111,8 @@ def shell(context):
     """Ejecuta una shell nueva dentro del ambiente virtual."""
     log('Creating new child shell inside virtual environment')
     log('To exit CTRL+D or exit')
-    context.run('bash --init-file {dir}/bin/activate'.format(dir=VENV_DIR),
+    context.run('bash \
+                 --init-file {dir}/bin/activate'.format(dir=VENV_DIR),
                 pty=True)
     log('Exiting virtual environment shell')
 
@@ -118,20 +129,24 @@ def deps(context):
 def setup_dev(context):
     """Configura entorno de dllo: pre-commit, commit-msg, etc."""
     log('Running $ pre-commit install')
-    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR), pty=True)
-    log('Running $ git config --global commit-template ...')
-    context.run('git config --global commit.template \
-                                     conf/commit-msg.txt', pty=True)
-    log('Running $ git config --global credential.helper ...')
-    context.run('git config --global credential.helper \
-                                     \'cache --timeout 3600\'', pty=True)
+    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR),
+                pty=True)
+    log('Running $ git config --local commit-template ...')
+    context.run('git config --local commit.template \
+                                     conf/commit-msg.txt',
+                pty=True)
+    log('Running $ git config --local credential.helper ...')
+    context.run('git config --local credential.helper \
+                                     \'cache --timeout 3600\'',
+                pty=True)
 
 
 @task(setup_dev)
 def pre_commit(context):
     """Ejecuta hooks de pre-commit (linters)."""
     log('Running $ pre-commit run --all-files')
-    context.run('{pth}/pre-commit run --all-files'.format(pth=PATH_DIR),
+    context.run('{pth}/pre-commit run \
+                                  --all-files'.format(pth=PATH_DIR),
                 pty=True)
 
 
@@ -140,8 +155,8 @@ def freeze(context):
     """Envoltura de pip freeze para cuidar las dependencias."""
     log('Obtaining current dependencies')
     context.run('{pth}/pip freeze'.format(pth=PATH_DIR))
-    log('WARNING: DONT REDIRECT OUTPUT to requirements.txt')
-    log('WARNING: Always edit manually following rules from requirements.txt')
+    log('CUIDADO: NO REDIRIJA LA SALIDA A requirements.txt')
+    log('CUIDADO: Siempre edite manualmente el archivo')
 
 
 # pylint: disable=unused-argument
@@ -155,10 +170,10 @@ def build(context):
 def dist(context):
     """Genera los instaladores."""
     log('Packaging')
-    context.run(
-        '{pth}/python setup.py sdist --formats=zip,bztar'.format(pth=PATH_DIR))
-    context.run(
-        '{pth}/python setup.py bdist --formats=zip,bztar'.format(pth=PATH_DIR))
+    context.run('{pth}/python setup.py sdist \
+                       --formats=zip,bztar'.format(pth=PATH_DIR))
+    context.run('{pth}/python setup.py bdist \
+                       --formats=zip,bztar'.format(pth=PATH_DIR))
 
 
 @task
@@ -202,15 +217,15 @@ def clean(context):
 def install(context):
     """Instala el proyecto en el ambiente virtual local."""
     log('Installing FLUIDAsserts in BUILD_DIR by symlink')
-    current_dir = os.getcwd()
-    destination_dir = '{dir}/lib/python3.4/site-packages/fluidasserts'.format(
-        dir=VENV_DIR)
-    if not os.path.exists(destination_dir):
-        os.symlink('%s/fluidasserts' % (current_dir), destination_dir)
+    currd = os.getcwd()
+    destd = '{dir}/lib/python{ver}/site-packages/fluidasserts'.format(
+        dir=VENV_DIR, ver=PYTHON_VER)
+    if not os.path.exists(destd):
+        os.symlink('%s/fluidasserts' % (currd), destd)
 
 
-# TODO(ralvarez): Aun no invoca FTP pues circle.yml le falta llamar docker
-# TODO(ralvarez): Hacer task parametrizable para ejecutar solo una suite
+# TODO(ralvarez): Aun no invoca FTP pues circle.yml le falta docker
+# TODO(ralvarez): Hacer task parametrizable para ejecutar solo suite
 @task(install)
 def test(context):
     """Ejecuta las pruebas de unidad que verifican el software."""
