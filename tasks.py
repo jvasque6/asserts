@@ -263,14 +263,13 @@ def lint(context):
                 warn=True, pty=True)
     context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
 
-    # linting with flake8
+    # linting with flake8 (config in setup.cfg - flake8 section)
     log('Linting with flake8')
-    context.run('{pth}/flake8 --statistics \
-                               --count \
-                               --output-file={dir}/flake8.txt \
-                               fluidasserts test *.py'.format(pth=PATH_DIR,
-                                                              dir=lint_dir),
+    context.run('{pth}/flake8 --output-file={dir}/flake8.txt \
+                              fluidasserts/ test/ *.py'.format(pth=PATH_DIR,
+                                                               dir=lint_dir),
                 warn=True, pty=True)
+    log('Running: $ cat ../flake8.txt')
     context.run('cat {dir}/flake8.txt'.format(dir=lint_dir))
 
     # linting with pylint

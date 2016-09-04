@@ -30,10 +30,9 @@ invoke==0.13.0			# tasks.py make ala python
 pdoc==0.3.2			# tasks.py para generar documentacion
 pre-commit==0.8.2		# tasks.py para linting antes de commit
 pylint==1.6.4			# tasks.py (obsoleto? importado en pre-commit)
-flake8==2.5.5			# tasks.py (obsoleto? importado en pre-commit)
+hacking==0.11.0			# tasks.py (este trae los otros linters)
 autopep8==1.2.4			# tasks.py (obsoleto? importado en pre-commit)
 pydocstyle==1.0.0		# tasks.py (aun no funciona desde precommit)
-
 pytest==2.9.2			# test
 pytest-cov==2.3.1		# test
 
@@ -49,5 +48,3 @@ requests==2.10.0		# fluidasserts.http
 requests-oauthlib==0.6.2	# fluidasserts.http
 cryptography==1.4		# fluidasserts.http_ssl
 paramiko==2.0.2			# fluidasserts.ssh
-
-hacking==0.11.0			# Candidate to erase
