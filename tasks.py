@@ -229,8 +229,9 @@ def install(context):
 @task(install)
 def test(context):
     """Ejecuta las pruebas de unidad que verifican el software."""
-#    log('Starting mocks')
-#    context.run('{dir}/test/server/ftp/start.sh'.format(dir=os.getcwd()))
+    log('Starting mocks')
+    context.run('{dir}/test/server/skel/start.sh \
+                 {dir}/test/server/ftp/conf.sh'.format(dir=os.getcwd()))
     log('Testing library')
     context.run('{pth}/py.test --verbose \
                                --cov=fluidasserts \
@@ -240,12 +241,14 @@ def test(context):
                                --cov-report annotate:{dir}/coverage/annotate \
                                --junitxml={dir}/test/results.xml \
                                --resultlog={dir}/test/results.txt \
+                               test/test_ftp.py \
                                test/test_pdf.py \
                                test/test_http.py'.format(pth=PATH_DIR,
                                                          dir=BUILD_DIR),
                 pty=True)
-#    log('Stopings mocks')
-#    context.run('{dir}/test/server/ftp/stop.sh'.format(dir=os.getcwd()))
+    log('Stopings mocks')
+    context.run('{dir}/test/server/skel/stop.sh \
+                 {dir}/test/server/ftp/conf.sh'.format(dir=os.getcwd()))
 
 
 @task(deps)
