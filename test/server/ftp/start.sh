@@ -1,1 +1,0 @@
-../skel/start.sh
