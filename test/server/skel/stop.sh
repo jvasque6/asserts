@@ -20,7 +20,5 @@ docker kill "$SERVICE"-hardened
 docker rm "$SERVICE"-hardened
 docker ps
 
-docker network inspect fluidasserts
-docker network ls
 docker network rm fluidasserts
 docker network ls
