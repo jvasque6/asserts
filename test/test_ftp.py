@@ -20,8 +20,8 @@ VSFTP
 # local imports
 from fluidasserts import ftp
 
-IP_HARDENED = '172.18.21.77'
-IP_VULNERABLE = '172.18.21.66'
+IP_HARDENED = '10.82.21.77'
+IP_VULNERABLE = '10.82.21.66'
 
 ADMIN_PASSWORD = 'root123'
 NONPASS_USERNAME = 'dario'

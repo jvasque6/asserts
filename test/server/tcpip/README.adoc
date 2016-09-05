@@ -1,5 +1,0 @@
-
-Este sera un servidor base con puertos
-   TCP
-   UDP
-   TCPWrappers

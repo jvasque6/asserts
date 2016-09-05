@@ -3,7 +3,11 @@
 #
 
 machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   timezone: America/Bogota
+  services:
+    - docker
   python:
     version: 3.4.4
 
@@ -13,6 +17,10 @@ dependencies:
     - sudo apt-get install python3.4-venv
 #    - cabal install shellcheck
   override:
+#    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+    - docker info
+    - docker --version
+    - test/server/skel/build.sh test/server/ftp/conf.sh
     - invoke deps
 
 test:

@@ -78,9 +78,10 @@ install_package asciidoctor
 install_package lynx
 install_package texlive-lang-spanish
 install_gem asciidoctor-pdf
+install_gem pygments.rb
 
 # genera documentacion con diferentes backends y en diversos formatos
-asciidoc_gen "$DOCUMENT" html4 html
+#asciidoc_gen "$DOCUMENT" html4 html # demasiados warnings en highlighting
 asciidoc_gen "$DOCUMENT" html5 html
 asciidoc_gen "$DOCUMENT" xhtml11 html
 asciidoc_gen "$DOCUMENT" slidy html

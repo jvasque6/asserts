@@ -8,11 +8,11 @@
 #    queda documentado el pendiente donde corresponde sin
 #    excepciones en archivos globales de configuracion
 
--   repo: git://github.com/pre-commit/mirrors-pylint
-    sha: v1.5.5
+-   repo: https://github.com/pre-commit/pre-commit.git
+    sha: 8dba3281d5051060755459dcf88e28fc26c27526
     hooks:
-    -   id: pylint
-        args: [--rcfile=conf/pylintrc]
+    -   id: validate_config
+    -   id: validate_manifest
 
 -   repo: git://github.com/pre-commit/mirrors-autopep8
     sha: v1.2.2
@@ -43,6 +43,11 @@
 #    -   id: detect-private-key  # generar la clave a mano dinamicamente
 #    -   id: detect-aws-credentials  # crear archivo con las claves
 
+-   repo: git://github.com/pre-commit/mirrors-pylint
+    sha: v1.5.5
+    hooks:
+    -   id: pylint
+        args: [--rcfile=conf/pylintrc]
 
 # en ubuntu no estan los repositorios de shellcheck
 # entonces toca hacer lo siguiente:
@@ -57,6 +62,6 @@
 # saca error en la instalacion, ambiente virtual? o python3?
 #
 #-   repo: git://github.com/FalconSocial/pre-commit-mirrors-pep257
-#    sha: v0.3.1
+#    sha: v0.3.2
 #    hooks:
 #    -   id: pep257
