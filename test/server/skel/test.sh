@@ -23,8 +23,8 @@ sudo docker run \
 		--volume=/tmp:/backup \
 		--name="$SERVICE"-testing \
 		--hostname="$SERVICE"-testing \
-		--net "$NET_NAME" \
-		--ip "$TEST_IP" \
+		--net="$NET_NAME" \
+		--ip="$TEST_IP" \
 		--publish-all \
                 --entrypoint=/bin/sh \
 		fluidsignal/"$SERVICE"

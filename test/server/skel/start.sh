@@ -23,8 +23,8 @@ docker run \
 		--hostname="$SERVICE"-vulnerable \
 		--env \
 			FLAVOR=vulnerable \
-		--net "$NET_NAME" \
-		--ip "$VULNERABLE_IP" \
+		--net="$NET_NAME" \
+		--ip="$VULNERABLE_IP" \
 		--publish-all \
 		fluidsignal/"$SERVICE"
 
@@ -34,7 +34,7 @@ docker run \
 		--hostname="$SERVICE"-hardened \
 		--env \
 			FLAVOR=hardened \
-		--net "$NET_NAME" \
-		--ip "$HARDENED_IP" \
+		--net="$NET_NAME" \
+		--ip="$HARDENED_IP" \
 		--publish-all \
 		fluidsignal/"$SERVICE"
