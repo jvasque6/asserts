@@ -13,11 +13,11 @@ else
   source "$1"
 fi
 
-sudo docker network create \
+docker network create \
 		--subnet="$NET_IP" \
 		"$NET_NAME"
 
-sudo docker run \
+docker run \
 		--detach \
 		--name="$SERVICE"-vulnerable \
 		--hostname="$SERVICE"-vulnerable \
@@ -28,7 +28,7 @@ sudo docker run \
 		--publish-all \
 		fluidsignal/"$SERVICE"
 
-sudo docker run \
+docker run \
 		--detach \
 		--name="$SERVICE"-hardened \
 		--hostname="$SERVICE"-hardened \

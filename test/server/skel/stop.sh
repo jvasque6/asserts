@@ -13,9 +13,9 @@ else
   source "$1"
 fi
 
-sudo docker ps
-sudo docker kill "$SERVICE"-vulnerable
-sudo docker rm "$SERVICE"-vulnerable
-sudo docker kill "$SERVICE"-hardened
-sudo docker rm "$SERVICE"-hardened
-sudo docker ps
+docker ps
+docker kill "$SERVICE"-vulnerable
+docker rm "$SERVICE"-vulnerable
+docker kill "$SERVICE"-hardened
+docker rm "$SERVICE"-hardened
+docker ps
