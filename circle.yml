@@ -4,6 +4,8 @@
 
 machine:
   timezone: America/Bogota
+  services:
+    - docker
   python:
     version: 3.4.4
 
@@ -13,6 +15,9 @@ dependencies:
     - sudo apt-get install python3.4-venv
 #    - cabal install shellcheck
   override:
+    - docker info
+    - test/server/skel/build.sh test/server/ftp/conf.sh
+#    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
     - invoke deps
 
 test:
