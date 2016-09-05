@@ -64,7 +64,14 @@ def self(context):
 
 
 @task
-def sync(context):
+def upload(context):
+    """Sube al repositorio central las ramas locales."""
+    log('Running $ git push origin')
+    context.run('git push origin', pty=True)
+
+
+@task
+def download(context):
     """Descarga cambios ocurridos en repositorio remoto central."""
     log('Running $ git remote -v')
     context.run('git remote -v', pty=True)
@@ -72,10 +79,8 @@ def sync(context):
     context.run('git fetch -v origin', pty=True)
     log('Running $ git branch')
     context.run('git branch', pty=True)
-    log('Running $ git diff --stat HEAD..develop')
-    context.run('git diff --stat HEAD..develop', pty=True)
-#    log('Running $ git checkout develop')
-#    context.run('git checkout develop', pty=True)
+    log('Running $ git diff --stat HEAD..master')
+    context.run('git diff --stat HEAD..master', pty=True)
 
 
 @task
