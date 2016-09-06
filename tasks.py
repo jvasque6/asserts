@@ -95,7 +95,7 @@ def not_staged(ctx):
 
 @task
 def not_commited(ctx):
-    """Cambios en stage, pendientes por pasar a commit (local)."""
+    """Pendiente por pasar a commit (local)."""
     log('Running $ git diff --staged')
     ctx.run('git diff --staged', pty=True)
 
