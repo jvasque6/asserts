@@ -236,7 +236,6 @@ def install(ctx):
         os.symlink('%s/fluidasserts' % (currd), destd)
 
 
-# TODO(ralvarez): Aun no invoca FTP pues circle.yml le falta docker
 # TODO(ralvarez): Hacer task parametrizable para ejecutar solo suite
 @task(install)
 def test(ctx):

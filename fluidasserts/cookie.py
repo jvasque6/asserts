@@ -13,7 +13,6 @@ from http.cookies import BaseCookie
 # 3rd party imports
 import requests
 
-
 # local imports
 # none
 
