@@ -12,185 +12,191 @@ import os
 import shutil
 
 # 3rd party imports
+from configobj import ConfigObj
 from invoke import task
+from validate import Validator
 
 # local imports
 # none
 
-
-PYTHON_VER = '3.4'
-VENV_CMD = 'pyvenv-3.4'
-BUILD_DIR = 'build'
-VENV_DIR = BUILD_DIR + '/venv'
-PATH_DIR = VENV_DIR + '/bin'
-DIST_DIR = 'dist'
-PRINT_PRE = '**** FLUIDAsserts: '
-PRINT_POS = '.'
+# pylint: disable=C0103
+cfg = ConfigObj('conf/conf.cfg', configspec='conf/conf.spec')
+cfg.validate(Validator())  # exit si la validación falla
 
 
 def log(text):
     """Imprime en consola con prefijo y sufijo parametrizado."""
-    print('{pre}{txt}{pos}'.format(pre=PRINT_PRE,
+    print('{pre}{txt}{pos}'.format(pre=cfg['develop']['print_pre'],
                                    txt=text,
-                                   pos=PRINT_POS))
+                                   pos=cfg['develop']['print_pos']))
 
 
 @task
-def self(context):
-    """Genera información de contexto para reporte de errores."""
+def self(ctx):
+    """Genera información para reporte de errores."""
     log('Data of who am I to report bugs')
     print('-----PEGAR AL FINAL DE UN REPORTE DE ERROR-----')
     log('Running $ date')
-    context.run('date')
+    ctx.run('date')
     log('Running $ lsb_release -a')
-    context.run('lsb_release -a')
+    ctx.run('lsb_release -a')
     log('Running $ pip show invoke')
-    context.run('pip show invoke')
-    log('Running $ whereis {cmd}'.format(cmd=VENV_CMD))
-    context.run('whereis {cmd}'.format(cmd=VENV_CMD))
+    ctx.run('pip show invoke')
+    log('Running $ whereis {c}'.format(c=cfg['develop']['venv_cmd']))
+    ctx.run('whereis {c}'.format(c=cfg['develop']['venv_cmd']))
     log('Running $ git --version')
-    context.run('git --version')
+    ctx.run('git --version')
     log('Running $ git config -l')
-    context.run('git config -l')
+    ctx.run('git config -l')
     log('Running $ git log -1')
-    context.run('git --no-pager log -1')
+    ctx.run('git --no-pager log -1')
     log('Running $ git status')
-    context.run('git status')
+    ctx.run('git status')
     log('Running $ git remote -v')
-    context.run('git remote -v')
+    ctx.run('git remote -v')
     log('Running $ git remote show origin')
-    context.run('git remote show origin', pty=True)
+    ctx.run('git remote show origin', pty=True)
     print('-----FIN DE INFORMACION DE SISTEMA DONDE ESTA EL ERROR---')
 
 
 @task
-def upload(context):
+def upload(ctx):
     """Sube al repositorio central las ramas locales."""
     log('Running $ git push origin')
-    context.run('git push origin', pty=True)
+    ctx.run('git push origin', pty=True)
 
 
 @task
-def download(context):
+def download(ctx):
     """Descarga cambios ocurridos en repositorio remoto central."""
     log('Running $ git remote -v')
-    context.run('git remote -v', pty=True)
+    ctx.run('git remote -v', pty=True)
     log('Running $ git fetch -v origin')
-    context.run('git fetch -v origin', pty=True)
+    ctx.run('git fetch -v origin', pty=True)
     log('Running $ git branch')
-    context.run('git branch', pty=True)
+    ctx.run('git branch', pty=True)
     log('Running $ git diff --stat HEAD..master')
-    context.run('git diff --stat HEAD..master', pty=True)
+    ctx.run('git diff --stat HEAD..master', pty=True)
 
 
 @task
-def re_commit(context):
+def re_commit(ctx):
     """Actualiza ultimo commit con otros cambios a incluir en el."""
     log('Running $ git commit --amend')
-    context.run('git commit --amend', pty=True)
+    ctx.run('git commit --amend', pty=True)
 
 
 @task
-def not_staged(context):
-    """Cambios locales, pendientes por pasar a stage."""
+def not_staged(ctx):
+    """Pendiente por pasar a stage."""
     log('Running $ git diff')
-    context.run('git diff', pty=True)
+    ctx.run('git diff', pty=True)
 
 
 @task
-def not_commited(context):
-    """Cambios en stage, pendientes por pasar a commit (local)."""
+def not_commited(ctx):
+    """Pendiente por pasar a commit (local)."""
     log('Running $ git diff --staged')
-    context.run('git diff --staged', pty=True)
+    ctx.run('git diff --staged', pty=True)
 
 
 @task
-def venv(context):
+def venv(ctx):
     """Crea un ambiente virtual de Python independiente del SO."""
     log('Creating virtual environment')
-    context.run('{cmd} {dir}'.format(cmd=VENV_CMD, dir=VENV_DIR))
+    ctx.run('{c} {d}'.format(c=cfg['develop']['venv_cmd'],
+                             d=cfg['develop']['venv_dir']))
 
 
 @task(venv)
-def shell(context):
+def shell(ctx):
     """Ejecuta una shell nueva dentro del ambiente virtual."""
     log('Creating new child shell inside virtual environment')
     log('To exit CTRL+D or exit')
-    context.run('bash \
-                 --init-file {dir}/bin/activate'.format(dir=VENV_DIR),
-                pty=True)
+    ctx.run('bash \
+               --init-file {b}/activate \
+            '.format(b=cfg['develop']['path_dir']), pty=True)
     log('Exiting virtual environment shell')
 
 
 @task(venv)
-def deps(context):
+def deps(ctx):
     """Instala dependencias requeridas en el ambiente virtual."""
     log('Installing dependencies')
-    context.run('{pth}/pip install -r requirements.txt \
-                                   --no-compile'.format(pth=PATH_DIR))
+    ctx.run('{b}/pip \
+                   install \
+                   -r requirements.txt \
+                   --no-compile \
+            '.format(b=cfg['develop']['path_dir']))
 
 
 @task(deps)
-def setup_dev(context):
+def setup_dev(ctx):
     """Configura entorno de dllo: pre-commit, commit-msg, etc."""
     log('Running $ pre-commit install')
-    context.run('{pth}/pre-commit install'.format(pth=PATH_DIR),
-                pty=True)
+    ctx.run('{b}/pre-commit \
+                     install \
+            '.format(b=cfg['develop']['path_dir']), pty=True)
     log('Running $ git config --local commit-template ...')
-    context.run('git config --local commit.template \
-                                     conf/commit-msg.txt',
-                pty=True)
+    ctx.run('git config \
+                   --local \
+                   commit.template conf/commit-msg.txt', pty=True)
     log('Running $ git config --local credential.helper ...')
-    context.run('git config --local credential.helper \
-                                     \'cache --timeout 3600\'',
-                pty=True)
+    ctx.run('git config \
+                   --local \
+                   credential.helper \'cache --timeout 3600\'', pty=True)
 
 
 @task(setup_dev)
-def pre_commit(context):
+def pre_commit(ctx):
     """Ejecuta hooks de pre-commit (linters)."""
     log('Running $ pre-commit run --all-files')
-    context.run('{pth}/pre-commit run \
-                                  --all-files'.format(pth=PATH_DIR),
-                pty=True)
+    ctx.run('{b}/pre-commit \
+                   run \
+                   --all-files \
+            '.format(b=cfg['develop']['path_dir']), pty=True)
 
 
 @task(venv)
-def freeze(context):
+def freeze(ctx):
     """Envoltura de pip freeze para cuidar las dependencias."""
     log('Obtaining current dependencies')
-    context.run('{pth}/pip freeze'.format(pth=PATH_DIR))
+    ctx.run('{b}/pip freeze'.format(b=cfg['develop']['path_dir']))
     log('CUIDADO: NO REDIRIJA LA SALIDA A requirements.txt')
     log('CUIDADO: Siempre edite manualmente el archivo')
 
 
 # pylint: disable=unused-argument
 @task(deps)
-def build(context):
+def build(ctx):
     """Costruye el software con sus dependencias."""
     log('Building from source')
 
 
 @task(build)
-def dist(context):
+def dist(ctx):
     """Genera los instaladores."""
     log('Packaging')
-    context.run('{pth}/python setup.py sdist \
-                       --formats=zip,bztar'.format(pth=PATH_DIR))
-    context.run('{pth}/python setup.py bdist \
-                       --formats=zip,bztar'.format(pth=PATH_DIR))
+    ctx.run('{b}/python setup.py \
+                          sdist \
+                          --formats=zip,bztar \
+            '.format(b=cfg['develop']['path_dir']))
+    ctx.run('{b}/python setup.py \
+                          bdist \
+                          --formats=zip,bztar \
+            '.format(b=cfg['develop']['path_dir']))
 
 
 @task
-def clean(context):
+def clean(ctx):
     """Borra todos los archivos intermedios generados."""
     log('Cleaning build directory')
-    if os.path.exists(BUILD_DIR):
-        shutil.rmtree(BUILD_DIR)
+    if os.path.exists(cfg['develop']['build_dir']):
+        shutil.rmtree(cfg['develop']['build_dir'])
 
     log('Cleaning dist directory')
-    if os.path.exists(DIST_DIR):
-        shutil.rmtree(DIST_DIR)
+    if os.path.exists(cfg['develop']['dist_dir']):
+        shutil.rmtree(cfg['develop']['dist_dir'])
 
     log('Cleaning python coverage file')
     coverage_file = '.coverage'
@@ -214,98 +220,120 @@ def clean(context):
         shutil.rmtree(cache_dir)
 
     log('Cleaning Python compiled files')
-    context.run('py3clean .')
+    ctx.run('py3clean .')
 
 
 # pylint: disable=unused-argument
 @task(build)
-def install(context):
+def install(ctx):
     """Instala el proyecto en el ambiente virtual local."""
-    log('Installing FLUIDAsserts in BUILD_DIR by symlink')
+    log('Installing FLUIDAsserts in build directory by symlink')
     currd = os.getcwd()
-    destd = '{dir}/lib/python{ver}/site-packages/fluidasserts'.format(
-        dir=VENV_DIR, ver=PYTHON_VER)
+    destd = ('{v}/lib/python{e}/site-packages/'
+             'fluidasserts').format(v=cfg['develop']['venv_dir'],
+                                    e=cfg['develop']['python_ver'])
     if not os.path.exists(destd):
         os.symlink('%s/fluidasserts' % (currd), destd)
 
 
-# TODO(ralvarez): Aun no invoca FTP pues circle.yml le falta docker
 # TODO(ralvarez): Hacer task parametrizable para ejecutar solo suite
 @task(install)
-def test(context):
+def test(ctx):
     """Ejecuta las pruebas de unidad que verifican el software."""
     log('Starting mocks')
-    context.run('{dir}/test/server/skel/start.sh \
-                 {dir}/test/server/ftp/conf.sh'.format(dir=os.getcwd()))
+    ctx.run('{c}/test/server/skel/start.sh \
+                                    {c}/test/server/ftp/conf.sh \
+            '.format(c=(os.getcwd())))
     log('Testing library')
-    context.run('{pth}/py.test --verbose \
-                               --cov=fluidasserts \
-                               --cov-report term \
-                               --cov-report html:{dir}/coverage/html \
-                               --cov-report xml:{dir}/coverage/results.xml \
-                               --cov-report annotate:{dir}/coverage/annotate \
-                               --junitxml={dir}/test/results.xml \
-                               --resultlog={dir}/test/results.txt \
-                               test/test_ftp.py \
-                               test/test_pdf.py \
-                               test/test_http.py'.format(pth=PATH_DIR,
-                                                         dir=BUILD_DIR),
-                pty=True)
+    ctx.run('{b}/py.test \
+                   --verbose \
+                   --cov=fluidasserts \
+                   --cov-report term \
+                   --cov-report html:{o}/coverage/html \
+                   --cov-report xml:{o}/coverage/results.xml \
+                   --cov-report annotate:{o}/coverage/annotate \
+                   --junitxml={o}/test/results.xml \
+                   --resultlog={o}/test/results.txt \
+                   test/test_ftp.py \
+                   test/test_pdf.py \
+                   test/test_http.py \
+            '.format(b=cfg['develop']['path_dir'],
+                     o=cfg['develop']['build_dir']), pty=True)
     log('Stopings mocks')
-    context.run('{dir}/test/server/skel/stop.sh \
-                 {dir}/test/server/ftp/conf.sh'.format(dir=os.getcwd()))
+    ctx.run('{c}/test/server/skel/stop.sh \
+                                    {c}/test/server/ftp/conf.sh \
+            '.format(c=os.getcwd()))
 
 
 @task(deps)
-def lint(context):
+def lint(ctx):
     """Realiza analisis de estilo sobre todo el software."""
-    lint_dir = BUILD_DIR + '/lint'
+    lint_dir = cfg['develop']['build_dir'] + '/lint'
     if not os.path.exists(lint_dir):
         os.makedirs(lint_dir)
 
     # linting with pydocstyle
     log('Linting with pydocstyle')
-    context.run('{pth}/pydocstyle --count fluidasserts test *.py \
-                            > {dir}/pydocstyle.txt 2>&1'.format(pth=PATH_DIR,
-                                                                dir=lint_dir),
-                warn=True, pty=True)
-    context.run('cat {dir}/pydocstyle.txt'.format(dir=lint_dir))
+    ctx.run('{b}/pydocstyle \
+                   --count \
+                   *.py \
+                   test \
+                   fluidasserts \
+                   1> {o}/pydocstyle.txt \
+                   2>&1 \
+            '.format(b=cfg['develop']['path_dir'], o=lint_dir),
+            warn=True, pty=True)
+    ctx.run('cat {o}/pydocstyle.txt'.format(o=lint_dir))
 
     # linting with flake8 (config in setup.cfg - flake8 section)
     log('Linting with flake8')
-    context.run('{pth}/flake8 --output-file={dir}/flake8.txt \
-                              fluidasserts/ test/ *.py'.format(pth=PATH_DIR,
-                                                               dir=lint_dir),
-                warn=True, pty=True)
+    ctx.run('{b}/flake8 \
+                   --output-file={o}/flake8.txt \
+                   *.py \
+                   test/ \
+                   fluidasserts/ \
+            '.format(b=cfg['develop']['path_dir'], o=lint_dir),
+            warn=True, pty=True)
     log('Running: $ cat ../flake8.txt')
-    context.run('cat {dir}/flake8.txt'.format(dir=lint_dir))
+    ctx.run('cat {o}/flake8.txt'.format(o=lint_dir))
 
     # linting with pylint
     log('Linting with pylint')
-    context.run('{pth}/pylint --rcfile=conf/pylintrc \
-                              fluidasserts test *.py \
-                              > {dir}/pylint.txt 2>&1'.format(pth=PATH_DIR,
-                                                              dir=lint_dir),
-                warn=True, pty=True)
-    context.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
+    ctx.run('{b}/pylint \
+                   --rcfile=conf/pylintrc \
+                   *.py \
+                   test \
+                   fluidasserts \
+                   > {o}/pylint.txt \
+                   2>&1 \
+            '.format(b=cfg['develop']['path_dir'], o=lint_dir),
+            warn=True, pty=True)
+    ctx.run('cat {dir}/pylint.txt'.format(dir=lint_dir))
 
 
 @task(deps)
-def style(context):
+def style(ctx):
     """Realiza mejoras automaticas de estilo."""
     log('Correcting style with autopep8')
-    context.run('{pth}/autopep8 -vv \
-                                --recursive \
-                                --in-place \
-                                fluidasserts test *.py'.format(pth=PATH_DIR))
+    ctx.run('{b}/autopep8 \
+                   -vv \
+                   --recursive \
+                   --in-place \
+                   *.py \
+                   test \
+                   fluidasserts \
+            '.format(b=cfg['develop']['path_dir']))
 
 
 @task(deps)
-def doc(context):
+def doc(ctx):
     """Genera la documentación de forma automatica."""
     log('Generating documentation')
-    context.run('{pth}/pdoc --html \
-                            --html-dir build/doc \
-                            --all-submodules \
-                            --overwrite \
-                            fluidasserts'.format(pth=PATH_DIR))
+    ctx.run('{b}/pdoc \
+                   --html \
+                   --html-dir {o}/doc \
+                   --all-submodules \
+                   --overwrite \
+                   fluidasserts \
+            '.format(b=cfg['develop']['path_dir'],
+                     o=cfg['develop']['build_dir']))

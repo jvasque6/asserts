@@ -8,21 +8,19 @@ las diferentes suites de pruebas.
 https://pytest.org/dev/fixture.html
 """
 
-# standard imports
 import time
+# standard imports
 from multiprocessing import Process
+# local imports
 from test.mock import httpserver
 
 # 3rd party imports
 import pytest
 
-# local imports
-# none
-
 
 @pytest.fixture(scope='module')
 def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba"""
+    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
     # Inicia el servidor HTTP en background
     prcs = Process(target=httpserver.start, name='MockHTTPServer')
     prcs.daemon = True

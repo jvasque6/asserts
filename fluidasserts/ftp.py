@@ -17,11 +17,13 @@ Futuras funciones incluyen:
 
 # standard imports
 import logging
-# 3rd party imports
 from ftplib import FTP, error_perm
 
-# local imports
+# 3rd party imports
+# none
 
+# local imports
+# none
 
 PORT = 21
 NULL_PASSWORD = ''

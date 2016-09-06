@@ -10,12 +10,11 @@ import logging
 # standard imports
 from http.cookies import BaseCookie
 
+# 3rd party imports
 import requests
 
-
-# 3rd party imports
-
 # local imports
+# none
 
 
 def __get_request(url):
