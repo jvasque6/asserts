@@ -7,17 +7,51 @@ HTTP se encuentra adecuadamente implementado.
 """
 
 # standard imports
-# none
+import time
+from multiprocessing import Process
 
 # 3rd party imports
 import pytest
 
 # local imports
 from fluidasserts import http
+from test.mock import httpserver
+
+
+#
+# Constants
+#
+
 
 BASE_URL = 'http://localhost:5000/http/headers'
 
-# mock_http definido en conftest.py
+
+#
+# Fixtures
+#
+
+
+@pytest.fixture(scope='module')
+def mock_http(request):
+    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
+    # Inicia el servidor HTTP en background
+    prcs = Process(target=httpserver.start, name='MockHTTPServer')
+    prcs.daemon = True
+    prcs.start()
+
+    # Espera que inicie servidor antes de recibir conexiones
+    time.sleep(0.1)
+
+    def teardown():
+        """Detiene servidor HTTP al finalizar las pruebas."""
+        prcs.terminate()
+
+    request.addfinalizer(teardown)
+
+
+#
+# Open tests
+#
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -27,18 +61,24 @@ def test_access_control_allow_origin_open():
         '%s/access_control_allow_origin/fail' % (BASE_URL))
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_cache_control_open():
+    """Header Cache-Control no establecido?"""
+    assert http.has_header_cache_control(
+        '%s/cache_control/fail' % (BASE_URL))
+
+#
+# Close tests
+#
+
+@pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?"""
     assert not http.has_header_access_control_allow_origin(
         '%s/access_control_allow_origin/ok' % (BASE_URL))
 
 
-def test_cache_control_open():
-    """Header Cache-Control no establecido?"""
-    assert http.has_header_cache_control(
-        '%s/cache_control/fail' % (BASE_URL))
-
-
+@pytest.mark.usefixtures('mock_http')
 def test_cache_control_close():
     """Header Cache-Control establecido?"""
     assert not http.has_header_cache_control(
