@@ -1,0 +1,11 @@
+[container]
+172.18.1.1
+
+[container:vars]
+admin_user = root
+admin_pass = ahViQu9E
+secured_user = secured
+secured_pass = MiGhu2qu
+guessed_user = guessed
+guessed_pass = guessed123
+nonpass_user = nonpass
