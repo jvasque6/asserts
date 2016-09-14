@@ -11,8 +11,9 @@ seccomp_sandbox=NO
 port_enable=YES
 ftp_data_port=20
 connect_from_port_20=YES
+setproctitle_enable=NO
 chroot_list_enable=YES
-chroot_list_file=/etc/vsftpd.chroot_list
+chroot_list_file=/etc/vsftpd/chroot_list
 pasv_enable=YES
 pasv_min_port=21000
 pasv_max_port=21009
@@ -21,7 +22,7 @@ pasv_max_port=21009
 
 # Specific
 ftpd_banner=Welcome to FTP Vulnerable service.
-#banner_file=/etc/banner
+#banner_file=/etc/vsftpd/banner
 max_login_fails=5
 anonymous_enable=YES
 write_enable=YES
@@ -43,6 +44,5 @@ ascii_download_enable=YES
 chroot_local_user=NO
 ls_recurse_enable=YES
 hide_ids=NO
-setproctitle_enable=YES
 pasv_promiscuous=YES
 port_promiscuous=YES
