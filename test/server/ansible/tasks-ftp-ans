@@ -1,6 +1,0 @@
-
-
-$ ansible ansible -m apk -a "update_cache=yes"
-$ ansible ansible -m apk -a "upgrade=yes"
-$ ansible ansible -m apk -a "name=vsftpd state=present"
-
