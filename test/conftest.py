@@ -8,28 +8,32 @@ las diferentes suites de pruebas.
 https://pytest.org/dev/fixture.html
 """
 
-import time
 # standard imports
-from multiprocessing import Process
-# local imports
-from test.mock import httpserver
+import subprocess
 
 # 3rd party imports
 import pytest
 
+# local imports
+# none
 
-@pytest.fixture(scope='module')
-def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
-    prcs = Process(target=httpserver.start, name='MockHTTPServer')
-    prcs.daemon = True
-    prcs.start()
 
-    # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.1)
+@pytest.fixture(scope='session')
+def container(request):
+    """Inicia y detiene el contenedor docker que se usa para pruebas."""
+    print('Prendiendo el contenedor')
+    subprocess.call('test/container/start.sh \
+                         test/container/conf.sh', shell=True)
+    print('Configurando dinamicamente el ambiente base del contenedor')
+    subprocess.call('ansible-playbook \
+                         test/setup/os.yml', shell=True)
+    subprocess.call('ansible-playbook \
+                         test/setup/ftp.yml --tags basic', shell=True)
 
     def teardown():
-        """Detiene servidor HTTP al finalizar las pruebas."""
-        prcs.terminate()
-        request.addfinalizer(teardown)
+        """Detiene el contenedor donde se ejecutan las pruebas."""
+        print('Apagando el contenedor')
+        subprocess.call('test/container/stop.sh \
+                             test/container/conf.sh', shell=True)
+
+    request.addfinalizer(teardown)
