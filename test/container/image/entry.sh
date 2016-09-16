@@ -13,10 +13,10 @@ fi
 # Creando el usuario no privilegiado
 USER=nonpriv
 echo "Creando usuario no privilegiado $USER"
-useradd $USER
-passwd -d $USER
-usermod -s /bin/bash $USER
-mkdir /home/$USER
+useradd "$USER"
+passwd -d "$USER"
+usermod -s /bin/bash "$USER"
+mkdir /home/"$USER"
 
 # Almancenando claves publicas y definiendo permisos requeridos
 for DIR in /root /home/"$USER"; do
@@ -31,7 +31,7 @@ done
 chown -R "$USER":"$USER" /home/"$USER"/
 
 # Otorgandole permisos de SUDO a $USER sin clave para ansible --become
-echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
+echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$USER"
 
 # Imprimiendo banner de inicio del server
 echo "FLUIDAsserts - Docker Ansible Base server (SSH, Python, SUDO)"
