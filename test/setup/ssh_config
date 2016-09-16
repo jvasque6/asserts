@@ -1,0 +1,6 @@
+Host 172.18.*.* container
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  User root
+  LogLevel ERROR
+  IdentityFile ~/.ssh/facont_id_rsa

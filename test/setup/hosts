@@ -9,3 +9,6 @@ secured_pass = MiGhu2qu
 guessed_user = guessed
 guessed_pass = guessed123
 nonpass_user = nonpass
+
+ansible_ssh_common_args = -F /home/ralvarez/.ssh/config.facont
+#ansible_ssh_private_key_file = /home/ralvarez/.ssh/facont_id_rsa

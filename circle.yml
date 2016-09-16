@@ -3,13 +3,14 @@
 #
 
 machine:
+# Este parche se requiere para que docker soporte especificación de IPs
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   timezone: America/Bogota
   services:
     - docker
-  python:
 # version de python del sistema base de CI, se requiere por ansible en 2.7
+  python:
     version: 2.7.10
   post:
 # versiones de python contra los cuales se probara el producto.
@@ -18,15 +19,11 @@ machine:
 
 dependencies:
   pre:
-    - pip install invoke
-    - pip install ansible
-#    - apt-get install python3.4-venv
+    - pip install invoke ansible tox tox-pyenv configobj
   override:
 #    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - pip install tox 
-    - pip install tox-pyenv
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
-    - tox -e py27,py34,py35 --notest
+    - tox -e py34 --notest
 
 test:
   pre:
@@ -34,7 +31,7 @@ test:
 #    - invoke lint
   override:
 #    - invoke test
-    - tox -e py27,py34,py35
+    - tox -e py34
 #    - invoke dist
     - invoke doc
   post:

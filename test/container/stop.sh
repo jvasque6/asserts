@@ -20,3 +20,5 @@ docker ps
 
 docker network rm fluidasserts
 docker network ls
+
+rm ~/.ssh/facont_id_rsa* ~/.ssh/config.facont

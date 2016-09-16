@@ -17,8 +17,8 @@ else
 fi
 
 # Probando conexion SSH
-ssh "$IP" "echo working"
-ssh "$IP" -l nonpriv "echo working"
+SSH_AUTH_SOCK=0 ssh -F ~/.ssh/config.facont "$IP" "echo working"
+SSH_AUTH_SOCK=0 ssh -F ~/.ssh/config.facont "$IP" -l nonpriv "echo working"
 
 # probando conexion Ansible
 #ansible "$IP" -a "echo working"
