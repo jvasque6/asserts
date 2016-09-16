@@ -9,17 +9,21 @@ machine:
   services:
     - docker
   python:
-    version: 3.4.4
+# version de python del sistema base de CI, se requiere por ansible en 2.7
+    version: 2.7.10
   post:
-    - pyenv global 2.7.9 3.4.4 3.5.2
+# versiones de python contra los cuales se probara el producto.
+    - pyenv global 2.7.10 3.4.4 3.5.2
 
 dependencies:
   pre:
-    - sudo pip install invoke
-    - sudo apt-get install python3.4-venv
+    - pip install invoke
+    - pip install ansible
+#    - apt-get install python3.4-venv
   override:
 #    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - pip install tox tox-pyenv
+    - pip install tox 
+    - pip install tox-pyenv
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
     - tox -e py27,py34,py35 --notest
 
