@@ -23,7 +23,7 @@ dependencies:
   override:
 #    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
-    - tox -e py34 --notest
+    - tox -e py27,py34 --notest
 
 test:
   pre:
