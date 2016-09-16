@@ -10,26 +10,27 @@ machine:
     - docker
   python:
     version: 3.4.4
+  post:
+    - pyenv global 2.7.9 3.4.4 3.5.2
 
 dependencies:
   pre:
     - sudo pip install invoke
     - sudo apt-get install python3.4-venv
-#    - cabal install shellcheck
   override:
 #    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - docker info
-    - docker --version
-    - test/server/skel/build.sh test/server/ftp/conf.sh
-    - invoke deps
+    - pip install tox tox-pyenv
+# crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
+    - tox -e py27,py34,py35 --notest
 
 test:
   pre:
-    - invoke pre_commit
-    - invoke lint
+#    - invoke pre_commit
+#    - invoke lint
   override:
-    - invoke test
-    - invoke dist
+#    - invoke test
+    - tox -e py27,py34,py35
+#    - invoke dist
     - invoke doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
