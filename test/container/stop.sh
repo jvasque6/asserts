@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# habilitar depuración
+set -x
+
 if [ -z "${1+x}" ]; then
   echo "Archivo de configuración no especificado."
   echo "Uso: $0 conf.sh"
