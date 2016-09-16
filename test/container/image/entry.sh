@@ -28,7 +28,7 @@ for DIR in /root /home/"$USER"; do
 done
 
 # Confirmando permisos en archivos del usuario no privilegiado
-chown -R $USER:$USER /home/$USER/
+chown -R "$USER":"$USER" /home/"$USER"/
 
 # Otorgandole permisos de SUDO a $USER sin clave para ansible --become
 echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER
