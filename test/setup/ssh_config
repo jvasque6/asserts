@@ -1,4 +1,4 @@
-Host 172.18.*.* container
+Host *
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
   User root
