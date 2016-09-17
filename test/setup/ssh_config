@@ -1,7 +1,8 @@
-Host *
+Host 172.30.216.100
   StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-  User root
-  LogLevel ERROR
+  UserKnownHostsFile /dev/null
+  PasswordAuthentication no
   IdentityFile ~/.ssh/facont_id_rsa
   IdentitiesOnly yes
+  LogLevel ERROR
+  User root

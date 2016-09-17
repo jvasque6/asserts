@@ -9,4 +9,6 @@ secured_pass = MiGhu2qu
 guessed_user = guessed
 guessed_pass = guessed123
 nonpass_user = nonpass
-ansible_ssh_common_args = -F /home/ralvarez/.ssh/config.facont
+
+# esta funciona pero siempre absoluta
+#ansible_ssh_common_args = -F /home/ralvarez/.ssh/config.facont

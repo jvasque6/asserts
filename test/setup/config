@@ -4,7 +4,7 @@
 # inventory: no definir nunca aqui, esta definido en tox.ini:ANSIBLE_HOSTS
 
 [defaults]
-#remote_user        = nonpriv
+#remote_user        = root
 #become	            = True
 host_key_checking   = False
 retry_files_enabled = False
@@ -12,4 +12,5 @@ callback_whitelist  = profile_tasks
 
 [ssh_connection]
 pipelining = True
-#ssh_args = -F ~/.ssh/facont.config
+#ssh_args = -F /home/ralvarez/.ssh/config.facont
+ssh_args = -F "{{ lookup('env', 'HOME') }}/.ssh/config.facont"
