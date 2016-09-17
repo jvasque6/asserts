@@ -20,10 +20,11 @@ docker network create \
 		--subnet="$NET_IP" \
 		"$NET_NAME"
 
+export PROJECT_PATH="${ANSIBLE_CONFIG%/*/*/*}"
+
 # En cada inicio se configura la conexión SSH correspondiente
 # Este archivo de configuración de SSH tambien esta parametrizado
 # en setup/config sección ssh, parametro ssh_args
-export PROJECT_PATH="${ANSIBLE_CONFIG%/*/*/*}"
 cp "$PROJECT_PATH"/test/setup/ssh_config ~/.ssh/config.facont
 echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f ~/.ssh/facont_id_rsa -q -N ""
 #test -f ~/.ssh/facont_id_rsa || ssh-keygen -q -N "" -t rsa -b 2048 -f ~/.ssh/facont_id_rsa
