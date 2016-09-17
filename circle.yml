@@ -26,6 +26,8 @@ dependencies:
     - docker pull fluidsignal/fluidasserts:container
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
     - tox -e py34 --notest
+    - docker --version
+    - ansible --version
 
 test:
   pre:
