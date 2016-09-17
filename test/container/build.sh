@@ -17,4 +17,8 @@ else
   IMAGE_PATH=$(dirname $1)/image
 fi
 
-docker build -t fluidsignal/"$SERVICE" "$IMAGE_PATH"
+# construir la imagen
+docker build -t fluidsignal/fluidasserts:"$SERVICE" "$IMAGE_PATH"
+
+# subirla al repositorio 
+docker push fluidsignal/fluidasserts:"$SERVICE"

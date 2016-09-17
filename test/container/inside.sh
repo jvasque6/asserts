@@ -28,6 +28,6 @@ docker run \
                 --entrypoint=/bin/bash \
 		--volume=/tmp:/host/tmp \
 		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
-		fluidsignal/"$SERVICE"
+		fluidsignal/fluidasserts:"$SERVICE"
 
 docker rm "$SERVICE"-inside

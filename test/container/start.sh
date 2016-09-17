@@ -37,4 +37,4 @@ docker run \
 		--publish-all \
 		--volume=/tmp:/host/tmp \
 		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
-		fluidsignal/"$SERVICE"
+		fluidsignal/fluidasserts:"$SERVICE"
