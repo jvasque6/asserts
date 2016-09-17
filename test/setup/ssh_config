@@ -4,3 +4,4 @@ Host *
   User root
   LogLevel ERROR
   IdentityFile ~/.ssh/facont_id_rsa
+  IdentitiesOnly yes
