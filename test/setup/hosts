@@ -2,6 +2,8 @@
 172.30.216.100
 
 [container:vars]
+
+# FLUID Assert Variables
 admin_user = root
 admin_pass = ahViQu9E
 secured_user = secured
@@ -10,5 +12,5 @@ guessed_user = guessed
 guessed_pass = guessed123
 nonpass_user = nonpass
 
-# esta funciona pero siempre absoluta
-#ansible_ssh_common_args = -F /home/ralvarez/.ssh/config.facont
+# Ansible Variables
+ansible_ssh_common_args = -F "{{ lookup('env', 'HOME') }}/.ssh/config.facont"
