@@ -21,7 +21,8 @@ dependencies:
   pre:
     - pip install invoke ansible tox tox-pyenv configobj
   override:
-#    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+# descargar imagen de docker
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
     - tox -e py27,py34 --notest
 
