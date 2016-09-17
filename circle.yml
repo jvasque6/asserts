@@ -25,7 +25,7 @@ dependencies:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
 # crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
-    - tox -e py27,py34 --notest
+    - tox -e py34 --notest
 
 test:
   pre:
