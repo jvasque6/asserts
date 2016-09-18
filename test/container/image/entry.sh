@@ -36,6 +36,11 @@ echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$USER"
 # Imprimiendo banner de inicio del server
 echo "FLUIDAsserts - Docker Ansible Base server (SSH, Python, SUDO)"
 
+# Configurando conexión SSH para Ansible
+sed -i "s/UsePAM yes/UsePAM no/" /etc/ssh/sshd_config
+sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config
+sed -i "s/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config
+
 # Iniciando servidor ssh
 exec /usr/sbin/sshd -D -e -f /etc/ssh/sshd_config
 
