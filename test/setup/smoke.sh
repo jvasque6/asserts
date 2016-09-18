@@ -6,11 +6,11 @@ set -x
 # salir al primer error
 set -e
 
-export ANSIBLE_HOSTS=./hosts
-export ANSIBLE_CONFIG=./config
+# importar entorno (ANSIBLE_*)
+source $(git rev-parse --show-toplevel)/env.sh
 
 # probando conexion Ansible
-ansible container -a "echo working"
+ansible container -a "echo working" -vvv
 ansible container -m shell -a "echo working"
 
 # Probando modulo de root

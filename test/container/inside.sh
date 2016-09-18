@@ -1,21 +1,15 @@
 #!/bin/bash
 
-if [ -z "${1+x}" ]; then
-  echo "Archivo de configuración no especificado."
-  echo "Uso: $0 conf.sh"
-  exit -1
-elif [ ! -f "$1" ]; then
-  echo "Archivo de configuración $1 no existe."
-  echo "Uso: $0 conf.sh"
-  exit -2
-else
-  echo "Cargando archivo de configuración $1"
-  source "$1"
-fi
+# importar entorno
+source $(git rev-parse --show-toplevel)/env.sh
 
 docker network create \
 		--subnet="$NET_IP" \
 		"$NET_NAME"
+
+# crear claves de acceso al contenedor
+cp "$PROJECT_DIR"/test/setup/ssh_config ~/.ssh/config.facont
+echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f ~/.ssh/facont_id_rsa -q -N ""
 
 docker run \
 		--tty \
@@ -31,3 +25,10 @@ docker run \
 		fluidsignal/fluidasserts:"$SERVICE"
 
 docker rm "$SERVICE"-inside
+
+# eliminar red de contenedores
+docker network rm fluidasserts
+
+# eliminar claves de accesso a contenedor
+rm -f ~/.ssh/config.facont
+rm -f ~/.ssh/facont_id_rsa*

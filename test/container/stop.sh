@@ -3,26 +3,16 @@
 # habilitar depuración
 set -x
 
-if [ -z "${1+x}" ]; then
-  echo "Archivo de configuración no especificado."
-  echo "Uso: $0 conf.sh"
-  exit -1
-elif [ ! -f "$1" ]; then
-  echo "Archivo de configuración $1 no existe."
-  echo "Uso: $0 conf.sh"
-  exit -2
-else
-  echo "Cargando archivo de configuración $1"
-  source "$1"
-fi
+# importar entorno
+source $(git rev-parse --show-toplevel)/env.sh
 
-docker ps
+# detener contenedor
 docker kill "$SERVICE"
 docker rm "$SERVICE"
-docker ps
 
+# eliminar red de contenedores
 docker network rm fluidasserts
-docker network ls
 
+# eliminar claves de accesso a contenedor
 rm -f ~/.ssh/config.facont
 rm -f ~/.ssh/facont_id_rsa*

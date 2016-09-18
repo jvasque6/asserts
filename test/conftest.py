@@ -22,8 +22,7 @@ import pytest
 def container(request):
     """Inicia y detiene el contenedor docker que se usa para pruebas."""
     print('Prendiendo el contenedor')
-    subprocess.call('test/container/start.sh \
-                         test/container/conf.sh', shell=True)
+    subprocess.call('test/container/start.sh', shell=True)
     print('Configurando dinamicamente el ambiente base del contenedor')
     subprocess.call('ansible-playbook -vvv \
                          test/setup/os.yml', shell=True)
@@ -33,7 +32,6 @@ def container(request):
     def teardown():
         """Detiene el contenedor donde se ejecutan las pruebas."""
         print('Apagando el contenedor')
-        subprocess.call('test/container/stop.sh \
-                             test/container/conf.sh', shell=True)
+        subprocess.call('test/container/stop.sh', shell=True)
 
     request.addfinalizer(teardown)

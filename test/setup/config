@@ -1,7 +1,5 @@
-# para que esta configuracion sea cargada esta variable de estar establecida 
-# export ANSIBLE_CONFIG=$HOME/git/asserts/test/setup/ansible.cfg
-# si se ejecuta desde tox no es necesario definirla pues tox.ini ya la tiene
-# inventory: no definir nunca aqui, esta definido en tox.ini:ANSIBLE_HOSTS
+# cargada si esta establecida la variable ANSIBLE_CONFIG
+# scripts que hagan uso de tox.ini y env.sh ya la tienen definida
 
 [defaults]
 retry_files_enabled = False
