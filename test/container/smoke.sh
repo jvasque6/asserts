@@ -3,6 +3,9 @@
 # Salir inmediatamente si algun comando retorna diferente de cero.
 set -e
 
+# habilitar depuración
+set -x
+
 # importar entorno (SSH_AUTH_SOCK reseteado)
 source $(git rev-parse --show-toplevel)/env.sh
 
