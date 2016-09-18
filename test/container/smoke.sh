@@ -10,7 +10,7 @@ set -x
 source $(git rev-parse --show-toplevel)/env.sh
 
 # Probando conexion SSH
-ssh -F ~/.ssh/config.facont "$IP" -l root \
+ssh -vvv -F ~/.ssh/config.facont "$IP" -l root \
 	echo "SSH connection as root to container is working"
-ssh -F ~/.ssh/config.facont "$IP" -l nonpriv \
+ssh -vvv -F ~/.ssh/config.facont "$IP" -l nonpriv \
 	echo "SSH connection as nonpriv to container is working"
