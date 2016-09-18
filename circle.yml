@@ -22,18 +22,17 @@ dependencies:
     - pip install invoke ansible tox tox-pyenv configobj
     - docker --version
     - ansible --version
-    - umask
   override:
 # descargar y construir imagen de docker
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
-    - test/container/build.sh
+#    - test/container/build.sh
   post:
 # pruebas de humo sobre el contenedor
-    - test/container/start.sh
-    - test/container/smoke.sh
-    - test/setup/smoke.sh
-    - test/container/stop.sh
+#    - test/container/start.sh
+#    - test/container/smoke.sh
+#    - test/setup/smoke.sh
+#    - test/container/stop.sh
 
 test:
   pre:
