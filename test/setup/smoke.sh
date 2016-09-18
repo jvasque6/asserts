@@ -9,10 +9,6 @@ set -e
 # importar entorno (ANSIBLE_*)
 source $(git rev-parse --show-toplevel)/env.sh
 
-# probando conexion Ansible
-ansible container -a "echo working" -vvv
-ansible container -m shell -a "echo working"
-
 # Probando modulo de root
 ansible container -m ping 
 
