@@ -28,5 +28,6 @@ docker run \
 		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
 		fluidsignal/fluidasserts:"$SERVICE"
 
-echo "Waiting 2 seconds until container start"
-sleep 2
+# menos segundos genera fallos en la conexión
+echo "Waiting 5 seconds until container start"
+sleep 5 
