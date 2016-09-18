@@ -13,6 +13,8 @@ RUN apt-get update \
                sudo \
                python \
                openssh-server \
+    && sed -i "s/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/g" /etc/ssh/sshd_config \
+    && sed -i "s/PermitRootLogin without-password/PermitRootLogin yes/" /etc/ssh/sshd_config \
     && mkdir -p /var/run/sshd
 
 # Cache para el modulo de FTP (descargar e instalar)
