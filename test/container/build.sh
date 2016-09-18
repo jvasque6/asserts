@@ -9,6 +9,3 @@ source $(git rev-parse --show-toplevel)/env.sh
 # construir la imagen
 docker build -t fluidsignal/fluidasserts:"$SERVICE" \
              "$PROJECT_DIR"/test/container/image
-
-# subirla al repositorio
-docker push fluidsignal/fluidasserts:"$SERVICE"
