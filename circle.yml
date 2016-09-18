@@ -3,8 +3,8 @@
 #
 
 machine:
-# Este parche se requiere para que docker soporte especificación de IPs
   pre:
+# Este parche se requiere para que docker soporte especificación de IPs
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
   timezone: America/Bogota
   services:
@@ -20,35 +20,27 @@ machine:
 dependencies:
   pre:
     - pip install invoke ansible tox tox-pyenv configobj
-    - docker --version
-    - ansible --version
   override:
-# descargar y construir imagen de docker
+# descargar imagen de docker
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
-#    - test/container/build.sh
-  post:
-# pruebas de humo sobre el contenedor
-#    - test/container/start.sh
-#    - test/container/smoke.sh
-#    - test/setup/smoke.sh
-#    - test/container/stop.sh
+    - tox -e py34 --notest
+
+# Antes de este punto todo es cacheable.
 
 test:
   pre:
 #    - invoke pre_commit
 #    - invoke lint
-# crear ambientes virtuales y sus dependencias (~ inv virtual;inv deps)
-    - tox -e py34 --notest
   override:
 #    - invoke test
     - tox -e py34
 #    - invoke dist
-    - invoke doc
+#    - invoke doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
-    - cp -r build/lint $CIRCLE_ARTIFACTS
-    - cp -r build/doc $CIRCLE_ARTIFACTS
-    - cp -r dist $CIRCLE_ARTIFACTS
+#    - cp -r build/lint $CIRCLE_ARTIFACTS
+#    - cp -r build/doc $CIRCLE_ARTIFACTS
+#    - cp -r dist $CIRCLE_ARTIFACTS
