@@ -5,4 +5,3 @@ Host 172.30.216.100
   IdentityFile ~/.ssh/facont_id_rsa
   IdentitiesOnly yes
   LogLevel ERROR
-  User root
