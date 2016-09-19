@@ -24,7 +24,7 @@ dependencies:
 # descargar imagen de docker
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
-    - tox -e py34 --notest
+    - tox -e py27,py34,py35 --notest
   post:
     - test/container/start.sh
     - test/container/smoke.sh
@@ -39,7 +39,7 @@ test:
 #    - invoke lint
   override:
 #    - invoke test
-    - tox -e py34
+    - tox -e py27,py34,py35
 #    - invoke dist
 #    - invoke doc
   post:
