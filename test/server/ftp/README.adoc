@@ -1,9 +1,0 @@
-
-Algunas referencias utiles
-
-https://github.com/noophq/docker-vsftpd
-https://hub.docker.com/r/vimagick/vsftpd/
-https://hub.docker.com/r/exira/vsftpd/
-https://hub.docker.com/r/odiobill/vsftpd/
-https://hub.docker.com/r/panubo/vsftpd/
-

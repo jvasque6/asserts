@@ -1,0 +1,149 @@
+---
+- hosts: container
+
+  become: yes
+
+  vars:
+    package: 'vsftpd'
+    service_user: 'ftpsecure'
+
+
+  tasks:
+
+#
+# tag: basic
+# ajustes requeridos para weak o hard
+# debe quedar funcional si no se invocan esos tags
+#
+
+  - name: verificar necesidad de instalar
+    shell:
+        dpkg -s {{package}} | grep Status
+    register: install_status
+    tags: basic
+
+  - name: instalar software
+    apt:
+      pkg={{package}}
+      update_cache=no
+      state=present
+    when: install_status.stdout.find('installed') == -1
+    tags: basic
+
+  - name: crear usuario para el servicio
+    user:
+      name={{service_user}}
+    tags: basic
+
+  - name: parchar defecto del servicio en debian
+    blockinfile:
+      dest=/etc/init.d/{{package}}
+      insertbefore='n=0'
+      block='sleep 1'
+      marker='# {mark} ANSIBLE MANAGED BLOCK'
+      backup=yes
+    tags: basic
+
+  - name: subir configuracion del servicio
+    copy:
+      src={{playbook_dir}}/ftp/
+      dest=/etc/vsftpd
+      owner=root
+      group=root
+      mode=644
+    tags: basic
+
+  - name: determinar estado de la configuracion
+    stat:
+      path=/etc/{{package}}.conf
+    register: cfg
+    tags: basic
+
+  - name: respaldar configuracion original
+    command:
+      mv /etc/{{package}}.conf /etc/{{package}}/conf.original
+    when: not cfg.stat.islnk
+    register: cfg_moved
+    tags: basic
+
+  - name: enlazar configuracion original
+    file:
+      src=/etc/{{package}}/conf.original
+      dest=/etc/{{package}}.conf
+      state=link
+    when: cfg_moved
+    notify: recargar configuracion
+    tags: basic
+
+
+#
+# tag: weak
+# configuracion debil (siempre la primera)
+#
+
+
+  - name: establecer configuracion debil
+    file:
+      src=/etc/{{package}}/conf.weak
+      dest=/etc/{{package}}.conf
+      state=link
+    notify: recargar configuracion
+    tags: weak
+
+  - name: asignar clave adivinable a usuario
+    shell:
+      echo {{guessed_user}}:{{guessed_pass}} | chpasswd
+    tags: weak
+
+  - name: remover clave a usuario sin clave
+    shell:
+      passwd -d {{nonpass_user}}
+    tags: weak
+
+  - name: permitir conexion a admin
+    replace:
+      dest=/etc/ftpusers
+      regexp='^root'
+      replace='#root'
+    tags: weak
+
+
+#
+# tag: hard
+# configuracion por defecto (la ultima) es la segura
+#
+
+
+  - name: establecer configuracion endurecida
+    file:
+      src=/etc/{{package}}/conf.hard
+      dest=/etc/{{package}}.conf
+      state=link
+    notify: recargar configuracion
+    tags: hard
+
+  - name: cambiar clave adivinada a usuario
+    shell:
+      echo {{guessed_user}}:Mai2eitu | chpasswd
+    tags: hard
+
+  - name: asignar clave a usuario sin clave
+    shell:
+      echo {{nonpass_user}}:4234453 | chpasswd
+    tags: hard
+
+  - name: prohibir conexion a admin
+    replace:
+      dest=/etc/ftpusers
+      regexp='^#root'
+      replace='root'
+    tags: hard
+
+
+  handlers:
+
+
+  - name: recargar configuracion
+    service:
+      name={{package}}
+      state=reloaded

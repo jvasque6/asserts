@@ -21,3 +21,6 @@ Exploiting/
 
 # Desconocido
 .cache/
+
+# Temporal local
+tmp/

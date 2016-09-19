@@ -60,10 +60,10 @@ def self(ctx):
 
 
 @task
-def upload(ctx):
-    """Sube al repositorio central las ramas locales."""
-    log('Running $ git push origin')
-    ctx.run('git push origin', pty=True)
+def size(ctx):
+    """Calcula el tamaño del software."""
+    log('Running $ cloc fluidasserts test *.py')
+    ctx.run('cloc fluidasserts test *.py')
 
 
 @task
@@ -77,6 +77,32 @@ def download(ctx):
     ctx.run('git branch', pty=True)
     log('Running $ git diff --stat HEAD..master')
     ctx.run('git diff --stat HEAD..master', pty=True)
+
+
+@task
+def sync(ctx):
+    """Respalda WD, descarga remote e integra con FF."""
+    log('Running $ git stash -u                      # Respaldo de WD')
+    ctx.run('git stash -u')
+    log('Running $ git checkout master               # Cambio a rama master')
+    ctx.run('git checkout master')
+    log('Running $ git merge --ff-only origin/master # Integra cambios FFbles')
+    ctx.run('git merge --ff-only origin/master')
+    log('Running $ git checkout $(whoami)            # Cambio a rama personal')
+    ctx.run('git checkout $(whoami)')
+    log('Running $ git merge --ff-only origin/master # Integra cambios FFbles')
+    ctx.run('git merge --ff-only origin/master')
+    log('Running $ git stash pop                     # Restaura WD')
+    ctx.run('git stash pop')
+    log('Running $ git diff --stat HEAD..master      # Estadisticas finales')
+    ctx.run('git diff --stat HEAD..master', pty=True)
+
+
+@task
+def upload(ctx):
+    """Sube al repositorio central las ramas locales."""
+    log('Running $ git push origin')
+    ctx.run('git push origin', pty=True)
 
 
 @task
