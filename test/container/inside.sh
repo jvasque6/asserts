@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# habilitar depuración
+if [ -n "$VERBOSE" ]; then
+  set -x
+fi
+
 # importar entorno
 source $(git rev-parse --show-toplevel)/env.sh
 

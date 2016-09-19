@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# depuración
-set -x
+# habilitar depuración
+if [ -n "$VERBOSE" ]; then
+  set -x
+fi
 
 # salir al primer error
 set -e
@@ -10,8 +12,8 @@ set -e
 source $(git rev-parse --show-toplevel)/env.sh
 
 # Probando modulo de root
-ansible container -m ping 
+ansible container ${VERBOSE:+-vvv} -m ping 
 
 # Probando credenciales no privilegiados y de root
-ansible container -m shell -a "id"
-ansible container -m shell -a "id" -b
+ansible container ${VERBOSE:+-vvv} -m shell -a "id"
+ansible container ${VERBOSE:+-vvv} -m shell -a "id" -b
