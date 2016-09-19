@@ -22,6 +22,10 @@ else
   echo "Contenedor prendido, y no en CIRCLECI, deteniendolo..."
   docker kill "$SERVICE"
   docker rm "$SERVICE"
+
+  # eliminar claves de accesso a contenedor
+  rm -f ~/.ssh/config.facont
+  rm -f ~/.ssh/facont_id_rsa*
 fi
 
 # eliminar red de contenedores si esta establecida
@@ -33,7 +37,3 @@ else
   echo "Red configurada y sin contenedores activos, eliminandola..."
   docker network rm fluidasserts
 fi
-
-# eliminar claves de accesso a contenedor
-rm -f ~/.ssh/config.facont
-rm -f ~/.ssh/facont_id_rsa*
