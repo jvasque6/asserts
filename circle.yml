@@ -25,6 +25,11 @@ dependencies:
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
     - tox -e py34 --notest
+  post:
+    - test/container/start.sh
+    - test/container/smoke.sh
+    - test/setup/smoke.sh
+    - test/container/stop.sh
 
 # Antes de este punto todo es cacheable.
 
