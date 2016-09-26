@@ -1,7 +1,5 @@
 # FLUIDAsserts 
 build/
-dist/
-results.log
 
 # Coverage files
 .coverage
@@ -9,9 +7,6 @@ results.log
 # Python bytecode
 *.py[cod]
 __pycache__/
-
-# ditutils generated
-MANIFEST
 
 # Vim cache 
 *.swp
