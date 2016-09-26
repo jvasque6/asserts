@@ -38,7 +38,7 @@ GUESSED_PASS = 'guessed123'
 # Fixtures
 #
 
-
+# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def weak_ftp(request):
     """Configura perfil de FTP vulnerable."""
@@ -47,6 +47,7 @@ def weak_ftp(request):
                                       --tags weak', shell=True)
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def hard_ftp(request):
     """Configura perfil de FTP endurecido."""
