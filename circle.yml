@@ -31,7 +31,7 @@ dependencies:
   post:
     - test/container/start.sh
     - test/container/smoke.sh
-    - test/setup/smoke.sh
+    - test/provision/smoke.sh
     - test/container/stop.sh
 
 # Antes de este punto todo es cacheable.  Pendiente investigar como.
