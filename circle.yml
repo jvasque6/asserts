@@ -19,10 +19,10 @@ machine:
 
 dependencies:
   pre:
-    - apt-get update
-    - apt-get install scons
+#    - apt-get update
+#    - apt-get install scons
 #    - pip install invoke ansible tox tox-pyenv configobj
-    - pip install --upgrade pip setuptools
+#    - pip install --upgrade pip setuptools
     - pip install ansible tox tox-pyenv configobj
   override:
 # descargar imagen de docker
