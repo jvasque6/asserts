@@ -1,0 +1,212 @@
+********************** DOCKER ************************
+
+Enviar imagenes al repositorio
+
+$ sudo docker login -u fluidsignal
+Password:
+Login Succeeded
+
+Marcar imagen local para ser enviada a repositorio remoto:
+
+$ sudo docker tag local-image:tagname fluidsignal/containers:tagname
+
+Ejemplo
+
+$ sudo docker tag fluidsignal/ssh fluidsignal/containers:ssh
+
+Enviar imagen a repositorio:
+
+$ sudo docker push fluidsignal/containers:tagname
+
+Ejemplo:
+
+$ sudo docker push fluidsignal/containers:ssh
+
+Una vez subidas al repositorio las imagenes pueden verse en:
+
+https://hub.docker.com/r/fluidsignal/containers/
+https://hub.docker.com/r/fluidsignal/containers/tags/
+
+Convenciones
+
+Por convencion se utilizara para los mocks de servicio docker.
+
+https://docs.docker.com/engine/userguide/eng-image/dockerfile_best-practices/
+http://blog.labianchin.me/2016/02/15/docker-tips-and-tricks
+
+Tambien se define la siguiente convencion para ejecutar los servicios:
+   * La red de servidores mocks estara en 172.18.0.0
+   * Para cada servicio se utilizara la red 172.18.XXX.0, donde XXX:
+     - Son el numero del puerto del servicio estandar correspondiente
+     - Si el puerto es mayor a 254, se tomaron los primeros 2 digitos.
+   * El host que ejecuta los servicios vulnerables sera el 172.18.XXX.66
+   * El host que ejecuta los servicios no vulnerables sera el 172.18.XXX.77
+   * El host que se utilizará para pruebas interactivas sera el 172.18.XXX.55
+
+De esta forma los servicios nunca se exponen al exterior y ademas pueden
+ejecutarse en su puerto original.
+
+********************** ANSIBLE ************************
+
+La version que trae ubuntu 14.04 de ansible es la siguiente:
+
+root@auto:~# dpkg -l | grep ansible
+ii  ansible                                               1.5.4+dfsg-1
+
+Para instalar en ubuntu la ultima version del repositorio oficial de ansible
+tenemos lo siguiente:
+
+sudo apt-add-repository -y ppa:ansible/ansible
+sudo apt-get update
+sudo apt-get install -y ansible
+
+Con lo cual quedamos con la siguiente version:
+
+oot@auto:~# dpkg -l | grep ansible
+ii  ansible                                               2.1.1.0-1ppa~trusty
+
+Copiar el archivo original de inventario de maquinas que se administraran
+para referencia futura en el archivo siguiente:
+
+$ sudo mv /etc/ansible/hosts /etc/ansible/hosts.orig
+
+Y se añaden los hosts de FLUIDAsserts asi:
+
+***
+$ cat /etc/ansible/hosts
+[ansible]
+172.18.1.1
+***
+
+Con este comando podemos ver los modulos de ansible que estan instalados
+
+$ ansible-doc -l
+
+Copiar la llave privada que permite la conexion al contenedor de pruebas
+
+$ cp fluid-asserts/test/server/ansible/container/ansible_id_rsa \
+     ~/.ssh/ansible_id_rsa
+
+Luego agregar al archivo de configuracion de SSH local la siguiente
+configuración que evita alertas innecesarias relacionadas con las
+maquinas de servidores mock correspondientes
+
+$ cat ~/.ssh/config
+Host 172.18.*.* ansible*
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+  User root
+  LogLevel ERROR
+  IdentityFile ~/.ssh/ansible_id_rsa
+
+Verificar permisos del archivo de configuracion
+
+$ chmod 600 ~/.ssh/config
+
+Finalmente todo esta funcionando si al iniciar los servicios
+de docker con:
+
+$ ./start.sh
+
+Luego puede establecerse conexion haciendo simplemente:
+
+$ ssh ansible echo working
+working
+
+Dado que el plugin de conexion por defecto es SSH, y hemos
+establecido ya dicha conexion, podemos proceder con:
+
+$ ansible ansible -a "echo working"
+172.18.1.1 | SUCCESS | rc=0 >>
+working
+
+****** INYECTANDO INVERSAMENTE LA CLAVE **************
+
+En vez de tener una clave privada inyectada desde el host, se podria
+realizar que mediante un volumen montado, el docker genere una llave
+y se la inyecte al host para que este pueda conectarse a el.
+
+Esto requeriria siempre montar la imagen con:
+
+-v $HOME/.ssh:/host/ssh
+
+Y en el entry hacer la generacion de las llaves privadas
+de root sin clave, y luego copiar de vuelta al host la configuracion
+correspondiente asi como la llave privada con la cual se debe
+conectar el server.
+
+Puede que esta configuracion genere un entorno mas seguro para
+escenarios donde el contenedor se ejectura en servidores.
+
+Para los propositos de FLUIDAsserts que es solo para pruebas y
+simulaciones de mock, esta configuracion parece suficiente.
+
+****** CONECTANDOSE COMO NO ROOT *********************
+
+En la maquina de control ubuntu con ansible2 se requiere cambiar a SCP
+
+$ grep scp_if_ssh /etc/ansible/ansible.cfg
+scp_if_ssh = True
+
+Tambien el metodo de invocacion debe ser en el mismo archivo
+
+$ grep become_method /etc/ansible/ansible.cfg
+become_method=su
+
+Adicionalmente en la imagen de Alpine hay que darle permisos de SUID
+al archivo sudo para que pueda ocurrir el become de ansible.
+
+Esto requiere hacerse en el Dockerfile o en el entry.sh
+
+chmod 4755 /bin/su
+
+Finalmente en la invocacion como usuario normal debe usarse el
+parametro -k para que pida la clave de usuario.
+
+Si adicionalmente se ingresa -b para hacer become de root, debe luego
+usarse el -K para que se solicite precisamente la clave de root.
+
+
+*********************** ANSIBLE DOCKER CONECCION PLUGIN **************
+
+http://blog.oddbit.com/2015/10/13/ansible-20-the-docker-connection-driver/
+
+Este es el modo mas simple y mas seguro de trabajar con docker y ansible
+para el proposito que requiere FLUIDAsserts, pues como todo el trabajo
+se hace localmente no deberia necesitarse SSH para hacer la configuracion
+
+Sin embargo al parecer en Ansible2 ocurre un error que solo esta reparado
+en la version en desarrollo de Ansible.  El error tien que ver con el
+usuario de docker con el cual se tiene que conectar ansible.
+
+************TODO**********************
+
+
+Poner esto en el inicio de los script de Entry:
+
+**
+set -e
+[ "$DEBUG" == 'true' ] && set -x
+**
+Fuente: En otras mejoras posibles
+https://github.com/macropin/docker-sshd/blob/master/entry.sh
+
+ESTRATEGIAS POSIBLES PARA INYECTAR O GENERAR LLAVES SSH EN MAQUINAS
+ADMINISTRABLES POR ANSIBLE
+
+- montar como volumen claves ssh locales y ajustar permisos en el entrypoint
+  requisitos al inicio,
+  hacks en el entrypoint de todas las imagenes
+  V: La clave es del usuario y se inyecta en el repositorio sin generar varias versiones
+  D: Como funciona al heredar de la imagen el flujo de los entry points, los entry points se apilan?
+- crear un volumen nombrado persistente docker, generar claves en container y traerlas localmente
+  * sera simple?
+  * no necesita hacks en el entrypoint??
+  https://hub.docker.com/r/danielguerra/alpine-sshd/
+- en la creacion de la imagen descargar las claves e instalarlas en la imagen
+  * simple, pero genera muchas versiones en el repositorio???
+- generar la clave en la creacion de la imagen y copiarla al sistema local
+- generar clave de root aleatoriamente al iniciar la imagen e imprimirla en los logs
+  - al crear la imagen??
+  - al iniciar la imagen??
+- utilizar el connection plugin de docker y asi no tener que hacer nada

@@ -27,7 +27,7 @@ if [ -z $(docker ps -q -f name="$SERVICE") ]; then
 
   # Crear dinamicamente claves de acceso al contenedor
   # La ruta de configuración SSH tambien esta parametrizado en test/setup/hosts
-  cp "$PROJECT_DIR"/test/setup/ssh_config ~/.ssh/config.facont
+  cp "$PROJECT_DIR"/test/provision/ssh_config ~/.ssh/config.facont
   echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f ~/.ssh/facont_id_rsa -q -N ""
 
   docker run \
