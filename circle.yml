@@ -19,8 +19,8 @@ machine:
 
 dependencies:
   pre:
-    - apt-get update
-    - apt-get install scons
+    - sudo apt-get update
+    - sudo apt-get install scons
     - pip install invoke ansible tox tox-pyenv configobj
     - pip install --upgrade pip setuptools
     - pip install ansible tox tox-pyenv configobj
