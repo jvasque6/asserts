@@ -25,8 +25,8 @@ dependencies:
     - pip install ansible tox tox-pyenv configobj
   override:
 # descargar imagen de docker
-    - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
-    - docker pull fluidsignal/fluidasserts:container
+    - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
+    - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
     - test/container/start.sh
@@ -49,4 +49,4 @@ test:
     - cp -r build/coverage $CIRCLE_ARTIFACTS
     - cp -r build/lint $CIRCLE_ARTIFACTS
     - cp -r build/doc $CIRCLE_ARTIFACTS
-    - cp -r dist $CIRCLE_ARTIFACTS
+    - cp -r build/dist $CIRCLE_ARTIFACTS
