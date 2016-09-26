@@ -90,14 +90,14 @@ env.Alias('flake8', flake8_results)
 
 # Builder para pdocstyle
 docst_results = ['#build/lint/pydocstyle.txt'] 
-Command(
+env.Command(
     source=[source_files, test_files],
     action=['tox -c conf/tox.ini -- \
                  pydocstyle --count *.py test src 2>&1 | \
                      tee -a build/lint/pydocstyle.txt'],
     target=docst_results,
 )
-Alias('docst', docst_results)
+env.Alias('docst', docst_results)
 
 #
 # Scripts Subordinados
