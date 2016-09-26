@@ -6,30 +6,34 @@ Este modulo define los parametros minimos requeridos para generar
 un instalador estandar de FLUIDAsserts.
 """
 
-# pylint: disable=import-error,no-name-in-module
 from setuptools import setup
 
 setup(
-    name = 'FLUIDAsserts',
-    description = 'Assertion Library for Security Assumptions',
-    version = '0.1',
-    url = 'https://fluid.la/',
-    author = 'FLUID Engineering Team',
-    author_email = 'engineering@fluid.la',
-    packages = [
+    name='FLUIDAsserts',
+    description='Assertion Library for Security Assumptions',
+    version='0.1',
+    url='https://fluid.la/',
+    author='FLUID Engineering Team',
+    author_email='engineering@fluid.la',
+    packages=[
         'fluidasserts',
     ],
-    package_dir = {
+    package_dir={
         'fluidasserts': 'src',
     },
-    classifiers = [
+    classifiers=[
+        'Environment :: Console',
         'Topic :: Security',
         'Topic :: Software Development :: Testing',
         'Topic :: Software Development :: Quality Assurance',
+        'Development Status :: 2 - Pre-Alpha',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
     ],
-    install_requires = [
+    install_requires=[
         'configobj==5.0.6',         # fluidasserts
         'PyPDF2==1.26.0',           # fluidasserts.pdf
         'Flask==0.11.1',            # fluidasserts.http
@@ -38,5 +42,5 @@ setup(
         'cryptography==1.4',        # fluidasserts.http_ssl
         'paramiko==2.0.2',          # fluidasserts.ssh
     ],
-    include_package_data = True,    # archivos a incluir en MANIFEST.in
+    include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
