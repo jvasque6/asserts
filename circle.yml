@@ -1,5 +1,5 @@
 #
-# Archivo de configuracion del servicio de integración continua circleci.
+# Archivo de configuracion del servicio de integración continua.
 #
 
 machine:
