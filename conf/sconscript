@@ -1,0 +1,70 @@
+# -*- coding: utf-8 -*-
+
+import os
+
+lenv = Environment()
+
+# - se requiere en el entorno de construccion la variable $USER
+# - Se importa todo el entorno para que GIT se vea en colores
+#   Idealmente se hace explicito cuales variables pero no fue
+#   posible identificar las variables que utiliza GIT para que
+#   el pager LESS funcionará sin errores.  Si esto se desactiva
+#   estos targets siempre se ven sin colores y con:
+#   WARNING: terminal is not fully functional.
+lenv['USER'] = os.environ['USER']
+lenv['ENV'] = os.environ
+
+# Crear facilmente Phony Targets
+# Tomada de https://bitbucket.org/scons/scons/wiki/PhonyTargets
+def PhonyTargets(env = None, **kw):
+    if not env: env = DefaultEnvironment()
+    for target,action in kw.items():
+        env.AlwaysBuild(env.Alias(target, [], action))
+
+# Target de autodiagnostico
+PhonyTargets(lenv, self = 
+    ['date', 
+     'lsb_release -a 2>&1',
+     'git --version',
+     'git config -l',
+     'git --no-pager log -1',
+     'git status',
+     'git remote -v',
+     'git remote show origin'])
+
+# Target de descarga
+PhonyTargets(lenv, download = 
+    ['git remote -v', 
+     'git fetch -v origin',
+     'git branch',
+     'git diff --stat HEAD..master'])
+
+# Target de sincronización
+PhonyTargets(lenv, sync = 
+    ['git stash -u',
+     'git checkout master',
+     'git merge --ff-only origin/master',
+     'git checkout $USER',
+     'git merge --ff-only origin/master',
+     'git stash pop',
+     'git diff --stat HEAD..master'])
+
+# Target de carga al repositorio
+PhonyTargets(lenv, upload = 
+    ['git push origin'])
+
+# Target para actualizar ultimo commit con otros cambios
+PhonyTargets(lenv, re_commit =
+    ['git commit --amend'])
+
+# Pendiente por pasar a stage
+PhonyTargets(lenv, not_staged =
+    ['git diff'])
+
+# Pendiente por pasar a commit (local)
+PhonyTargets(lenv, not_commited =
+    ['git diff --staged'])
+
+# Configura entorno de desarrollo: pre-commit, commit-msg
+PhonyTargets(lenv, setup_dev =
+    ['git config --local commit.template conf/commit-msg.txt'])
