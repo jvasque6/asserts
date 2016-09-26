@@ -1,6 +1,5 @@
----
 #
-# Archivo de configuracion del servicio de integración continua circleci
+# Archivo de configuracion del servicio de integración continua circleci.
 #
 
 machine:
@@ -20,10 +19,10 @@ machine:
 
 dependencies:
   pre:
-#    - apt-get update
-#    - apt-get install scons
-#    - pip install invoke ansible tox tox-pyenv configobj
-#    - pip install --upgrade pip setuptools
+    - apt-get update
+    - apt-get install scons
+    - pip install invoke ansible tox tox-pyenv configobj
+    - pip install --upgrade pip setuptools
     - pip install ansible tox tox-pyenv configobj
   override:
 # descargar imagen de docker
@@ -43,7 +42,6 @@ test:
      - scons lint
   override:
      - scons test
-          timeout: 120
      - scons dist
      - scons doc
   post:
