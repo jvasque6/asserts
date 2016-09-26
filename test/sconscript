@@ -30,7 +30,7 @@ lenv.Clean(test_run, ['#build/run',
                       '#build/coverage',
                       '#.cache',
                       '#.coverage'])
-lenv.Depends(deps_results, test_run)
+#lenv.Depends(deps_results, test_run)
 
 # Alias
 lenv.Alias('test', test_results)
