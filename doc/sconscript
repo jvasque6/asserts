@@ -15,7 +15,6 @@ doc_command = 'tox -c conf/tox.ini -- pdoc --html --html-dir build/doc --all-sub
 doc_builder = Builder(action = doc_command)
 lenv.Append(BUILDERS = {'Doc' : doc_builder})
 doc_run = lenv.Doc(target=doc_results, source=doc_needs)
-lenv.Depends(doc_run, deps_results)
 lenv.Clean(doc_run, ['#build/doc'])  # dir no en targets
 
 # Alias

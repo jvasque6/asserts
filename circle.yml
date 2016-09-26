@@ -19,33 +19,36 @@ machine:
 
 dependencies:
   pre:
-    - pip install invoke ansible tox tox-pyenv configobj
+    - apt-get update
+    - apt-get install scons
+#    - pip install invoke ansible tox tox-pyenv configobj
+    - pip install --upgrade pip setuptools
+    - pip install ansible tox tox-pyenv configobj
   override:
 # descargar imagen de docker
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
-    - tox -e py27,py34,py35 --notest
+    - scons deps
   post:
     - test/container/start.sh
     - test/container/smoke.sh
     - test/setup/smoke.sh
     - test/container/stop.sh
 
-# Antes de este punto todo es cacheable.
+# Antes de este punto todo es cacheable.  Pendiente investigar como.
 
 test:
   pre:
-#    - invoke pre_commit
-#    - invoke lint
+     - scons lint
   override:
-#    - invoke test
-    - tox -e py27,py34,py35
-#    - invoke dist
-#    - invoke doc
+     - scons test
+          timeout: 120
+     - scons dist
+     - scons doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
-    - cp results.log $CIRCLE_ARTIFACTS
+    - cp build/results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
-#    - cp -r build/lint $CIRCLE_ARTIFACTS
-#    - cp -r build/doc $CIRCLE_ARTIFACTS
-#    - cp -r dist $CIRCLE_ARTIFACTS
+    - cp -r build/lint $CIRCLE_ARTIFACTS
+    - cp -r build/doc $CIRCLE_ARTIFACTS
+    - cp -r dist $CIRCLE_ARTIFACTS
