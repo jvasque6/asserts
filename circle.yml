@@ -27,6 +27,7 @@ dependencies:
 # descargar imagen de docker
     - docker login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
     - docker pull fluidsignal/fluidasserts:container
+    - tox --version
     - scons deps
   post:
     - test/container/start.sh
