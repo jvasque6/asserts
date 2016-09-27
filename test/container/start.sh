@@ -27,7 +27,7 @@ if [ -z $(docker ps -q -f name="$SERVICE") ]; then
 
   # Crear dinamicamente claves de acceso al contenedor
   # La ruta de configuración SSH tambien esta parametrizado en test/setup/hosts
-  cp "$PROJECT_DIR"/test/setup/ssh_config ~/.ssh/config.facont
+  cp "$PROJECT_DIR"/test/provision/ssh_config ~/.ssh/config.facont
   echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f ~/.ssh/facont_id_rsa -q -N ""
 
   docker run \
@@ -41,9 +41,8 @@ if [ -z $(docker ps -q -f name="$SERVICE") ]; then
 		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
 		fluidsignal/fluidasserts:"$SERVICE"
 
-  # menos segundos genera fallos en la conexión
-  echo "Esperando 5 segundos a que el contenedor inicie totalmente..."
-  sleep 5 
+  echo "Esperando que el puerto 22 este abierto..."
+  until nc -z $IP 22; do : sleep 0.2; done
 else
   echo "Contenedor ya inicio, reutilizando contenedor..."
 fi

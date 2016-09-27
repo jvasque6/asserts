@@ -1,0 +1,21 @@
+# -*- coding: utf-8 -*-
+
+# Importar explicitamente
+Import('env', 
+       'source_files', 
+       'deps_results')
+
+# Variables de entorno especificas de este entorno local
+lenv = env.Clone()
+
+# Builder de la documentación
+doc_needs = [source_files]
+doc_results = ['#build/doc/fluidasserts/index.html']
+doc_command = 'tox -c conf/tox.ini -- pdoc --html --html-dir build/doc --all-submodules --overwrite fluidasserts'
+doc_builder = Builder(action = doc_command)
+lenv.Append(BUILDERS = {'Doc' : doc_builder})
+doc_run = lenv.Doc(target=doc_results, source=doc_needs)
+lenv.Clean(doc_run, ['#build/doc'])  # dir no en targets
+
+# Alias
+lenv.Alias('doc', doc_results)

@@ -38,20 +38,21 @@ GUESSED_PASS = 'guessed123'
 # Fixtures
 #
 
-
+# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def weak_ftp(request):
     """Configura perfil de FTP vulnerable."""
     print('Running FTP vulnerable playbook')
-    subprocess.call('ansible-playbook test/setup/ftp.yml \
+    subprocess.call('ansible-playbook test/provision/ftp.yml \
                                       --tags weak', shell=True)
 
 
+# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def hard_ftp(request):
     """Configura perfil de FTP endurecido."""
     print('Running FTP hardened playbook')
-    subprocess.call('ansible-playbook test/setup/ftp.yml \
+    subprocess.call('ansible-playbook test/provision/ftp.yml \
                                       --tags hard', shell=True)
 
 
