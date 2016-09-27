@@ -20,15 +20,16 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update
-    - sudo apt-get install scons
     - pip install --upgrade pip setuptools
-    - pip install ansible tox tox-pyenv configobj
-  override:
-# descargar imagen de docker
     - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
+  override:
+    - sudo apt-get install scons ansible
+    - pip install tox tox-pyenv
+# descargar imagen de docker
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
+    - scons self
     - test/container/start.sh
     - test/container/smoke.sh
     - test/provision/smoke.sh
