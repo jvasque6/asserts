@@ -1,67 +1,24 @@
-# invocar el autopep desde aqui o desde el wrapper precommit?
-# por el momento lo dejamos aqui! que funciona bien y arregla
-# mucho problema antes de que se ejecuten el resto de linters
-#
-# 1. Evitar el uso del parametro exclude: en el hook.
-#    Preferiblemente usar el tag del linter que dentro del
-#    archivo en question inhibe su analisis.  De esta forma
-#    queda documentado el pendiente donde corresponde sin
-#    excepciones en archivos globales de configuracion
-
 -   repo: https://github.com/pre-commit/pre-commit.git
-    sha: 8dba3281d5051060755459dcf88e28fc26c27526
+    sha: bbf1f62ed686a3e321280703a227fbd957e76151
     hooks:
     -   id: validate_config
     -   id: validate_manifest
-
--   repo: git://github.com/pre-commit/mirrors-autopep8
-    sha: v1.2.2
-    hooks:
-    -   id: autopep8
-
-- repo: git://github.com/FalconSocial/pre-commit-python-sorter
-  sha: 1.0.4
-  hooks:
-  - id: python-import-sorter
-#    args: [--check-only, --diff]
-#    args: ['--silent-overwrite']
-
 -   repo: git://github.com/pre-commit/pre-commit-hooks
-    sha: v0.6.0
+    sha: 18d7035de5388cc7775be57f529c154bf541aab9
     hooks:
-    -   id: end-of-file-fixer           # fixer first
-    -   id: fix-encoding-pragma         # fixer first
-    -   id: double-quote-string-fixer   # fixer first
-    -   id: trailing-whitespace         # fixer first
+#    -   id: end-of-file-fixer
+#    -   id: fix-encoding-pragma
+#    -   id: double-quote-string-fixer
+#    -   id: trailing-whitespace
     -   id: check-docstring-first
     -   id: check-added-large-files
     -   id: check-ast
     -   id: check-case-conflict
     -   id: check-yaml
     -   id: flake8
-#    -   id: name-tests-test   # no soporta los archivos en test solo tests
-#    -   id: detect-private-key  # generar la clave a mano dinamicamente
-#    -   id: detect-aws-credentials  # crear archivo con las claves
-
 -   repo: git://github.com/pre-commit/mirrors-pylint
-    sha: v1.5.5
+    sha: 29c787c152552c93bdc59c45c23a155cb0570feb
     hooks:
     -   id: pylint
-        args: [--rcfile=conf/pylintrc]
-
-# en ubuntu no estan los repositorios de shellcheck
-# entonces toca hacer lo siguiente:
-# $ sudo apt-get install cabal-install # package mananger de haskell
-# $ cabal install shellcheck  # descargar y compilar el linter de bash
-#
-#-   repo: git://github.com/detailyang/pre-commit-shell
-#    sha: 1.0.0
-#    hooks:
-#    - id: shell-lint
-
-# saca error en la instalacion, ambiente virtual? o python3?
-#
-#-   repo: git://github.com/FalconSocial/pre-commit-mirrors-pep257
-#    sha: v0.3.2
-#    hooks:
-#    -   id: pep257
+        args:
+        - --rcfile=conf/pylintrc

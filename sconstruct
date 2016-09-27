@@ -1,0 +1,126 @@
+# -*- coding: utf-8 -*-
+
+import os
+
+# Construcción del entorno de construcción por defecto
+env = Environment()
+
+# Variables que se propagan del entorno exterior a todos los entornos
+env['ENV']['PATH'] = os.environ['PATH']
+env['ENV']['HOME'] = os.environ['HOME']
+# Variables que se propagan del entorno exterior en caso de existir
+if 'VERBOSE' in os.environ: 
+    env['ENV']['VERBOSE'] = os.environ['VERBOSE']
+if 'CIRCLECI' in os.environ: 
+    env['ENV']['CIRCLECI'] = os.environ['CIRCLECI']
+
+#
+# Variables que se definen aqui para todos los entornos
+# 
+
+# no generar pyc pyo o directorio __pycache__
+env['ENV']['PYTHONDONTWRITEBYTECODE'] = 1
+# https://docs.python.org/3.1/library/warnings.html#the-warnings-filter
+env['ENV']['PYTHONWARNINGS'] = 'ignore'
+
+# ubicación del cache de cambio de archivos
+env.SConsignFile('build/decider') 
+
+# Codigo fuente
+source_files = Glob('#src/*.py')
+test_files = Glob('#test/*.py')
+env.NoClean(source_files)
+
+#
+# Reglas
+#
+
+# Builder de ambiente virtual y depedencias
+deps_needs = ['#conf/tox.ini']
+deps_results = ['#build/virtual/log/tox-0.log']
+deps_builder = Builder(action = 'tox -c conf/tox.ini --notest')
+env.Append(BUILDERS = {'Deps' : deps_builder})
+deps_run = env.Deps(target = deps_results, source = deps_needs)
+env.Clean(deps_run, ['#build/virtual'])  # dir no en targets
+env.Alias('deps', deps_results)
+
+# Builder de distribución de fuente
+sdist_needs = [source_files,
+               'MANIFEST.in',
+               '#setup.cfg',
+               '#setup.py']
+sdist_results = ['#build/dist/FLUIDAsserts-0.1.zip']
+sdist_command = 'python setup.py sdist' # conf en setup.cfg
+sdist_builder = Builder(action = sdist_command)
+env.Append(BUILDERS = {'SDist' : sdist_builder})
+sdist_run = env.SDist(target=sdist_results, source=sdist_needs)
+env.Alias('sdist', sdist_results)
+
+# Builder de distribución de binario
+bdist_needs = source_files
+bdist_results = ['#build/dist/FLUIDAsserts-0.1-py2.py3-none-any.whl',
+                 '#build/dist/FLUIDAsserts-0.1-py2.7.egg']
+bdist_command = 'python setup.py bdist_wheel bdist_egg'  # conf en setup.cfg
+bdist_builder = Builder(action = bdist_command)
+env.Append(BUILDERS = {'BDist' : bdist_builder})
+bdist_run = env.BDist(target=bdist_results, source=bdist_needs)
+env.Alias('bdist', bdist_results)
+
+# Builder para pylint
+pylint_results = ['#build/lint/pylint.txt'] 
+env.Command(
+    source=[source_files, test_files, '#conf/pylintrc'],
+    action=['tox -c conf/tox.ini -- \
+                 pylint --rcfile=conf/pylintrc *.py test src 2>&1 | \
+                     tee -a build/lint/pylint.txt'],
+    target=pylint_results,
+)
+env.Alias('pylint', pylint_results)
+
+# Builder para flake8
+flake8_results = ['#build/lint/flake8.txt'] 
+env.Command(
+    source=[source_files, test_files, '#setup.cfg'],
+    action=['tox -c conf/tox.ini -- \
+                 flake8 *.py test/ src/ 2>&1 | \
+                     tee -a build/lint/flake8.txt'],
+    target=flake8_results,
+)
+env.Alias('flake8', flake8_results)
+
+# Builder para pdocstyle
+docst_results = ['#build/lint/pydocstyle.txt'] 
+env.Command(
+    source=[source_files, test_files],
+    action=['tox -c conf/tox.ini -- \
+                 pydocstyle --count *.py test src 2>&1 | \
+                     tee -a build/lint/pydocstyle.txt'],
+    target=docst_results,
+)
+env.Alias('docst', docst_results)
+
+#
+# Scripts Subordinados
+#
+
+# Phony Targets
+SConscript('#conf/sconscript')
+
+# Pruebas de unidad
+SConscript('#test/sconscript', exports=['env', 'source_files', 'deps_results'])
+
+# Documentación
+SConscript('#doc/sconscript', exports=['env', 'source_files', 'deps_results'])
+
+#
+# Alias Agrupadores
+# 
+env.Alias('dist', [sdist_results,
+                   bdist_results])
+env.Alias('lint', [docst_results,
+                   pylint_results,
+                   flake8_results])
+
+
+# Solo construccion explicita
+Default(None)

@@ -1,9 +1,0 @@
-# cargada si esta establecida la variable ANSIBLE_CONFIG
-# scripts que hagan uso de tox.ini y env.sh ya la tienen definida
-
-[defaults]
-retry_files_enabled = False
-callback_whitelist  = profile_tasks
-
-[ssh_connection]
-pipelining = True
