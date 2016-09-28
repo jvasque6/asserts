@@ -34,12 +34,13 @@ setup(
         'Intended Audience :: System Administrators',
     ],
     install_requires=[
-        'configobj==5.0.6',          # fluidasserts
-        'PyPDF2==1.26.0',            # fluidasserts.pdf
-        'requests==2.10.0',          # fluidasserts.http
-        'requests-oauthlib==0.6.2',  # fluidasserts.http
-        'cryptography==1.4',         # fluidasserts.http_ssl
-        'paramiko==2.0.2',           # fluidasserts.ssh
+        'configobj==5.0.6',          # src
+        'PyPDF2==1.26.0',            # src.pdf
+        'requests==2.10.0',          # src.http
+        'requests-oauthlib==0.6.2',  # src.http
+        'cryptography==1.4',         # src.http_ssl
+        'ldap3==1.2.2',              # src.ldap
+        'paramiko==2.0.2',           # src.ssh
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
