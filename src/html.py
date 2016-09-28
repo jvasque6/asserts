@@ -79,12 +79,12 @@ def has_not_autocomplete(filename, selector):
         filename, selector, '[form|input]', attr, value)
     
     if has_attr == False:
-	status = 'OPEN'
-	result = True
-	logging.info('%s attribute in %s, Details=%s, %s',
+        status = 'OPEN'
+        result = True
+        logging.info('%s attribute in %s, Details=%s, %s',
                  attr, filename, '', status)
     else:
-	status = 'CLOSE'
-	result = False
-	logging.info('%s attribute in %s, Details=%s, %s',
+        status = 'CLOSE'
+        result = False
+        logging.info('%s attribute in %s, Details=%s, %s',
                  attr, filename, value, status)

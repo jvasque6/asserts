@@ -29,6 +29,6 @@ def test_autocomplete_open():
 
 def test_autocomplete_close():
     """Attribute autocomplete=off in no-vulnerable.html?"""
-    assert html.has_not_autocomplete(
+    assert not html.has_not_autocomplete(
         'test/static/non-vulnerable.html',
         'body > form')
