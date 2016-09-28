@@ -41,6 +41,7 @@ setup(
         'cryptography==1.4',         # src.http_ssl
         'ldap3==1.2.2',              # src.ldap
         'paramiko==2.0.2',           # src.ssh
+	'beautifulsoup4==4.5.1',     # src.html
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
