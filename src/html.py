@@ -39,12 +39,7 @@ def __has_attribute(filename, selector, tag, attr, value):
                 autocomplete: on, off.
 
     """
-
-    # Vulnerability default status
-    status = 'OPEN'
-    # Vulnerability default result
-    result = False
-
+    
     handle = open(filename, 'r')
     html_doc = handle.read()
     handle.close()
@@ -57,12 +52,11 @@ def __has_attribute(filename, selector, tag, attr, value):
     prog = re.compile('%s' % cache_rgx, flags=re.IGNORECASE)
     match = prog.search(str(form))
 
-    if match:
-        status = 'CLOSE'
-        result = True
+    if match is not None:
+	result = True
+    else:
+        result = False
 
-    logging.info('%s attribute in %s, Details=%s, %s',
-                 attr, filename, value, status)
     return result
 
 
@@ -78,5 +72,19 @@ def has_not_autocomplete(filename, selector):
             3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
                seleccionar la opción Copy > Copy Selector
     """
-    return __has_attribute(
-        filename, selector, '[form|input]', 'autocomplete', 'off')
+    
+    attr = 'autocomplete'
+    value = 'off'
+    has_attr = __has_attribute(
+        filename, selector, '[form|input]', attr, value)
+    
+    if has_attr == False:
+	status = 'OPEN'
+	result = True
+	logging.info('%s attribute in %s, Details=%s, %s',
+                 attr, filename, '', status)
+    else:
+	status = 'CLOSE'
+	result = False
+	logging.info('%s attribute in %s, Details=%s, %s',
+                 attr, filename, value, status)
