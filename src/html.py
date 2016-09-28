@@ -53,7 +53,7 @@ def __has_attribute(filename, selector, tag, attr, value):
     match = prog.search(str(form))
 
     if match is not None:
-	result = True
+        result = True
     else:
         result = False
 
