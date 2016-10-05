@@ -20,15 +20,15 @@ Email: jescobar@fluid.la
 from fluidasserts import html
 
 
-def test_autocomplete_open():
+def test_form_autocomplete_open():
     """Attribute autocomplete=off in vulnerable.html?"""
-    assert not html.has_not_autocomplete(
+    assert html.form_autocomplete(
         'test/static/vulnerable.html',
         'body > form')
 
 
-def test_autocomplete_close():
+def test_form_autocomplete_close():
     """Attribute autocomplete=off in no-vulnerable.html?"""
-    assert not html.has_not_autocomplete(
+    assert not html.form_autocomplete(
         'test/static/non-vulnerable.html',
         'body > form')
