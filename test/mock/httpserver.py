@@ -127,6 +127,48 @@ def expires_fail():
     return resp
 
 
+@APP.route('/http/headers/put_close', methods = ['OPTIONS'])
+def put_close():
+    resp = Response("Method PUT not Allowed")
+    resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
+    return resp
+
+
+@APP.route('/http/headers/put_open', methods = ['OPTIONS'])
+def put_open():
+    resp = Response("Method PUT Allowed")
+    resp.headers['allow'] = 'PUT'
+    return resp
+
+
+@APP.route('/http/headers/trace_close', methods = ['OPTIONS'])
+def trace_close():
+    resp = Response("Method TRACE not Allowed")
+    resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
+    return resp
+
+
+@APP.route('/http/headers/trace_open', methods = ['OPTIONS'])
+def trace_open():
+    resp = Response("Method TRACE Allowed")
+    resp.headers['allow'] = 'TRACE'
+    return resp
+
+
+@APP.route('/http/headers/delete_close', methods = ['OPTIONS'])
+def delete_close():
+    resp = Response("Method DELETE not Allowed")
+    resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
+    return resp
+
+
+@APP.route('/http/headers/delete_open', methods = ['OPTIONS'])
+def delete_open():
+    resp = Response("Method DELETE Allowed")
+    resp.headers['allow'] = 'DELETE'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
