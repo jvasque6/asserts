@@ -83,6 +83,43 @@ def test_cache_control_close():
         '%s/cache_control/ok' % (BASE_URL))
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_put_close():
+    """HTTP PUT Not Allowed"""
+    assert not http.has_put_method('%s/put_close' % (BASE_URL))
+
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_put_open():
+    """HTTP PUT Allowed"""
+    assert not http.has_put_method('%s/put_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_trace_close():
+    """HTTP TRACE Not Allowed"""
+    assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_trace_open():
+    """HTTP TRACE Allowed"""
+    assert not http.has_trace_method('%s/trace_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_delete_close():
+    """HTTP DELETE Not Allowed"""
+    assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_delete_open():
+    """HTTP DELETE Allowed"""
+    assert not http.has_delete_method('%s/delete_open' % (BASE_URL))
+
+
 #
 # TODO(glopez) Functions in HTTP library
 #
