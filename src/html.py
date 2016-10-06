@@ -39,7 +39,7 @@ def __has_attribute(filename, selector, tag, attr, value):
                 autocomplete: on, off.
 
     """
-    
+
     handle = open(filename, 'r')
     html_doc = handle.read()
     handle.close()
@@ -52,15 +52,10 @@ def __has_attribute(filename, selector, tag, attr, value):
     prog = re.compile('%s' % cache_rgx, flags=re.IGNORECASE)
     match = prog.search(str(form))
 
-    if match is not None:
-        result = True
-    else:
-        result = False
-
-    return result
+    return match is not None
 
 
-def has_not_autocomplete(filename, selector):
+def form_autocomplete(filename, selector):
     """
         Verifica si el selector (selector) en el archivo (filename) tiene
         configurado el atributo autocomplete con valor off.
@@ -72,19 +67,21 @@ def has_not_autocomplete(filename, selector):
             3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
                seleccionar la opción Copy > Copy Selector
     """
-    
+
     attr = 'autocomplete'
     value = 'off'
     has_attr = __has_attribute(
         filename, selector, '[form|input]', attr, value)
-    
-    if has_attr == False:
+
+    if has_attr is False:
         status = 'OPEN'
         result = True
         logging.info('%s attribute in %s, Details=%s, %s',
-                 attr, filename, '', status)
+                     attr, filename, '', status)
     else:
         status = 'CLOSE'
         result = False
         logging.info('%s attribute in %s, Details=%s, %s',
-                 attr, filename, value, status)
+                     attr, filename, value, status)
+
+    return result

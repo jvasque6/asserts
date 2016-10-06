@@ -11,6 +11,9 @@ set -e
 # importar entorno
 source $(git rev-parse --show-toplevel)/env.sh
 
+# Mensaje de inicio
+echo "---### Compilando contenedor."
+
 # construir la imagen
 docker build -t fluidsignal/fluidasserts:"$SERVICE" \
              "$PROJECT_DIR"/test/container

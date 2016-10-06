@@ -17,14 +17,12 @@ import pytest
 from fluidasserts import http
 from test.mock import httpserver
 
-
 #
 # Constants
 #
 
 
 BASE_URL = 'http://localhost:5000/http/headers'
-
 
 #
 # Fixtures
@@ -48,7 +46,6 @@ def mock_http(request):
 
     request.addfinalizer(teardown)
 
-
 #
 # Open tests
 #
@@ -70,6 +67,7 @@ def test_cache_control_open():
 #
 # Close tests
 #
+
 
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():

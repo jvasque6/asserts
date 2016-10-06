@@ -30,10 +30,7 @@ dependencies:
     - scons deps
   post:
     - scons self
-    - test/container/start.sh
-    - test/container/smoke.sh
-    - test/provision/smoke.sh
-    - test/container/stop.sh
+    - scons smoke
 
 # Antes de este punto todo es cacheable.  Pendiente investigar como.
 
