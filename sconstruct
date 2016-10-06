@@ -3,7 +3,7 @@
 import os
 
 # Garantizando version de scons
-EnsureSConsVersion(2, 5)
+EnsureSConsVersion(2, 3)
 
 # Construcción del entorno de construcción por defecto
 env = Environment()
