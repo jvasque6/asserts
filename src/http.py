@@ -331,34 +331,46 @@ def __options_request(url):
 def has_trace_method(url):
     """check HTTP TRACE."""
     is_trace_present = __options_request(url).headers
+    result = True
     if 'allow' in is_trace_present:
         if 'TRACE' in is_trace_present['allow']:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'TRACE', 'Is Present', 'OPEN')
         else:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'TRACE', 'Not Present', 'CLOSE')
+            result = False
     else:
         logging.info('Method not allowed in %s', url)
+        result = False
+    return result
 
 
 def has_delete_method(url):
     """check HTTP DELETE."""
     is_delete_present = __options_request(url).headers
+    result = True
     if 'allow' in is_delete_present:
         if 'DELETE' in is_delete_present['allow']:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'DELETE', 'Is Present', 'OPEN')
         else:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'DELETE', 'Not Present', 'CLOSE')
+            result = False
     else:
         logging.info('Method not allowed in %s', url)
+        result = False
+    return result
 
 
 def has_put_method(url):
     """check HTTP PUT."""
     is_put_present = __options_request(url).headers
+    result = True
     if 'allow' in is_put_present:
         if 'PUT' in is_put_present['allow']:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'PUT', 'Is Present', 'OPEN')
         else:
             logging.info('%s HTTP Method %s, Details=%s, %s', url, 'PUT', 'Not Present', 'CLOSE')
+            result = False
     else:
         logging.info('Method not allowed in %s', url)
+        reuslt  = False
+    return result
