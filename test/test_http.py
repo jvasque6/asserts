@@ -93,7 +93,7 @@ def test_put_close():
 @pytest.mark.usefixtures('mock_http')
 def test_put_open():
     """HTTP PUT Allowed"""
-    assert not http.has_put_method('%s/put_open' % (BASE_URL))
+    assert http.has_put_method('%s/put_open' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -105,7 +105,7 @@ def test_trace_close():
 @pytest.mark.usefixtures('mock_http')
 def test_trace_open():
     """HTTP TRACE Allowed"""
-    assert not http.has_trace_method('%s/trace_open' % (BASE_URL))
+    assert http.has_trace_method('%s/trace_open' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -117,7 +117,7 @@ def test_delete_close():
 @pytest.mark.usefixtures('mock_http')
 def test_delete_open():
     """HTTP DELETE Allowed"""
-    assert not http.has_delete_method('%s/delete_open' % (BASE_URL))
+    assert http.has_delete_method('%s/delete_open' % (BASE_URL))
 
 
 #
