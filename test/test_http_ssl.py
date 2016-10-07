@@ -25,4 +25,14 @@ def test_http_ssl_is_pfs_enabled():
     """PFS habilitado en sitio?"""
     assert http_ssl.is_pfs_enabled('fluid.la')
 
+
+def test_http_ssl_is_cert_active():
+    """Certificado aun esta vigente?"""
+    assert http_ssl.is_cert_active('fluid.la')
+
+
+def test_http_ssl_is_cert_lifespan_safe():
+    """Vigencia del certificado es segura?"""
+    assert http_ssl.is_cert_validity_lifespan_safe('fluid.la')
+
 # Pendente implementar resto de metodos

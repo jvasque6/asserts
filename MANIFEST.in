@@ -7,6 +7,6 @@ include setup.py
 # incluir explicitamente solo los archivos python de src
 recursive-include src *.py
 
-# incluir los archivos de configuración del software
+# incluir los archivos de configuracion del software
 include conf/conf.cfg
 include conf/conf.spec

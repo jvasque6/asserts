@@ -7,7 +7,8 @@ Modulo LDAP
 import logging
 
 # 3rd party imports
-from ldap3 import Server, Connection
+from ldap3 import Server
+from ldap3 import Connection
 
 # local imports
 # None
@@ -31,7 +32,7 @@ def is_anonymous_bind_allowed(server):
                      server, 'CLOSED')
         return False
     finally:
-        conn.close()
+        conn.unbind()
 
     if conn.bind() is True:
         logging.info('LDAP anonymous bind success, Details=%s, %s',

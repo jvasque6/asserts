@@ -8,8 +8,9 @@ import logging
 import socket
 
 # 3rd party imports
-import ssl
 import datetime
+import ssl
+
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
@@ -69,7 +70,7 @@ def is_cert_validity_lifespan_safe(site, port=PORT):
     """
     Function to check whether cert lifespan is safe
     """
-    MAX_VALIDITY_DAYS = 365
+    max_validity_days = 365
 
     result = True
     cert = str(ssl.get_server_certificate((site, port)))
@@ -78,7 +79,7 @@ def is_cert_validity_lifespan_safe(site, port=PORT):
     cert_validity = \
         cert_obj.not_valid_after - cert_obj.not_valid_before
 
-    if cert_validity.days <= MAX_VALIDITY_DAYS:
+    if cert_validity.days <= max_validity_days:
         logging.info('Certificate has a secure lifespan, Details=Not\
                       valid before: %s, Not valid after: %s, %s',
                      cert_obj.not_valid_before.isoformat(),
