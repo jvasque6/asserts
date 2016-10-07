@@ -19,9 +19,11 @@ PDF.
 # local imports
 from fluidasserts import pdf
 
+
 #
 # Open tests
 #
+
 
 def test_pdf_has_author_open():
     """PDF tiene metados de autor en el docinfo?"""
@@ -37,9 +39,11 @@ def test_pdf_has_producer_open():
     """PDF tiene metados de productor en el docinfo?"""
     assert pdf.has_producer('test/static/vulnerable.pdf')
 
+
 #
 # Close tests
 #
+
 
 def test_pdf_has_author_close():
     """PDF no tiene metados de autor en el docinfo?"""

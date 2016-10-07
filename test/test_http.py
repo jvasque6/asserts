@@ -17,14 +17,12 @@ import pytest
 from fluidasserts import http
 from test.mock import httpserver
 
-
 #
 # Constants
 #
 
 
 BASE_URL = 'http://localhost:5000/http/headers'
-
 
 #
 # Fixtures
@@ -48,7 +46,6 @@ def mock_http(request):
 
     request.addfinalizer(teardown)
 
-
 #
 # Open tests
 #
@@ -71,6 +68,7 @@ def test_cache_control_open():
 # Close tests
 #
 
+
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?"""
@@ -83,6 +81,43 @@ def test_cache_control_close():
     """Header Cache-Control establecido?"""
     assert not http.has_header_cache_control(
         '%s/cache_control/ok' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_put_close():
+    """HTTP PUT Not Allowed"""
+    assert not http.has_put_method('%s/put_close' % (BASE_URL))
+
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_put_open():
+    """HTTP PUT Allowed"""
+    assert http.has_put_method('%s/put_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_trace_close():
+    """HTTP TRACE Not Allowed"""
+    assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_trace_open():
+    """HTTP TRACE Allowed"""
+    assert http.has_trace_method('%s/trace_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_delete_close():
+    """HTTP DELETE Not Allowed"""
+    assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_delete_open():
+    """HTTP DELETE Allowed"""
+    assert http.has_delete_method('%s/delete_open' % (BASE_URL))
 
 
 #

@@ -24,17 +24,20 @@ def PhonyTargets(env=None, **kw):
 # Target de autodiagnostico
 PhonyTargets(lenv, self=[
     'date',
+    'id',
     'lsb_release -a 2>&1',
+    'python --version',
+    'python3 --version',
+    'scons --version',
+    'docker --version',
+    'ansible --version',
+    'tox --version',
     'git --version',
     'git config -l',
     'git --no-pager log -1',
     'git status',
     'git remote -v',
     'git remote show origin',
-    'docker --version',
-    'scons --version',
-    'tox --version',
-    'ansible --version',
 ])
 
 # Target de descarga
@@ -42,7 +45,7 @@ PhonyTargets(lenv, download=[
     'git remote -v',
     'git fetch -v origin',
     'git branch',
-    'git diff --stat HEAD..master',
+    'git diff --stat HEAD..origin/master',
 ])
 
 # Target de sincronización
@@ -53,7 +56,7 @@ PhonyTargets(lenv, sync=[
     'git checkout $USER',
     'git merge --ff-only origin/master',
     'git stash pop',
-    'git diff --stat HEAD..master',
+    'git diff --stat HEAD..origin/master',
 ])
 
 # Target de reci
@@ -64,25 +67,42 @@ PhonyTargets(lenv, reci=[
 
 # Target de carga al repositorio
 PhonyTargets(lenv, upload=[
-    'git push origin'
+    'git push origin',
 ])
 
 # Target para actualizar ultimo commit con otros cambios
 PhonyTargets(lenv, re_commit=[
-    'git commit --amend'
+    'git commit --amend',
 ])
 
 # Pendiente por pasar a stage
 PhonyTargets(lenv, not_staged=[
-    'git diff'
+    'git diff',
 ])
 
 # Pendiente por pasar a commit (local)
 PhonyTargets(lenv, not_commited=[
-    'git diff --staged'
+    'git diff --staged',
 ])
 
 # Configura entorno de desarrollo: pre-commit, commit-msg
 PhonyTargets(lenv, setup_dev=[
-    'git config --local commit.template conf/commit-msg.txt'
+    'git config --local commit.template conf/commit-msg.txt',
+    'git config --local push.default simple',
+])
+
+# Configura entorno de desarrollo: pre-commit, commit-msg
+PhonyTargets(lenv, pre_commit=[
+    'tox -c conf/tox.ini -- pre-commit run --all-files',
+])
+
+# Ejecuta pruebas de humo de infraestructura
+PhonyTargets(lenv, smoke=[
+    'docker info',
+    'test/container/build.sh',
+    'test/container/start.sh',
+    'test/container/smoke.sh',
+    'test/provision/smoke.sh',
+    'test/container/stop.sh',
+    'test/container/upload.sh',
 ])

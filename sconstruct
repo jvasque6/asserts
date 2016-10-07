@@ -2,6 +2,9 @@
 
 import os
 
+# Garantizando version de scons
+EnsureSConsVersion(2, 3)
+
 # Construcción del entorno de construcción por defecto
 env = Environment()
 
@@ -71,7 +74,7 @@ pylint_results = ['#build/lint/pylint.txt']
 env.Command(
     source=[source_files, test_files, '#conf/pylintrc'],
     action=['tox -c conf/tox.ini -- \
-                 pylint --rcfile=conf/pylintrc *.py test src 2>&1 | \
+                 -pylint --rcfile=conf/pylintrc *.py test src 2>&1 | \
                      tee -a build/lint/pylint.txt'],
     target=pylint_results,
 )
@@ -82,7 +85,7 @@ flake8_results = ['#build/lint/flake8.txt']
 env.Command(
     source=[source_files, test_files, '#setup.cfg'],
     action=['tox -c conf/tox.ini -- \
-                 flake8 *.py test/ src/ 2>&1 | \
+                 -flake8 *.py test/ src/ 2>&1 | \
                      tee -a build/lint/flake8.txt'],
     target=flake8_results,
 )
@@ -93,7 +96,7 @@ docst_results = ['#build/lint/pydocstyle.txt']
 env.Command(
     source=[source_files, test_files],
     action=['tox -c conf/tox.ini -- \
-                 pydocstyle --count *.py test src 2>&1 | \
+                 -pydocstyle --count *.py test src 2>&1 | \
                      tee -a build/lint/pydocstyle.txt'],
     target=docst_results,
 )
