@@ -65,6 +65,34 @@ def is_cert_active(site, port=PORT):
     return result
 
 
+def is_cert_validity_lifespan_safe(site, port=PORT):
+    """
+    Function to check whether cert is still valid
+    """
+    MAX_VALIDITY_DAYS = 365
+
+    result = True
+    cert = str(ssl.get_server_certificate((site, port)))
+    cert_obj = load_pem_x509_certificate(cert, default_backend())
+
+    cert_validity_days = \
+        cert_obj.not_valid_after - cert_obj.not_valid_after
+
+    if cert_validity_days.days <= MAX_VALIDITY_DAYS:
+        logging.info('Certificate has a secure lifespan, Details=Not\
+                      valid before: %s, Not valid after: %s, %s',
+                     cert_obj.not_valid_before.isoformat(),
+                     cert_obj.not_valid_after.isoformat(), 'CLOSE')
+        result = False
+    else:
+        logging.info('Certificate has an insecure lifespan, Details=Not\
+                      valid before: %s, Not valid after: %s, %s',
+                     cert_obj.not_valid_before.isoformat(),
+                     cert_obj.not_valid_after.isoformat(), 'OPEN')
+        result = True
+    return result
+
+
 def is_pfs_enabled(site, port=PORT):
     """
     Function to check whether PFS is enabled
