@@ -9,6 +9,7 @@ import socket
 
 # 3rd party imports
 import ssl
+import datetime
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
@@ -38,6 +39,57 @@ def is_cert_cn_equal_to_site(site, port=PORT):
         logging.info('%s CN equals to site, Details=%s, %s',
                      cert_cn, site, 'CLOSE')
         result = False
+    return result
+
+
+def is_cert_active(site, port=PORT):
+    """
+    Function to check whether cert is still valid
+    """
+    result = True
+    cert = str(ssl.get_server_certificate((site, port)))
+    cert_obj = load_pem_x509_certificate(cert, default_backend())
+
+    if cert_obj.not_valid_after > datetime.datetime.now():
+        logging.info('Certificate is still valid, Details=Not valid\
+                      after: %s, Current time: %s, %s',
+                     cert_obj.not_valid_after.isoformat(),
+                     datetime.datetime.now().isoformat(), 'CLOSE')
+        result = False
+    else:
+        logging.info('Certificate is not valid, Details=Not valid\
+                      after: %s, Current time: %s, %s',
+                     cert_obj.not_valid_after.isoformat(),
+                     datetime.datetime.now().isoformat(), 'OPEN')
+        result = True
+    return result
+
+
+def is_cert_validity_lifespan_safe(site, port=PORT):
+    """
+    Function to check whether cert lifespan is safe
+    """
+    MAX_VALIDITY_DAYS = 365
+
+    result = True
+    cert = str(ssl.get_server_certificate((site, port)))
+    cert_obj = load_pem_x509_certificate(cert, default_backend())
+
+    cert_validity = \
+        cert_obj.not_valid_after - cert_obj.not_valid_before
+
+    if cert_validity.days <= MAX_VALIDITY_DAYS:
+        logging.info('Certificate has a secure lifespan, Details=Not\
+                      valid before: %s, Not valid after: %s, %s',
+                     cert_obj.not_valid_before.isoformat(),
+                     cert_obj.not_valid_after.isoformat(), 'CLOSE')
+        result = False
+    else:
+        logging.info('Certificate has an insecure lifespan, Details=Not\
+                      valid before: %s, Not valid after: %s, %s',
+                     cert_obj.not_valid_before.isoformat(),
+                     cert_obj.not_valid_after.isoformat(), 'OPEN')
+        result = True
     return result
 
 
