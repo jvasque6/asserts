@@ -44,6 +44,11 @@
 
 # tag: weak
 # certificado inseguro
+#
+        - name: copy weak nginx config file
+          template: src=nginx/nginx-tls-weak.conf.j2 dest={{ conf_file }}
+          notify: restart nginx
+          tags: weak 
 
         - name: copy TLS key
           copy: src=nginx/nginx-weak.key dest={{ key_file }} owner=root mode=0600
@@ -57,6 +62,10 @@
 
 # tag: weak
 # certificado inseguro
+        - name: copy weak nginx config file
+          template: src=nginx/nginx-tls-hard.conf.j2 dest={{ conf_file }}
+          notify: restart nginx
+          tags: hard 
 
         - name: copy TLS key
           copy: src=nginx/nginx-hard.key dest={{ key_file }} owner=root mode=0600

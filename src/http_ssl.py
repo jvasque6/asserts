@@ -27,8 +27,8 @@ def is_cert_cn_equal_to_site(site, port=PORT):
     Function to check whether cert cn is equal to site
     """
     result = True
-    cert = str(ssl.get_server_certificate((site, port)))
-    cert_obj = load_pem_x509_certificate(cert, default_backend())
+    cert = ssl.get_server_certificate((site, port))
+    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
     cert_cn = cert_obj.subject.get_attributes_for_oid(NameOID.COMMON_NAME)[
         0].value
     wildcard_site = '*.' + site
@@ -49,7 +49,7 @@ def is_cert_active(site, port=PORT):
     """
     result = True
     cert = str(ssl.get_server_certificate((site, port)))
-    cert_obj = load_pem_x509_certificate(cert, default_backend())
+    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
 
     if cert_obj.not_valid_after > datetime.datetime.now():
         logging.info('Certificate is still valid, Details=Not valid\
@@ -74,7 +74,7 @@ def is_cert_validity_lifespan_safe(site, port=PORT):
 
     result = True
     cert = str(ssl.get_server_certificate((site, port)))
-    cert_obj = load_pem_x509_certificate(cert, default_backend())
+    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'), default_backend())
 
     cert_validity = \
         cert_obj.not_valid_after - cert_obj.not_valid_before
@@ -128,7 +128,7 @@ def is_pfs_enabled(site, port=PORT):
     result = True
     try:
         wrapped_socket.connect((site, port))
-        wrapped_socket.send(packet)
+        wrapped_socket.send(packet.encode('utf-8'))
         logging.info('PFS enabled on site, Details=%s, %s',
                      site, 'CLOSE')
         result = False
@@ -195,3 +195,4 @@ def is_sslv3_tlsv1_enabled(site, port=PORT):
     finally:
         wrapped_socket.close()
     return result
+

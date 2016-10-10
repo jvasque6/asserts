@@ -7,10 +7,10 @@ SSL se encuentra adecuadamente implementado.
 """
 
 # standard imports
-# none
+import subprocess
 
 # 3rd party imports
-# none
+import pytest
 
 # local imports
 from fluidasserts import http_ssl
@@ -53,7 +53,7 @@ def test_httpssl_cert_cn_equal_to_site_open():
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_httpssl_pfs_enabled_open():
     """PFS habilitado en sitio?"""
-    assert http_ssl.is_pfs_enabled(CONTAINER_IP)
+    assert not http_ssl.is_pfs_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
