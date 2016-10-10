@@ -15,24 +15,83 @@ SSL se encuentra adecuadamente implementado.
 # local imports
 from fluidasserts import http_ssl
 
+# Constants
+CONTAINER_IP = '172.30.216.100'
 
-def test_http_ssl_is_cert_cn_equal_to_site():
+
+#
+# Fixtures
+#
+
+# pylint: disable=unused-argument
+@pytest.fixture(scope='module')
+def weak_ssl(request):
+    """Configura perfil de HTTPS vulnerable."""
+    print('Running HTTP_SSL vulnerable playbook')
+    subprocess.call('ansible-playbook test/provision/web-tls.yml \
+            --tags basic,weak', shell=True)
+
+# pylint: disable=unused-argument
+@pytest.fixture(scope='module')
+def hard_ssl(request):
+    """Configura perfil de HTTPS endurecido."""
+    print('Running HTTP_SSL hardened playbook')
+    subprocess.call('ansible-playbook test/provision/web-tls.yml \
+            --tags basic,hard', shell=True)
+
+
+#
+# Open tests
+#
+
+@pytest.mark.usefixtures('container', 'weak_ssl')
+def test_httpssl_cert_cn_equal_to_site_open():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert http_ssl.is_cert_cn_equal_to_site('fluid.la')
+    assert http_ssl.is_cert_cn_equal_to_site(CONTAINER_IP)
 
 
-def test_http_ssl_is_pfs_enabled():
+@pytest.mark.usefixtures('container', 'weak_ssl')
+def test_httpssl_pfs_enabled_open():
     """PFS habilitado en sitio?"""
-    assert http_ssl.is_pfs_enabled('fluid.la')
+    assert http_ssl.is_pfs_enabled(CONTAINER_IP)
 
 
-def test_http_ssl_is_cert_active():
+@pytest.mark.usefixtures('container', 'weak_ssl')
+def test_httpssl_cert_active_open():
     """Certificado aun esta vigente?"""
-    assert http_ssl.is_cert_active('fluid.la')
+    assert http_ssl.is_cert_active(CONTAINER_IP)
 
 
-def test_http_ssl_is_cert_lifespan_safe():
+@pytest.mark.usefixtures('container', 'weak_ssl')
+def test_httpssl_cert_lifespan_safe_open():
     """Vigencia del certificado es segura?"""
-    assert http_ssl.is_cert_validity_lifespan_safe('fluid.la')
+    assert http_ssl.is_cert_validity_lifespan_safe(CONTAINER_IP)
+
+#
+# Closing tests
+#
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_httpssl_cert_cn_equal_to_site_close():
+    """CN del cert concuerda con el nombre del sitio?"""
+    assert http_ssl.is_cert_cn_equal_to_site(CONTAINER_IP)
+
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_httpssl_pfs_enabled_close():
+    """PFS habilitado en sitio?"""
+    assert http_ssl.is_pfs_enabled(CONTAINER_IP)
+
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_httpssl_cert_active_close():
+    """Certificado aun esta vigente?"""
+    assert http_ssl.is_cert_active(CONTAINER_IP)
+
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_httpssl_cert_lifespan_safe_close():
+    """Vigencia del certificado es segura?"""
+    assert http_ssl.is_cert_validity_lifespan_safe(CONTAINER_IP)
 
 # Pendente implementar resto de metodos
