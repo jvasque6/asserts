@@ -56,6 +56,12 @@ def test_httpssl_pfs_enabled_open():
     assert http_ssl.is_pfs_enabled(CONTAINER_IP)
 
 
+@pytest.mark.usefixtures('container', 'weak_ssl')
+def test_httpssl_sslv3_enabled_open():
+    """SSLv3 habilitado en sitio?"""
+    assert http_ssl.is_sslv3_tlsv1_enabled(CONTAINER_IP)
+
+
 #@pytest.mark.usefixtures('container', 'weak_ssl')
 #def test_httpssl_cert_active_open():
 #    """Certificado aun esta vigente?"""
@@ -81,6 +87,12 @@ def test_httpssl_cert_cn_equal_to_site_close():
 def test_httpssl_pfs_enabled_close():
     """PFS habilitado en sitio?"""
     assert not http_ssl.is_pfs_enabled(CONTAINER_IP)
+
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_httpssl_sslv3_enabled_close():
+    """SSLv3 habilitado en sitio?"""
+    assert not http_ssl.is_sslv3_tlsv1_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')

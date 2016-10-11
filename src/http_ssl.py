@@ -180,7 +180,7 @@ def is_sslv3_tlsv1_enabled(site, port=PORT):
                                          ciphers=ciphers)
 
         wrapped_socket.connect((site, port))
-        wrapped_socket.send(packet)
+        wrapped_socket.send(packet.encode('utf-8'))
         logging.info('SSLv3 enabled on site, Details=%s, %s',
                      site, 'OPEN')
         result = True
