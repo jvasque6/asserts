@@ -372,5 +372,5 @@ def has_put_method(url):
             result = False
     else:
         logging.info('Method not allowed in %s', url)
-        reuslt  = False
+        result = False
     return result
