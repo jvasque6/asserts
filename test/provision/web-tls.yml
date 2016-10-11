@@ -60,8 +60,8 @@
           notify: restart nginx
           tags: weak 
 
-# tag: weak
-# certificado inseguro
+# tag: hard 
+# certificado seguro
         - name: copy weak nginx config file
           template: src=nginx/nginx-tls-hard.conf.j2 dest={{ conf_file }}
           notify: restart nginx
