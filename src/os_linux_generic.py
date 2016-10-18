@@ -202,10 +202,15 @@ def is_os_syncookies_enabled(server, username, password,
     Checks if SynCookies or similar is enabled in os_linux_generic
     """
     result = True
-    cmd = 'cat /proc/sys/net/ipv4/tcp_syncookies'
+    cmd = 'sysctl -q -n net.ipv4.tcp_syncookies'
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
+    if len(out) == 0:
+        logging.info('%s server has syncookies enabled,\
+                      Details=%s, %s', server, out, 'CLOSE')
+        result = False
+        
     if int(out) == 1:
         logging.info('%s server has syncookies enabled,\
                       Details=%s, %s', server, out, 'CLOSE')
