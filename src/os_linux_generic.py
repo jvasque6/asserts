@@ -209,7 +209,7 @@ def is_os_syncookies_enabled(server, username, password,
     if len(out) == 0:
         logging.info('%s server has syncookies enabled,\
                       Details=%s, %s', server, out, 'CLOSE')
-        result = False
+        return False
         
     if int(out) == 1:
         logging.info('%s server has syncookies enabled,\
