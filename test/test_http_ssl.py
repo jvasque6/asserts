@@ -23,6 +23,7 @@ CONTAINER_IP = '172.30.216.100'
 # Fixtures
 #
 
+
 # pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def weak_ssl(request):
@@ -30,6 +31,7 @@ def weak_ssl(request):
     print('Running HTTP_SSL vulnerable playbook')
     subprocess.call('ansible-playbook test/provision/web-tls.yml \
             --tags basic,weak', shell=True)
+
 
 # pylint: disable=unused-argument
 @pytest.fixture(scope='module')
@@ -43,6 +45,7 @@ def hard_ssl(request):
 #
 # Open tests
 #
+
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_httpssl_cert_cn_equal_to_site_open():
@@ -76,6 +79,7 @@ def test_httpssl_cert_lifespan_safe_open():
 #
 # Closing tests
 #
+
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_httpssl_cert_cn_equal_to_site_close():
