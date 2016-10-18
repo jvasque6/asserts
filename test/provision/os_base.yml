@@ -1,0 +1,66 @@
+---
+- hosts: container
+
+  become: yes
+
+  tasks:
+
+  - name: definir clave de root
+    shell:
+      echo {{admin_user}}:{{admin_pass}} | chpasswd
+
+  - name: crear usuario seguro
+    user:
+      name={{secured_user}}
+      shell=/bin/bash
+
+  - name: asignar clave segura a usuario
+    shell:
+      echo {{secured_user}}:{{secured_pass}} | chpasswd
+
+  - name: crear usuario con clave adivinable
+    user:
+      name={{guessed_user}}
+      shell=/bin/bash
+
+  - name: asignar clave adivinable a usuario
+    shell:
+      echo {{guessed_user}}:{{guessed_pass}} | chpasswd
+
+  - name: crear usuario sin clave
+    user:
+      name={{nonpass_user}}
+      shell=/bin/bash
+
+  - name: eliminar clave a usuario
+    shell:
+      passwd -d {{nonpass_user}}
+
+  - name: permitir asignacion de claves nulas
+    replace:
+      dest=/etc/pam.d/common-password
+      regexp='pam_unix.so obscure'
+      replace='pam_unix.so nullok obscure'
+      backup=yes
+
+  - name: permitir autenticacion sin clave
+    replace:
+      dest=/etc/pam.d/common-auth
+      regexp='pam_unix.so nullok_secure'
+      replace='pam_unix.so nullok'
+      backup=yes
+
+  - name: permitir autenticacion ssh sin clave
+    replace:
+      dest=/etc/ssh/sshd_config
+      regexp='PermitEmptyPasswords no'
+      replace='PermitEmptyPasswords yes'
+      backup=yes
+    notify: reiniciar ssh
+
+  handlers:
+
+  - name: reiniciar ssh
+    service:
+      name=ssh
+      state=reloaded
