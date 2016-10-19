@@ -25,7 +25,7 @@ def container(request):
     subprocess.call('test/container/start.sh', shell=True)
     print('Configurando dinamicamente el ambiente base del contenedor')
     subprocess.call('ansible-playbook \
-                         test/provision/os.yml', shell=True)
+                         test/provision/os_base.yml', shell=True)
     subprocess.call('ansible-playbook \
                          test/provision/ftp.yml --tags basic', shell=True)
 
