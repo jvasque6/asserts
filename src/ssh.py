@@ -11,7 +11,7 @@ Este modulo permite verificar vulnerabilidades propias de SSH como:
 """
 
 # standard imports
-# none
+import os
 
 # 3rd party imports
 import paramiko
