@@ -127,6 +127,22 @@ def expires_fail():
     return resp
 
 
+@APP.route('/http/headers/hsts/ok')
+def hsts_ok():
+    """Header que define bien la implementacion de HSTS."""
+    resp = Response('Expires OK')
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+    return resp
+
+
+@APP.route('/http/headers/hsts/fail')
+def hsts_fail():
+    """Header que define mal implementacion de HSTS."""
+    resp = Response('Expires FAIL')
+    resp.headers['Strict-Transport-Security'] = 'Fail'
+    return resp
+
+
 @APP.route('/http/headers/put_close', methods = ['OPTIONS'])
 def put_close():
     resp = Response("Method PUT not Allowed")
