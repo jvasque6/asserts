@@ -71,6 +71,13 @@ def test_hsts_open():
     assert http.is_header_hsts_missing(
         '%s/hsts/fail' % (BASE_URL))
 
+
+@pytest.mark.usefixtures('mock_http')
+def test_basic_open():
+    """Auth BASIC habilitado?"""
+    assert not http.is_basic_auth_enabled(
+        '%s/basic/fail' % (BASE_URL))
+
 #
 # Close tests
 #
@@ -95,6 +102,13 @@ def test_hsts_close():
     """Header Strict-Transport-Security establecido?"""
     assert not http.is_header_hsts_missing(
         '%s/hsts/ok' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_basic_close():
+    """Auth BASIC no habilitado?"""
+    assert not http.is_basic_auth_enabled(
+        '%s/basic/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')

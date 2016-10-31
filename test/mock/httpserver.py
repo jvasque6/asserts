@@ -143,6 +143,22 @@ def hsts_fail():
     return resp
 
 
+@APP.route('/http/headers/basic/ok')
+def basic_ok():
+    """Header que define bien la implementacion de HTTP Auth."""
+    resp = Response('Basic Auth OK')
+    resp.headers['WWW-Authenticate'] = 'NTLM'
+    return resp
+
+
+@APP.route('/http/headers/basic/fail')
+def basic_fail():
+    """Header que define mal implementacion de HTTP Auth."""
+    resp = Response('Basic Auth FAIL')
+    resp.headers['WWW-Authenticate'] = 'Basic'
+    return resp
+
+
 @APP.route('/http/headers/put_close', methods = ['OPTIONS'])
 def put_close():
     resp = Response("Method PUT not Allowed")

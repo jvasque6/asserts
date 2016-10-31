@@ -32,7 +32,8 @@ HDR_RGX = {
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^.*[0-9]+\\.[0-9]+.*$',
     'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
-    'x-xss-protection': '^1(; mode=block)?$'
+    'x-xss-protection': '^1(; mode=block)?$',
+    'www-authenticate': '^((?!BASIC).)*$'
 }
 
 
@@ -250,6 +251,11 @@ def is_header_x_xxs_protection_missing(url):
 def is_header_hsts_missing(url):
     """Check if strict-transport-security header is missing"""
     return __check_result(url, 'strict-transport-security')
+
+
+def is_basic_auth_enabled(url):
+    """Check if BASIC authentication is enabled"""
+    return __check_result(url, 'www-authenticate')
 
 
 def has_trace_method(url):
