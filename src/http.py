@@ -13,6 +13,8 @@ Este modulo permite verificar vulnerabilidades propias de HTTP como:
 import logging
 import re
 import requests
+import urllib
+
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
@@ -33,7 +35,7 @@ HDR_RGX = {
     'server': '^.*[0-9]+\\.[0-9]+.*$',
     'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
     'x-xss-protection': '^1(; mode=block)?$',
-    'www-authenticate': '^((?!BASIC).)*$'
+    'www-authenticate': '^((?!Basic).)*$'
 }
 
 
@@ -150,7 +152,7 @@ def __check_result(url, header):
     """Returns result according to the assert"""
     result = True
     if __has_secure_header(url, header) is True:
-        result = False 
+        result = False
     else:
         result = True
 
@@ -271,3 +273,28 @@ def has_delete_method(url):
 def has_put_method(url):
     """Check HTTP PUT."""
     return __has_method(url, 'PUT')
+
+
+def generic_http_assert(url, method, expected_regex,
+                        failure_regex, headers=None, data=None):
+    opener = urllib.request.build_opener(urllib.request.HTTPHandler)
+    if data is not None:
+        post_data = urllib.urlencode(data)
+    if data is not None and headers is not None:
+        response = opener.open(url, data, headers)
+    else:
+        response = opener.open(url)
+    the_page = response.read().decode('utf-8')
+
+    if re.search(str(failure_regex), the_page):
+        logging.info('%s HTTP assertion failed, Details=%s, %s, %s',
+                     url, method, failure_regex, 'OPEN')
+        return True
+    elif re.search(str(expected_regex), the_page) is None:
+        logging.info('%s HTTP assertion not found, Details=%s, %s, %s',
+                     url, method, expected_regex, 'OPEN')
+        return True
+    elif re.search(str(expected_regex), the_page):
+        logging.info('%s HTTP assertion succeed, Details=%s, %s, %s',
+                     url, method, expected_regex, 'CLOSE')
+        return False
