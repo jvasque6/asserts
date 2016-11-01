@@ -201,6 +201,21 @@ def delete_open():
     return resp
 
 
+@APP.route('/http/headers/expected')
+def expected_string():
+    return "Expected string"
+
+
+@APP.route('/http/headers/unexpected')
+def unexpected_string():
+    return "Unexpected string"
+
+
+@APP.route('/http/headers/notfound')
+def notfound_string():
+    return "Randomstring"
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()

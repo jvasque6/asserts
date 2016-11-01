@@ -75,8 +75,29 @@ def test_hsts_open():
 @pytest.mark.usefixtures('mock_http')
 def test_basic_open():
     """Auth BASIC habilitado?"""
-    assert not http.is_basic_auth_enabled(
+    assert http.is_basic_auth_enabled(
         '%s/basic/fail' % (BASE_URL))
+        
+        
+@pytest.mark.usefixtures('mock_http')
+def test_unexpected_string():
+    """String not expected found?"""
+    assert http.generic_http_assert(
+        '%s/unexpected' % (BASE_URL),
+        'GET',
+        '_',
+        'Unexpected string')
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_notfound_string():
+    """Expected string not found?"""
+    assert http.generic_http_assert(
+        '%s/notfound' % (BASE_URL),
+        'GET',
+        'Expected string',
+        'Unexpected string')
+
 
 #
 # Close tests
@@ -145,6 +166,16 @@ def test_delete_close():
 def test_delete_open():
     """HTTP DELETE Allowed"""
     assert http.has_delete_method('%s/delete_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_expected_string():
+    """Expected string found?"""
+    assert not http.generic_http_assert(
+        '%s/expected' % (BASE_URL),
+        'GET',
+        'Expected string',
+        '_')
 
 
 #
