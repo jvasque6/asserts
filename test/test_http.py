@@ -54,15 +54,29 @@ def mock_http(request):
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_open():
     """Header Access-Control-Allow-Origin no establecido?"""
-    assert http.has_header_access_control_allow_origin(
+    assert http.is_header_access_control_allow_origin_missing(
         '%s/access_control_allow_origin/fail' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_cache_control_open():
     """Header Cache-Control no establecido?"""
-    assert http.has_header_cache_control(
+    assert http.is_header_cache_control_missing(
         '%s/cache_control/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_hsts_open():
+    """Header Strict-Transport-Security no establecido?"""
+    assert http.is_header_hsts_missing(
+        '%s/hsts/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_basic_open():
+    """Auth BASIC habilitado?"""
+    assert not http.is_basic_auth_enabled(
+        '%s/basic/fail' % (BASE_URL))
 
 #
 # Close tests
@@ -72,22 +86,35 @@ def test_cache_control_open():
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?"""
-    assert not http.has_header_access_control_allow_origin(
+    assert not http.is_header_access_control_allow_origin_missing(
         '%s/access_control_allow_origin/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_cache_control_close():
     """Header Cache-Control establecido?"""
-    assert not http.has_header_cache_control(
+    assert not http.is_header_cache_control_missing(
         '%s/cache_control/ok' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_hsts_close():
+    """Header Strict-Transport-Security establecido?"""
+    assert not http.is_header_hsts_missing(
+        '%s/hsts/ok' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_basic_close():
+    """Auth BASIC no habilitado?"""
+    assert not http.is_basic_auth_enabled(
+        '%s/basic/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_put_close():
     """HTTP PUT Not Allowed"""
     assert not http.has_put_method('%s/put_close' % (BASE_URL))
-
 
 
 @pytest.mark.usefixtures('mock_http')
