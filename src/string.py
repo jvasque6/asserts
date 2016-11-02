@@ -21,7 +21,7 @@ def __check_password_strength(password, length):
     """
     Function to check if a user password is secure
     """
-    DICTIONARY = 'test/provision/wordlists/password.lst'
+    DICTIONARY = 'test/static/wordlists/password.lst'
 
     caps = sum(1 for c in password if c.isupper())
     lower = sum(1 for c in password if c.islower())
@@ -29,8 +29,7 @@ def __check_password_strength(password, length):
     special = sum(1 for c in password if not c.isalnum())
 
     fd = open(DICTIONARY)
-    words = [x.encode('utf-8').rstrip() for x 
-             in fd.readlines()]
+    words = [x.rstrip() for x in fd.readlines()]
 
     result = True
 
@@ -101,11 +100,10 @@ def is_ssid_insecure(ssid):
     """
     Function to check if a given SSID is secure
     """
-    DICTIONARY = 'test/provision/wordlists/password.lst'
+    DICTIONARY = 'test/static/wordlists/password.lst'
      
     fd = open(DICTIONARY)
-    words = [x.encode('utf-8').rstrip() for x
-             in fd.readlines()]
+    words = [x.rstrip() for x in fd.readlines()]
 
     result = True
     if ssid in words:
@@ -114,7 +112,7 @@ def is_ssid_insecure(ssid):
         result = True
     else:
         logging.info('%s is a secure SSID. Details=%s',
-                     ssid, 'OPEN')
+                     ssid, 'CLOSE')
         result = False
 
     return result
