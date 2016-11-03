@@ -12,9 +12,8 @@ Este modulo permite verificar vulnerabilidades propias de HTTP como:
 # standard imports
 import logging
 import re
-import requests
 import urllib
-
+import requests
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
@@ -126,7 +125,7 @@ def oauth_auth(url, user, passw):
 
 
 def __has_secure_header(url, header):
-    """Check if header is present"""
+    """Check if header is present."""
     headers_info = __get_request(url).headers
     result = False
     if header in headers_info:
@@ -136,10 +135,7 @@ def __has_secure_header(url, header):
             value) is not None else 'OPEN')(value)
         logging.info('%s HTTP header %s, Details=%s, %s',
                      header, url, value, state)
-        if state == 'CLOSE':
-            result = True
-        else:
-            result = False
+        result = state == 'CLOSE'
     else:
         logging.info('%s HTTP header %s, Details=%s, %s',
                      header, url, 'Not Present', 'OPEN')
@@ -149,7 +145,7 @@ def __has_secure_header(url, header):
 
 
 def __check_result(url, header):
-    """Returns result according to the assert"""
+    """Returns result according to the assert."""
     result = True
     if __has_secure_header(url, header) is True:
         result = False
@@ -168,7 +164,7 @@ def __options_request(url):
 
 
 def __has_method(url, method):
-    """Check specific HTTP method"""
+    """Check specific HTTP method."""
     is_method_present = __options_request(url).headers
     result = True
     if 'allow' in is_method_present:
@@ -186,7 +182,7 @@ def __has_method(url, method):
 
 
 def is_header_x_asp_net_version_missing(url):
-    """Check if x-aspnet-version header is missing"""
+    """Check if x-aspnet-version header is missing."""
     return __check_result(url, 'x-aspnet-version')
 
 
@@ -196,67 +192,67 @@ def is_header_access_control_allow_origin_missing(url):
 
 
 def is_header_cache_control_missing(url):
-    """Check if cache-control header is missing"""
+    """Check if cache-control header is missing."""
     return __check_result(url, 'cache-control')
 
 
 def is_header_content_security_policy_missing(url):
-    """Check if content-security-policy header is missing"""
+    """Check if content-security-policy header is missing."""
     return __check_result(url, 'content-security-policy')
 
 
 def is_header_content_type_missing(url):
-    """Check if content-security-policy header is missing"""
+    """Check if content-security-policy header is missing."""
     return __check_result(url, 'content-type')
 
 
 def is_header_expires_missing(url):
-    """Check if content-security-policy header is missing"""
+    """Check if content-security-policy header is missing."""
     return __check_result(url, 'expires')
 
 
 def is_header_pragma_missing(url):
-    """Check if pragma header is missing"""
+    """Check if pragma header is missing."""
     return __check_result(url, 'pragma')
 
 
 def is_header_server_missing(url):
-    """Check if server header is missing"""
+    """Check if server header is missing."""
     return __check_result(url, 'server')
 
 
 def is_header_x_powered_by_missing(url):
-    """Check if x-powered-by header is missing"""
+    """Check if x-powered-by header is missing."""
     return __check_result(url, 'x-powered-by')
 
 
 def is_header_x_content_type_options_missing(url):
-    """Check if x-content-type-options header is missing"""
+    """Check if x-content-type-options header is missing."""
     return __check_result(url, 'x-content-type-options')
 
 
 def is_header_x_frame_options_missing(url):
-    """Check if x-frame-options header is missing"""
+    """Check if x-frame-options header is missing."""
     return __check_result(url, 'x-frame-options')
 
 
 def is_header_x_permitted_cross_domain_policies_missing(url):
-    """Check if x-permitted-cross-domain-policies header is missing"""
+    """Check if x-permitted-cross-domain-policies header is missing."""
     return __check_result(url, 'x-permitted-cross-domain-policies')
 
 
 def is_header_x_xxs_protection_missing(url):
-    """Check if x-xss-protection header is missing"""
+    """Check if x-xss-protection header is missing."""
     return __check_result(url, 'x-xss-protection')
 
 
 def is_header_hsts_missing(url):
-    """Check if strict-transport-security header is missing"""
+    """Check if strict-transport-security header is missing."""
     return __check_result(url, 'strict-transport-security')
 
 
 def is_basic_auth_enabled(url):
-    """Check if BASIC authentication is enabled"""
+    """Check if BASIC authentication is enabled."""
     return __check_result(url, 'www-authenticate')
 
 
@@ -277,9 +273,12 @@ def has_put_method(url):
 
 def generic_http_assert(url, method, expected_regex,
                         failure_regex, headers=None, data=None):
+    """Generic HTTP assert method."""
+
     opener = urllib.request.build_opener(urllib.request.HTTPHandler)
+
     if data is not None:
-        post_data = urllib.urlencode(data)
+        post_data = urllib.parse.urlencode(data)
     if data is not None and headers is not None:
         response = opener.open(url, data, headers)
     else:

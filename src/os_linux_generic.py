@@ -5,14 +5,11 @@ Modulo OS os_linux_generic
 
 # standard imports
 import logging
-import os
 
 # 3rd party imports
-import paramiko
+# None
 
 # local imports
-from fluidasserts.ssh import ssh_user_pass
-from fluidasserts.ssh import ssh_with_config
 from fluidasserts.ssh import ssh_exec_command
 
 
@@ -84,8 +81,8 @@ def is_os_antimalware_installed(server, username, password,
     """
     result = True
     cmd = 'which clamscan avgscan'
-    out, err = ssh_exec_command(server, username, password, cmd,
-                                ssh_config)
+    out, _ = ssh_exec_command(server, username, password, cmd,
+                              ssh_config)
 
     if len(out) > 0:
         logging.info('%s server has an antivirus installed,\
