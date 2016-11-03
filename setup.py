@@ -40,8 +40,8 @@ setup(
         'requests-oauthlib==0.6.2',  # src.http
         'cryptography==1.4',         # src.http_ssl
         'ldap3==1.2.2',              # src.ldap
-        'paramiko==2.0.2',           # src.ssh
-        'beautifulsoup4==4.5.1',      # src.html
+        'paramiko==2.0.2',           # src.ssh_helper
+        'pywinrm==0.2.1',            # src.winrm_helper
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

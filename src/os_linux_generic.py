@@ -10,7 +10,7 @@ import logging
 # None
 
 # local imports
-from fluidasserts.ssh import ssh_exec_command
+from fluidasserts.ssh_helper import ssh_exec_command
 
 
 def is_os_min_priv_enabled(server, username, password, ssh_config=None):
