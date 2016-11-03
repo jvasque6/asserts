@@ -5,11 +5,9 @@ Strings check module
 
 # standard imports
 import logging
-import re
-import socket
 
 # 3rd party imports
-import datetime
+# None
 
 # local imports
 # None
@@ -17,17 +15,17 @@ import datetime
 
 def __check_password_strength(password, length):
     """
-    Function to check if a user password is secure
+    Function to check if a user password is secure.
     """
-    DICTIONARY = 'test/static/wordlists/password.lst'
+    dictionary = 'test/static/wordlists/password.lst'
 
     caps = sum(1 for c in password if c.isupper())
     lower = sum(1 for c in password if c.islower())
     nums = sum(1 for c in password if c.isdigit())
     special = sum(1 for c in password if not c.isalnum())
 
-    with open(DICTIONARY) as fd:
-        words = [x.rstrip() for x in fd.readlines()]
+    with open(dictionary) as dict_fd:
+        words = [x.rstrip() for x in dict_fd.readlines()]
 
     result = True
 
@@ -59,30 +57,30 @@ def __check_password_strength(password, length):
 
 def is_user_password_insecure(password):
     """
-    Function to check if a user password is secure
+    Function to check if a user password is secure.
     """
-    MIN_PASSWORD_LEN = 8
+    min_password_len = 8
 
-    return __check_password_strength(password, MIN_PASSWORD_LEN)
+    return __check_password_strength(password, min_password_len)
 
 
 def is_system_password_insecure(password):
     """
-    Function to check if a system password is secure
+    Function to check if a system password is secure.
     """
-    MIN_PASSWORD_LEN = 20
+    min_password_len = 20
 
-    return __check_password_strength(password, MIN_PASSWORD_LEN)
+    return __check_password_strength(password, min_password_len)
 
 
 def is_otp_token_insecure(password):
     """
-    Function to check if a system password is secure
+    Function to check if a system password is secure.
     """
-    MIN_PASSWORD_LEN = 6
+    min_password_len = 6
 
     result = True
-    if len(password) < MIN_PASSWORD_LEN:
+    if len(password) < min_password_len:
         logging.info('%s OTP token is too short. Details=%s, %s',
                      password, len(password), 'OPEN')
         result = True
@@ -96,12 +94,12 @@ def is_otp_token_insecure(password):
 
 def is_ssid_insecure(ssid):
     """
-    Function to check if a given SSID is secure
+    Function to check if a given SSID is secure.
     """
-    DICTIONARY = 'test/static/wordlists/password.lst'
+    dictionary = 'test/static/wordlists/password.lst'
 
-    with open(DICTIONARY) as fd:
-        words = [x.rstrip() for x in fd.readlines()]
+    with open(dictionary) as dict_fd:
+        words = [x.rstrip() for x in dict_fd.readlines()]
 
     result = True
     if ssid in words:

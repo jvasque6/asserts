@@ -147,10 +147,10 @@ def test_compilers_installed_close():
 def test_antimalware_installed_close():
     """Antimalware installed?"""
     assert not mod_os.is_os_antimalware_installed(CONTAINER_IP,
-                                              CONTAINER_USER,
-                                              CONTAINER_PASS,
-                                              CONTAINER_CONFIG,
-                                              CONTAINER_OS)
+                                                  CONTAINER_USER,
+                                                  CONTAINER_PASS,
+                                                  CONTAINER_CONFIG,
+                                                  CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'hard_os')

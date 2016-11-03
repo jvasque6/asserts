@@ -77,8 +77,8 @@ def test_basic_open():
     """Auth BASIC habilitado?"""
     assert http.is_basic_auth_enabled(
         '%s/basic/fail' % (BASE_URL))
-        
-        
+
+
 @pytest.mark.usefixtures('mock_http')
 def test_unexpected_string():
     """String not expected found?"""
