@@ -5,8 +5,8 @@ Strings check module
 
 # standard imports
 import logging
+import re
 import socket
-import sys
 
 # 3rd party imports
 import datetime
@@ -14,8 +14,6 @@ import datetime
 # local imports
 # None
 
-#reload(sys)  
-#sys.setdefaultencoding('utf8')
 
 def __check_password_strength(password, length):
     """
@@ -28,8 +26,8 @@ def __check_password_strength(password, length):
     nums = sum(1 for c in password if c.isdigit())
     special = sum(1 for c in password if not c.isalnum())
 
-    fd = open(DICTIONARY)
-    words = [x.rstrip() for x in fd.readlines()]
+    with open(DICTIONARY) as fd:
+        words = [x.rstrip() for x in fd.readlines()]
 
     result = True
 
@@ -53,7 +51,7 @@ def __check_password_strength(password, length):
                      password, "Caps: " + str(caps) +
                      "Lower: " + str(lower) +
                      "Numbers: " + str(nums) +
-                     "Special: " + str(special), 'OPEN')
+                     "Special: " + str(special), 'CLOSE')
         result = False
 
     return result
@@ -90,7 +88,7 @@ def is_otp_token_insecure(password):
         result = True
     else:
         logging.info('%s OTP token is secure. Details=%s, %s',
-                     password, len(password), 'OPEN')
+                     password, len(password), 'CLOSE')
         result = False
 
     return result
@@ -101,9 +99,9 @@ def is_ssid_insecure(ssid):
     Function to check if a given SSID is secure
     """
     DICTIONARY = 'test/static/wordlists/password.lst'
-     
-    fd = open(DICTIONARY)
-    words = [x.rstrip() for x in fd.readlines()]
+
+    with open(DICTIONARY) as fd:
+        words = [x.rstrip() for x in fd.readlines()]
 
     result = True
     if ssid in words:
@@ -116,10 +114,3 @@ def is_ssid_insecure(ssid):
         result = False
 
     return result
-
-
-def is_event_not_compliant(event):
-    """
-    Function to check whether a given event is compliant
-    """
-    pass
