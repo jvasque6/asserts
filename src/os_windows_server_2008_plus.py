@@ -32,7 +32,7 @@ def is_os_compilers_installed(server, username, password, ssh_config):
     """
     Checks if there's any compiler installed in Windows Server
     """
-    common_compilers = ['Visual', 'Python', 'Mingw', 'Kaspersky']
+    common_compilers = ['Visual', 'Python', 'Mingw', 'CygWin']
     cmd = r'reg query\
            "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s'
 
