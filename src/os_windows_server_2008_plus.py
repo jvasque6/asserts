@@ -52,12 +52,12 @@ def is_os_compilers_installed(server, username, password, ssh_config):
     result = True
     if installed_compilers > 0:
         logging.info('%s server has compilers installed,\
-                     Details=umask %s, %s', server,
+                     Details=%s, %s', server,
                      installed_software, 'OPEN')
         result = True
     else:
         logging.info('%s server has not compilers installed,\
-                     Details=umask %s, %s', server,
+                     Details=%s, %s', server,
                      installed_software, 'CLOSE')
         result = False
     return result
@@ -87,12 +87,12 @@ def is_os_antimalware_installed(server, username, password, ssh_config):
     result = True
     if installed_av > 0:
         logging.info('%s server has an antivirus installed,\
-                     Details=umask %s, %s', server,
+                     Details=%s, %s', server,
                      installed_software, 'CLOSE')
         result = False
     else:
         logging.info('%s server has not an antivirus installed,\
-                     Details=umask %s, %s', server,
+                     Details=%s, %s', server,
                      installed_software, 'OPEN')
         result = True
     return result
@@ -109,4 +109,9 @@ def is_os_syncookies_enabled(server, username, password, ssh_config):
     """
     Checks if SynCookies or similar is enabled in Windows Server
     """
-    pass
+    
+    # On Windows, SYN Cookies are enabled by default and there's not
+    # way to disable it.
+    logging.info('%s server has SYN Cookies enabled,\
+                     Details=%s', server, 'CLOSE')
+    return False
