@@ -22,7 +22,7 @@ from cryptography.x509.oid import NameOID
 PORT = 443
 
 
-def is_cert_cn_equal_to_site(site, port=PORT):
+def is_cert_cn_not_equal_to_site(site, port=PORT):
     """
     Function to check whether cert cn is equal to site
     """
@@ -47,7 +47,7 @@ def is_cert_cn_equal_to_site(site, port=PORT):
     return result
 
 
-def is_cert_active(site, port=PORT):
+def is_cert_inactive(site, port=PORT):
     """
     Function to check whether cert is still valid
     """
@@ -71,7 +71,7 @@ def is_cert_active(site, port=PORT):
     return result
 
 
-def is_cert_validity_lifespan_safe(site, port=PORT):
+def is_cert_validity_lifespan_unsafe(site, port=PORT):
     """
     Function to check whether cert lifespan is safe
     """
@@ -100,7 +100,7 @@ def is_cert_validity_lifespan_safe(site, port=PORT):
     return result
 
 
-def is_pfs_enabled(site, port=PORT):
+def is_pfs_disabled(site, port=PORT):
     """
     Function to check whether PFS is enabled
     """

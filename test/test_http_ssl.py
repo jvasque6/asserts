@@ -50,13 +50,13 @@ def hard_ssl(request):
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_httpssl_cert_cn_equal_to_site_open():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert http_ssl.is_cert_cn_equal_to_site(CONTAINER_IP)
+    assert http_ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_httpssl_pfs_enabled_open():
     """PFS habilitado en sitio?"""
-    assert http_ssl.is_pfs_enabled(CONTAINER_IP)
+    assert http_ssl.is_pfs_disabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
@@ -68,13 +68,13 @@ def test_httpssl_sslv3_enabled_open():
 #@pytest.mark.usefixtures('container', 'weak_ssl')
 #def test_httpssl_cert_active_open():
 #    """Certificado aun esta vigente?"""
-#    assert http_ssl.is_cert_active(CONTAINER_IP)
+#    assert http_ssl.is_cert_inactive(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_httpssl_cert_lifespan_safe_open():
     """Vigencia del certificado es segura?"""
-    assert http_ssl.is_cert_validity_lifespan_safe(CONTAINER_IP)
+    assert http_ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
 
 #
 # Closing tests
@@ -84,13 +84,13 @@ def test_httpssl_cert_lifespan_safe_open():
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_httpssl_cert_cn_equal_to_site_close():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert not http_ssl.is_cert_cn_equal_to_site(CONTAINER_IP)
+    assert not http_ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_httpssl_pfs_enabled_close():
     """PFS habilitado en sitio?"""
-    assert not http_ssl.is_pfs_enabled(CONTAINER_IP)
+    assert not http_ssl.is_pfs_disabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
@@ -102,12 +102,12 @@ def test_httpssl_sslv3_enabled_close():
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_httpssl_cert_active_close():
     """Certificado aun esta vigente?"""
-    assert not http_ssl.is_cert_active(CONTAINER_IP)
+    assert not http_ssl.is_cert_inactive(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_httpssl_cert_lifespan_safe_close():
     """Vigencia del certificado es segura?"""
-    assert not http_ssl.is_cert_validity_lifespan_safe(CONTAINER_IP)
+    assert not http_ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
 
 # Pendente implementar resto de metodos

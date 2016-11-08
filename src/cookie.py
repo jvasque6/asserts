@@ -25,7 +25,7 @@ def __get_request(url):
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 
-def has_http_only(url, cookie_name):
+def has_not_http_only(url, cookie_name):
     """Verifica si la cookie tiene el atributo httponly."""
     http_req = __get_request(url)
     cookielist = BaseCookie(http_req.headers['set-cookie'])
@@ -40,7 +40,7 @@ def has_http_only(url, cookie_name):
                      cookie_name, url, 'Not Present', 'OPEN')
 
 
-def has_secure(url, cookie_name):
+def has_not_secure(url, cookie_name):
     """Verifica si la cookie tiene el atributo secure."""
     http_req = __get_request(url)
     cookielist = BaseCookie(http_req.headers['set-cookie'])
