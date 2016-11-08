@@ -52,7 +52,7 @@ def hard_os(request):
 @pytest.mark.usefixtures('container', 'weak_os')
 def test_os_min_priv_enabled_open():
     """Secure umask?"""
-    assert mod_os.is_os_min_priv_enabled(CONTAINER_IP,
+    assert mod_os.is_os_min_priv_disabled(CONTAINER_IP,
                                          CONTAINER_USER,
                                          CONTAINER_PASS,
                                          CONTAINER_CONFIG,
@@ -62,7 +62,7 @@ def test_os_min_priv_enabled_open():
 # @pytest.mark.usefixtures('container', 'weak_os')
 # def test_os_sudo_enabled_open():
 #    """sudo enabled?"""
-#    assert mod_os.is_os_sudo_enabled(CONTAINER_IP,
+#    assert mod_os.is_os_sudo_disabled(CONTAINER_IP,
 #                                     CONTAINER_USER,
 #                                     CONTAINER_PASS,
 #                                     CONTAINER_CONFIG,
@@ -82,7 +82,7 @@ def test_compilers_installed_open():
 @pytest.mark.usefixtures('container', 'weak_os')
 def test_antimalware_installed_open():
     """Antimalware installed?"""
-    assert mod_os.is_os_antimalware_installed(CONTAINER_IP,
+    assert mod_os.is_os_antimalware_not_installed(CONTAINER_IP,
                                               CONTAINER_USER,
                                               CONTAINER_PASS,
                                               CONTAINER_CONFIG,
@@ -102,7 +102,7 @@ def test_remote_admin_enabled_open():
 # @pytest.mark.usefixtures('container', 'weak_os')
 # def test_syncookies_enabled_open():
 #    """SYN Cookies enabled?"""
-#    assert mod_os.is_os_syncookies_enabled(CONTAINER_IP,
+#    assert mod_os.is_os_syncookies_disabled(CONTAINER_IP,
 #                                           CONTAINER_USER,
 #                                           CONTAINER_PASS,
 #                                           CONTAINER_CONFIG,
@@ -116,7 +116,7 @@ def test_remote_admin_enabled_open():
 @pytest.mark.usefixtures('container', 'hard_os')
 # def test_os_min_priv_enabled_close():
 #    """Secure umask?"""
-#    assert not mod_os.is_os_min_priv_enabled(CONTAINER_IP,
+#    assert not mod_os.is_os_min_priv_disabled(CONTAINER_IP,
 #                                         CONTAINER_USER,
 #                                         CONTAINER_PASS,
 #                                         CONTAINER_CONFIG,
@@ -126,7 +126,7 @@ def test_remote_admin_enabled_open():
 @pytest.mark.usefixtures('container', 'hard_os')
 def test_os_sudo_enabled_close():
     """sudo enabled?"""
-    assert not mod_os.is_os_sudo_enabled(CONTAINER_IP,
+    assert not mod_os.is_os_sudo_disabled(CONTAINER_IP,
                                          CONTAINER_USER,
                                          CONTAINER_PASS,
                                          CONTAINER_CONFIG,
@@ -146,7 +146,7 @@ def test_compilers_installed_close():
 @pytest.mark.usefixtures('container', 'hard_os')
 def test_antimalware_installed_close():
     """Antimalware installed?"""
-    assert not mod_os.is_os_antimalware_installed(CONTAINER_IP,
+    assert not mod_os.is_os_antimalware_not_installed(CONTAINER_IP,
                                                   CONTAINER_USER,
                                                   CONTAINER_PASS,
                                                   CONTAINER_CONFIG,
@@ -166,7 +166,7 @@ def test_remote_admin_enabled_close():
 @pytest.mark.usefixtures('container', 'hard_os')
 def test_syncookies_enabled_close():
     """SYN Cookies enabled?"""
-    assert not mod_os.is_os_syncookies_enabled(CONTAINER_IP,
+    assert not mod_os.is_os_syncookies_disabled(CONTAINER_IP,
                                                CONTAINER_USER,
                                                CONTAINER_PASS,
                                                CONTAINER_CONFIG,
