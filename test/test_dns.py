@@ -13,7 +13,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts import dns 
+from fluidasserts import dns
 
 # Constants
 CONTAINER_IP = '172.30.216.100'
