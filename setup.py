@@ -42,7 +42,9 @@ setup(
         'ldap3==1.2.2',              # src.ldap
         'paramiko==2.0.2',           # src.ssh_helper
         'pywinrm==0.2.1',            # src.winrm_helper
-	'beautifulsoup4==4.5.1',     # src.html
+        'beautifulsoup4==4.5.1',     # src.html
+        'dnspython==1.15.0',         # src.dns
+
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

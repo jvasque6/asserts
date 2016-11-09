@@ -75,7 +75,7 @@ def is_os_compilers_installed(server, username, password,
 
 
 def is_os_antimalware_not_installed(server, username, password,
-                                ssh_config=None):
+                                    ssh_config=None):
     """
     Checks if there's any antimalware installed in os_linux_generic
     """
@@ -117,7 +117,7 @@ def is_os_remote_admin_enabled(server, username, password,
 
 
 def is_os_syncookies_disabled(server, username, password,
-                             ssh_config=None):
+                              ssh_config=None):
     """
     Checks if SynCookies or similar is enabled in os_linux_generic
     """

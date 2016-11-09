@@ -53,20 +53,20 @@ def hard_os(request):
 def test_os_min_priv_enabled_open():
     """Secure umask?"""
     assert mod_os.is_os_min_priv_disabled(CONTAINER_IP,
-                                         CONTAINER_USER,
-                                         CONTAINER_PASS,
-                                         CONTAINER_CONFIG,
-                                         CONTAINER_OS)
+                                          CONTAINER_USER,
+                                          CONTAINER_PASS,
+                                          CONTAINER_CONFIG,
+                                          CONTAINER_OS)
 
 
 # @pytest.mark.usefixtures('container', 'weak_os')
 # def test_os_sudo_enabled_open():
 #    """sudo enabled?"""
 #    assert mod_os.is_os_sudo_disabled(CONTAINER_IP,
-#                                     CONTAINER_USER,
-#                                     CONTAINER_PASS,
-#                                     CONTAINER_CONFIG,
-#                                     CONTAINER_OS)
+#                                      CONTAINER_USER,
+#                                      CONTAINER_PASS,
+#                                      CONTAINER_CONFIG,
+#                                      CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'weak_os')
@@ -83,10 +83,10 @@ def test_compilers_installed_open():
 def test_antimalware_installed_open():
     """Antimalware installed?"""
     assert mod_os.is_os_antimalware_not_installed(CONTAINER_IP,
-                                              CONTAINER_USER,
-                                              CONTAINER_PASS,
-                                              CONTAINER_CONFIG,
-                                              CONTAINER_OS)
+                                                  CONTAINER_USER,
+                                                  CONTAINER_PASS,
+                                                  CONTAINER_CONFIG,
+                                                  CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'weak_os')
@@ -103,10 +103,10 @@ def test_remote_admin_enabled_open():
 # def test_syncookies_enabled_open():
 #    """SYN Cookies enabled?"""
 #    assert mod_os.is_os_syncookies_disabled(CONTAINER_IP,
-#                                           CONTAINER_USER,
-#                                           CONTAINER_PASS,
-#                                           CONTAINER_CONFIG,
-#                                           CONTAINER_OS)
+#                                            CONTAINER_USER,
+#                                            CONTAINER_PASS,
+#                                            CONTAINER_CONFIG,
+#                                            CONTAINER_OS)
 
 #
 # Closing tests
@@ -117,20 +117,20 @@ def test_remote_admin_enabled_open():
 # def test_os_min_priv_enabled_close():
 #    """Secure umask?"""
 #    assert not mod_os.is_os_min_priv_disabled(CONTAINER_IP,
-#                                         CONTAINER_USER,
-#                                         CONTAINER_PASS,
-#                                         CONTAINER_CONFIG,
-#                                         CONTAINER_OS)
+#                                              CONTAINER_USER,
+#                                              CONTAINER_PASS,
+#                                              CONTAINER_CONFIG,
+#                                              CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'hard_os')
 def test_os_sudo_enabled_close():
     """sudo enabled?"""
     assert not mod_os.is_os_sudo_disabled(CONTAINER_IP,
-                                         CONTAINER_USER,
-                                         CONTAINER_PASS,
-                                         CONTAINER_CONFIG,
-                                         CONTAINER_OS)
+                                          CONTAINER_USER,
+                                          CONTAINER_PASS,
+                                          CONTAINER_CONFIG,
+                                          CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'hard_os')
@@ -147,10 +147,10 @@ def test_compilers_installed_close():
 def test_antimalware_installed_close():
     """Antimalware installed?"""
     assert not mod_os.is_os_antimalware_not_installed(CONTAINER_IP,
-                                                  CONTAINER_USER,
-                                                  CONTAINER_PASS,
-                                                  CONTAINER_CONFIG,
-                                                  CONTAINER_OS)
+                                                      CONTAINER_USER,
+                                                      CONTAINER_PASS,
+                                                      CONTAINER_CONFIG,
+                                                      CONTAINER_OS)
 
 
 @pytest.mark.usefixtures('container', 'hard_os')
@@ -167,10 +167,10 @@ def test_remote_admin_enabled_close():
 def test_syncookies_enabled_close():
     """SYN Cookies enabled?"""
     assert not mod_os.is_os_syncookies_disabled(CONTAINER_IP,
-                                               CONTAINER_USER,
-                                               CONTAINER_PASS,
-                                               CONTAINER_CONFIG,
-                                               CONTAINER_OS)
+                                                CONTAINER_USER,
+                                                CONTAINER_PASS,
+                                                CONTAINER_CONFIG,
+                                                CONTAINER_OS)
 
 
 # Pendente implementar resto de metodos
