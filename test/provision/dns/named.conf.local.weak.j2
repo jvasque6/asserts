@@ -9,7 +9,8 @@
 
 zone "{{ zone_domain }}" {
 	allow-transfer {127.0.0.1; 172.30.0.0/16;};
+	allow-update { any; };
 	type master;
-	file "/etc/bind/db.test";
+	file "{{ test_zone }}";
 };
 

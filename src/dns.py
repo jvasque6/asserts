@@ -9,6 +9,8 @@ import logging
 # 3rd party imports
 import dns.query
 from dns.exception import DNSException
+import dns.rdatatype
+import dns.update
 import dns.zone
 from dns.zone import BadZone
 from dns.zone import NoSOA
@@ -50,5 +52,25 @@ def is_xfr_enabled(domain, nameserver):
         logging.info('Zone transfer not enabled on server, Details=%s:%s, %s',
                      domain, nameserver, 'CLOSE')
         result = False
+
+    return result
+
+
+def is_dynupdate_enabled(domain, nameserver):
+    newrecord = 'newrecord'
+
+    update = dns.update.Update(domain)
+    update.add('newrecord', 3600, dns.rdatatype.A, '10.10.10.10')
+    response = dns.query.tcp(update, nameserver)
+
+    result = True
+    if response.rcode() > 0:
+        logging.info('Zone update not enabled on server, \
+                     Details=%s:%s, %s', domain, nameserver, 'CLOSE')
+        result = False
+    else:
+        logging.info('Zone update enabled on server, Details=%s:%s, %s',
+                     domain, nameserver, 'OPEN')
+        result = True
 
     return result

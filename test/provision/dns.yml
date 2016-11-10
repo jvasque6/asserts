@@ -4,7 +4,7 @@
   become: yes 
   vars:
         conf_zone: /etc/bind/named.conf.local
-        test_zone: /etc/bind/db.test
+        test_zone: /var/cache/bind/db.test
         zone_domain: fluid.la 
   tasks:
         - name: Install bind9 
@@ -12,7 +12,7 @@
           tags: basic
 
         - name: Copy zone 
-          copy: src=dns/db.test dest={{ test_zone }} owner=root mode=0644
+          copy: src=dns/db.test dest={{ test_zone }} owner=bind mode=0644
           notify: restart bind9 
           tags: basic 
 
@@ -20,7 +20,7 @@
 # DNS inseguro 
 #
         - name: Copy weak zone config 
-          template: src=dns/named.conf.local.weak.j2 dest={{ conf_zone }}
+          template: src=dns/named.conf.local.weak.j2 owner=bind dest={{ conf_zone }}
           notify: restart bind9 
           tags: weak 
 
@@ -28,7 +28,7 @@
 # DNS seguro
 #
         - name: Copy hard zone config 
-          template: src=dns/named.conf.local.hard.j2 dest={{ conf_zone }}
+          template: src=dns/named.conf.local.hard.j2 owner=bind dest={{ conf_zone }}
           notify: restart bind9 
           tags: hard
 
