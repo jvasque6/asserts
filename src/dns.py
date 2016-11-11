@@ -7,14 +7,15 @@ DNS check module
 import logging
 
 # 3rd party imports
-import dns.query
+import dns.dnssec
 from dns.exception import DNSException
+import dns.query
 import dns.rdatatype
 import dns.update
 import dns.zone
 from dns.zone import BadZone
-from dns.zone import NoSOA
 from dns.zone import NoNS
+from dns.zone import NoSOA
 
 # local imports
 # None
@@ -57,10 +58,11 @@ def is_xfr_enabled(domain, nameserver):
 
 
 def is_dynupdate_enabled(domain, nameserver):
+    """Checks if zone updating is enabled."""
     newrecord = 'newrecord'
 
     update = dns.update.Update(domain)
-    update.add('newrecord', 3600, dns.rdatatype.A, '10.10.10.10')
+    update.add(newrecord, 3600, dns.rdatatype.A, '10.10.10.10')
     response = dns.query.tcp(update, nameserver)
 
     result = True
@@ -73,4 +75,48 @@ def is_dynupdate_enabled(domain, nameserver):
                      domain, nameserver, 'OPEN')
         result = True
 
+    return result
+
+
+def is_dns_cache_poison_enabled(domain, nameserver):
+    """
+    Checks if cache poisoning is possible.
+    The check is made by looking DNSSEC records
+    """
+    
+    # get DNSKEY for zone
+    request = dns.message.make_query(domain,
+                                     dns.rdatatype.DNSKEY,
+                                     want_dnssec=True)
+
+    response = dns.query.udp(request,nameserver)
+    
+    result = True
+    if response.rcode() != 0:
+        logging.info('Cache poisonig is possible on server, \
+                     Details=%s:%s, %s', domain, nameserver, 'OPEN')
+        result = True
+    else:
+        answer = response.answer
+        if len(answer) != 2:
+            logging.info('Cache poisonig not possible on server, \
+                         Details=%s:%s, %s', domain,
+                         nameserver, 'CLOSE')
+            result = False
+
+        # the DNSKEY should be self signed, validate it
+        name = dns.name.from_text(fluid.la)
+        try:
+            dns.dnssec.validate(answer[0],answer[1],{name:answer[0]})
+        except dns.dnssec.ValidationFailure:
+            logging.info('Cache poisonig is possible on server, \
+                         Details=%s:%s, %s', domain,
+                         nameserver, 'OPEN')
+            result = True
+        else:
+            logging.info('Cache poisonig inot possible on server, \
+                         Details=%s:%s, %s', domain,
+                         nameserver, 'CLOSE')
+            result = False
+    
     return result
