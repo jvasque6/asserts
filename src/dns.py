@@ -127,9 +127,17 @@ def has_cache_snooping(nameserver):
     domain = 'google.com'
     name = dns.name.from_text(domain)
 
-    # Make a recursive request
+    # Make a recursive request to fill out the cache
     request = dns.message.make_query(name, dns.rdatatype.A,
                                      dns.rdataclass.IN)
+
+    response = dns.query.udp(request,nameserver)
+    
+    
+    # Make a non-recursive request
+    request = dns.message.make_query(name, dns.rdatatype.A,
+                                     dns.rdataclass.IN)
+    request.flags ^= dns.flags.RD
 
     response = dns.query.udp(request,nameserver)
     
