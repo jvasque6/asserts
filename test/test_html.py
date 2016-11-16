@@ -17,7 +17,7 @@ Email: jescobar@fluid.la
 # 3rd party imports
 
 # local imports
-from fluidasserts import html
+from fluidasserts.format import html
 
 
 def test_form_autocomplete_open():

@@ -11,7 +11,7 @@ import re
 # None
 
 # local imports
-from fluidasserts.winrm_helper import winrm_exec_command
+from fluidasserts.helper.winrm_helper import winrm_exec_command
 
 
 def is_os_min_priv_disabled(server, username, password, ssh_config):

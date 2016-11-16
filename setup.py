@@ -16,7 +16,10 @@ setup(
     author='FLUID Engineering Team',
     author_email='engineering@fluid.la',
     packages=[
-        'fluidasserts',
+        'fluidasserts.format',
+        'fluidasserts.helper',
+        'fluidasserts.os',
+        'fluidasserts.service',
     ],
     package_dir={
         'fluidasserts': 'src',

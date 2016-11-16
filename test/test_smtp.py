@@ -13,7 +13,7 @@ SMTP se encuentra adecuadamente implementado.
 # none
 
 # local imports
-from fluidasserts import smtp
+from fluidasserts.service import smtp
 
 
 smtp.has_vrfy('127.0.0.1', 10025)
