@@ -10,6 +10,6 @@
 zone "{{ zone_domain }}" {
 	allow-transfer {none;};
 	type master;
-	file "/etc/bind/db.test";
+	file "{{ test_zone_hard }}";
 };
 
