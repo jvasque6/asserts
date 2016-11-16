@@ -52,12 +52,7 @@ def __has_attribute(filename, selector, tag, attr, value):
     prog = re.compile('%s' % cache_rgx, flags=re.IGNORECASE)
     match = prog.search(str(form))
 
-    if match is not None:
-        result = True
-    else:
-        result = False
-
-    return result
+    return match is not None
 
 
 def has_not_autocomplete(filename, selector):
@@ -91,7 +86,7 @@ def has_not_autocomplete(filename, selector):
 
     return result
 
-def has_not_pragma_nocache(filename):
+def is_cacheable(filename):
     """ 
         Verifica si el archivo (filename) tiene configurada la etiqueta
         <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> y 
