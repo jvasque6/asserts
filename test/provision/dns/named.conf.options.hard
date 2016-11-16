@@ -23,5 +23,8 @@ options {
 	dnssec-enable yes; 
 	dnssec-validation yes;
 	dnssec-lookaside auto;
+	allow-recursion {"none";};
+	recursion no;
+
 };
 
