@@ -68,7 +68,7 @@ def test_dns_has_cache_poison_open():
 @pytest.mark.usefixtures('container', 'weak_dns')
 def test_dns_has_cache_snooping_open():
     """Server vulnerable a cache snooping?"""
-    assert dns.has_cache_snooping(TEST_ZONE, CONTAINER_IP)
+    assert dns.has_cache_snooping(CONTAINER_IP)
 
 #
 # Closing tests
@@ -96,6 +96,6 @@ def test_dns_has_cache_poison_close():
 @pytest.mark.usefixtures('container', 'hard_dns')
 def test_dns_has_cache_snooping_close():
     """Server vulnerable a cache snooping?"""
-    assert not dns.has_cache_snooping(TEST_ZONE, CONTAINER_IP)
+    assert not dns.has_cache_snooping(CONTAINER_IP)
 
 # Pendente implementar resto de metodos
