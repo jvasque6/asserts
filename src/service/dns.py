@@ -93,7 +93,7 @@ def has_cache_poison(domain, nameserver):
     result = True
     try:
         response = myresolver.query(name, 'DNSKEY')
-    except:
+    except Exception:
         logging.info('Cache poisonig is possible on server, \
                      Details=%s:%s, %s', domain, nameserver, 'OPEN')
         return True
@@ -119,11 +119,9 @@ def has_cache_poison(domain, nameserver):
 
 
 def has_cache_snooping(nameserver):
-    """ 
-    Checks if nameserver has cache snooping
-    (supports non recursive queries)
-    """
-    
+    """Checks if nameserver has cache snooping
+    (supports non recursive queries)"""
+
     domain = 'google.com'
     name = dns.name.from_text(domain)
 
@@ -131,16 +129,15 @@ def has_cache_snooping(nameserver):
     request = dns.message.make_query(name, dns.rdatatype.A,
                                      dns.rdataclass.IN)
 
-    response = dns.query.udp(request,nameserver)
-    
-    
+    response = dns.query.udp(request, nameserver)
+
     # Make a non-recursive request
     request = dns.message.make_query(name, dns.rdatatype.A,
                                      dns.rdataclass.IN)
     request.flags ^= dns.flags.RD
 
-    response = dns.query.udp(request,nameserver)
-    
+    response = dns.query.udp(request, nameserver)
+
     result = True
     if response.rcode() == 0:
         logging.info('Cache snooping possible on server, \
@@ -152,5 +149,5 @@ def has_cache_snooping(nameserver):
                      Details=%s:%s, %s', domain,
                      nameserver, 'CLOSE')
         result = False
-    
+
     return result

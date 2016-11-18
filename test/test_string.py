@@ -13,7 +13,7 @@ strings se encuentra adecuadamente implementado.
 # None
 
 # local imports
-from fluidasserts import string
+from fluidasserts.format import string
 
 # Constants
 WEAK_USER_PASS = 'password'

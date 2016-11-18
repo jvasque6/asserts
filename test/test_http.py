@@ -14,7 +14,7 @@ from multiprocessing import Process
 import pytest
 
 # local imports
-from fluidasserts import http
+from fluidasserts.service import http
 from test.mock import httpserver
 
 #

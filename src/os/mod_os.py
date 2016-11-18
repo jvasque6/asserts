@@ -10,8 +10,8 @@ Modulo OS general
 # None
 
 # local imports
-from fluidasserts import os_linux_generic
-from fluidasserts import os_windows_server_2008_plus
+from fluidasserts.os import os_linux_generic
+from fluidasserts.os import os_windows_server_2008_plus
 
 
 def is_os_min_priv_disabled(server, username, password, ssh_config,

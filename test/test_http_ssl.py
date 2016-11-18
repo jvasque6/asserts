@@ -13,7 +13,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts import http_ssl
+from fluidasserts.service import http_ssl
 
 # Constants
 CONTAINER_IP = '172.30.216.100'

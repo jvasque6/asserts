@@ -18,7 +18,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts import ftp
+from fluidasserts.service import ftp
 
 
 #

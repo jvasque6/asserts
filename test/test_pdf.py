@@ -17,7 +17,7 @@ PDF.
 # none
 
 # local imports
-from fluidasserts import pdf
+from fluidasserts.format import pdf
 
 
 #
