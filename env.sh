@@ -15,5 +15,3 @@ export ANSIBLE_SCP_IF_SSH=y
 # Desahibilitar agentes SSH
 export SSH_AUTH_SOCK=0
 
-
-export VERBOSE=1
