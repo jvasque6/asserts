@@ -44,7 +44,7 @@ def __get_request(url, auth=None):
         headers = {
             'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
         return requests.get(url, verify=False, auth=auth, headers=headers)
-    except ConnectionError:
+    except requests.ConnectionError:
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 
@@ -56,7 +56,7 @@ def __post_request(url, data=''):
         # TODO(glopez): El user agent debe ser de FLUIDAsserts y parametrizable
         return requests.post(url, verify=False, data=data,
                              headers=headers, allow_redirects=False)
-    except ConnectionError:
+    except requests.ConnectionError:
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 
@@ -159,7 +159,7 @@ def __options_request(url):
     """HTTP OPTIONS request."""
     try:
         return requests.options(url, verify=False)
-    except ConnectionError:
+    except requests.ConnectionError:
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 

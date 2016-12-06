@@ -14,20 +14,6 @@ import re
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 
 
-def is_os_min_priv_disabled(server, username, password):
-    """
-    Checks if umask or similar is secure in Windows Server
-    """
-    pass
-
-
-def is_os_sudo_disabled(server, username, password):
-    """
-    Checks if there's sudo or similar installed in Windows Server
-    """
-    pass
-
-
 def is_os_compilers_installed(server, username, password):
     """
     Checks if there's any compiler installed in Windows Server
@@ -158,10 +144,10 @@ def is_protected_users_disabled(server, username, password):
         if re.search('UseLogonCredential.*0x0',
                      has_logon_credentials,
                      re.IGNORECASE) is not None:
-                         result = False
-                         logging.info('%s server has UseLogonCredentials\
-                                      set to 0x0 Details=%s, %s', server,
-                                      'UseLogonCredential', 'CLOSE')
+            result = False
+            logging.info('%s server has UseLogonCredentials\
+                         set to 0x0 Details=%s, %s', server,
+                         'UseLogonCredential', 'CLOSE')
         else:
             result = True
             logging.info('%s server has not all required patches installed,\
