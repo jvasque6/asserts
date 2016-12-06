@@ -104,5 +104,5 @@ PhonyTargets(lenv, smoke=[
     'test/container/smoke.sh',
     'test/provision/smoke.sh',
     'test/container/stop.sh',
-    'test/container/upload.sh',
+    #'test/container/upload.sh',
 ])
