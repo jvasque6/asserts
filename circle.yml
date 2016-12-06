@@ -20,6 +20,9 @@ machine:
 dependencies:
   pre:
     - sudo apt-get update
+    - sudo apt-get install software-properties-common
+    - sudo apt-add-repository -y ppa:ansible/ansible
+    - sudo apt-get update
     - pip install --upgrade pip setuptools
     - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
   override:

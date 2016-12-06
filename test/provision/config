@@ -15,4 +15,3 @@ callback_whitelist  = profile_tasks
 
 # Permite que la conexion mediante SSH sea mas agil
 pipelining = True
-control_path = none 
