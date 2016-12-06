@@ -21,7 +21,7 @@ def __get_request(url):
     """Realiza una petición GET HTTP ."""
     try:
         return requests.get(url)
-    except ConnectionError:
+    except requests.ConnectionError:
         logging.error('Sin acceso a %s , %s', url, 'ERROR')
 
 

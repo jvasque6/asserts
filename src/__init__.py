@@ -2,6 +2,12 @@
 
 """Paquete principal de FLUIDAsserts.
 
+FLUIDAsserts está compuesto de 4 subpaquetes:
+* format: Verificaciones de formatos específicos
+* helper: Módulos de ayuda
+* os: Verificaciones a nivel de sistema operativo
+* service: Verificaciones de servicios específicos
+
 FLUIDAsserts verifica si una vulnerabilidad se encuentra abierta o cerrada.
 
 Para ello en este paquete existe por cada protocolo o formato un módulo que
