@@ -14,21 +14,21 @@ import re
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 
 
-def is_os_min_priv_disabled(server, username, password, ssh_config):
+def is_os_min_priv_disabled(server, username, password):
     """
     Checks if umask or similar is secure in Windows Server
     """
     pass
 
 
-def is_os_sudo_disabled(server, username, password, ssh_config):
+def is_os_sudo_disabled(server, username, password):
     """
     Checks if there's sudo or similar installed in Windows Server
     """
     pass
 
 
-def is_os_compilers_installed(server, username, password, ssh_config):
+def is_os_compilers_installed(server, username, password):
     """
     Checks if there's any compiler installed in Windows Server
     """
@@ -63,7 +63,7 @@ def is_os_compilers_installed(server, username, password, ssh_config):
     return result
 
 
-def is_os_antimalware_not_installed(server, username, password, ssh_config):
+def is_os_antimalware_not_installed(server, username, password):
     """
     Checks if there's any antimalware installed in Windows Server
     """
@@ -98,14 +98,14 @@ def is_os_antimalware_not_installed(server, username, password, ssh_config):
     return result
 
 
-def is_os_remote_admin_enabled(server, username, password, ssh_config):
+def is_os_remote_admin_enabled(server, username, password):
     """
     Checks if admins can remotely login in Windows Server
     """
     pass
 
 
-def is_os_syncookies_disabled(server, username, password, ssh_config):
+def is_os_syncookies_disabled(server, username, password):
     """
     Checks if SynCookies or similar is enabled in Windows Server
     """
