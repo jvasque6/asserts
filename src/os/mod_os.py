@@ -10,8 +10,8 @@ Modulo OS general
 # None
 
 # local imports
-from fluidasserts.os import os_linux_generic
-from fluidasserts.os import os_windows_server_2008_plus
+from fluidasserts.os import linux_generic
+from fluidasserts.os import windows_server_2008_plus
 
 
 def is_os_min_priv_disabled(server, username, password, ssh_config,
@@ -21,15 +21,15 @@ def is_os_min_priv_disabled(server, username, password, ssh_config,
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_min_priv_disabled(server, username,
-                                                     password,
-                                                     ssh_config)
+            linux_generic.is_os_min_priv_disabled(server, username,
+                                                  password,
+                                                  ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_min_priv_disabled(server,
-                                                                username,
-                                                                password,
-                                                                ssh_config)
+            windows_server_2008_plus.is_os_min_priv_disabled(server,
+                                                             username,
+                                                             password,
+                                                             ssh_config)
 
 
 def is_os_sudo_disabled(server, username, password, ssh_config, os_type):
@@ -38,15 +38,15 @@ def is_os_sudo_disabled(server, username, password, ssh_config, os_type):
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_sudo_disabled(server, username,
-                                                 password,
-                                                 ssh_config)
+            linux_generic.is_os_sudo_disabled(server, username,
+                                              password,
+                                              ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_sudo_disabled(server,
-                                                            username,
-                                                            password,
-                                                            ssh_config)
+            windows_server_2008_plus.is_os_sudo_disabled(server,
+                                                         username,
+                                                         password,
+                                                         ssh_config)
 
 
 def is_os_compilers_installed(server, username, password, ssh_config,
@@ -56,15 +56,15 @@ def is_os_compilers_installed(server, username, password, ssh_config,
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_compilers_installed(server, username,
-                                                       password,
-                                                       ssh_config)
+            linux_generic.is_os_compilers_installed(server, username,
+                                                    password,
+                                                    ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_compilers_installed(server,
-                                                                  username,
-                                                                  password,
-                                                                  ssh_config)
+            windows_server_2008_plus.is_os_compilers_installed(server,
+                                                               username,
+                                                               password,
+                                                               ssh_config)
 
 
 def is_os_antimalware_not_installed(server, username, password, ssh_config,
@@ -74,16 +74,16 @@ def is_os_antimalware_not_installed(server, username, password, ssh_config,
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_antimalware_not_installed(server,
-                                                             username,
-                                                             password,
-                                                             ssh_config)
+            linux_generic.is_os_antimalware_not_installed(server,
+                                                          username,
+                                                          password,
+                                                          ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_antimalware_not_installed(server,
-                                                                        username,
-                                                                        password,
-                                                                        ssh_config)
+            windows_server_2008_plus.is_os_antimalware_not_installed(server,
+                                                                     username,
+                                                                     password,
+                                                                     ssh_config)
 
 
 def is_os_remote_admin_enabled(server, username, password, ssh_config,
@@ -93,16 +93,16 @@ def is_os_remote_admin_enabled(server, username, password, ssh_config,
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_remote_admin_enabled(server,
-                                                        username,
-                                                        password,
-                                                        ssh_config)
+            linux_generic.is_os_remote_admin_enabled(server,
+                                                     username,
+                                                     password,
+                                                     ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_remote_admin_enabled(server,
-                                                                   username,
-                                                                   password,
-                                                                   ssh_config)
+            windows_server_2008_plus.is_os_remote_admin_enabled(server,
+                                                                username,
+                                                                password,
+                                                                ssh_config)
 
 
 def is_os_syncookies_disabled(server, username, password, ssh_config,
@@ -112,13 +112,13 @@ def is_os_syncookies_disabled(server, username, password, ssh_config,
     """
     if os_type is 'LINUX_GENERIC':
         return \
-            os_linux_generic.is_os_syncookies_disabled(server,
-                                                       username,
-                                                       password,
-                                                       ssh_config)
+            linux_generic.is_os_syncookies_disabled(server,
+                                                    username,
+                                                    password,
+                                                    ssh_config)
     elif os_type is 'WINDOWS_SERVER_2008_PLUS':
         return \
-            os_windows_server_2008_plus.is_os_syncookies_disabled(server,
-                                                                  username,
-                                                                  password,
-                                                                  ssh_config)
+            windows_server_2008_plus.is_os_syncookies_disabled(server,
+                                                               username,
+                                                               password,
+                                                               ssh_config)
