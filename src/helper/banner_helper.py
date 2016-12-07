@@ -12,16 +12,18 @@ smtp_service = SMTPService()
 http_service = HTTPService(payload='GET / HTTP/1.0\r\n\r\n')
 https_service = HTTPSService(payload='GET / HTTP/1.0\r\n\r\n')
 
-banner = get_banner(http_service, 'google.com')
-version = get_version(http_service, banner)
+banner = get_banner(https_service, 'fluid.la')
+version = get_version(https_service, banner)
 print version
 """
 
 
 # standard imports
 from abc import ABCMeta, abstractmethod
-import socket
 import re
+import ssl
+import socket
+
 
 # 3rd party imports
 # none
@@ -152,13 +154,17 @@ class HTTPSService(Service):
         return m.group(1)
 
 
-def passive_service_connect(server, port):
+def passive_service_connect(server, port, is_ssl):
     """
     Gets the banner of the service on a given port of an IP address
     """
     banner = ""
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s = socket.create_connection((server, port))
+        if is_ssl:
+            sock = ssl.wrap_socket(s)
+        else:
+            sock = s
         sock.connect((server, port))
         banner = sock.recv(5096)
     except socket.error:
@@ -169,13 +175,17 @@ def passive_service_connect(server, port):
     return banner
 
 
-def active_service_connect(server, port, payload):
+def active_service_connect(server, port, is_ssl, payload):
     """
     Gets the banner of the service on a given port of an IP address
     """
     banner = ""
     try:
-        sock = socket.create_connection((server, port))
+        s = socket.create_connection((server, port))
+        if is_ssl:
+            sock = ssl.wrap_socket(s)
+        else:
+            sock = s
         sent_bytes = sock.send(payload)
         if sent_bytes < len(payload):
             raise socket.error
@@ -189,13 +199,18 @@ def active_service_connect(server, port, payload):
 
 
 def get_banner(service, server, port=None):
+    if port is None:
+        port = service.port
+
     if service.is_active:
         banner = active_service_connect(server,
-                                        service.port,
+                                        port,
+                                        service.is_ssl,
                                         service.payload)
     else:
         banner = passive_service_connect(server,
-                                         service.port)
+                                         port,
+                                         service.is_ssl)
     return banner
 
 
