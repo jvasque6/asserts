@@ -39,19 +39,3 @@ def is_port_open(ipaddress, port):
     logging.info('Checking port, Details=%s, %s',
                  ipaddress + ':' + str(port), status)
     return result
-
-
-def getbanner(ipaddress, port):
-    """
-    Gets the banner of the service on a given port of an IP address
-    """
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((ipaddress, port))
-        logging.info('Banner %s, Details=%s, %s', ipaddress + ':' +
-                     str(port), sock.recv(2048), 'OPEN')
-    except socket.error:
-        logging.info('Checking port, Details=%s, %s',
-                     ipaddress + ':' + str(port), 'CLOSE')
-    finally:
-        sock.close()
