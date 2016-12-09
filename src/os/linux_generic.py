@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Modulo OS os_linux_generic
+Modulo OS os_linux_generic.
 """
 
 # standard imports
@@ -14,9 +14,8 @@ from fluidasserts.helper.ssh_helper import ssh_exec_command
 
 
 def is_os_min_priv_disabled(server, username, password, ssh_config=None):
-    """
-    Checks if umask or similar is secure in os_linux_generic
-    """
+    """Check if umask or similar is secure in os_linux_generic."""
+
     result = True
     cmd = 'umask'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -34,8 +33,7 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
 
 
 def is_os_sudo_disabled(server, username, password, ssh_config=None):
-    """
-    Checks if there's sudo or similar installed in os_linux_generic
+    """Check if there's sudo or similar installed in os_linux_generic.
     """
     result = True
     cmd = 'which sudo'
@@ -55,9 +53,8 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
 
 def is_os_compilers_installed(server, username, password,
                               ssh_config=None):
-    """
-    Checks if there's any compiler installed in os_linux_generic
-    """
+    """Check if there's any compiler installed in os_linux_generic."""
+
     result = True
     cmd = 'which cc gcc c++ g++ javac ld as nasm'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -76,8 +73,7 @@ def is_os_compilers_installed(server, username, password,
 
 def is_os_antimalware_not_installed(server, username, password,
                                     ssh_config=None):
-    """
-    Checks if there's any antimalware installed in os_linux_generic
+    """Check if there's any antimalware installed in os_linux_generic.
     """
     result = True
     cmd = 'which clamscan avgscan'
@@ -97,9 +93,8 @@ def is_os_antimalware_not_installed(server, username, password,
 
 def is_os_remote_admin_enabled(server, username, password,
                                ssh_config=None):
-    """
-    Checks if admins can remotely login in os_linux_generic
-    """
+    """Check if admins can remotely login in os_linux_generic."""
+
     result = True
     cmd = 'grep -i "^PermitRootLogin.*yes" /etc/ssh/sshd_config'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -118,9 +113,9 @@ def is_os_remote_admin_enabled(server, username, password,
 
 def is_os_syncookies_disabled(server, username, password,
                               ssh_config=None):
+    """Check if SynCookies or similar is enabled in os_linux_generic.
     """
-    Checks if SynCookies or similar is enabled in os_linux_generic
-    """
+
     result = True
     cmd = 'sysctl -q -n net.ipv4.tcp_syncookies'
     out, _ = ssh_exec_command(server, username, password, cmd,

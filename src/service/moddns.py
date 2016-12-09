@@ -80,10 +80,8 @@ def is_dynupdate_enabled(domain, nameserver):
 
 
 def has_cache_poison(domain, nameserver):
-    """
-    Checks if cache poisoning is possible.
-    The check is made by looking DNSSEC records
-    """
+    """Checks if cache poisoning is possible.
+    The check is made by looking DNSSEC records"""
 
     myresolver = dns.resolver.Resolver()
     myresolver.nameservers = [nameserver]
@@ -119,7 +117,7 @@ def has_cache_poison(domain, nameserver):
 
 
 def has_cache_snooping(nameserver):
-    """Checks if nameserver has cache snooping
+    """Checks if nameserver has cache snooping.
     (supports non recursive queries)"""
 
     domain = 'google.com'

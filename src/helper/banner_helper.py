@@ -39,7 +39,6 @@ class Service(object):
 
     def __init__(self, port, is_active, is_ssl, payload=None):
         """Return a new Service object."""
-
         self.port = port
         self.is_active = is_active
         self.is_ssl = is_ssl
@@ -47,9 +46,8 @@ class Service(object):
 
     @abstractmethod
     def get_version(self, banner):
-        """
-        This method should parse the banner and return the product
-        and version of the service.
+        """Parse the banner and return the product and version of 
+        the service.
         """
         pass
 
@@ -67,8 +65,8 @@ class FTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        m = re.search(r'220.(.*)', banner)
-        return m.group(1)
+        regex_match = re.search(r'220.(.*)', banner)
+        return regex_match.group(1)
 
 
 class SSHService(Service):
@@ -116,8 +114,8 @@ class SMTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        m = re.search(r'220 (\S+) (.*ESMTP.*)', banner)
-        return m.group(2)
+        regex_match = re.search(r'220 (\S+) (.*ESMTP.*)', banner)
+        return regex_match.group(2)
 
 
 class HTTPService(Service):
@@ -133,8 +131,8 @@ class HTTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        m = re.search(r'Server: (.*)', banner)
-        return m.group(1)
+        regex_match = re.search(r'Server: (.*)', banner)
+        return regex_match.group(1)
 
 
 class HTTPSService(Service):
@@ -150,45 +148,25 @@ class HTTPSService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        m = re.search(r'Server: (.*)', banner)
-        return m.group(1)
+        regex_match = re.search(r'Server: (.*)', banner)
+        return regex_match.group(1)
 
 
-def passive_service_connect(server, port, is_ssl):
+def service_connect(server, port, is_ssl, payload=None):
     """
     Gets the banner of the service on a given port of an IP address
     """
     banner = ""
     try:
-        s = socket.create_connection((server, port))
+        raw_socket = socket.create_connection((server, port))
         if is_ssl:
-            sock = ssl.wrap_socket(s)
+            sock = ssl.wrap_socket(raw_socket)
         else:
-            sock = s
-        sock.connect((server, port))
-        banner = sock.recv(5096)
-    except socket.error:
-        banner = ""
-    finally:
-        sock.close()
-
-    return banner
-
-
-def active_service_connect(server, port, is_ssl, payload):
-    """
-    Gets the banner of the service on a given port of an IP address
-    """
-    banner = ""
-    try:
-        s = socket.create_connection((server, port))
-        if is_ssl:
-            sock = ssl.wrap_socket(s)
-        else:
-            sock = s
-        sent_bytes = sock.send(payload)
-        if sent_bytes < len(payload):
-            raise socket.error
+            sock = raw_socket
+        if payload is not None:
+            sent_bytes = sock.send(payload)
+            if sent_bytes < len(payload):
+                raise socket.error
         banner = sock.recv(5096)
     except socket.error:
         banner = ""
@@ -199,20 +177,18 @@ def active_service_connect(server, port, is_ssl, payload):
 
 
 def get_banner(service, server, port=None):
+    """High level method to get banner."""
+
     if port is None:
         port = service.port
 
-    if service.is_active:
-        banner = active_service_connect(server,
-                                        port,
-                                        service.is_ssl,
-                                        service.payload)
-    else:
-        banner = passive_service_connect(server,
-                                         port,
-                                         service.is_ssl)
+    banner = service_connect(server, port,
+                             service.is_ssl,
+                             service.payload)
     return banner
 
 
 def get_version(service, banner):
+    """High level method to get version."""
+
     return service.get_version(banner)
