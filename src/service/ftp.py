@@ -23,7 +23,7 @@ from ftplib import FTP, error_perm
 # none
 
 # local imports
-# none
+from fluidasserts.helper import banner_helper
 
 PORT = 21
 NULL_PASSWORD = ''
@@ -63,3 +63,20 @@ def is_anonymous_enabled(ip_address):
 def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
     """Determina si un servidor FTP permite autenticar al administrador."""
     return is_a_valid_user(ip_address, username, password)
+
+
+def is_version_visible(ip_address):
+    ftp_service = banner_helper.FTPService()
+    banner = banner_helper.get_banner(ftp_service, ip_address)
+    version = banner_helper.get_version(ftp_service, banner)
+
+    result = True
+    if version:
+        result = True
+        logging.info('FTP version visible on %s, Details=%s, %s',
+                     ip_address, banner, version)
+    else:
+        result = False
+        logging.info('FTP version not visible on %s, Details=None',
+                     ip_address)
+    return result

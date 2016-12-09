@@ -65,8 +65,11 @@ class FTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(r'220.(.*)', banner)
-        return regex_match.group(1)
+        regex_match = re.search(b'220.(.*)', banner)
+        version = regex_match.group(1)
+        if len(version) < 3:
+            return None
+        return version
 
 
 class SSHService(Service):
@@ -114,7 +117,7 @@ class SMTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(r'220 (\S+) (.*ESMTP.*)', banner)
+        regex_match = re.search(b'220 (\S+) (.*ESMTP.*)', banner)
         return regex_match.group(2)
 
 
@@ -131,7 +134,7 @@ class HTTPService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(r'Server: (.*)', banner)
+        regex_match = re.search(b'Server: (.*)', banner)
         return regex_match.group(1)
 
 
@@ -148,7 +151,7 @@ class HTTPSService(Service):
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(r'Server: (.*)', banner)
+        regex_match = re.search(b'Server: (.*)', banner)
         return regex_match.group(1)
 
 
@@ -156,7 +159,7 @@ def service_connect(server, port, is_ssl, payload=None):
     """
     Gets the banner of the service on a given port of an IP address
     """
-    banner = ""
+    banner = ''
     try:
         raw_socket = socket.create_connection((server, port))
         if is_ssl:
@@ -169,7 +172,7 @@ def service_connect(server, port, is_ssl, payload=None):
                 raise socket.error
         banner = sock.recv(5096)
     except socket.error:
-        banner = ""
+        banner = ''
     finally:
         sock.close()
 
@@ -185,7 +188,7 @@ def get_banner(service, server, port=None):
     banner = service_connect(server, port,
                              service.is_ssl,
                              service.payload)
-    return banner
+    return banner.rstrip()
 
 
 def get_version(service, banner):
