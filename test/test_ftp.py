@@ -85,6 +85,11 @@ def test_is_a_valid_user_open():
     assert ftp.is_a_valid_user(CONTAINER_IP, GUESSED_USER, GUESSED_PASS)
 
 
+@pytest.mark.usefixtures('container', 'weak_ftp')
+def test_is_version_visible_open():
+    """Servidor FTP vulnerable SI muestra version?"""
+    assert ftp.is_version_visible(CONTAINER_IP)
+
 #
 # Closing tests
 #
@@ -112,3 +117,9 @@ def test_user_without_password_close():
 def test_is_a_valid_user_close():
     """Servidor FTP endurecido NO autentica a usuario adivinado?"""
     assert not ftp.is_a_valid_user(CONTAINER_IP, GUESSED_USER, GUESSED_PASS)
+
+
+@pytest.mark.usefixtures('container', 'hard_ftp')
+def test_is_version_visible_close():
+    """Servidor FTP endurecido NO muestra version?"""
+    assert not ftp.is_version_visible(CONTAINER_IP)
