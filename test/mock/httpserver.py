@@ -143,6 +143,24 @@ def hsts_fail():
     return resp
 
 
+@APP.route('/http/headers/version/ok')
+def version_ok():
+    """Header Server seguro."""
+    resp = Response('Server header OK')
+    resp.headers['Server'] = 'Apache'
+    return resp
+
+
+@APP.route('/http/headers/version/fail')
+def version_fail():
+    """Header Server inseguro."""
+    resp = Response('Server header FAIL')
+    resp.headers['Strict-Transport-Security'] = 'Fail'
+    resp.headers['Cosa'] = 'Cosa'
+    resp.headers['Server'] = 'Apache/2.4.10 (Debian) OpenSSL/1.0.1t'
+    return resp
+
+
 @APP.route('/http/headers/basic/ok')
 def basic_ok():
     """Header que define bien la implementacion de HTTP Auth."""

@@ -32,7 +32,7 @@ HDR_RGX = {
     'strict-transport-security': '^\\s*max-age=\\s*\\d+',
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
-    'server': '^.*[0-9]+\\.[0-9]+.*$',
+    'server': '^[^0-9]*$',
     'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
     'x-xss-protection': '^1(; mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$'
@@ -217,8 +217,8 @@ def is_header_pragma_missing(url):
     return __check_result(url, 'pragma')
 
 
-def is_header_server_missing(url):
-    """Check if server header is missing."""
+def is_header_server_insecure(url):
+    """Check if server header is insecure."""
     return __check_result(url, 'server')
 
 
@@ -298,28 +298,3 @@ def generic_http_assert(url, method, expected_regex,
         logging.info('%s HTTP assertion succeed, Details=%s, %s, %s',
                      url, method, expected_regex, 'CLOSE')
         return False
-
-
-def is_version_visible(url):
-    ip_address = url.split('/', 3)[2]
-    proto = url.split('/', 3)[0][:-1]
-    if proto == 'http':
-        service_object = banner_helper.HTTPService(payload='GET / HTTP/1.0\r\n\r\n')
-    elif proto == 'https':
-        service_object = banner_helper.HTTPSService(payload='GET / HTTP/1.0\r\n\r\n')
-    else:
-        raise requests.ConnectionError
-
-    banner = banner_helper.get_banner(service_object, ip_address)
-    version = banner_helper.get_version(service_object, banner)
-
-    result = True
-    if version:
-        result = True
-        logging.info('Host version visible on %s, Details=%s',
-                     ip_address, version)
-    else:
-        result = False
-        logging.info('Host version not visible on %s, Details=None',
-                     ip_address)
-    return result

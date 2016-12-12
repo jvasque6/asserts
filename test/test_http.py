@@ -99,6 +99,30 @@ def test_notfound_string():
         'Unexpected string')
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_delete_open():
+    """HTTP DELETE Allowed"""
+    assert http.has_delete_method('%s/delete_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_put_open():
+    """HTTP PUT Allowed"""
+    assert http.has_put_method('%s/put_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_trace_open():
+    """HTTP TRACE Allowed"""
+    assert http.has_trace_method('%s/trace_open' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_version_open():
+    """Header Server inseguro?"""
+    assert http.is_header_server_insecure(
+        '%s/version/fail' % (BASE_URL))
+
 #
 # Close tests
 #
@@ -139,33 +163,15 @@ def test_put_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_put_open():
-    """HTTP PUT Allowed"""
-    assert http.has_put_method('%s/put_open' % (BASE_URL))
-
-
-@pytest.mark.usefixtures('mock_http')
 def test_trace_close():
     """HTTP TRACE Not Allowed"""
     assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_trace_open():
-    """HTTP TRACE Allowed"""
-    assert http.has_trace_method('%s/trace_open' % (BASE_URL))
-
-
-@pytest.mark.usefixtures('mock_http')
 def test_delete_close():
     """HTTP DELETE Not Allowed"""
     assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
-
-
-@pytest.mark.usefixtures('mock_http')
-def test_delete_open():
-    """HTTP DELETE Allowed"""
-    assert http.has_delete_method('%s/delete_open' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -176,6 +182,13 @@ def test_expected_string():
         'GET',
         'Expected string',
         '_')
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_version_close():
+    """Header Server inseguro?"""
+    assert not http.is_header_server_insecure(
+        '%s/version/ok' % (BASE_URL))
 
 
 #
