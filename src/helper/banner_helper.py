@@ -46,7 +46,7 @@ class Service(object):
 
     @abstractmethod
     def get_version(self, banner):
-        """Parse the banner and return the product and version of 
+        """Parse the banner and return the product and version of
         the service.
         """
         pass
@@ -118,7 +118,9 @@ class SMTPService(Service):
     def get_version(self, banner):
         """Get version."""
         regex_match = re.search(b'220 (\S+) (.*ESMTP.*)', banner)
-        return regex_match.group(2)
+        if regex_match:
+            return regex_match.group(2)
+        return None
 
 
 class HTTPService(Service):
@@ -135,7 +137,9 @@ class HTTPService(Service):
     def get_version(self, banner):
         """Get version."""
         regex_match = re.search(b'Server: (.*)', banner)
-        return regex_match.group(1)
+        if regex_match:
+            return regex_match.group(1)
+        return None
 
 
 class HTTPSService(Service):
@@ -152,7 +156,9 @@ class HTTPSService(Service):
     def get_version(self, banner):
         """Get version."""
         regex_match = re.search(b'Server: (.*)', banner)
-        return regex_match.group(1)
+        if regex_match:
+            return regex_match.group(1)
+        return None
 
 
 def service_connect(server, port, is_ssl, payload=None):

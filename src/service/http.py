@@ -19,6 +19,7 @@ import requests
 from requests_oauthlib import OAuth1
 
 # local imports
+from fluidasserts.helper import banner_helper
 
 
 HDR_RGX = {
@@ -297,3 +298,28 @@ def generic_http_assert(url, method, expected_regex,
         logging.info('%s HTTP assertion succeed, Details=%s, %s, %s',
                      url, method, expected_regex, 'CLOSE')
         return False
+
+
+def is_version_visible(url):
+    ip_address = url.split('/', 3)[2]
+    proto = url.split('/', 3)[0][:-1]
+    if proto == 'http':
+        service_object = banner_helper.HTTPService(payload='GET / HTTP/1.0\r\n\r\n')
+    elif proto == 'https':
+        service_object = banner_helper.HTTPSService(payload='GET / HTTP/1.0\r\n\r\n')
+    else:
+        raise requests.ConnectionError
+
+    banner = banner_helper.get_banner(service_object, ip_address)
+    version = banner_helper.get_version(service_object, banner)
+
+    result = True
+    if version:
+        result = True
+        logging.info('Host version visible on %s, Details=%s',
+                     ip_address, version)
+    else:
+        result = False
+        logging.info('Host version not visible on %s, Details=None',
+                     ip_address)
+    return result
