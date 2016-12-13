@@ -15,6 +15,7 @@ import pytest
 
 # local imports
 from fluidasserts.service import http
+from fluidasserts.helper import http_helper
 from test.mock import httpserver
 
 #
@@ -82,9 +83,8 @@ def test_basic_open():
 @pytest.mark.usefixtures('mock_http')
 def test_unexpected_string():
     """String not expected found?"""
-    assert http.generic_http_assert(
+    assert http_helper.generic_http_assert(
         '%s/unexpected' % (BASE_URL),
-        'GET',
         '_',
         'Unexpected string')
 
@@ -92,9 +92,8 @@ def test_unexpected_string():
 @pytest.mark.usefixtures('mock_http')
 def test_notfound_string():
     """Expected string not found?"""
-    assert http.generic_http_assert(
+    assert http_helper.generic_http_assert(
         '%s/notfound' % (BASE_URL),
-        'GET',
         'Expected string',
         'Unexpected string')
 
@@ -177,9 +176,8 @@ def test_delete_close():
 @pytest.mark.usefixtures('mock_http')
 def test_expected_string():
     """Expected string found?"""
-    assert not http.generic_http_assert(
+    assert not http_helper.generic_http_assert(
         '%s/expected' % (BASE_URL),
-        'GET',
         'Expected string',
         '_')
 

@@ -23,6 +23,7 @@
     - name: Install dependencies
       apt: name={{ item }} update_cache=yes cache_valid_time=3600
       with_items:
+        - ca-certificates
         - mysql-server
         - python-mysqldb
         - unzip
@@ -34,10 +35,16 @@
         - libapache2-mod-php5
 
     - name: Download DVWA
+      get_url: 
+        url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
+        dest: /tmp/v1.9.zip
+        mode: 0644
+        validate_certs: no
+
+    - name: Unarchive DVWA
       unarchive: 
-        src: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
+        src: /tmp/v1.9.zip
         dest: /var/www/html
-        remote_src: yes
 
     - name: Remove existing DVWA install directory
       file: path=/var/www/html/dvwa state=absent
@@ -61,6 +68,7 @@
         - { regexp: "db_password", line: "$_DVWA[ 'db_password' ] = 'password';" }
         - { regexp: "db_port", line: "$_DVWA[ 'db_port'] = '3306';" }
         - { regexp: "default_security_level", line: "$_DVWA[ 'default_security_level' ] = 'low';" }
+      notify: Restart mysql
 
     - name: Configure php.ini allow_url_include
       ini_file:
@@ -93,7 +101,7 @@
         state=present
 
     - name: Copy DVWA SQL data to import
-      copy: src=templates/dvwa.sql dest=/tmp/dvwa.sql
+      copy: src=dvwa/templates/dvwa.sql dest=/tmp/dvwa.sql
 
     - name: Insert SQL data
       mysql_db:
@@ -106,3 +114,6 @@
   handlers:
         - name: Restart apache2
           service: name=apache2 state=restarted
+
+        - name: Restart mysql
+          service: name=mysql state=restarted
