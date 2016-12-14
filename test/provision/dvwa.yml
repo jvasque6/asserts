@@ -33,7 +33,16 @@
         - php-pear
         - php5-gd 
         - libapache2-mod-php5
+        
+    - name: Start and enable MySQL 
+      service: name=mysql state=started enabled=yes
 
+#    - name: Setup MySQL root password
+#      mysql-user: name=root host={{ item }} password={{ mysql_root_password }} state=present
+#      with_items:
+#        - localhost
+#        - 127.0.0.1
+  
     - name: Download DVWA
       get_url: 
         url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
@@ -68,7 +77,6 @@
         - { regexp: "db_password", line: "$_DVWA[ 'db_password' ] = 'password';" }
         - { regexp: "db_port", line: "$_DVWA[ 'db_port'] = '3306';" }
         - { regexp: "default_security_level", line: "$_DVWA[ 'default_security_level' ] = 'low';" }
-      notify: Restart mysql
 
     - name: Configure php.ini allow_url_include
       ini_file:
@@ -114,6 +122,3 @@
   handlers:
         - name: Restart apache2
           service: name=apache2 state=restarted
-
-        - name: Restart mysql
-          service: name=mysql state=restarted

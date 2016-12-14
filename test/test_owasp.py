@@ -7,6 +7,7 @@ para probar OWASP TOP 10 2013 de aplicaciones.
 """
 
 # standard imports
+import logging
 import subprocess
 import time
 from multiprocessing import Process
@@ -45,8 +46,10 @@ def test_sqli_open():
     """SQL injection habilitado?"""
     url = 'http://'+ CONTAINER_IP + '/dvwa/login.php'
 
+    logging.info(url)
     response = http_helper.get_request(url, headers={})
-    sessionid = response.cookies['PHPSESSID']
+    logging.info(response.cookies)
+    sessionid = response.cookies.get_dict()['PHPSESSID']
     cookie = {'security': 'low', 'PHPSESSID': sessionid}
 
     soup = BeautifulSoup(response.text, "lxml")
