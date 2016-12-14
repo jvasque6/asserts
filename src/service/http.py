@@ -40,28 +40,6 @@ HDR_RGX = {
 }
 
 
-#def __get_request(url, auth=None):
-    #"""Realiza una petición GET HTTP."""
-    #try:
-        #headers = {
-            #'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
-        #return requests.get(url, verify=False, auth=auth, headers=headers)
-    #except requests.ConnectionError:
-        #logging.error('Sin acceso a %s , %s', url, 'ERROR')
-
-
-#def __post_request(url, data=''):
-    #"""Realiza una petición POST HTTP."""
-    #try:
-        #headers = {
-            #'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
-        ## TODO(glopez): El user agent debe ser de FLUIDAsserts y parametrizable
-        #return requests.post(url, verify=False, data=data,
-                             #headers=headers, allow_redirects=False)
-    #except requests.ConnectionError:
-        #logging.error('Sin acceso a %s , %s', url, 'ERROR')
-
-
 def formauth_by_statuscode(url, code, **formargs):
     """XXXXXXXXXXXXXX."""
     http_req = http_helper.post_request(url, formargs)
