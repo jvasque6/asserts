@@ -1,0 +1,125 @@
+---
+- name: Installs and configure DVWA for OWASP TOP 10 testing 
+  hosts: container 
+  become: yes 
+  vars:
+    servername: localhost
+    mysql_dvwa_db: dvwa
+    mysql_root_user: root
+    mysql_root_password: password
+  tasks:
+    - name: set mysql root password
+      debconf: name=mysql-server
+        question=mysql-server/root_password
+        value={{ mysql_root_password }}
+        vtype=password
+
+    - name: Confirm mysql root password
+      debconf: name=mysql-server
+        question=mysql-server/root_password_again
+        value={{ mysql_root_password }}
+        vtype=password
+
+    - name: Install dependencies
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600
+      with_items:
+        - ca-certificates
+        - mysql-server
+        - python-mysqldb
+        - unzip
+        - apache2
+        - php5
+        - php5-mysql
+        - php-pear
+        - php5-gd 
+        - libapache2-mod-php5
+        
+    - name: Start and enable MySQL 
+      service: name=mysql state=started enabled=yes
+
+#    - name: Setup MySQL root password
+#      mysql-user: name=root host={{ item }} password={{ mysql_root_password }} state=present
+#      with_items:
+#        - localhost
+#        - 127.0.0.1
+  
+#    - name: Download DVWA
+#      get_url: 
+#        url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
+#        dest: /tmp/v1.9.zip
+#        mode: 0644
+#        validate_certs: no
+
+    - name: Unarchive DVWA
+      unarchive: 
+        src: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
+        dest: /var/www/html
+        remote_src: yes
+
+    - name: Remove existing DVWA install directory
+      file: path=/var/www/html/dvwa state=absent
+
+    - name: Rename DVWA on install directory
+      command: mv /var/www/html/DVWA-1.9 /var/www/html/dvwa
+      
+    - name: Fix perms on /var/www/html/dvwa/hackable/uploads
+      file: name=/var/www/html/dvwa/hackable/uploads mode=777
+
+    - name: Fix perms on /var/www/html/dvwa/external/phpids/0.6/lib/IDS/tmp/phpids_log.txt
+      file: name=/var/www/html/dvwa/external/phpids/0.6/lib/IDS/tmp/phpids_log.txt mode=777
+
+    - name: Config DVWA parameters
+      lineinfile:
+        dest: /var/www/html/dvwa/config/config.inc.php
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        backup: yes
+      with_items:
+        - { regexp: "db_password", line: "$_DVWA[ 'db_password' ] = 'password';" }
+        - { regexp: "db_port", line: "$_DVWA[ 'db_port'] = '3306';" }
+        - { regexp: "default_security_level", line: "$_DVWA[ 'default_security_level' ] = 'low';" }
+
+    - name: Configure php.ini allow_url_include
+      ini_file:
+        dest: /etc/php5/apache2/php.ini
+        section: PHP
+        option: allow_url_include
+        value: On
+      notify: Restart apache2
+
+    - name: Configure php.ini allow_url_fopen
+      ini_file:
+        dest: /etc/php5/apache2/php.ini
+        section: PHP
+        option: allow_url_fopen
+        value: On
+      notify: Restart apache2
+
+    - name: Configure Apache parameters
+      lineinfile:
+        dest: /etc/apache2/apache2.conf
+        regexp: '^ServerName'
+        line: 'ServerName {{ servername }}'
+      notify: Restart apache2
+
+    - name: Create DVWA database
+      mysql_db:
+        name={{ mysql_dvwa_db }}
+        login_user={{ mysql_root_user }}
+        login_password={{ mysql_root_password }}
+        state=present
+
+    - name: Copy DVWA SQL data to import
+      copy: src=dvwa/templates/dvwa.sql dest=/tmp/dvwa.sql
+
+    - name: Insert SQL data
+      mysql_db:
+        name={{ mysql_dvwa_db }}
+        login_user={{ mysql_root_user }}
+        login_password={{ mysql_root_password }}
+        state=import
+        target=/tmp/dvwa.sql
+
+  handlers:
+        - name: Restart apache2
+          service: name=apache2 state=restarted

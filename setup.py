@@ -42,11 +42,12 @@ setup(
         'PyPDF2==1.26.0',            # src.pdf
         'requests==2.10.0',          # src.http
         'requests-oauthlib==0.6.2',  # src.http
-        'cryptography==1.4',         # src.http_ssl
+        'cryptography==1.7',         # src.http_ssl
         'ldap3==1.2.2',              # src.ldap
         'paramiko==2.0.2',           # src.ssh_helper
         'pywinrm==0.2.1',            # src.winrm_helper
         'beautifulsoup4==4.5.1',     # src.html
+        'lxml==3.6.4',     	     # src.http_helper
         'dnspython==1.15.0',         # src.dns
 
     ],

@@ -19,6 +19,8 @@ import requests
 from requests_oauthlib import OAuth1
 
 # local imports
+from fluidasserts.helper import banner_helper
+from fluidasserts.helper import http_helper
 
 
 HDR_RGX = {
@@ -31,38 +33,16 @@ HDR_RGX = {
     'strict-transport-security': '^\\s*max-age=\\s*\\d+',
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
-    'server': '^.*[0-9]+\\.[0-9]+.*$',
+    'server': '^[^0-9]*$',
     'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
     'x-xss-protection': '^1(; mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$'
 }
 
 
-def __get_request(url, auth=None):
-    """Realiza una petición GET HTTP."""
-    try:
-        headers = {
-            'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
-        return requests.get(url, verify=False, auth=auth, headers=headers)
-    except requests.ConnectionError:
-        logging.error('Sin acceso a %s , %s', url, 'ERROR')
-
-
-def __post_request(url, data=''):
-    """Realiza una petición POST HTTP."""
-    try:
-        headers = {
-            'user-agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'}
-        # TODO(glopez): El user agent debe ser de FLUIDAsserts y parametrizable
-        return requests.post(url, verify=False, data=data,
-                             headers=headers, allow_redirects=False)
-    except requests.ConnectionError:
-        logging.error('Sin acceso a %s , %s', url, 'ERROR')
-
-
 def formauth_by_statuscode(url, code, **formargs):
     """XXXXXXXXXXXXXX."""
-    http_req = __post_request(url, formargs)
+    http_req = http_helper.post_request(url, formargs)
     if http_req.status_code == code:
         logging.info('POST Authentication %s, Details=%s, %s',
                      url, 'Success with ' + str(formargs), 'OPEN')
@@ -76,7 +56,7 @@ def formauth_by_statuscode(url, code, **formargs):
 
 def formauth_by_response(url, text, **formargs):
     """XXXXXXXXXXXXXX."""
-    http_req = __post_request(url, formargs)
+    http_req = http_helper.post_request(url, formargs)
     if http_req.text.find(text) >= 0:
         logging.info('POST Authentication %s, Details=%s, %s',
                      url, 'Success with ' + str(formargs), 'OPEN')
@@ -90,8 +70,8 @@ def formauth_by_response(url, text, **formargs):
 
 def basic_auth(url, user, passw):
     """XXXXXXXXXXXXXX."""
-    resp = __get_request(url, (user, passw))
-    if __get_request(url).status_code == 401:
+    resp = http_helper.get_request(url, (user, passw))
+    if http_helper.get_request(url).status_code == 401:
         if resp.status_code == 200:
             logging.info(
                 'HTTPBasicAuth %s, Details=%s, %s',
@@ -108,8 +88,8 @@ def basic_auth(url, user, passw):
 
 def oauth_auth(url, user, passw):
     """XXXXXXXXXXXXXX."""
-    resp = __get_request(url, OAuth1(user, passw))
-    if __get_request(url).status_code == 401:
+    resp = http_helper.get_request(url, OAuth1(user, passw))
+    if http_helper.get_request(url).status_code == 401:
         if resp.status_code == 200:
             logging.info(
                 'HTTPOAuth %s, Details=%s, %s',
@@ -126,7 +106,7 @@ def oauth_auth(url, user, passw):
 
 def __has_secure_header(url, header):
     """Check if header is present."""
-    headers_info = __get_request(url).headers
+    headers_info = http_helper.get_request(url).headers
     result = False
     if header in headers_info:
         value = headers_info[header]
@@ -216,8 +196,8 @@ def is_header_pragma_missing(url):
     return __check_result(url, 'pragma')
 
 
-def is_header_server_missing(url):
-    """Check if server header is missing."""
+def is_header_server_insecure(url):
+    """Check if server header is insecure."""
     return __check_result(url, 'server')
 
 
@@ -270,30 +250,3 @@ def has_put_method(url):
     """Check HTTP PUT."""
     return __has_method(url, 'PUT')
 
-
-def generic_http_assert(url, method, expected_regex,
-                        failure_regex, headers=None, data=None):
-    """Generic HTTP assert method."""
-
-    opener = urllib.request.build_opener(urllib.request.HTTPHandler)
-
-    if data is not None:
-        post_data = urllib.parse.urlencode(data)
-    if data is not None and headers is not None:
-        response = opener.open(url, data, headers)
-    else:
-        response = opener.open(url)
-    the_page = response.read().decode('utf-8')
-
-    if re.search(str(failure_regex), the_page):
-        logging.info('%s HTTP assertion failed, Details=%s, %s, %s',
-                     url, method, failure_regex, 'OPEN')
-        return True
-    elif re.search(str(expected_regex), the_page) is None:
-        logging.info('%s HTTP assertion not found, Details=%s, %s, %s',
-                     url, method, expected_regex, 'OPEN')
-        return True
-    elif re.search(str(expected_regex), the_page):
-        logging.info('%s HTTP assertion succeed, Details=%s, %s, %s',
-                     url, method, expected_regex, 'CLOSE')
-        return False
