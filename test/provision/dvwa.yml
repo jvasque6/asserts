@@ -43,17 +43,18 @@
 #        - localhost
 #        - 127.0.0.1
   
-    - name: Download DVWA
-      get_url: 
-        url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
-        dest: /tmp/v1.9.zip
-        mode: 0644
-        validate_certs: no
+#    - name: Download DVWA
+#      get_url: 
+#        url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
+#        dest: /tmp/v1.9.zip
+#        mode: 0644
+#        validate_certs: no
 
     - name: Unarchive DVWA
       unarchive: 
-        src: /tmp/v1.9.zip
+        src: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
         dest: /var/www/html
+        remote_src: yes
 
     - name: Remove existing DVWA install directory
       file: path=/var/www/html/dvwa state=absent
