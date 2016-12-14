@@ -42,7 +42,8 @@ HDR_RGX = {
 
 def formauth_by_statuscode(url, code, **formargs):
     """XXXXXXXXXXXXXX."""
-    http_req = http_helper.post_request(url, formargs)
+    request = http_helper.HTTPRequest(url, data=formargs)
+    http_req = request.do_request()
     if http_req.status_code == code:
         logging.info('POST Authentication %s, Details=%s, %s',
                      url, 'Success with ' + str(formargs), 'OPEN')
@@ -56,7 +57,8 @@ def formauth_by_statuscode(url, code, **formargs):
 
 def formauth_by_response(url, text, **formargs):
     """XXXXXXXXXXXXXX."""
-    http_req = http_helper.post_request(url, formargs)
+    request = http_helper.HTTPRequest(url, data=formargs)
+    http_req = request.do_request()
     if http_req.text.find(text) >= 0:
         logging.info('POST Authentication %s, Details=%s, %s',
                      url, 'Success with ' + str(formargs), 'OPEN')
@@ -70,8 +72,11 @@ def formauth_by_response(url, text, **formargs):
 
 def basic_auth(url, user, passw):
     """XXXXXXXXXXXXXX."""
-    resp = http_helper.get_request(url, (user, passw))
-    if http_helper.get_request(url).status_code == 401:
+    request = http_helper.HTTPRequest(url, auth=(user, passw))
+    resp = request.do_request()
+
+    request_no_auth = http_helper.HTTPRequest(url)
+    if request_no_auth.do_request().status_code == 401:
         if resp.status_code == 200:
             logging.info(
                 'HTTPBasicAuth %s, Details=%s, %s',
@@ -88,8 +93,11 @@ def basic_auth(url, user, passw):
 
 def oauth_auth(url, user, passw):
     """XXXXXXXXXXXXXX."""
-    resp = http_helper.get_request(url, OAuth1(user, passw))
-    if http_helper.get_request(url).status_code == 401:
+    request = http_helper.HTTPRequest(url, auth=OAuth1(user, passw))
+    resp = request.do_request()
+
+    request_no_auth = http_helper.HTTPRequest(url)
+    if request_no_auth.do_request().status_code == 401:
         if resp.status_code == 200:
             logging.info(
                 'HTTPOAuth %s, Details=%s, %s',
@@ -106,7 +114,9 @@ def oauth_auth(url, user, passw):
 
 def __has_secure_header(url, header):
     """Check if header is present."""
-    headers_info = http_helper.get_request(url).headers
+    request = http_helper.HTTPRequest(url)
+    headers_info = request.do_request().headers
+
     result = False
     if header in headers_info:
         value = headers_info[header]
@@ -249,4 +259,3 @@ def has_delete_method(url):
 def has_put_method(url):
     """Check HTTP PUT."""
     return __has_method(url, 'PUT')
-

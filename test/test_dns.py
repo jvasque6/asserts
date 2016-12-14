@@ -26,7 +26,7 @@ TEST_ZONE = 'fluid.la'
 
 # pylint: disable=unused-argument
 @pytest.fixture(scope='module')
-def weak_dns(request):
+def weak_dns():
     """Configura perfil de DNS vulnerable."""
     print('Running DNS vulnerable playbook')
     subprocess.call('ansible-playbook test/provision/dns.yml \
@@ -35,7 +35,7 @@ def weak_dns(request):
 
 # pylint: disable=unused-argument
 @pytest.fixture(scope='module')
-def hard_dns(request):
+def hard_dns():
     """Configura perfil de DNS endurecido."""
     print('Running DNS hardened playbook')
     subprocess.call('ansible-playbook test/provision/dns.yml \

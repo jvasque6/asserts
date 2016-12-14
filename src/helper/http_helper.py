@@ -5,7 +5,6 @@
 
 # standard imports
 import logging
-import urllib
 import re
 import requests
 
@@ -16,40 +15,47 @@ from bs4 import BeautifulSoup
 # none
 
 
-def get_request(url, headers={}, cookies=None, params=None, auth=None):
-    """Realiza una petición GET HTTP."""
-    try:
-        headers['user-agent'] = \
-                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'
-        return requests.get(url, verify=False,
-                            auth=auth, params=params,
-                            cookies=cookies, headers=headers)
-    except requests.ConnectionError:
-        logging.error('Sin acceso a %s , %s', url, 'ERROR')
+class HTTPRequest(object):
+    """Clase de objetos HTTP requests."""
 
+    def __init__(self, url, params=None, headers=dict(),
+                 cookies=None, data='', auth=None):
+        self.url = url
+        self.params = params
+        self.headers = headers
+        self.cookies = cookies
+        self.data = data
+        self.auth = auth
+        self.headers['user-agent'] = \
+                     'Mozilla/5.0 (X11; Linux x86_64) \
+                     AppleWebKit/537.36 (KHTML, like Gecko)'
 
-def post_request(url, headers={}, cookies=None, params=None, data=''):
-    """Realiza una petición POST HTTP."""
-    try:
-        headers['user-agent'] = \
-                'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0)'
-        return requests.post(url, verify=False, data=data,
-                             cookies=cookies, params=params,
-                             headers=headers, allow_redirects=True)
-    except requests.ConnectionError:
-        logging.error('Sin acceso a %s , %s', url, 'ERROR')
+    def do_request(self):
+        """Realiza una petición HTTP."""
+        try:
+            if self.data == '':
+                return requests.get(self.url, verify=False,
+                                    auth=self.auth, params=self.params,
+                                    cookies=self.cookies,
+                                    headers=self.headers)
+            else:
+                return requests.post(self.url, verify=False,
+                                     data=self.data, auth=self.auth,
+                                     params=self.params,
+                                     cookies=self.cookies,
+                                     headers=self.headers)
+        except requests.ConnectionError:
+            logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
 
 
 def generic_http_assert(url, expected_regex, failure_regex,
-                        headers={}, cookies=None, params=None, data=None):
+                        headers={}, cookies=None, params=None, data=''):
     """Generic HTTP assert method."""
 
-    if data is None:
-        response = get_request(url, headers=headers, cookies=cookies,
-                               params=params)
-    else:
-        response = post_request(url, headers=headers, cookies=cookies,
-                                params=params, data=data)
+    request = HTTPRequest(url=url, headers=headers, params=params,
+                          cookies=cookies, data=data)
+
+    response = request.do_request()
 
     the_page = response.text
 
