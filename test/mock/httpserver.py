@@ -224,11 +224,6 @@ def expected_string():
     return "Expected string"
 
 
-@APP.route('/http/headers/unexpected')
-def unexpected_string():
-    return "Unexpected string"
-
-
 @APP.route('/http/headers/notfound')
 def notfound_string():
     return "Randomstring"

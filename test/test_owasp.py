@@ -38,17 +38,17 @@ def deploy_dvwa():
 
 
 @pytest.mark.usefixtures('container', 'deploy_dvwa')
-@http_helper.sqli_engine('MySQL')
-@http_helper.sqli_app('DVWA', host=CONTAINER_IP, level='weak')
-def test_sqli_open(**kw):
-    assert http_helper.generic_http_assert(**kw)
+@http_helper.dvwa_vuln('SQLi', host=CONTAINER_IP, level='weak')
+@http_helper.http_app('DVWA', host=CONTAINER_IP)
+def test_sqli_open(**kwargs):
+    assert http_helper.generic_http_assert(**kwargs)
 
 #
 # Close tests
 #
 
 
-@http_helper.sqli_engine('MySQL')
-@http_helper.sqli_app('DVWA', host=CONTAINER_IP, level='hard')
-def test_sqli_close(**kw):
-    assert not http_helper.generic_http_assert(**kw)
+@http_helper.dvwa_vuln('SQLi', host=CONTAINER_IP, level='hard')
+@http_helper.http_app('DVWA', host=CONTAINER_IP)
+def test_sqli_close(**kwargs):
+    assert not http_helper.generic_http_assert(**kwargs)
