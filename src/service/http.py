@@ -99,7 +99,8 @@ def __has_method(url, method):
     return result
 
 
-def __check_http_response(url, params, expect, data='', cookies={}):
+def __check_http_response(url, expect, params=None,
+                          data='', cookies={}):
     http_session = http_helper.HTTPSession(url)
     http_session.params = params
     http_session.data = data
@@ -199,6 +200,21 @@ def has_put_method(url):
     return __has_method(url, 'PUT')
 
 
+def has_sqli(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
+def has_xss(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
+def has_command_injection(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
 def generic_http_assert(http_session, expected_regex):
     """Generic HTTP assert method."""
     if not http_session.response:
@@ -219,10 +235,4 @@ def generic_http_assert(http_session, expected_regex):
         return False
 
 
-def has_sqli(url, params, expect, data='', cookies={}):
-    return __check_http_response(url, params, expect, data=data,
-                                 cookies=cookies)
 
-def has_xss(url, params, expect, data='', cookies={}):
-    return __check_http_response(url, params, expect, data=data,
-                                 cookies=cookies)

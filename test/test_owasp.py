@@ -68,7 +68,7 @@ def test_sqli_open():
     params = {'id': 'a\'', 'Submit': 'Submit'}
     
     expected = 'html'
-    assert http.has_sqli(vulnerable_url, params, expected,
+    assert http.has_sqli(vulnerable_url, expected, params,
                          cookies=dvwa_cookie)
 
 
@@ -81,8 +81,23 @@ def test_xss_open():
     params = {'name': '<script>alert(1)</script>'}
 
     expected = 'Hello alert'
-    assert http.has_xss(vulnerable_url, params, expected,
+    assert http.has_xss(vulnerable_url, expected, params,
                          cookies=dvwa_cookie)
+
+
+def test_command_injection_open():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'low'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/exec/'
+    data = 'ip=127.0.0.1%3Buname&Submit=Submit'
+
+    expected = '<pre></pre>'
+    assert http.has_command_injection(vulnerable_url, expected,
+                                      params=None, data=data,
+                                      cookies=dvwa_cookie)
+
 
 
 #
@@ -99,8 +114,8 @@ def test_sqli_close():
     params = {'id': 'a\'', 'Submit': 'Submit'}
 
     expected = 'html'
-    assert not http.has_sqli(vulnerable_url, params, 
-                             expected, cookies=dvwa_cookie)
+    assert not http.has_sqli(vulnerable_url, expected, params,
+                             cookies=dvwa_cookie)
 
 
 def test_xss_close():
@@ -112,5 +127,19 @@ def test_xss_close():
     params = {'name': '<script>alert(1)</script>'}
 
     expected = 'Hello alert'
-    assert not http.has_xss(vulnerable_url, params, 
-                             expected, cookies=dvwa_cookie)
+    assert not http.has_xss(vulnerable_url, expected, params, 
+                            cookies=dvwa_cookie)
+
+
+def test_command_injection_close():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'medium'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/exec/'
+    data = 'ip=127.0.0.1%3Buname&Submit=Submit'
+
+    expected = '<pre></pre>'
+    assert not http.has_command_injection(vulnerable_url, expected,
+                                          params=None, data=data,
+                                          cookies=dvwa_cookie)
