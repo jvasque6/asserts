@@ -40,73 +40,11 @@ HDR_RGX = {
 }
 
 
-def formauth_by_statuscode(url, code, **formargs):
-    """XXXXXXXXXXXXXX."""
-    http_req = http_helper.post_request(url, formargs)
-    if http_req.status_code == code:
-        logging.info('POST Authentication %s, Details=%s, %s',
-                     url, 'Success with ' + str(formargs), 'OPEN')
-    else:
-        logging.info('POST Authentication %s, Details=%s, %s',
-                     url,
-                     'Error code (' + str(http_req.status_code) +
-                     ') ' + str(formargs),
-                     'CLOSE')
-
-
-def formauth_by_response(url, text, **formargs):
-    """XXXXXXXXXXXXXX."""
-    http_req = http_helper.post_request(url, formargs)
-    if http_req.text.find(text) >= 0:
-        logging.info('POST Authentication %s, Details=%s, %s',
-                     url, 'Success with ' + str(formargs), 'OPEN')
-    else:
-        logging.info(
-            'POST Authentication %s, Details=%s, %s',
-            url,
-            'Error text (' + http_req.text + ') ' + str(formargs),
-            'CLOSE')
-
-
-def basic_auth(url, user, passw):
-    """XXXXXXXXXXXXXX."""
-    resp = http_helper.get_request(url, (user, passw))
-    if http_helper.get_request(url).status_code == 401:
-        if resp.status_code == 200:
-            logging.info(
-                'HTTPBasicAuth %s, Details=%s, %s',
-                url,
-                'Success with [ ' + user + ' : ' + passw + ' ]',
-                'OPEN')
-        else:
-            logging.info('HTTPBasicAuth %s, Details=%s, %s', url,
-                         'Fail with [ ' + user + ' : ' + passw + ' ]', 'CLOSE')
-    else:
-        logging.info('HTTPBasicAuth %s, Details=%s, %s', url,
-                     'HTTPBasicAuth Not present', 'CLOSE')
-
-
-def oauth_auth(url, user, passw):
-    """XXXXXXXXXXXXXX."""
-    resp = http_helper.get_request(url, OAuth1(user, passw))
-    if http_helper.get_request(url).status_code == 401:
-        if resp.status_code == 200:
-            logging.info(
-                'HTTPOAuth %s, Details=%s, %s',
-                url,
-                'Success with [ ' + user + ' : ' + passw + ' ]',
-                'OPEN')
-        else:
-            logging.info('HTTPOAuth %s, Details=%s, %s', url,
-                         'Fail with [ ' + user + ' : ' + passw + ' ]', 'CLOSE')
-    else:
-        logging.info('HTTPOAuth %s, Details=%s, %s', url,
-                     'HTTPOAuth Not present', 'CLOSE')
-
-
 def __has_secure_header(url, header):
     """Check if header is present."""
-    headers_info = http_helper.get_request(url).headers
+    http_session = http_helper.HTTPSession(url)
+    headers_info = http_session.response.headers
+
     result = False
     if header in headers_info:
         value = headers_info[header]
@@ -159,6 +97,17 @@ def __has_method(url, method):
         logging.info('Method %s not allowed in %s', method, url)
         result = False
     return result
+
+
+def __check_http_response(url, expect, params=None,
+                          data='', cookies={}):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.data = data
+    http_session.cookies = cookies
+    http_session.do_request()
+
+    return generic_http_assert(http_session, expect)
 
 
 def is_header_x_asp_net_version_missing(url):
@@ -249,4 +198,41 @@ def has_delete_method(url):
 def has_put_method(url):
     """Check HTTP PUT."""
     return __has_method(url, 'PUT')
+
+
+def has_sqli(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
+def has_xss(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
+def has_command_injection(url, expect, params=None, data='', cookies={}):
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=cookies)
+
+
+def generic_http_assert(http_session, expected_regex):
+    """Generic HTTP assert method."""
+    if not http_session.response:
+        response = http_session.do_request()
+    else:
+        response = http_session.response
+    the_page = response.text
+
+    if re.search(str(expected_regex), the_page) is None:
+        logging.info('%s HTTP assertion not found, Details=%s, %s',
+                     http_session.url, expected_regex, 'OPEN')
+        logging.info(the_page)
+        return True
+    else:
+        logging.info('%s HTTP assertion succeed, Details=%s, %s',
+                     http_session.url, expected_regex, 'CLOSE')
+        logging.info(the_page)
+        return False
+
+
 

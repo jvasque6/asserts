@@ -8,7 +8,7 @@
     mysql_root_user: root
     mysql_root_password: password
   tasks:
-    - name: set mysql root password
+    - name: Set MySQL root password
       debconf: name=mysql-server
         question=mysql-server/root_password
         value={{ mysql_root_password }}
@@ -36,19 +36,6 @@
         
     - name: Start and enable MySQL 
       service: name=mysql state=started enabled=yes
-
-#    - name: Setup MySQL root password
-#      mysql-user: name=root host={{ item }} password={{ mysql_root_password }} state=present
-#      with_items:
-#        - localhost
-#        - 127.0.0.1
-  
-#    - name: Download DVWA
-#      get_url: 
-#        url: https://github.com/ethicalhack3r/DVWA/archive/v1.9.zip
-#        dest: /tmp/v1.9.zip
-#        mode: 0644
-#        validate_certs: no
 
     - name: Unarchive DVWA
       unarchive: 
