@@ -207,37 +207,7 @@ def generic_http_assert(http_session, expected_regex):
         return False
 
 
-def has_sqli_get_no_auth(url, params, expect):
-    http_session = http_helper.HTTPSession(url)
-    http_session.params = params
-    http_session.do_request()
-
-    expected_regex = expect
-    return generic_http_assert(http_session, expected_regex)
-
-
-def has_sqli_post_no_auth(url, params, data, expect):
-    http_session = http_helper.HTTPSession(url)
-    http_session.params = params
-    http_session.data = data
-    http_session.cookies = cookies
-    http_session.do_request()
-
-    expected_regex = expect
-    return generic_http_assert(http_session, expected_regex)
-
-
-def has_sqli_get_auth(url, params, cookies, expect):
-    http_session = http_helper.HTTPSession(url)
-    http_session.params = params
-    http_session.cookies = cookies
-    http_session.do_request()
-
-    expected_regex = expect
-    return generic_http_assert(http_session, expected_regex)
-
-
-def has_sqli_post_auth(url, params, data, cookies, expect):
+def has_sqli(url, params, expect, data='', cookies={}):
     http_session = http_helper.HTTPSession(url)
     http_session.params = params
     http_session.data = data

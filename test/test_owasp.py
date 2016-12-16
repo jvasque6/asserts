@@ -67,8 +67,8 @@ def test_sqli_get_auth_open():
         '/dvwa/vulnerabilities/sqli/'
     params = {'id': 'a\'', 'Submit': 'Submit'}
 
-    assert http.has_sqli_get_auth(vulnerable_url, params,
-                                  dvwa_cookie, 'html')
+    assert http.has_sqli(vulnerable_url, params, 'html',
+                         cookies=dvwa_cookie)
 
 #
 # Close tests
@@ -83,5 +83,5 @@ def test_sqli_get_auth_close():
         '/dvwa/vulnerabilities/sqli/'
     params = {'id': 'a\'', 'Submit': 'Submit'}
 
-    assert not http.has_sqli_get_auth(vulnerable_url, params,
-                                      dvwa_cookie, 'html')
+    assert not http.has_sqli(vulnerable_url, params, 
+                             'html', cookies=dvwa_cookie)
