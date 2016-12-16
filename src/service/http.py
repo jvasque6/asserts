@@ -99,6 +99,16 @@ def __has_method(url, method):
     return result
 
 
+def __check_http_response(url, params, expect, data='', cookies={}):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.data = data
+    http_session.cookies = cookies
+    http_session.do_request()
+
+    return generic_http_assert(http_session, expect)
+
+
 def is_header_x_asp_net_version_missing(url):
     """Check if x-aspnet-version header is missing."""
     return __check_result(url, 'x-aspnet-version')
@@ -200,19 +210,19 @@ def generic_http_assert(http_session, expected_regex):
     if re.search(str(expected_regex), the_page) is None:
         logging.info('%s HTTP assertion not found, Details=%s, %s',
                      http_session.url, expected_regex, 'OPEN')
+        logging.info(the_page)
         return True
     else:
         logging.info('%s HTTP assertion succeed, Details=%s, %s',
                      http_session.url, expected_regex, 'CLOSE')
+        logging.info(the_page)
         return False
 
 
 def has_sqli(url, params, expect, data='', cookies={}):
-    http_session = http_helper.HTTPSession(url)
-    http_session.params = params
-    http_session.data = data
-    http_session.cookies = cookies
-    http_session.do_request()
+    return __check_http_response(url, params, expect, data=data,
+                                 cookies=cookies)
 
-    expected_regex = expect
-    return generic_http_assert(http_session, expected_regex)
+def has_xss(url, params, expect, data='', cookies={}):
+    return __check_http_response(url, params, expect, data=data,
+                                 cookies=cookies)

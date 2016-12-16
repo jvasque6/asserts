@@ -59,29 +59,58 @@ def get_dvwa_cookies():
 #
 
 @pytest.mark.usefixtures('container', 'deploy_dvwa')
-def test_sqli_get_auth_open():
+def test_sqli_open():
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/dvwa/vulnerabilities/sqli/'
     params = {'id': 'a\'', 'Submit': 'Submit'}
-
-    assert http.has_sqli(vulnerable_url, params, 'html',
+    
+    expected = 'html'
+    assert http.has_sqli(vulnerable_url, params, expected,
                          cookies=dvwa_cookie)
+
+
+def test_xss_open():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'low'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/xss_r/'
+    params = {'name': '<script>alert(1)</script>'}
+
+    expected = 'Hello alert'
+    assert http.has_xss(vulnerable_url, params, expected,
+                         cookies=dvwa_cookie)
+
 
 #
 # Close tests
 #
 
 
-def test_sqli_get_auth_close():
+def test_sqli_close():
     dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'impossible'
+    dvwa_cookie['security'] = 'medium'
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/dvwa/vulnerabilities/sqli/'
     params = {'id': 'a\'', 'Submit': 'Submit'}
 
+    expected = 'html'
     assert not http.has_sqli(vulnerable_url, params, 
-                             'html', cookies=dvwa_cookie)
+                             expected, cookies=dvwa_cookie)
+
+
+def test_xss_close():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'medium'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/xss_r/'
+    params = {'name': '<script>alert(1)</script>'}
+
+    expected = 'Hello alert'
+    assert not http.has_xss(vulnerable_url, params, 
+                             expected, cookies=dvwa_cookie)
