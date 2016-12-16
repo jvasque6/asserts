@@ -42,8 +42,8 @@ HDR_RGX = {
 
 def __has_secure_header(url, header):
     """Check if header is present."""
-    request = http_helper.HTTPRequest(url)
-    headers_info = request.do_request().headers
+    http_session = http_helper.HTTPSession(url)
+    headers_info = http_session.response.headers
 
     result = False
     if header in headers_info:
@@ -187,3 +187,62 @@ def has_delete_method(url):
 def has_put_method(url):
     """Check HTTP PUT."""
     return __has_method(url, 'PUT')
+
+
+def generic_http_assert(http_session, expected_regex):
+    """Generic HTTP assert method."""
+    if not http_session.response:
+        response = http_session.do_request()
+    else:
+        response = http_session.response
+    the_page = response.text
+
+    if re.search(str(expected_regex), the_page) is None:
+        logging.info('%s HTTP assertion not found, Details=%s, %s',
+                     http_session.url, expected_regex, 'OPEN')
+        return True
+    else:
+        logging.info('%s HTTP assertion succeed, Details=%s, %s',
+                     http_session.url, expected_regex, 'CLOSE')
+        return False
+
+
+def has_sqli_get_no_auth(url, params, expect):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.do_request()
+
+    expected_regex = expect
+    return generic_http_assert(http_session, expected_regex)
+
+
+def has_sqli_post_no_auth(url, params, data, expect):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.data = data
+    http_session.cookies = cookies
+    http_session.do_request()
+
+    expected_regex = expect
+    return generic_http_assert(http_session, expected_regex)
+
+
+def has_sqli_get_auth(url, params, cookies, expect):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.cookies = cookies
+    http_session.do_request()
+
+    expected_regex = expect
+    return generic_http_assert(http_session, expected_regex)
+
+
+def has_sqli_post_auth(url, params, data, cookies, expect):
+    http_session = http_helper.HTTPSession(url)
+    http_session.params = params
+    http_session.data = data
+    http_session.cookies = cookies
+    http_session.do_request()
+
+    expected_regex = expect
+    return generic_http_assert(http_session, expected_regex)

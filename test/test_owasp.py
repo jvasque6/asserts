@@ -14,6 +14,7 @@ import pytest
 
 # local imports
 from fluidasserts.helper import http_helper
+from fluidasserts.service import http
 
 #
 # Constants
@@ -32,23 +33,55 @@ def deploy_dvwa():
     print('Deploying Damn Vulnerable Web Application')
     subprocess.call('ansible-playbook test/provision/dvwa.yml',
                     shell=True)
+
+
+def get_dvwa_cookies():
+    login_url = 'http://' + CONTAINER_IP + '/dvwa/login.php'
+    http_session = http_helper.HTTPSession(login_url)
+    response = http_session.response
+
+    csrf_token = http_helper.find_value_in_response(response.text,
+                                                    'input',
+                                                    'user_token')
+    http_session.data = 'username=admin&\
+        password=password&user_token=' + \
+        csrf_token + '&Login=Login'
+
+    successful_text = 'Welcome to Damn Vulnerable'
+    http_session.formauth_by_response(successful_text)
+    if not http_session.is_auth:
+        return {}
+
+    return http_session.cookies
+
 #
 # Open tests
 #
 
-
 @pytest.mark.usefixtures('container', 'deploy_dvwa')
-@http_helper.dvwa_vuln('SQLi', host=CONTAINER_IP, level='weak')
-@http_helper.http_app('DVWA', host=CONTAINER_IP)
-def test_sqli_open(**kwargs):
-    assert http_helper.generic_http_assert(**kwargs)
+def test_sqli_get_auth_open():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'low'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/sqli/'
+    params = {'id': 'a\'', 'Submit': 'Submit'}
+
+    assert http.has_sqli_get_auth(vulnerable_url, params,
+                                  dvwa_cookie, 'html')
 
 #
 # Close tests
 #
 
 
-@http_helper.dvwa_vuln('SQLi', host=CONTAINER_IP, level='hard')
-@http_helper.http_app('DVWA', host=CONTAINER_IP)
-def test_sqli_close(**kwargs):
-    assert not http_helper.generic_http_assert(**kwargs)
+def test_sqli_get_auth_close():
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'impossible'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/sqli/'
+    params = {'id': 'a\'', 'Submit': 'Submit'}
+
+    assert not http.has_sqli_get_auth(vulnerable_url, params,
+                                      dvwa_cookie, 'html')
