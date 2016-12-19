@@ -236,6 +236,12 @@ def has_command_injection(url, expect, params=None, data='', cookies={}):
                                  data=data, cookies=cookies)
 
 
+def has_session_fixation(url, expect, params=None, data=''):
+    """Check session fixation by no passing cookies and authenticating."""
+    return __check_http_response(url, expect, params=params,
+                                 data=data, cookies=None)
+
+
 def is_sessionid_exposed(url, argument='sessionid'):
     """Checks if resulting URL has a session ID exposed."""
     http_session = http_helper.HTTPSession(url)
@@ -253,3 +259,4 @@ def is_sessionid_exposed(url, argument='sessionid'):
         logging.info('Session ID is hidden in %s, Details=%s, %s',
                      response_url, argument, 'CLOSE')
     return result
+

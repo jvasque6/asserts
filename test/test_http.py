@@ -181,6 +181,7 @@ def test_version_close():
         '%s/version/ok' % (BASE_URL))
 
 
+
 #
 # TODO(glopez) Functions in HTTP library
 #

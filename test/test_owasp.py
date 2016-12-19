@@ -83,7 +83,7 @@ def get_dvwa_cookies():
 
 
 @pytest.mark.usefixtures('container', 'deploy_dvwa')
-def test_sqli_open():
+def test_owasp_A1_sqli_open():
     """App vulnerable a SQLi?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
@@ -97,21 +97,7 @@ def test_sqli_open():
                          cookies=dvwa_cookie)
 
 
-def test_xss_open():
-    """App vulnerable a XSS?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'low'
-
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/xss_r/'
-    params = {'name': '<script>alert(1)</script>'}
-
-    expected = 'Hello alert'
-    assert http.has_xss(vulnerable_url, expected, params,
-                        cookies=dvwa_cookie)
-
-
-def test_command_injection_open():
+def test_owasp_A1_command_injection_open():
     """App vulnerable a command injection?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
@@ -127,17 +113,39 @@ def test_command_injection_open():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_sessionid_exposed_open():
+def test_owasp_A2_sessionid_exposed_open():
     """Session ID expuesto?"""
     assert http.is_sessionid_exposed(
         '%s/sessionid_in_url' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_owasp_A2_session_fixation_open():
+    """Session fixation posible?"""
+    assert http.has_session_fixation(
+        '%s/session_fixation_open' % (BASE_URL), 'Login required')
+
+
+
+def test_owasp_A3_xss_open():
+    """App vulnerable a XSS?"""
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'low'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/xss_r/'
+    params = {'name': '<script>alert(1)</script>'}
+
+    expected = 'Hello alert'
+    assert http.has_xss(vulnerable_url, expected, params,
+                        cookies=dvwa_cookie)
 
 #
 # Close tests
 #
 
 
-def test_sqli_close():
+def test_owasp_A1_sqli_close():
     """App vulnerable a SQLi?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'medium'
@@ -151,21 +159,7 @@ def test_sqli_close():
                              cookies=dvwa_cookie)
 
 
-def test_xss_close():
-    """App vulnerable a XSS?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'medium'
-
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/xss_r/'
-    params = {'name': '<script>alert(1)</script>'}
-
-    expected = 'Hello alert'
-    assert not http.has_xss(vulnerable_url, expected, params,
-                            cookies=dvwa_cookie)
-
-
-def test_command_injection_close():
+def test_owasp_A1_command_injection_close():
     """App vulnerable a command injection?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'medium'
@@ -181,7 +175,28 @@ def test_command_injection_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_sessionid_exposed_close():
+def test_owasp_A2_sessionid_exposed_close():
     """Session ID expuesto?"""
     assert not http.is_sessionid_exposed(
         '%s/sessionid_not_in_url' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_owasp_A2_session_fixation_open():
+    """Session fixation posible?"""
+    assert not http.has_session_fixation(
+        '%s/session_fixation_close' % (BASE_URL), 'Login required')
+
+
+def test_owasp_A3_xss_close():
+    """App vulnerable a XSS?"""
+    dvwa_cookie = get_dvwa_cookies()
+    dvwa_cookie['security'] = 'medium'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/dvwa/vulnerabilities/xss_r/'
+    params = {'name': '<script>alert(1)</script>'}
+
+    expected = 'Hello alert'
+    assert not http.has_xss(vulnerable_url, expected, params,
+                            cookies=dvwa_cookie)
