@@ -182,7 +182,7 @@ def test_owasp_A2_sessionid_exposed_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_owasp_A2_session_fixation_open():
+def test_owasp_A2_session_fixation_close():
     """Session fixation posible?"""
     assert not http.has_session_fixation(
         '%s/session_fixation_close' % (BASE_URL), 'Login required')
