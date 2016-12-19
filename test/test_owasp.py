@@ -8,6 +8,8 @@ para probar OWASP TOP 10 2013 de aplicaciones.
 
 # standard imports
 import subprocess
+import time
+from multiprocessing import Process
 
 # 3rd party imports
 import pytest
@@ -15,16 +17,36 @@ import pytest
 # local imports
 from fluidasserts.helper import http_helper
 from fluidasserts.service import http
+from test.mock import httpserver
 
 #
 # Constants
 #
 
 CONTAINER_IP = '172.30.216.100'
+BASE_URL = 'http://localhost:5000/http/headers'
 
 #
 # Fixtures
 #
+
+
+@pytest.fixture(scope='module')
+def mock_http(request):
+    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
+    # Inicia el servidor HTTP en background
+    prcs = Process(target=httpserver.start, name='MockHTTPServer')
+    prcs.daemon = True
+    prcs.start()
+
+    # Espera que inicie servidor antes de recibir conexiones
+    time.sleep(0.1)
+
+    def teardown():
+        """Detiene servidor HTTP al finalizar las pruebas."""
+        prcs.terminate()
+
+    request.addfinalizer(teardown)
 
 
 @pytest.fixture(scope='module')
@@ -36,6 +58,7 @@ def deploy_dvwa():
 
 
 def get_dvwa_cookies():
+    """Log in DVWA and return valid cookie."""
     login_url = 'http://' + CONTAINER_IP + '/dvwa/login.php'
     http_session = http_helper.HTTPSession(login_url)
     response = http_session.response
@@ -58,21 +81,24 @@ def get_dvwa_cookies():
 # Open tests
 #
 
+
 @pytest.mark.usefixtures('container', 'deploy_dvwa')
 def test_sqli_open():
+    """App vulnerable a SQLi?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/dvwa/vulnerabilities/sqli/'
     params = {'id': 'a\'', 'Submit': 'Submit'}
-    
+
     expected = 'html'
     assert http.has_sqli(vulnerable_url, expected, params,
                          cookies=dvwa_cookie)
 
 
 def test_xss_open():
+    """App vulnerable a XSS?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
 
@@ -82,10 +108,11 @@ def test_xss_open():
 
     expected = 'Hello alert'
     assert http.has_xss(vulnerable_url, expected, params,
-                         cookies=dvwa_cookie)
+                        cookies=dvwa_cookie)
 
 
 def test_command_injection_open():
+    """App vulnerable a command injection?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'low'
 
@@ -99,6 +126,11 @@ def test_command_injection_open():
                                       cookies=dvwa_cookie)
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_sessionid_exposed_open():
+    """Session ID expuesto?"""
+    assert http.is_sessionid_exposed(
+        '%s/sessionid_in_url' % (BASE_URL))
 
 #
 # Close tests
@@ -106,6 +138,7 @@ def test_command_injection_open():
 
 
 def test_sqli_close():
+    """App vulnerable a SQLi?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'medium'
 
@@ -119,6 +152,7 @@ def test_sqli_close():
 
 
 def test_xss_close():
+    """App vulnerable a XSS?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'medium'
 
@@ -127,11 +161,12 @@ def test_xss_close():
     params = {'name': '<script>alert(1)</script>'}
 
     expected = 'Hello alert'
-    assert not http.has_xss(vulnerable_url, expected, params, 
+    assert not http.has_xss(vulnerable_url, expected, params,
                             cookies=dvwa_cookie)
 
 
 def test_command_injection_close():
+    """App vulnerable a command injection?"""
     dvwa_cookie = get_dvwa_cookies()
     dvwa_cookie['security'] = 'medium'
 
@@ -143,3 +178,10 @@ def test_command_injection_close():
     assert not http.has_command_injection(vulnerable_url, expected,
                                           params=None, data=data,
                                           cookies=dvwa_cookie)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_sessionid_exposed_close():
+    """Session ID expuesto?"""
+    assert not http.is_sessionid_exposed(
+        '%s/sessionid_not_in_url' % (BASE_URL))

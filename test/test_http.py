@@ -87,7 +87,6 @@ def test_notfound_string():
     expected = 'Expected string'
     http_session = http_helper.HTTPSession(url)
     assert http.generic_http_assert(http_session, expected)
-        
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -113,6 +112,7 @@ def test_version_open():
     """Header Server inseguro?"""
     assert http.is_header_server_insecure(
         '%s/version/fail' % (BASE_URL))
+
 
 #
 # Close tests

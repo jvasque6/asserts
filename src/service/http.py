@@ -12,14 +12,12 @@ Este modulo permite verificar vulnerabilidades propias de HTTP como:
 # standard imports
 import logging
 import re
-import urllib
 import requests
 
 # 3rd party imports
-from requests_oauthlib import OAuth1
+# None
 
 # local imports
-from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 
 
@@ -108,6 +106,26 @@ def __check_http_response(url, expect, params=None,
     http_session.do_request()
 
     return generic_http_assert(http_session, expect)
+
+
+def generic_http_assert(http_session, expected_regex):
+    """Generic HTTP assert method."""
+    if not http_session.response:
+        response = http_session.do_request()
+    else:
+        response = http_session.response
+    the_page = response.text
+
+    if re.search(str(expected_regex), the_page) is None:
+        logging.info('%s HTTP assertion not found, Details=%s, %s',
+                     http_session.url, expected_regex, 'OPEN')
+        logging.info(the_page)
+        return True
+    else:
+        logging.info('%s HTTP assertion succeed, Details=%s, %s',
+                     http_session.url, expected_regex, 'CLOSE')
+        logging.info(the_page)
+        return False
 
 
 def is_header_x_asp_net_version_missing(url):
@@ -201,38 +219,37 @@ def has_put_method(url):
 
 
 def has_sqli(url, expect, params=None, data='', cookies={}):
+    """Check SQLi vuln by checking expected string."""
     return __check_http_response(url, expect, params=params,
                                  data=data, cookies=cookies)
 
 
 def has_xss(url, expect, params=None, data='', cookies={}):
+    """Check XSS vuln by checking expected string."""
     return __check_http_response(url, expect, params=params,
                                  data=data, cookies=cookies)
 
 
 def has_command_injection(url, expect, params=None, data='', cookies={}):
+    """Check command injection vuln by checking expected string."""
     return __check_http_response(url, expect, params=params,
                                  data=data, cookies=cookies)
 
 
-def generic_http_assert(http_session, expected_regex):
-    """Generic HTTP assert method."""
-    if not http_session.response:
-        response = http_session.do_request()
+def is_sessionid_exposed(url, argument='sessionid'):
+    """Checks if resulting URL has a session ID exposed."""
+    http_session = http_helper.HTTPSession(url)
+    response_url = http_session.response.url
+
+    regex = r'\b' + argument + r'\b'
+
+    result = True
+    if re.search(regex, response_url):
+        result = True
+        logging.info('Session ID is exposed in %s, Details=%s, %s',
+                     response_url, argument, 'OPEN')
     else:
-        response = http_session.response
-    the_page = response.text
-
-    if re.search(str(expected_regex), the_page) is None:
-        logging.info('%s HTTP assertion not found, Details=%s, %s',
-                     http_session.url, expected_regex, 'OPEN')
-        logging.info(the_page)
-        return True
-    else:
-        logging.info('%s HTTP assertion succeed, Details=%s, %s',
-                     http_session.url, expected_regex, 'CLOSE')
-        logging.info(the_page)
-        return False
-
-
-
+        result = False
+        logging.info('Session ID is hidden in %s, Details=%s, %s',
+                     response_url, argument, 'CLOSE')
+    return result
