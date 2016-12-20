@@ -85,9 +85,7 @@ def test_notfound_string():
     """Expected string not found?"""
     url = '%s/notfound' % (BASE_URL)
     expected = 'Expected string'
-    http_session = http_helper.HTTPSession(url)
-    assert http.generic_http_assert(http_session, expected)
-        
+    assert http.generic_http_assert(url, expected)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -113,6 +111,7 @@ def test_version_open():
     """Header Server inseguro?"""
     assert http.is_header_server_insecure(
         '%s/version/fail' % (BASE_URL))
+
 
 #
 # Close tests
@@ -170,8 +169,8 @@ def test_expected_string():
     """Expected string found?"""
     url = '%s/expected' % (BASE_URL)
     expected = 'Expected string'
-    http_session = http_helper.HTTPSession(url)
-    assert not http.generic_http_assert(http_session, expected)
+
+    assert not http.generic_http_assert(url, expected)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -179,6 +178,7 @@ def test_version_close():
     """Header Server inseguro?"""
     assert not http.is_header_server_insecure(
         '%s/version/ok' % (BASE_URL))
+
 
 
 #

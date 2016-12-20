@@ -28,7 +28,12 @@ nuevos headers y funcione para más casos de prueba.
 # none
 
 # 3rd party imports
-from flask import Flask, Response
+from flask import Flask
+from flask import redirect
+from flask import request
+from flask import Response
+from flask import url_for
+
 
 # local imports
 # none
@@ -227,6 +232,33 @@ def expected_string():
 @APP.route('/http/headers/notfound')
 def notfound_string():
     return "Randomstring"
+
+
+@APP.route('/http/headers/session_fixation_open')
+def session_fixation_open():
+    return redirect(url_for('session_fixated_vuln', sessionid=12345678),
+                    code=302)
+
+
+@APP.route('/http/headers/sessionfixated_url')
+def session_fixated_vuln():
+    resp = Response("Login successful")
+    return resp
+
+
+@APP.route('/http/headers/session_fixation_close')
+def session_fixation_close():
+    return redirect(url_for('session_fixated_not_vuln', sessionid=12345678),
+                    code=302)
+
+
+@APP.route('/http/headers/session_not_fixated_url')
+def session_fixated_not_vuln():
+    if request.cookies.get('login_ok') == True:
+        resp = Response('Login successful')
+    else:
+        resp = Response('Login required')
+    return resp
 
 
 def start():

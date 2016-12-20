@@ -17,7 +17,9 @@ Futuras funciones incluyen:
 
 # standard imports
 import logging
-from ftplib import FTP, error_perm
+from ftplib import error_perm
+from ftplib import FTP
+
 
 # 3rd party imports
 # none
@@ -66,6 +68,7 @@ def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
 
 
 def is_version_visible(ip_address):
+    """Check if banner is visible."""
     ftp_service = banner_helper.FTPService()
     banner = banner_helper.get_banner(ftp_service, ip_address)
     version = banner_helper.get_version(ftp_service, banner)
