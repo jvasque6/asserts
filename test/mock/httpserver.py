@@ -234,37 +234,6 @@ def notfound_string():
     return "Randomstring"
 
 
-@APP.route('/http/headers/sessionid_in_url')
-def sessionid_in_url():
-    return redirect(url_for('sessionid_vuln', sessionid=12345678),
-                    code=302)
-
-
-@APP.route('/http/headers/session_id/sessionid=<sessionid>')
-def sessionid_vuln(sessionid=None):
-    resp = Response("Session ID is" +
-                    str(request.args.get('sessionid')))
-    return resp
-
-
-@APP.route('/http/headers/sessionid_not_in_url')
-def sessionid_not_in_url():
-    return redirect(url_for('sessionid_not_vuln', sessionid=12345678),
-                    code=302)
-
-
-@APP.route('/http/headers/secure_redirect')
-def sessionid_not_vuln():
-    return redirect(url_for('sessionid_hidden'),
-                    code=302)
-
-
-@APP.route('/http/headers/session_id_hidden')
-def sessionid_hidden():
-    resp = Response("Session ID is hidden")
-    return resp
-
-
 @APP.route('/http/headers/session_fixation_open')
 def session_fixation_open():
     return redirect(url_for('session_fixated_vuln', sessionid=12345678),

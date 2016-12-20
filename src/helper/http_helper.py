@@ -30,8 +30,10 @@ class HTTPSession(object):
         self.auth = auth
         self.response = None
         self.is_auth = False
-        self.headers['user-agent'] = 'Mozilla/5.0 \
-            (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko)'
+        self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
+            AppleWebKit/537.36 (KHTML, like Gecko)'
+        self.headers['Accept'] = '*/*'
+        
         self.do_request()
 
     def do_request(self):
@@ -43,10 +45,6 @@ class HTTPSession(object):
                                    params=self.params,
                                    cookies=self.cookies,
                                    headers=self.headers)
-                self.response = ret
-                if ret.cookies.get_dict() != {}:
-                    self.cookies = ret.cookies.get_dict()
-                return ret
             else:
                 ret = requests.post(self.url, verify=False,
                                     data=self.data,
@@ -54,10 +52,14 @@ class HTTPSession(object):
                                     params=self.params,
                                     cookies=self.cookies,
                                     headers=self.headers)
-                self.response = ret
-                if ret.cookies.get_dict() != {}:
-                    self.cookies = ret.cookies.get_dict()
-                return ret
+            self.response = ret
+            if ret.cookies == {}:
+                if ret.request._cookies != {} and \
+                    self.cookies != ret.request._cookies:
+                        self.cookies = ret.request._cookies
+            else:
+                self.cookies = ret.cookies
+            return ret
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
 
@@ -80,21 +82,22 @@ class HTTPSession(object):
                          'Error code (' + str(http_req.status_code) +
                          ') ' + str(self.data))
 
-        if http_req.cookies.get_dict() != {}:
-            self.cookies = http_req.cookies.get_dict()
+        if http_req.cookies == {}:
+            if http_req.request._cookies != {} and \
+                self.cookies != http_req.request._cookies:
+                    self.cookies = http_req.request._cookies
+        else:
+            self.cookies = http_req.cookies
         self.response = http_req
         self.data = ''
         return http_req
 
     def formauth_by_response(self, text):
         """Autentica y verifica autenticacion usando regex."""
-        backup_headers = self.headers
         self.headers['Content-Type'] = \
             'application/x-www-form-urlencoded'
-        self.headers['Accept'] = '*/*'
 
         http_req = self.do_request()
-
         if http_req.text.find(text) >= 0:
             self.is_auth = True
             logging.info('POST Authentication %s, Details=%s',
@@ -105,11 +108,16 @@ class HTTPSession(object):
                 'POST Authentication %s, Details=%s',
                 self.url,
                 'Error text (' + http_req.text + ') ' + str(self.data))
-        if http_req.cookies.get_dict() != {}:
-            self.cookies = http_req.cookies.get_dict()
+
+        if http_req.cookies == {}:
+            if http_req.request._cookies != {} and \
+                self.cookies != http_req.request._cookies:
+                    self.cookies = http_req.request._cookies
+        else:
+            self.cookies = http_req.cookies
         self.response = http_req
         self.data = ''
-        self.headers = backup_headers
+        del(self.headers['Content-Type'])
         return http_req
 
     def basic_auth(self, user, passw):

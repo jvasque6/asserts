@@ -50,153 +50,222 @@ def mock_http(request):
 
 
 @pytest.fixture(scope='module')
-def deploy_dvwa():
-    """Despliega DVWA."""
-    print('Deploying Damn Vulnerable Web Application')
-    subprocess.call('ansible-playbook test/provision/dvwa.yml',
+def deploy_bwapp():
+    """Despliega bWAPP."""
+    print('Deploying bWAPP')
+    subprocess.call('ansible-playbook test/provision/bwapp.yml',
                     shell=True)
 
 
-def get_dvwa_cookies():
-    """Log in DVWA and return valid cookie."""
-    login_url = 'http://' + CONTAINER_IP + '/dvwa/login.php'
+def get_bwapp_cookies():
+    """Log in to bWAPP and return valid cookie."""
+    login_url = 'http://' + CONTAINER_IP + '/bWAPP/login.php'
     http_session = http_helper.HTTPSession(login_url)
-    response = http_session.response
+        
+    http_session.data = 'login=bee&password=bug&security_level=0&form=submit'
 
-    csrf_token = http_helper.find_value_in_response(response.text,
-                                                    'input',
-                                                    'user_token')
-    http_session.data = 'username=admin&\
-        password=password&user_token=' + \
-        csrf_token + '&Login=Login'
-
-    successful_text = 'Welcome to Damn Vulnerable'
+    successful_text = 'Welcome Bee'
     http_session.formauth_by_response(successful_text)
+
     if not http_session.is_auth:
         return {}
-
     return http_session.cookies
+
 
 #
 # Open tests
 #
 
 
-@pytest.mark.usefixtures('container', 'deploy_dvwa')
+@pytest.mark.usefixtures('container', 'deploy_bwapp')
 def test_owasp_A1_sqli_open():
     """App vulnerable a SQLi?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'low'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/sqli/'
-    params = {'id': 'a\'', 'Submit': 'Submit'}
+        '/bWAPP/sqli_1.php'
+    params = {'title': 'a\'', 'action': 'search'}
 
-    expected = 'html'
+    expected = 'No movies were found'
+    
     assert http.has_sqli(vulnerable_url, expected, params,
-                         cookies=dvwa_cookie)
+                         cookies=bwapp_cookie)
 
 
-def test_owasp_A1_command_injection_open():
+def test_owasp_A1_OS_injection_open():
     """App vulnerable a command injection?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'low'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/exec/'
-    data = 'ip=127.0.0.1%3Buname&Submit=Submit'
+        '/bWAPP/commandi.php'
+    
+    data = {'target': 'www.nsa.gov;uname', 'form':'submit'}
 
-    expected = '<pre></pre>'
+    expected = 'uname'
+    
     assert http.has_command_injection(vulnerable_url, expected,
-                                      params=None, data=data,
-                                      cookies=dvwa_cookie)
+                                      data=data, cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_owasp_A2_sessionid_exposed_open():
     """Session ID expuesto?"""
-    assert http.is_sessionid_exposed(
-        '%s/sessionid_in_url' % (BASE_URL))
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/smgmt_sessionid_url.php'
+
+    assert http.is_sessionid_exposed(vulnerable_url,
+                                     argument='PHPSESSID',
+                                     cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
-def test_owasp_A2_session_fixation_open():
-    """Session fixation posible?"""
-    assert http.has_session_fixation(
-        '%s/session_fixation_open' % (BASE_URL), 'Login required')
-
+#@pytest.mark.usefixtures('mock_http')
+#def test_owasp_A2_session_fixation_open():
+    #"""Session fixation posible?"""
+    #assert http.has_session_fixation(
+        #'%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
 def test_owasp_A3_xss_open():
     """App vulnerable a XSS?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'low'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/xss_r/'
-    params = {'name': '<script>alert(1)</script>'}
+        '/bWAPP/xss_get.php'
+    params = {'firstname':'<script>alert(1)</script>',
+              'lastname':'b', 'form':'submit'}
 
-    expected = 'Hello alert'
+    expected = 'Welcome &lt;script'
+    
     assert http.has_xss(vulnerable_url, expected, params,
-                        cookies=dvwa_cookie)
-
-#
-# Close tests
-#
+                        cookies=bwapp_cookie)
 
 
-def test_owasp_A1_sqli_close():
+def test_owasp_A4_insecure_dor_open():
+    """App vulnerable a direct object reference?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/insecure_direct_object_ref_2.php'
+
+    data = {'ticket_quantity':'1', 'ticket_price':'31337',
+            'action': 'order'}
+
+    expected = '<b>15 EUR</b>'
+    
+    assert http.has_insecure_dor(vulnerable_url, expected, data=data,
+                                 cookies=bwapp_cookie)
+
+
+##
+## Close tests
+##
+
+
+def test_owasp_A1_sqli_bwapp_close():
     """App vulnerable a SQLi?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'medium'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/sqli/'
-    params = {'id': 'a\'', 'Submit': 'Submit'}
+        '/bWAPP/sqli_1.php'
+    params = {'title': 'a\'', 'action': 'search'}
 
-    expected = 'html'
+    expected = 'No movies were found'
     assert not http.has_sqli(vulnerable_url, expected, params,
-                             cookies=dvwa_cookie)
+                             cookies=bwapp_cookie)
 
 
-def test_owasp_A1_command_injection_close():
+def test_owasp_A1_OS_injection_close():
     """App vulnerable a command injection?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'medium'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/exec/'
-    data = 'ip=127.0.0.1%3Buname&Submit=Submit'
+        '/bWAPP/commandi.php'
+    
+    data = {'target': 'www.nsa.gov;uname', 'form':'submit'}
 
-    expected = '<pre></pre>'
+    expected = 'uname'
+    
     assert not http.has_command_injection(vulnerable_url, expected,
-                                          params=None, data=data,
-                                          cookies=dvwa_cookie)
+                                          data=data,
+                                          cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_owasp_A2_sessionid_exposed_close():
     """Session ID expuesto?"""
-    assert not http.is_sessionid_exposed(
-        '%s/sessionid_not_in_url' % (BASE_URL))
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/smgmt_sessionid_url.php'
+
+    assert not http.is_sessionid_exposed(vulnerable_url,
+                                         argument='PHPSESSID',
+                                         cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
-def test_owasp_A2_session_fixation_close():
-    """Session fixation posible?"""
-    assert not http.has_session_fixation(
-        '%s/session_fixation_close' % (BASE_URL), 'Login required')
+#@pytest.mark.usefixtures('mock_http')
+#def test_owasp_A2_session_fixation_close():
+    #"""Session fixation posible?"""
+    #assert not http.has_session_fixation(
+        #'%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
 def test_owasp_A3_xss_close():
     """App vulnerable a XSS?"""
-    dvwa_cookie = get_dvwa_cookies()
-    dvwa_cookie['security'] = 'medium'
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/dvwa/vulnerabilities/xss_r/'
-    params = {'name': '<script>alert(1)</script>'}
+        '/bWAPP/xss_get.php'
+    params = {'firstname':'<script>alert(1)</script>',
+              'lastname':'b', 'form':'submit'}
 
-    expected = 'Hello alert'
+    expected = 'Welcome &lt;script'
+    
     assert not http.has_xss(vulnerable_url, expected, params,
-                            cookies=dvwa_cookie)
+                            cookies=bwapp_cookie)
+
+
+def test_owasp_A4_insecure_dor_close():
+    """App vulnerable a direct object reference?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/insecure_direct_object_ref_2.php'
+
+    data = {'ticket_quantity':'1', 'ticket_price':'31337',
+              'action': 'order'}
+
+    expected = '<b>15 EUR</b>'
+    
+    assert not http.has_insecure_dor(vulnerable_url, expected, data=data,
+                                     cookies=bwapp_cookie)

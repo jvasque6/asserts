@@ -33,6 +33,7 @@
         - php-pear
         - php5-gd 
         - libapache2-mod-php5
+        - dnsutils 
         
     - name: Start and enable MySQL 
       service: name=mysql state=started enabled=yes
