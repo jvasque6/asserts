@@ -113,6 +113,26 @@ def test_owasp_A1_OS_injection_open():
                                       data=data, cookies=bwapp_cookie)
 
 
+
+def test_owasp_A1_PHP_injection_open():
+    """App vulnerable a PHP injection?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '0',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/phpi.php'
+    
+    params = {'message': 'test;phpinfo();'}
+
+    expected = '<p><i>test;phpinfo()'
+    
+    assert http.has_php_command_injection(vulnerable_url, expected,
+                                          params=params,
+                                          cookies=bwapp_cookie)
+
+
 def test_owasp_A2_sessionid_exposed_open():
     """Session ID expuesto?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -210,6 +230,25 @@ def test_owasp_A1_OS_injection_close():
     assert not http.has_command_injection(vulnerable_url, expected,
                                           data=data,
                                           cookies=bwapp_cookie)
+
+
+def test_owasp_A1_PHP_injection_close():
+    """App vulnerable a PHP injection?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie.set('security_level', '2',
+                     domain=bwapp_cookie.list_domains()[0],
+                     path=bwapp_cookie.list_paths()[0])
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/phpi.php'
+    
+    params = {'message': 'test;phpinfo();'}
+
+    expected = '<p><i>test;phpinfo()'
+    
+    assert not http.has_php_command_injection(vulnerable_url, expected,
+                                              params=params,
+                                              cookies=bwapp_cookie)
 
 
 def test_owasp_A2_sessionid_exposed_close():
