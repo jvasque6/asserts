@@ -98,13 +98,13 @@ def __has_method(url, method):
 
 
 def generic_http_assert(url, expected_regex, params=None,
-                          data='', cookies={}):
+                        data='', cookies={}):
     """Generic HTTP assert method."""
     http_session = http_helper.HTTPSession(url, params=params,
                                            data=data, cookies=cookies)
     response = http_session.response
     the_page = response.text
-   
+
     if re.search(str(expected_regex), the_page) is None:
         logging.info('%s HTTP assertion not found, Details=%s, %s',
                      http_session.url, expected_regex, 'OPEN')
@@ -210,31 +210,31 @@ def has_put_method(url):
 def has_sqli(url, expect, params=None, data='', cookies={}):
     """Check SQLi vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
-                                 data=data, cookies=cookies)
+                               data=data, cookies=cookies)
 
 
 def has_xss(url, expect, params=None, data='', cookies={}):
     """Check XSS vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
-                                 data=data, cookies=cookies)
+                               data=data, cookies=cookies)
 
 
 def has_command_injection(url, expect, params=None, data='', cookies={}):
     """Check command injection vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
-                                 data=data, cookies=cookies)
+                               data=data, cookies=cookies)
 
 
 def has_session_fixation(url, expect, params=None, data=''):
     """Check session fixation by no passing cookies and authenticating."""
     return generic_http_assert(url, expect, params=params,
-                                 data=data, cookies=None)
+                               data=data, cookies=None)
 
 
 def has_insecure_dor(url, expect, params=None, data='', cookies={}):
     """Check command injection vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
-                                 data=data, cookies=cookies)
+                               data=data, cookies=cookies)
 
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,

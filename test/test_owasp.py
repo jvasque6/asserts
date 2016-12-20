@@ -61,7 +61,7 @@ def get_bwapp_cookies():
     """Log in to bWAPP and return valid cookie."""
     login_url = 'http://' + CONTAINER_IP + '/bWAPP/login.php'
     http_session = http_helper.HTTPSession(login_url)
-        
+
     http_session.data = 'login=bee&password=bug&security_level=0&form=submit'
 
     successful_text = 'Welcome Bee'
@@ -90,7 +90,7 @@ def test_owasp_A1_sqli_open():
     params = {'title': 'a\'', 'action': 'search'}
 
     expected = 'No movies were found'
-    
+
     assert http.has_sqli(vulnerable_url, expected, params,
                          cookies=bwapp_cookie)
 
@@ -104,11 +104,11 @@ def test_owasp_A1_OS_injection_open():
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/commandi.php'
-    
-    data = {'target': 'www.nsa.gov;uname', 'form':'submit'}
+
+    data = {'target': 'www.nsa.gov;uname', 'form': 'submit'}
 
     expected = 'uname'
-    
+
     assert http.has_command_injection(vulnerable_url, expected,
                                       data=data, cookies=bwapp_cookie)
 
@@ -144,11 +144,11 @@ def test_owasp_A3_xss_open():
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/xss_get.php'
-    params = {'firstname':'<script>alert(1)</script>',
-              'lastname':'b', 'form':'submit'}
+    params = {'firstname': '<script>alert(1)</script>',
+              'lastname': 'b', 'form': 'submit'}
 
     expected = 'Welcome &lt;script'
-    
+
     assert http.has_xss(vulnerable_url, expected, params,
                         cookies=bwapp_cookie)
 
@@ -163,18 +163,18 @@ def test_owasp_A4_insecure_dor_open():
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/insecure_direct_object_ref_2.php'
 
-    data = {'ticket_quantity':'1', 'ticket_price':'31337',
+    data = {'ticket_quantity': '1', 'ticket_price': '31337',
             'action': 'order'}
 
     expected = '<b>15 EUR</b>'
-    
+
     assert http.has_insecure_dor(vulnerable_url, expected, data=data,
                                  cookies=bwapp_cookie)
 
 
-##
-## Close tests
-##
+#
+# Close tests
+#
 
 
 def test_owasp_A1_sqli_bwapp_close():
@@ -202,11 +202,11 @@ def test_owasp_A1_OS_injection_close():
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/commandi.php'
-    
-    data = {'target': 'www.nsa.gov;uname', 'form':'submit'}
+
+    data = {'target': 'www.nsa.gov;uname', 'form': 'submit'}
 
     expected = 'uname'
-    
+
     assert not http.has_command_injection(vulnerable_url, expected,
                                           data=data,
                                           cookies=bwapp_cookie)
@@ -243,11 +243,11 @@ def test_owasp_A3_xss_close():
 
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/xss_get.php'
-    params = {'firstname':'<script>alert(1)</script>',
-              'lastname':'b', 'form':'submit'}
+    params = {'firstname': '<script>alert(1)</script>',
+              'lastname': 'b', 'form': 'submit'}
 
     expected = 'Welcome &lt;script'
-    
+
     assert not http.has_xss(vulnerable_url, expected, params,
                             cookies=bwapp_cookie)
 
@@ -262,10 +262,10 @@ def test_owasp_A4_insecure_dor_close():
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/insecure_direct_object_ref_2.php'
 
-    data = {'ticket_quantity':'1', 'ticket_price':'31337',
-              'action': 'order'}
+    data = {'ticket_quantity': '1', 'ticket_price': '31337',
+            'action': 'order'}
 
     expected = '<b>15 EUR</b>'
-    
+
     assert not http.has_insecure_dor(vulnerable_url, expected, data=data,
                                      cookies=bwapp_cookie)

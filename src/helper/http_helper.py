@@ -33,7 +33,7 @@ class HTTPSession(object):
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
             AppleWebKit/537.36 (KHTML, like Gecko)'
         self.headers['Accept'] = '*/*'
-        
+
         self.do_request()
 
     def do_request(self):
