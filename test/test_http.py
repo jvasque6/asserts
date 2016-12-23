@@ -7,15 +7,15 @@ HTTP se encuentra adecuadamente implementado.
 """
 
 # standard imports
-import time
 from multiprocessing import Process
+import time
 
 # 3rd party imports
 import pytest
 
 # local imports
-from fluidasserts.service import http
 from fluidasserts.helper import http_helper
+from fluidasserts.service import http
 from test.mock import httpserver
 
 #
@@ -178,7 +178,6 @@ def test_version_close():
     """Header Server inseguro?"""
     assert not http.is_header_server_insecure(
         '%s/version/ok' % (BASE_URL))
-
 
 
 #

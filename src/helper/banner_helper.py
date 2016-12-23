@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
+r"""
 Modulo para verificación de banners de diferentes protocolos.
 
 Ejemplo de uso:
@@ -19,11 +19,11 @@ print version
 
 
 # standard imports
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+from abc import abstractmethod
 import re
-import ssl
 import socket
-
+import ssl
 
 # 3rd party imports
 # none
@@ -46,7 +46,9 @@ class Service(object):
 
     @abstractmethod
     def get_version(self, banner):
-        """Parse the banner and return the product and version of
+        """Function get_version.
+
+        Parse the banner and return the product and version of
         the service.
         """
         pass
@@ -162,9 +164,7 @@ class HTTPSService(Service):
 
 
 def service_connect(server, port, is_ssl, payload=None):
-    """
-    Gets the banner of the service on a given port of an IP address
-    """
+    """Get the banner of the service on a given port of an IP address."""
     banner = ''
     try:
         raw_socket = socket.create_connection((server, port))
@@ -187,7 +187,6 @@ def service_connect(server, port, is_ssl, payload=None):
 
 def get_banner(service, server, port=None):
     """High level method to get banner."""
-
     if port is None:
         port = service.port
 
@@ -199,5 +198,4 @@ def get_banner(service, server, port=None):
 
 def get_version(service, banner):
     """High level method to get version."""
-
     return service.get_version(banner)

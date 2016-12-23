@@ -16,9 +16,9 @@ Futuras funciones incluyen:
 """
 
 # standard imports
-import logging
 from ftplib import error_perm
 from ftplib import FTP
+import logging
 
 
 # 3rd party imports
