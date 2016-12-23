@@ -19,9 +19,7 @@ import socket
 
 
 def is_port_open(ipaddress, port):
-    """
-    Check if a given port on an IP address is open
-    """
+    """Check if a given port on an IP address is open."""
     status = 'CLOSE'
     result = True
     try:

@@ -21,9 +21,7 @@ import winrm
 
 
 def winrm_exec_command(server, username, password, command):
-    """
-    Connects using WinRM user and pass and exec specific command
-    """
+    """Connect using WinRM user and pass and exec specific command."""
     try:
         session = winrm.Session(server, auth=(username, password))
         result = session.run_cmd(command)

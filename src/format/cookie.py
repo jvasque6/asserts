@@ -6,11 +6,12 @@ Este modulo deberia considerarse su anexion al verificador de http.py pues como
 tal las cookies son parte de dicho protocolo.
 """
 
-import logging
+
 # standard imports
 from http.cookies import BaseCookie
 
 # 3rd party imports
+import logging
 import requests
 
 # local imports

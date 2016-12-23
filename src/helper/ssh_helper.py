@@ -13,8 +13,7 @@ import paramiko
 
 
 def ssh_user_pass(server, username, password, command):
-    """Connects using SSH user and pass and exec specific command."""
-
+    """Connect using SSH user and pass and exec specific command."""
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -35,8 +34,7 @@ def ssh_user_pass(server, username, password, command):
 
 
 def ssh_with_config(server, username, config_file, command):
-    """Connects using SSH config and exec specific command."""
-
+    """Connect using SSH config and exec specific command."""
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -76,8 +74,7 @@ def ssh_with_config(server, username, config_file, command):
 
 def ssh_exec_command(server, username, password, command,
                      config_file=None):
-    """Connects using SSH and exec specific command."""
-
+    """Connect using SSH and exec specific command."""
     if config_file is None:
         out, err = ssh_user_pass(server, username, password, command)
     else:

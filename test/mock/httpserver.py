@@ -254,7 +254,7 @@ def session_fixation_close():
 
 @APP.route('/http/headers/session_not_fixated_url')
 def session_fixated_not_vuln():
-    if request.cookies.get('login_ok') == True:
+    if request.cookies.get('login_ok') is True:
         resp = Response('Login successful')
     else:
         resp = Response('Login required')

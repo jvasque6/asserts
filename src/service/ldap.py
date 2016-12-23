@@ -7,8 +7,8 @@ Modulo LDAP
 import logging
 
 # 3rd party imports
-from ldap3 import Server
 from ldap3 import Connection
+from ldap3 import Server
 
 # local imports
 # None
@@ -18,7 +18,8 @@ SSL_PORT = 636
 
 
 def is_anonymous_bind_allowed(server):
-    """
+    """function is_anonymous_bind_allowed
+
     Function to check whether anonymous binding is allowed on
     LDAP server
     """

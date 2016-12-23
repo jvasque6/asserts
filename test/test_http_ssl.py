@@ -65,10 +65,10 @@ def test_httpssl_sslv3_enabled_open():
     assert http_ssl.is_sslv3_tlsv1_enabled(CONTAINER_IP)
 
 
-#@pytest.mark.usefixtures('container', 'weak_ssl')
-#def test_httpssl_cert_active_open():
-#    """Certificado aun esta vigente?"""
-#    assert http_ssl.is_cert_inactive(CONTAINER_IP)
+# @pytest.mark.usefixtures('container', 'weak_ssl')
+# def test_httpssl_cert_active_open():
+#     """Certificado aun esta vigente?"""
+#     assert http_ssl.is_cert_inactive(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')

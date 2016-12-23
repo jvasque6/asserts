@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Servidor SMTP para hacer el mock correspondiente
+"""Servidor SMTP para hacer el mock correspondiente.
 
 <abotero@fluid.la>
 """
