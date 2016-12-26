@@ -225,6 +225,12 @@ def has_command_injection(url, expect, params=None, data='', cookies={}):
                                data=data, cookies=cookies)
 
 
+def has_php_command_injection(url, expect, params=None, data='', cookies={}):
+    """Check PHP command injection by checking expected string."""
+    return generic_http_assert(url, expect, params=params,
+                               data=data, cookies=cookies)
+
+
 def has_session_fixation(url, expect, params=None, data=''):
     """Check session fixation by no passing cookies and authenticating."""
     return generic_http_assert(url, expect, params=params,

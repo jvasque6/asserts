@@ -9,6 +9,7 @@ https://pytest.org/dev/fixture.html
 """
 
 # standard imports
+from __future__ import print_function
 import subprocess
 
 # 3rd party imports

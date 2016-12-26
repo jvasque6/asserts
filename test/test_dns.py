@@ -7,6 +7,7 @@ DNS se encuentra adecuadamente implementado.
 """
 
 # standard imports
+from __future__ import print_function
 import subprocess
 
 # 3rd party imports
@@ -24,7 +25,6 @@ TEST_ZONE = 'fluid.la'
 #
 
 
-# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def weak_dns():
     """Configura perfil de DNS vulnerable."""
@@ -33,7 +33,6 @@ def weak_dns():
             --tags basic,weak', shell=True)
 
 
-# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
 def hard_dns():
     """Configura perfil de DNS endurecido."""
@@ -48,25 +47,25 @@ def hard_dns():
 
 
 @pytest.mark.usefixtures('container', 'weak_dns')
-def test_dns_is_xfr_enabled_open():
+def test_is_xfr_enabled_open():
     """Transferencia de zonas habilitado en server?"""
     assert moddns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_dns')
-def test_dns_is_dynupdates_enabled_open():
+def test_is_dynupdates_enabled_open():
     """Actualizacion de zonas habilitado en server?"""
     assert moddns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_dns')
-def test_dns_has_cache_poison_open():
+def test_has_cache_poison_open():
     """Server vulnerable a cache poison?"""
     assert moddns.has_cache_poison(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_dns')
-def test_dns_has_cache_snooping_open():
+def test_has_cache_snooping_open():
     """Server vulnerable a cache snooping?"""
     assert moddns.has_cache_snooping(CONTAINER_IP)
 
@@ -76,25 +75,25 @@ def test_dns_has_cache_snooping_open():
 
 
 @pytest.mark.usefixtures('container', 'hard_dns')
-def test_dns_is_xfr_enabled_close():
+def test_is_xfr_enabled_close():
     """Transferencia de zonas habilitado en server?"""
     assert not moddns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_dns')
-def test_dns_is_dynupdates_enabled_close():
+def test_is_dynupdates_enabled_close():
     """Actualizacion de zonas habilitado en server?"""
     assert not moddns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_dns')
-def test_dns_has_cache_poison_close():
+def test_has_cache_poison_close():
     """Server vulnerable a cache poison?"""
     assert not moddns.has_cache_poison(TEST_ZONE, CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_dns')
-def test_dns_has_cache_snooping_close():
+def test_has_cache_snooping_close():
     """Server vulnerable a cache snooping?"""
     assert not moddns.has_cache_snooping(CONTAINER_IP)
 
