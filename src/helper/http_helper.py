@@ -54,8 +54,8 @@ class HTTPSession(object):
             self.response = ret
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
-                   self.cookies != ret.request._cookies:
-                        self.cookies = ret.request._cookies
+                    self.cookies != ret.request._cookies:
+                    self.cookies = ret.request._cookies
             else:
                 self.cookies = ret.cookies
             return ret
@@ -83,8 +83,8 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-               self.cookies != http_req.request._cookies:
-                    self.cookies = http_req.request._cookies
+                self.cookies != http_req.request._cookies:
+                self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies
         self.response = http_req
@@ -110,13 +110,13 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-               self.cookies != http_req.request._cookies:
-                    self.cookies = http_req.request._cookies
+                self.cookies != http_req.request._cookies:
+                self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies
         self.response = http_req
         self.data = ''
-        del(self.headers['Content-Type'])
+        del self.headers['Content-Type']
         return http_req
 
     def basic_auth(self, user, passw):
