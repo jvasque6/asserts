@@ -7,6 +7,7 @@ OS se encuentra adecuadamente implementado.
 """
 
 # standard imports
+from __future__ import print_function
 import subprocess
 
 # 3rd party imports
@@ -14,6 +15,7 @@ import pytest
 
 # local imports
 from fluidasserts.os import linux_generic
+
 
 # Constants
 CONTAINER_IP = '172.30.216.100'
@@ -26,18 +28,16 @@ CONTAINER_CONFIG = '~/.ssh/config.facont'
 # Fixtures
 #
 
-# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
-def weak_os(request):
+def weak_os():
     """Configura perfil de OS vulnerable."""
     print('Running OS vulnerable playbook')
     subprocess.call('ansible-playbook test/provision/os.yml \
             --tags weak', shell=True)
 
 
-# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
-def hard_os(request):
+def hard_os():
     """Configura perfil de OS endurecido."""
     print('Running OS hardened playbook')
     subprocess.call('ansible-playbook test/provision/os.yml \
@@ -49,7 +49,7 @@ def hard_os(request):
 #
 
 @pytest.mark.usefixtures('container', 'weak_os')
-def test_os_min_priv_enabled_open():
+def test_min_priv_enabled_open():
     """Secure umask?"""
     assert linux_generic.is_os_min_priv_disabled(CONTAINER_IP,
                                                  CONTAINER_USER,
@@ -116,7 +116,7 @@ def test_remote_admin_enabled_open():
 
 
 @pytest.mark.usefixtures('container', 'hard_os')
-def test_os_sudo_enabled_close():
+def test_sudo_enabled_close():
     """sudo enabled?"""
     assert not linux_generic.is_os_sudo_disabled(CONTAINER_IP,
                                                  CONTAINER_USER,

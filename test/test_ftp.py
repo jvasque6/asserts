@@ -12,6 +12,7 @@ VSFTP
 """
 
 # standard imports
+from __future__ import print_function
 import subprocess
 
 # 3rd party imports
@@ -38,18 +39,17 @@ GUESSED_PASS = 'guessed123'
 # Fixtures
 #
 
-# pylint: disable=unused-argument
+
 @pytest.fixture(scope='module')
-def weak_ftp(request):
+def weak_ftp():
     """Configura perfil de FTP vulnerable."""
     print('Running FTP vulnerable playbook')
     subprocess.call('ansible-playbook test/provision/ftp.yml \
                                       --tags weak', shell=True)
 
 
-# pylint: disable=unused-argument
 @pytest.fixture(scope='module')
-def hard_ftp(request):
+def hard_ftp():
     """Configura perfil de FTP endurecido."""
     print('Running FTP hardened playbook')
     subprocess.call('ansible-playbook test/provision/ftp.yml \
