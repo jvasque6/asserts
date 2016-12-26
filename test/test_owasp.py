@@ -181,6 +181,22 @@ def test_owasp_a4_insecure_dor_open():
                                  cookies=bwapp_cookie)
 
 
+def test_owasp_a7_dirtraversal_open():
+    """App vulnerable a direct object reference?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '0'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/directory_traversal_2.php'
+
+    params = {'directory': '../'}
+
+    expected = 'An error occurred, please try again'
+
+    assert http.has_dirtraversal(vulnerable_url, expected, params=params,
+                                 cookies=bwapp_cookie)
+
+
 #
 # Close tests
 #
@@ -284,4 +300,21 @@ def test_owasp_a4_insecure_dor_close():
     expected = '<b>15 EUR</b>'
 
     assert not http.has_insecure_dor(vulnerable_url, expected, data=data,
+                                     cookies=bwapp_cookie)
+
+
+def test_owasp_a7_dirtraversal_close():
+    """App vulnerable a direct object reference?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '2'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/directory_traversal_2.php'
+
+    params = {'directory': '../'}
+
+    expected = 'An error occurred, please try again'
+
+    assert not http.has_dirtraversal(vulnerable_url, expected,
+                                     params=params,
                                      cookies=bwapp_cookie)

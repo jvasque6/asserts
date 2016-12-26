@@ -6,6 +6,7 @@
 # standard imports
 from functools import wraps
 import logging
+import re
 import requests
 
 # 3rd party imports
@@ -14,6 +15,23 @@ from requests_oauthlib import OAuth1
 
 # local imports
 # none
+
+
+HDR_RGX = {
+    'access-control-allow-origin': '^https?:\\/\\/.*$',
+    'cache-control': 'private, no-cache, no-store, max-age=0, no-transform',
+    'content-security-policy': '^([a-zA-Z]+\\-[a-zA-Z]+|sandbox).*$',
+    'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
+    'expires': '^\\s*0\\s*$',
+    'pragma': '^\\s*no-cache\\s*$',
+    'strict-transport-security': '^\\s*max-age=\\s*\\d+',
+    'x-content-type-options': '^\\s*nosniff\\s*$',
+    'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
+    'server': '^[^0-9]*$',
+    'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
+    'x-xss-protection': '^1(; mode=block)?$',
+    'www-authenticate': '^((?!Basic).)*$'
+}
 
 
 class HTTPSession(object):
@@ -169,6 +187,53 @@ class HTTPSession(object):
             self.is_auth = False
             logging.info('HTTPOAuth %s, Details=%s', self.url,
                          'HTTPOAuth Not present')
+
+def options_request(url):
+    """HTTP OPTIONS request."""
+    try:
+        return requests.options(url, verify=False)
+    except requests.ConnectionError:
+        logging.error('Sin acceso a %s , %s', url, 'ERROR')
+
+
+def has_method(url, method):
+    """Check specific HTTP method."""
+    is_method_present = options_request(url).headers
+    result = True
+    if 'allow' in is_method_present:
+        if method in is_method_present['allow']:
+            logging.info('%s HTTP Method %s, Details=%s, %s',
+                         url, method, 'Is Present', 'OPEN')
+        else:
+            logging.info('%s HTTP Method %s, Details=%s, %s',
+                         url, method, 'Not Present', 'CLOSE')
+            result = False
+    else:
+        logging.info('Method %s not allowed in %s', method, url)
+        result = False
+    return result
+
+
+def has_insecure_header(url, header):
+    """Check if header is present."""
+    http_session = HTTPSession(url)
+    headers_info = http_session.response.headers
+
+    result = True
+    if header in headers_info:
+        value = headers_info[header]
+        state = (lambda val: 'CLOSE' if re.match(
+            HDR_RGX[header],
+            value) is not None else 'OPEN')(value)
+        logging.info('%s HTTP header %s, Details=%s, %s',
+                     header, url, value, state)
+        result = state != 'CLOSE'
+    else:
+        logging.info('%s HTTP header %s, Details=%s, %s',
+                     header, url, 'Not Present', 'OPEN')
+        result = True
+
+    return result
 
 
 def find_value_in_response(raw_text, field_type, field_name):
