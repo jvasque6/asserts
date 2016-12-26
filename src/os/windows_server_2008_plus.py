@@ -16,7 +16,6 @@ from fluidasserts.helper.winrm_helper import winrm_exec_command
 
 def is_os_compilers_installed(server, username, password):
     """Check if there's any compiler installed in Windows Server."""
-
     common_compilers = ['Visual', 'Python', 'Mingw', 'CygWin']
     cmd = b'reg query \
            "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s'
@@ -50,7 +49,6 @@ def is_os_compilers_installed(server, username, password):
 
 def is_os_antimalware_not_installed(server, username, password):
     """Check if there's any antimalware installed in Windows Server."""
-
     common_av = ['Symantec', 'Norton', 'AVG', 'Kaspersky', 'TrendMicro',
                  'Panda', 'Sophos', 'McAfee', 'Eset']
     cmd = b'reg query \
@@ -84,7 +82,6 @@ def is_os_antimalware_not_installed(server, username, password):
 
 def is_os_syncookies_disabled(server, username, password):
     """Check if SynCookies or similar is enabled in Windows Server."""
-
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
     logging.info('%s server has SYN Cookies enabled,\
@@ -93,10 +90,12 @@ def is_os_syncookies_disabled(server, username, password):
 
 
 def is_protected_users_disabled(server, username, password):
-    """Check if protected users is enabled on system.
-    If the result is True, executing mimikatz would give
-    dangerous results."""
+    """Function is_protected_users_disabled.
 
+    Check if protected users is enabled on system.
+    If the result is True, executing mimikatz would give
+    dangerous results.
+    """
     security_patches = ['KB2871997']
     cmd = b'reg query \
            "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\\\

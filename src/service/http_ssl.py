@@ -23,9 +23,7 @@ PORT = 443
 
 
 def is_cert_cn_not_equal_to_site(site, port=PORT):
-    """
-    Function to check whether cert cn is equal to site
-    """
+    """Function to check whether cert cn is equal to site"""
     result = True
     cert = ssl.get_server_certificate((site, port))
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -48,9 +46,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
 
 
 def is_cert_inactive(site, port=PORT):
-    """
-    Function to check whether cert is still valid
-    """
+    """Function to check whether cert is still valid"""
     result = True
     cert = str(ssl.get_server_certificate((site, port)))
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -72,9 +68,7 @@ def is_cert_inactive(site, port=PORT):
 
 
 def is_cert_validity_lifespan_unsafe(site, port=PORT):
-    """
-    Function to check whether cert lifespan is safe
-    """
+    """Function to check whether cert lifespan is safe"""
     max_validity_days = 365
 
     result = True
@@ -101,9 +95,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
 
 def is_pfs_disabled(site, port=PORT):
-    """
-    Function to check whether PFS is enabled
-    """
+    """Function to check whether PFS is enabled"""
     packet = '<packet>SOME_DATA</packet>'
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -152,9 +144,7 @@ def is_pfs_disabled(site, port=PORT):
 
 
 def is_sslv3_tlsv1_enabled(site, port=PORT):
-    """
-    Function to check whether SSLv3 or TLSv1 suites are enabled
-    """
+    """Function to check whether SSLv3 or TLSv1 suites are enabled"""
     packet = '<packet>SOME_DATA</packet>'
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

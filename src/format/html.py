@@ -20,24 +20,26 @@ from bs4 import BeautifulSoup
 
 
 def __has_attribute(filename, selector, tag, attr, value):
-    """
-        Este metodo verifica si el codigo HTML obtenido por el selector
-        (selector) dentro del archivo (filename) tiene algun atributo (attr)
-        con un valor (value) especifico.
 
-        <filename> debe ser una ruta local, por ejemplo: /data/vulnerable.html
-        <selector> puede ser obtenido desde la consola de Google Chrome:
-            1. Abrir la consola de Google Chrome
-            2. Ir a la pestana Elements
-            3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
-               seleccionar la opcion Copy > Copy Selector
-        <attr> es el atributo a buscar, por ejemplo: autocomplete
-        <tag> debe ser el nombre de la etiqueta HTML donde se aplicara la
-              expresion regular, puede ser una o mas etiquetas, por ejemplo:
-              "a", "[form|input]", "table", etc.
-        <value> es el valor que se espera tenga el atributo, por ejemplo con
-                autocomplete: on, off.
+    """funcion __has_attribute
 
+    Este metodo verifica si el codigo HTML obtenido por el selector
+    (selector) dentro del archivo (filename) tiene algun atributo (attr)
+    con un valor (value) especifico.
+
+    :param filename: debe ser una ruta local, por ejemplo:
+        /data/vulnerable.html
+    :param selector: puede ser obtenido desde la consola de Google Chrome:
+        1. Abrir la consola de Google Chrome
+        2. Ir a la pestana Elements
+        3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
+           seleccionar la opcion Copy > Copy Selector
+    :param attr: es el atributo a buscar, por ejemplo: autocomplete
+    :param tag: debe ser el nombre de la etiqueta HTML donde se aplicara la
+          expresion regular, puede ser una o mas etiquetas, por ejemplo:
+          "a", "[form|input]", "table", etc.
+    :param value: es el valor que se espera tenga el atributo, por ejemplo con
+            autocomplete: on, off.
     """
 
     handle = open(filename, 'r')
@@ -56,16 +58,18 @@ def __has_attribute(filename, selector, tag, attr, value):
 
 
 def has_not_autocomplete(filename, selector):
-    """
-        Verifica si el selector (selector) en el archivo (filename) tiene
-        configurado el atributo autocomplete con valor off.
+    """funcion has_not_autocomplete
 
-        <filename> debe ser una ruta local, por ejemplo: /data/vulnerable.html
-        <selector> puede ser obtenido desde la consola de Google Chrome:
-            1. Abrir la consola de Google Chrome
-            2. Ir a la pestana Elements
-            3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
-               seleccionar la opcion Copy > Copy Selector
+    Verifica si el selector (selector) en el archivo (filename) tiene
+    configurado el atributo autocomplete con valor off.
+
+    :param filename: debe ser una ruta local, por ejemplo:
+        /data/vulnerable.html
+    :param selector: puede ser obtenido desde la consola de Google Chrome:
+        1. Abrir la consola de Google Chrome
+        2. Ir a la pestana Elements
+        3. Clic derecho sobre la etiqueta HTML que se quiera copiar y
+           seleccionar la opcion Copy > Copy Selector
     """
 
     attr = 'autocomplete'
@@ -86,86 +90,89 @@ def has_not_autocomplete(filename, selector):
 
     return result
 
+
 def is_cacheable(filename):
-    """ 
-        Verifica si el archivo (filename) tiene configurada la etiqueta
-        <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> y 
-        <META HTTP-EQUIV="Expires" CONTENT="-1">, la cual evita que se
-        almacene la pagina en memoria cache.
-        
-        <filename> debe ser una ruta local, por ejemplo: /data/vulnerable.html
+    """funcion is_cacheable
+
+    Verifica si el archivo (filename) tiene configurada la etiqueta
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> y
+    <META HTTP-EQUIV="Expires" CONTENT="-1">, la cual evita que se
+    almacene la pagina en memoria cache.
+
+    :param filename: debe ser una ruta local, por ejemplo:
+        /data/vulnerable.html
     """
-    
+
     selector = 'html'
     tag = 'meta'
-    
-    """ Validacion de la primera etiqueta 
+
+    """ Validacion de la primera etiqueta
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> """
     attr = 'http-equiv'
     value = 'pragma'
     has_http_equiv = __has_attribute(
         filename, selector, tag, attr, value)
-    
-    if has_http_equiv == False:
+
+    if has_http_equiv is False:
         """ Si no se tiene el atributo http-equiv="pragma" se califica como
         vulnerable y sale del metodo. """
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s', 
-            attr, filename, value, status)
-        
+        logging.info('%s attribute in %s, Details=%s, %s',
+                     attr, filename, value, status)
+
         return result
-        
+
     attr = 'content'
     value = 'no\-cache'
     has_content = __has_attribute(
         filename, selector, tag, attr, value)
-    
-    if has_content == False:
+
+    if has_content is False:
         """ Si no se tiene el atributo content="no-cache" se califica como
         vulnerable y sale del metodo. """
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s', 
-            attr, filename, value, status)
-        
+        logging.info('%s attribute in %s, Details=%s, %s',
+                     attr, filename, value, status)
+
         return result
-        
-    """ Validacion de la segunda etiqueta 
+
+    """ Validacion de la segunda etiqueta
     <META HTTP-EQUIV="Expires" CONTENT="-1"> """
     attr = 'http-equiv'
     value = 'expires'
     has_http_equiv = __has_attribute(
         filename, selector, tag, attr, value)
-        
-    if has_http_equiv == False:
+
+    if has_http_equiv is False:
         """ Si no se tiene el atributo http-equiv="expires" se califica como
         vulnerable y sale del metodo. """
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s', 
-            attr, filename, value, status)
-        
+        logging.info('%s attribute in %s, Details=%s, %s',
+                     attr, filename, value, status)
+
         return result
-    
+
     attr = 'content'
     value = '-1'
     has_content = __has_attribute(
         filename, selector, tag, attr, value)
-        
-    if has_content == False:
+
+    if has_content is False:
         """ Si no se tiene el atributo content="-1" se califica como
         vulnerable y sale del metodo. """
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s', 
-            attr, filename, value, status)
-        
+        logging.info('%s attribute in %s, Details=%s, %s',
+                     attr, filename, value, status)
+
         return result
-        
+
     status = 'CLOSE'
     result = False
-    logging.info('%s attribute in %s, Details=%s, %s', 
-            attr, filename, value, status)
-    
+    logging.info('%s attribute in %s, Details=%s, %s',
+                 attr, filename, value, status)
+
     return result

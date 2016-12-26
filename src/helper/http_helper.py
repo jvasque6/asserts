@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo de ayuda HTTP
+"""Modulo de ayuda HTTP.
 """
 
 # standard imports
-import logging
 from functools import wraps
+import logging
 import requests
-
 
 # 3rd party imports
 from bs4 import BeautifulSoup
@@ -55,7 +54,7 @@ class HTTPSession(object):
             self.response = ret
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
-                    self.cookies != ret.request._cookies:
+                   self.cookies != ret.request._cookies:
                         self.cookies = ret.request._cookies
             else:
                 self.cookies = ret.cookies
@@ -84,7 +83,7 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-                self.cookies != http_req.request._cookies:
+               self.cookies != http_req.request._cookies:
                     self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies
@@ -111,7 +110,7 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-                self.cookies != http_req.request._cookies:
+               self.cookies != http_req.request._cookies:
                     self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies
@@ -173,7 +172,7 @@ class HTTPSession(object):
 
 
 def find_value_in_response(raw_text, field_type, field_name):
-    """Extracts value from HTML field."""
+    """Extract value from HTML field."""
     soup = BeautifulSoup(raw_text, "lxml")
     for tag in soup(field_type):
         if tag.get('name') == field_name:

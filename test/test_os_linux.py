@@ -106,7 +106,7 @@ def test_remote_admin_enabled_open():
 #
 
 
-@pytest.mark.usefixtures('container', 'hard_os')
+# @pytest.mark.usefixtures('container', 'hard_os')
 # def test_os_min_priv_enabled_close():
 #    """Secure umask?"""
 #    assert not linux_generic.is_os_min_priv_disabled(CONTAINER_IP,

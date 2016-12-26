@@ -7,9 +7,9 @@ para probar OWASP TOP 10 2013 de aplicaciones.
 """
 
 # standard imports
+from multiprocessing import Process
 import subprocess
 import time
-from multiprocessing import Process
 
 # 3rd party imports
 import pytest
@@ -148,11 +148,11 @@ def test_owasp_A2_sessionid_exposed_open():
                                      cookies=bwapp_cookie)
 
 
-#@pytest.mark.usefixtures('mock_http')
-#def test_owasp_A2_session_fixation_open():
-    #"""Session fixation posible?"""
-    #assert http.has_session_fixation(
-        #'%s/session_fixation_open' % (BASE_URL), 'Login required')
+# @pytest.mark.usefixtures('mock_http')
+# def test_owasp_A2_session_fixation_open():
+#     """Session fixation posible?"""
+#     assert http.has_session_fixation(
+#         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
 def test_owasp_A3_xss_open():
@@ -266,11 +266,11 @@ def test_owasp_A2_sessionid_exposed_close():
                                          cookies=bwapp_cookie)
 
 
-#@pytest.mark.usefixtures('mock_http')
-#def test_owasp_A2_session_fixation_close():
-    #"""Session fixation posible?"""
-    #assert not http.has_session_fixation(
-        #'%s/session_fixation_close' % (BASE_URL), 'Login required')
+# @pytest.mark.usefixtures('mock_http')
+# def test_owasp_A2_session_fixation_close():
+#    """Session fixation posible?"""
+#    assert not http.has_session_fixation(
+#         '%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
 def test_owasp_A3_xss_close():
