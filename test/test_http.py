@@ -14,7 +14,6 @@ import time
 import pytest
 
 # local imports
-from fluidasserts.helper import http_helper
 from fluidasserts.service import http
 from test.mock import httpserver
 

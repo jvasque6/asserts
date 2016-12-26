@@ -7,6 +7,7 @@ SSL se encuentra adecuadamente implementado.
 """
 
 # standard imports
+from __future__ import print_function
 import subprocess
 
 # 3rd party imports

@@ -167,7 +167,13 @@ def has_session_fixation(url, expect, params=None, data=''):
 
 
 def has_insecure_dor(url, expect, params=None, data='', cookies={}):
-    """Check command injection vuln by checking expected string."""
+    """Check insecure direct object reference vuln."""
+    return generic_http_assert(url, expect, params=params,
+                               data=data, cookies=cookies)
+
+
+def has_dirtraversal(url, expect, params=None, data='', cookies={}):
+    """Check directory traversal vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
