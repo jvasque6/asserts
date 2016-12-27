@@ -197,11 +197,13 @@ def has_hpp(url, expect, params=None, data='', cookies={}):
                                data=data, cookies=cookies)
 
 
-def has_insecure_upload(url, expect, files, params=None, data='',
-                        cookies={}):
+def has_insecure_upload(url, expect, file_param, file_path, params=None,
+                        data='', cookies={}):
     """Check insecure upload vuln."""
+    exploit_file = {file_param: open(file_path)}
     return generic_http_assert(url, expect, params=params,
-                               data=data, files=files, cookies=cookies)
+                               data=data, files=exploit_file,
+                               cookies=cookies)
 
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,

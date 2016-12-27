@@ -149,13 +149,14 @@ def test_owasp_a1_insecure_upload_open():
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/unrestricted_file_upload.php'
 
-    exploit_file = {'file': open('test/provision/bwapp/exploit.php')}
+    file_param = 'file'
+    file_path = 'test/provision/bwapp/exploit.php'
     data = {'MAX_FILE_SIZE': '100000', 'form': 'upload'}
 
     expected = 'Sorry, the file extension is not allowed'
 
     assert http.has_insecure_upload(vulnerable_url, expected,
-                                    exploit_file, data=data,
+                                    file_param, file_path, data=data,
                                     cookies=bwapp_cookie)
 
 
@@ -336,14 +337,15 @@ def test_owasp_a1_insecure_upload_close():
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/unrestricted_file_upload.php'
 
-    exploit_file = {'file': open('test/provision/bwapp/exploit.php')}
+    file_param = 'file'
+    file_path = 'test/provision/bwapp/exploit.php'
     data = {'MAX_FILE_SIZE': '100000', 'form': 'upload'}
 
     expected = 'Sorry, the file extension is not allowed'
 
     assert not http.has_insecure_upload(vulnerable_url, expected,
-                                        exploit_file, data=data,
-                                        cookies=bwapp_cookie)
+                                       file_param, file_path, data=data,
+                                       cookies=bwapp_cookie)
 
 
 def test_owasp_a2_sessionid_exposed_close():
