@@ -179,7 +179,13 @@ def has_dirtraversal(url, expect, params=None, data='', cookies={}):
 
 
 def has_csrf(url, expect, params=None, data='', cookies={}):
-    """Check directory traversal vuln by checking expected string."""
+    """Check CSRF vuln by checking expected string."""
+    return generic_http_assert(url, expect, params=params,
+                               data=data, cookies=cookies)
+
+
+def has_lfi(url, expect, params=None, data='', cookies={}):
+    """Check local file inclusion vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 

@@ -197,6 +197,22 @@ def test_owasp_a7_dirtraversal_open():
                                  cookies=bwapp_cookie)
 
 
+def test_owasp_a7_lfi_open():
+    """App vulnerable a LFI?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '0'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/rlfi.php'
+
+    params = {'language': 'message.txt', 'action': 'go'}
+
+    expected = 'Try to climb higher Spidy'
+
+    assert not http.has_lfi(vulnerable_url, expected, params=params,
+                            cookies=bwapp_cookie)
+
+
 def test_owasp_a8_csrf_open():
     """App vulnerable a Cross-Site Request Forgery?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -335,6 +351,22 @@ def test_owasp_a7_dirtraversal_close():
     assert not http.has_dirtraversal(vulnerable_url, expected,
                                      params=params,
                                      cookies=bwapp_cookie)
+
+
+def test_owasp_a7_lfi_close():
+    """App vulnerable a LFI?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '2'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/rlfi.php'
+
+    params = {'language': 'message.txt', 'action': 'go'}
+
+    expected = 'Try to climb higher Spidy'
+
+    assert http.has_lfi(vulnerable_url, expected, params=params,
+                        cookies=bwapp_cookie)
 
 
 def test_owasp_a8_csrf_close():
