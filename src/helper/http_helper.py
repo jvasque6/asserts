@@ -38,13 +38,14 @@ class HTTPSession(object):
     """Class of HTTP request objects."""
 
     def __init__(self, url, params=None, headers=dict(),
-                 cookies=None, data='', auth=None):
+                 cookies=None, data='', files=None, auth=None):
         self.url = url
         self.params = params
         self.headers = headers
         self.cookies = cookies
         self.data = data
         self.auth = auth
+        self.files = files
         self.response = None
         self.is_auth = False
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
@@ -68,7 +69,8 @@ class HTTPSession(object):
                                     auth=self.auth,
                                     params=self.params,
                                     cookies=self.cookies,
-                                    headers=self.headers)
+                                    headers=self.headers,
+                                    files=self.files)
             self.response = ret
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
@@ -80,6 +82,7 @@ class HTTPSession(object):
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
 
+        
     def formauth_by_statuscode(self, code):
         """Autentica y verifica autenticacion usando codigo HTTP."""
         self.headers['Content-Type'] = \

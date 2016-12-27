@@ -21,10 +21,11 @@ from fluidasserts.helper import http_helper
 
 
 def generic_http_assert(url, expected_regex, params=None,
-                        data='', cookies={}):
+                        data='', files=None, cookies={}):
     """Generic HTTP assert method."""
     http_session = http_helper.HTTPSession(url, params=params,
-                                           data=data, cookies=cookies)
+                                           data=data, files=files,
+                                           cookies=cookies)
     response = http_session.response
     the_page = response.text
 
@@ -194,6 +195,13 @@ def has_hpp(url, expect, params=None, data='', cookies={}):
     """Check HTTP Parameter Pollution vuln."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
+
+
+def has_insecure_upload(url, expect, files, params=None, data='',
+                        cookies={}):
+    """Check insecure upload vuln."""
+    return generic_http_assert(url, expect, params=params,
+                               data=data, files=files, cookies=cookies)
 
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,
