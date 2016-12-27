@@ -128,6 +128,19 @@ def test_owasp_a1_php_injection_open():
                                           cookies=bwapp_cookie)
 
 
+def test_owasp_a1_hpp_open():
+    """App vulnerable a HTTP Parameter Polluiton?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '0'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/hpp-3.php?movie=6&movie=7&movie=8&name=pepe&action=vote'
+
+    expected = 'HTTP Parameter Pollution detected'
+
+    assert http.has_hpp(vulnerable_url, expected, cookies=bwapp_cookie)
+
+
 def test_owasp_a2_sessionid_exposed_open():
     """Session ID expuesto?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -281,6 +294,20 @@ def test_owasp_a1_php_injection_close():
     assert not http.has_php_command_injection(vulnerable_url, expected,
                                               params=params,
                                               cookies=bwapp_cookie)
+
+
+def test_owasp_a1_hpp_close():
+    """App vulnerable a HTTP Parameter Polluiton?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '2'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/hpp-3.php?movie=6&movie=7&movie=8&name=pepe&action=vote'
+
+    expected = 'HTTP Parameter Pollution detected'
+
+    assert not http.has_hpp(vulnerable_url, expected,
+                             cookies=bwapp_cookie)
 
 
 def test_owasp_a2_sessionid_exposed_close():
