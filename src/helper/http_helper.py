@@ -48,7 +48,7 @@ class HTTPSession(object):
         self.response = None
         self.is_auth = False
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
-            AppleWebKit/537.36 (KHTML, like Gecko)'
+            AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
         self.headers['Accept'] = '*/*'
 
         self.do_request()
@@ -73,7 +73,7 @@ class HTTPSession(object):
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                     self.cookies != ret.request._cookies:
-                    self.cookies = ret.request._cookies
+                        self.cookies = ret.request._cookies
             else:
                 self.cookies = ret.cookies
             return ret

@@ -141,11 +141,11 @@ def test_owasp_a2_sessionid_exposed_open():
                                      cookies=bwapp_cookie)
 
 
-# @pytest.mark.usefixtures('mock_http')
-# def test_owasp_A2_session_fixation_open():
-#     """Session fixation posible?"""
-#     assert http.has_session_fixation(
-#         '%s/session_fixation_open' % (BASE_URL), 'Login required')
+@pytest.mark.usefixtures('mock_http')
+def test_owasp_a2_session_fixation_open():
+    """Session fixation posible?"""
+    assert http.has_session_fixation(
+        '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
 def test_owasp_a3_xss_open():
@@ -182,7 +182,7 @@ def test_owasp_a4_insecure_dor_open():
 
 
 def test_owasp_a7_dirtraversal_open():
-    """App vulnerable a direct object reference?"""
+    """App vulnerable a directory traversal?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
 
@@ -195,6 +195,23 @@ def test_owasp_a7_dirtraversal_open():
 
     assert http.has_dirtraversal(vulnerable_url, expected, params=params,
                                  cookies=bwapp_cookie)
+
+
+def test_owasp_a8_csrf_open():
+    """App vulnerable a Cross-Site Request Forgery?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '0'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/csrf_1.php'
+
+    params = {'password_new': 'bug', 'password_conf': 'bug',
+              'action': 'change'}
+
+    expected = 'Current password'
+
+    assert http.has_csrf(vulnerable_url, expected, params=params,
+                         cookies=bwapp_cookie)
 
 
 #
@@ -263,11 +280,11 @@ def test_owasp_a2_sessionid_exposed_close():
                                          cookies=bwapp_cookie)
 
 
-# @pytest.mark.usefixtures('mock_http')
-# def test_owasp_A2_session_fixation_close():
-#    """Session fixation posible?"""
-#    assert not http.has_session_fixation(
-#         '%s/session_fixation_close' % (BASE_URL), 'Login required')
+@pytest.mark.usefixtures('mock_http')
+def test_owasp_a2_session_fixation_close():
+    """Session fixation posible?"""
+    assert not http.has_session_fixation(
+        '%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
 def test_owasp_a3_xss_close():
@@ -304,7 +321,7 @@ def test_owasp_a4_insecure_dor_close():
 
 
 def test_owasp_a7_dirtraversal_close():
-    """App vulnerable a direct object reference?"""
+    """App vulnerable a directory traversal?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -318,3 +335,20 @@ def test_owasp_a7_dirtraversal_close():
     assert not http.has_dirtraversal(vulnerable_url, expected,
                                      params=params,
                                      cookies=bwapp_cookie)
+
+
+def test_owasp_a8_csrf_close():
+    """App vulnerable a Cross-Site Request Forgery?"""
+    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie['security_level'] = '2'
+
+    vulnerable_url = 'http://' + CONTAINER_IP + \
+        '/bWAPP/csrf_1.php'
+
+    params = {'password_new': 'bug', 'password_conf': 'bug',
+              'action': 'change'}
+
+    expected = 'Current password'
+
+    assert not http.has_csrf(vulnerable_url, expected, params=params,
+                             cookies=bwapp_cookie)

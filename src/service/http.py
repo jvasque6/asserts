@@ -178,6 +178,12 @@ def has_dirtraversal(url, expect, params=None, data='', cookies={}):
                                data=data, cookies=cookies)
 
 
+def has_csrf(url, expect, params=None, data='', cookies={}):
+    """Check directory traversal vuln by checking expected string."""
+    return generic_http_assert(url, expect, params=params,
+                               data=data, cookies=cookies)
+
+
 def is_sessionid_exposed(url, argument='sessionid', params=None,
                          data='', cookies={}):
     """Checks if resulting URL has a session ID exposed."""
