@@ -80,7 +80,7 @@ def is_os_antimalware_not_installed(server, username, password):
     return result
 
 
-def is_os_syncookies_disabled(server, username, password):
+def is_os_syncookies_disabled(server):
     """Check if SynCookies or similar is enabled in Windows Server."""
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.

@@ -4,13 +4,11 @@
 """
 
 # standard imports
-from functools import wraps
 import logging
 import re
 import requests
 
 # 3rd party imports
-from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
 
 # local imports
@@ -81,7 +79,6 @@ class HTTPSession(object):
             return ret
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
-
 
     def formauth_by_statuscode(self, code):
         """Autentica y verifica autenticacion usando codigo HTTP."""
@@ -191,6 +188,7 @@ class HTTPSession(object):
             logging.info('HTTPOAuth %s, Details=%s', self.url,
                          'HTTPOAuth Not present')
 
+
 def options_request(url):
     """HTTP OPTIONS request."""
     try:
@@ -237,86 +235,3 @@ def has_insecure_header(url, header):
         result = True
 
     return result
-
-
-def find_value_in_response(raw_text, field_type, field_name):
-    """Extract value from HTML field."""
-    soup = BeautifulSoup(raw_text, "lxml")
-    for tag in soup(field_type):
-        if tag.get('name') == field_name:
-            return tag.get('value')
-    return None
-
-
-def dvwa_vuln(vuln, host, level='hard'):
-    """Vulnerability check decorator factory."""
-    def my_decorator(func):
-        """Decorator."""
-        if vuln == 'SQLi':
-            @wraps(func)
-            def sqli():
-                """Establece las variables para probar SQLi en DVWA."""
-                url = 'http://' + host + '/dvwa/vulnerabilities/sqli/'
-                params = {'id': 'a\'', 'Submit': 'Submit'}
-                expected_regex = 'html'
-
-                if level == 'hard':
-                    security_level = 'impossible'
-                else:
-                    security_level = 'low'
-                cookies = {'security': security_level}
-
-                kwargs = {'url': url, 'params': params,
-                          'expected_regex': expected_regex,
-                          'cookies': cookies}
-                func(**kwargs)
-            return sqli
-        if vuln == 'XSS':
-            @wraps(func)
-            def xss():
-                """Establece las variables para probar XSS en DVWA."""
-                pass
-            return xss
-    return my_decorator
-
-
-def http_app(app, host):
-    """Application decorator factory."""
-    def my_decorator(func):
-        """Decorator."""
-        if app == 'DVWA':
-            @wraps(func)
-            def do_dvwa(**kargs):
-                """Ejecuta acciones necesarias para loguearse en DVWA."""
-                url = 'http://' + host + '/dvwa/login.php'
-
-                request = HTTPSession(url)
-                response = request.response
-
-                sessionid = response.cookies.get_dict()['PHPSESSID']
-                cookies = {'security': 'low', 'PHPSESSID': sessionid}
-
-                csrf_token = find_value_in_response(response.text,
-                                                    'input',
-                                                    'user_token')
-
-                data = 'username=admin&password=password&user_token=' + \
-                    csrf_token + '&Login=Login'
-
-                login_req = HTTPSession(url, cookies=cookies, data=data)
-
-                successful_text = 'Welcome to Damn Vulnerable'
-                login_req.formauth_by_response(successful_text)
-
-                url = kargs['url']
-                params = kargs['params']
-                cookies['security'] = kargs['cookies']['security']
-                expected_regex = kargs['expected_regex']
-
-                kwargs = {'url': url, 'params': params,
-                          'expected_regex': expected_regex,
-                          'headers': login_req.headers,
-                          'cookies': cookies}
-                func(**kwargs)
-            return do_dvwa
-    return my_decorator

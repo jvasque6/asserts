@@ -110,7 +110,6 @@ def test_owasp_a1_os_injection_open():
                                       data=data, cookies=bwapp_cookie)
 
 
-
 def test_owasp_a1_php_injection_open():
     """App vulnerable a PHP injection?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -326,7 +325,7 @@ def test_owasp_a1_hpp_close():
     expected = 'HTTP Parameter Pollution detected'
 
     assert not http.has_hpp(vulnerable_url, expected,
-                             cookies=bwapp_cookie)
+                            cookies=bwapp_cookie)
 
 
 def test_owasp_a1_insecure_upload_close():
@@ -344,8 +343,8 @@ def test_owasp_a1_insecure_upload_close():
     expected = 'Sorry, the file extension is not allowed'
 
     assert not http.has_insecure_upload(vulnerable_url, expected,
-                                       file_param, file_path, data=data,
-                                       cookies=bwapp_cookie)
+                                        file_param, file_path, data=data,
+                                        cookies=bwapp_cookie)
 
 
 def test_owasp_a2_sessionid_exposed_close():
