@@ -82,7 +82,7 @@ class HTTPSession(object):
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
 
-        
+
     def formauth_by_statuscode(self, code):
         """Autentica y verifica autenticacion usando codigo HTTP."""
         self.headers['Content-Type'] = \
