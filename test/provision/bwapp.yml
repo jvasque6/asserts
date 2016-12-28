@@ -98,9 +98,6 @@
     - name: Copy bWAPP SQL data to import
       copy: src=bwapp/templates/bwapp.sql dest=/tmp/bwapp.sql
 
-    - name: Copy exploit 
-      copy: src=bwapp/exploit.php dest=/tmp/exploit.php
-
     - name: Insert SQL data
       mysql_db:
         name={{ mysql_db }}
