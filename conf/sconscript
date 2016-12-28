@@ -99,10 +99,10 @@ PhonyTargets(lenv, pre_commit=[
 # Ejecuta pruebas de humo de infraestructura
 PhonyTargets(lenv, smoke=[
     'docker info',
-    'test/container/build.sh',
+    #'test/container/build.sh',
     'test/container/start.sh',
     'test/container/smoke.sh',
     'test/provision/smoke.sh',
     'test/container/stop.sh',
-    'test/container/upload.sh',
+    #'test/container/upload.sh',
 ])
