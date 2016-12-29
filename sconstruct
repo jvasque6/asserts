@@ -63,7 +63,7 @@ env.Alias('sdist', sdist_results)
 bdist_needs = source_files
 bdist_results = ['#build/dist/FLUIDAsserts-0.1-py2.py3-none-any.whl',
                  '#build/dist/FLUIDAsserts-0.1-py2.7.egg']
-bdist_command = 'python setup.py bdist_wheel bdist_egg'  # conf en setup.cfg
+bdist_command = 'python3 setup.py bdist_wheel bdist_egg'  # conf en setup.cfg
 bdist_builder = Builder(action = bdist_command)
 env.Append(BUILDERS = {'BDist' : bdist_builder})
 bdist_run = env.BDist(target=bdist_results, source=bdist_needs)
