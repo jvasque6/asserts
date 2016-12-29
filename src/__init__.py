@@ -1,29 +1,13 @@
 # -*- coding: utf-8 -*-
 
-"""Paquete principal de FLUIDAsserts.
+"""Paquete format de FLUIDAsserts.
 
-FLUIDAsserts está compuesto de 4 subpaquetes:
-* format: Verificaciones de formatos específicos
-* helper: Módulos de ayuda
-* os: Verificaciones a nivel de sistema operativo
-* service: Verificaciones de servicios específicos
-
-FLUIDAsserts verifica si una vulnerabilidad se encuentra abierta o cerrada.
-
-Para ello en este paquete existe por cada protocolo o formato un módulo que
-implementa las verificaciones necesarias propias de cada tecnologia.
-
-Las verificaciones son predicados, es decir, funciones que retornan verdadero
-cuando la vulnerabilidad se encuentra aun abierta y falso cuando ya esta se
-encuentra cerrada.
-
-Desde este paquete se carga el archivo de configuración que contiene todos
-los detalles sobre formato y ubicación de los logs generados por la
-herramienta.
+Config
 """
 
 # standard imports
 import logging.config
+from pkg_resources import resource_stream
 
 # 3rd party imports
 from configobj import ConfigObj
@@ -32,8 +16,18 @@ from validate import Validator
 # local imports
 # none
 
+try:
+    _log_config_file = 'conf.cfg'
+    _log_config_location = resource_stream(__name__, _log_config_file)
+
+    _log_spec_file = 'conf.spec'
+    _log_spec_location = resource_stream(__name__, _log_spec_file)
+except:
+    _log_config_location = 'conf/conf.cfg'
+    _log_spec_location = 'conf/conf.spec'
+
 # pylint: disable=C0103
-cfg = ConfigObj('conf/conf.cfg', configspec='conf/conf.spec')
+cfg = ConfigObj(_log_config_location, configspec=_log_spec_location)
 cfg.validate(Validator())  # exit si la validación falla
 
 logging.config.dictConfig(cfg['logging'])

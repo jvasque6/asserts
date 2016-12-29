@@ -79,7 +79,7 @@ def get_bwapp_cookies():
 
 
 @pytest.mark.usefixtures('container', 'deploy_bwapp')
-def test_owasp_a1_sqli_open():
+def test_a1_sqli_open():
     """App vulnerable a SQLi?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -94,7 +94,7 @@ def test_owasp_a1_sqli_open():
                          cookies=bwapp_cookie)
 
 
-def test_owasp_a1_os_injection_open():
+def test_a1_os_injection_open():
     """App vulnerable a command injection?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -110,7 +110,7 @@ def test_owasp_a1_os_injection_open():
                                       data=data, cookies=bwapp_cookie)
 
 
-def test_owasp_a1_php_injection_open():
+def test_a1_php_injection_open():
     """App vulnerable a PHP injection?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -127,7 +127,7 @@ def test_owasp_a1_php_injection_open():
                                           cookies=bwapp_cookie)
 
 
-def test_owasp_a1_hpp_open():
+def test_a1_hpp_open():
     """App vulnerable a HTTP Parameter Polluiton?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -140,7 +140,7 @@ def test_owasp_a1_hpp_open():
     assert http.has_hpp(vulnerable_url, expected, cookies=bwapp_cookie)
 
 
-def test_owasp_a1_insecure_upload_open():
+def test_a1_insecure_upload_open():
     """App vulnerable a insecure upload?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -159,7 +159,7 @@ def test_owasp_a1_insecure_upload_open():
                                     cookies=bwapp_cookie)
 
 
-def test_owasp_a2_sessionid_exposed_open():
+def test_a2_sessionid_exposed_open():
     """Session ID expuesto?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -173,13 +173,13 @@ def test_owasp_a2_sessionid_exposed_open():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_owasp_a2_session_fixation_open():
+def test_a2_session_fixation_open():
     """Session fixation posible?"""
     assert http.has_session_fixation(
         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
-def test_owasp_a3_xss_open():
+def test_a3_xss_open():
     """App vulnerable a XSS?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -195,7 +195,7 @@ def test_owasp_a3_xss_open():
                         cookies=bwapp_cookie)
 
 
-def test_owasp_a4_insecure_dor_open():
+def test_a4_insecure_dor_open():
     """App vulnerable a direct object reference?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -212,7 +212,7 @@ def test_owasp_a4_insecure_dor_open():
                                  cookies=bwapp_cookie)
 
 
-def test_owasp_a7_dirtraversal_open():
+def test_a7_dirtraversal_open():
     """App vulnerable a directory traversal?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -228,7 +228,7 @@ def test_owasp_a7_dirtraversal_open():
                                  cookies=bwapp_cookie)
 
 
-def test_owasp_a7_lfi_open():
+def test_a7_lfi_open():
     """App vulnerable a LFI?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -244,7 +244,7 @@ def test_owasp_a7_lfi_open():
                             cookies=bwapp_cookie)
 
 
-def test_owasp_a8_csrf_open():
+def test_a8_csrf_open():
     """App vulnerable a Cross-Site Request Forgery?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '0'
@@ -266,7 +266,7 @@ def test_owasp_a8_csrf_open():
 #
 
 
-def test_owasp_a1_sqli_close():
+def test_a1_sqli_close():
     """App vulnerable a SQLi?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -280,7 +280,7 @@ def test_owasp_a1_sqli_close():
                              cookies=bwapp_cookie)
 
 
-def test_owasp_a1_os_injection_close():
+def test_a1_os_injection_close():
     """App vulnerable a command injection?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -297,7 +297,7 @@ def test_owasp_a1_os_injection_close():
                                           cookies=bwapp_cookie)
 
 
-def test_owasp_a1_php_injection_close():
+def test_a1_php_injection_close():
     """App vulnerable a PHP injection?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -314,7 +314,7 @@ def test_owasp_a1_php_injection_close():
                                               cookies=bwapp_cookie)
 
 
-def test_owasp_a1_hpp_close():
+def test_a1_hpp_close():
     """App vulnerable a HTTP Parameter Polluiton?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -328,7 +328,7 @@ def test_owasp_a1_hpp_close():
                             cookies=bwapp_cookie)
 
 
-def test_owasp_a1_insecure_upload_close():
+def test_a1_insecure_upload_close():
     """App vulnerable a insecure upload?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -347,7 +347,7 @@ def test_owasp_a1_insecure_upload_close():
                                         cookies=bwapp_cookie)
 
 
-def test_owasp_a2_sessionid_exposed_close():
+def test_a2_sessionid_exposed_close():
     """Session ID expuesto?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -361,13 +361,13 @@ def test_owasp_a2_sessionid_exposed_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_owasp_a2_session_fixation_close():
+def test_a2_session_fixation_close():
     """Session fixation posible?"""
     assert not http.has_session_fixation(
         '%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
-def test_owasp_a3_xss_close():
+def test_a3_xss_close():
     """App vulnerable a XSS?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -383,7 +383,7 @@ def test_owasp_a3_xss_close():
                             cookies=bwapp_cookie)
 
 
-def test_owasp_a4_insecure_dor_close():
+def test_a4_insecure_dor_close():
     """App vulnerable a direct object reference?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -400,7 +400,7 @@ def test_owasp_a4_insecure_dor_close():
                                      cookies=bwapp_cookie)
 
 
-def test_owasp_a7_dirtraversal_close():
+def test_a7_dirtraversal_close():
     """App vulnerable a directory traversal?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -417,7 +417,7 @@ def test_owasp_a7_dirtraversal_close():
                                      cookies=bwapp_cookie)
 
 
-def test_owasp_a7_lfi_close():
+def test_a7_lfi_close():
     """App vulnerable a LFI?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
@@ -433,7 +433,7 @@ def test_owasp_a7_lfi_close():
                         cookies=bwapp_cookie)
 
 
-def test_owasp_a8_csrf_close():
+def test_a8_csrf_close():
     """App vulnerable a Cross-Site Request Forgery?"""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
