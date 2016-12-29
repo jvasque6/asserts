@@ -34,9 +34,9 @@ def __check_password_strength(password, length):
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
         logging.info('%s is too weak. Details=%s, %s',
                      password, "Caps: " + str(caps) +
-                     "Lower: " + str(lower) +
-                     "Numbers: " + str(nums) +
-                     "Special: " + str(special), 'OPEN')
+                     " Lower: " + str(lower) +
+                     " Numbers: " + str(nums) +
+                     " Special: " + str(special), 'OPEN')
         result = True
     elif password in words:
         logging.info('%s is a dictionary password. Details=%s',
@@ -45,9 +45,9 @@ def __check_password_strength(password, length):
     else:
         logging.info('%s password is secure. Details=%s, %s',
                      password, "Caps: " + str(caps) +
-                     "Lower: " + str(lower) +
-                     "Numbers: " + str(nums) +
-                     "Special: " + str(special), 'CLOSE')
+                     " Lower: " + str(lower) +
+                     " Numbers: " + str(nums) +
+                     " Special: " + str(special), 'CLOSE')
         result = False
 
     return result

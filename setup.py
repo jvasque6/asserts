@@ -22,6 +22,13 @@ setup(
         'fluidasserts.os',
         'fluidasserts.service',
     ],
+    data_files=[
+        ('fluidasserts', ['conf/conf.cfg', 'conf/conf.spec']),
+        ('fluidasserts/format', ['conf/conf.cfg', 'conf/conf.spec']),
+        ('fluidasserts/helper', ['conf/conf.cfg', 'conf/conf.spec']),
+        ('fluidasserts/os', ['conf/conf.cfg', 'conf/conf.spec']),
+        ('fluidasserts/service', ['conf/conf.cfg', 'conf/conf.spec']),
+        ],
     package_dir={
         'fluidasserts': 'src',
     },
