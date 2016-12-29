@@ -40,14 +40,14 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # src
         'PyPDF2==1.26.0',            # src.pdf
-        'requests==2.10.0',          # src.http
-        'requests-oauthlib==0.6.2',  # src.http
-        'cryptography==1.7',         # src.http_ssl
-        'ldap3==1.2.2',              # src.ldap
-        'paramiko==2.0.2',           # src.ssh_helper
-        'pywinrm==0.2.1',            # src.winrm_helper
+        'requests==2.12.4',          # src.http
+        'requests-oauthlib==0.7.0',  # src.http
+        'cryptography==1.7.1',         # src.http_ssl
+        'ldap3==2.1.1',              # src.ldap
+        'paramiko==2.1.1',           # src.ssh_helper
+        'pywinrm==0.2.2',            # src.winrm_helper
         'beautifulsoup4==4.5.1',     # src.html
-        'lxml==3.6.4',     	     # src.http_helper
+        'lxml==3.7.1',     	     # src.http_helper
         'dnspython==1.15.0',         # src.dns
 
     ],
