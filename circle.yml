@@ -46,7 +46,6 @@ test:
      - scons doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
-    - cp build/results.log $CIRCLE_ARTIFACTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
     - cp -r build/lint $CIRCLE_ARTIFACTS
     - cp -r build/doc $CIRCLE_ARTIFACTS
