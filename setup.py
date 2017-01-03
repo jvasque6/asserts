@@ -49,13 +49,14 @@ setup(
         'PyPDF2==1.26.0',            # src.pdf
         'requests==2.12.4',          # src.http
         'requests-oauthlib==0.7.0',  # src.http
-        'cryptography==1.7.1',         # src.http_ssl
+        'cryptography==1.7.1',       # src.http_ssl
         'ldap3==2.1.1',              # src.ldap
         'paramiko==2.1.1',           # src.ssh_helper
         'pywinrm==0.2.2',            # src.winrm_helper
         'beautifulsoup4==4.5.1',     # src.html
         'lxml==3.7.1',     	     # src.http_helper
         'dnspython==1.15.0',         # src.dns
+        'tlslite-ng==0.6.0',         # src.http_ssl
 
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in

@@ -10,6 +10,7 @@ import socket
 # 3rd party imports
 import datetime
 import ssl
+import tlslite
 
 
 from cryptography.hazmat.backends import default_backend
@@ -143,51 +144,70 @@ def is_pfs_disabled(site, port=PORT):
     return result
 
 
-def is_sslv3_tlsv1_enabled(site, port=PORT):
-    """Function to check whether SSLv3 or TLSv1 suites are enabled"""
-    packet = '<packet>SOME_DATA</packet>'
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(10)
-
-    ciphers = 'ADH-AES128-SHA:ADH-AES256-SHA:ADH-CAMELLIA128-SHA:\
-               ADH-CAMELLIA256-SHA:ADH-DES-CBC3-SHA:ADH-RC4-MD5:\
-               ADH-SEED-SHA:AES128-SHA:AES256-SHA:CAMELLIA128-SHA:\
-               CAMELLIA256-SHA:DES-CBC3-SHA:DH-DSS-AES128-SHA:\
-               DH-DSS-AES256-SHA:DH-DSS-CAMELLIA128-SHA:\
-               DH-DSS-CAMELLIA256-SHA:DH-DSS-DES-CBC3-SHA:\
-               DH-DSS-SEED-SHA:DHE-DSS-AES128-SHA:DHE-DSS-AES256-SHA:\
-               DHE-DSS-CAMELLIA128-SHA:DHE-DSS-CAMELLIA256-SHA:\
-               DHE-DSS-DES-CBC3-SHA:DHE-DSS-RC4-SHA:DHE-DSS-SEED-SHA:\
-               DHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:\
-               DHE-RSA-CAMELLIA128-SHA:DHE-RSA-CAMELLIA256-SHA:\
-               DHE-RSA-DES-CBC3-SHA:DHE-RSA-SEED-SHA:DH-RSA-AES128-SHA:\
-               DH-RSA-AES256-SHA:DH-RSA-CAMELLIA128-SHA:\
-               DH-RSA-CAMELLIA256-SHA:DH-RSA-DES-CBC3-SHA:\
-               DH-RSA-SEED-SHA:GOST2001-GOST89-GOST89:\
-               GOST2001-NULL-GOST94:GOST94-GOST89-GOST89:\
-               GOST94-NULL-GOST94:IDEA-CBC-SHA:NULL-MD5:NULL-SHA:\
-               RC4-MD5:RC4-SHA:SEED-SHA'
-
+def is_sslv3_enabled(site, port=PORT):
+    """Function to check whether SSLv3 suites are enabled"""
+  
     result = True
     try:
-        wrapped_socket = ssl.wrap_socket(sock,
-                                         ssl_version=ssl.PROTOCOL_TLSv1,
-                                         ciphers=ciphers)
-
-        wrapped_socket.connect((site, port))
-        wrapped_socket.send(packet.encode('utf-8'))
-        logging.info('SSLv3 enabled on site, Details=%s, %s',
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        sock.connect((site, port))
+        
+        tls_conn = tlslite.TLSConnection(sock)
+        settings = tlslite.HandshakeSettings()
+        
+        settings.minVersion = (3, 0)
+        settings.maxVersion = (3, 0)
+        new_settings = settings.validate()
+        
+        tls_conn.handshakeClientCert(settings=new_settings)
+        
+        print('SSLv3 enabled on site, Details=%s, %s',
                      site, 'OPEN')
         result = True
-    except ssl.SSLError:
-        logging.info('SSLv3 not enabled on site, Details=%s, %s',
+    except tlslite.errors.TLSRemoteAlert:
+        print('SSLv3 not enabled on site, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     except socket.error:
-        logging.info('Port is closed for SSLv3 check, Details=%s, %s',
+        print('Port is closed for SSLv3 check, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     finally:
-        wrapped_socket.close()
+        sock.close()
+    return result
+
+
+
+def is_tlsv1_enabled(site, port=PORT):
+    """Function to check whether TLSv1 suites are enabled"""
+  
+    result = True
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        sock.connect((site, port))
+        
+        tls_conn = tlslite.TLSConnection(sock)
+        settings = tlslite.HandshakeSettings()
+        
+        settings.minVersion = (3, 1)
+        settings.maxVersion = (3, 1)
+        new_settings = settings.validate()
+        
+        tls_conn.handshakeClientCert(settings=new_settings)
+        
+        print('TLSv1 enabled on site, Details=%s, %s',
+                     site, 'OPEN')
+        result = True
+    except tlslite.errors.TLSRemoteAlert:
+        print('TLSv1 not enabled on site, Details=%s, %s',
+                     site, 'CLOSE')
+        result = False
+    except socket.error:
+        print('Port is closed for TLSv1 check, Details=%s, %s',
+                     site, 'CLOSE')
+        result = False
+    finally:
+        sock.close()
     return result
