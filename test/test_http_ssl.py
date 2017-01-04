@@ -58,10 +58,19 @@ def test_pfs_enabled_open():
     assert http_ssl.is_pfs_disabled(CONTAINER_IP)
 
 
+# There's no way to check this on Debian/Jessie because openssl dropped
+# SSLv3 completely from that version on.
+#
+#@pytest.mark.usefixtures('container', 'weak_ssl')
+#def test_sslv3_enabled_open():
+#    """SSLv3 habilitado en sitio?"""
+#    assert http_ssl.is_sslv3_enabled(CONTAINER_IP)
+
+
 @pytest.mark.usefixtures('container', 'weak_ssl')
-def test_sslv3_enabled_open():
-    """SSLv3 habilitado en sitio?"""
-    assert http_ssl.is_sslv3_tlsv1_enabled(CONTAINER_IP)
+def test_tlsv1_enabled_open():
+    """TLSv1 habilitado en sitio?"""
+    assert http_ssl.is_tlsv1_enabled(CONTAINER_IP)
 
 
 # @pytest.mark.usefixtures('container', 'weak_ssl')
@@ -95,7 +104,13 @@ def test_pfs_enabled_close():
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_sslv3_enabled_close():
     """SSLv3 habilitado en sitio?"""
-    assert not http_ssl.is_sslv3_tlsv1_enabled(CONTAINER_IP)
+    assert not http_ssl.is_sslv3_enabled(CONTAINER_IP)
+
+
+@pytest.mark.usefixtures('container', 'hard_ssl')
+def test_tlsv1_enabled_close():
+    """TLSv1 habilitado en sitio?"""
+    assert not http_ssl.is_tlsv1_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')

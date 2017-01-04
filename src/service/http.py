@@ -29,7 +29,7 @@ def generic_http_assert(url, expected_regex, params=None,
     response = http_session.response
     the_page = response.text
 
-    if re.search(str(expected_regex), the_page) is None:
+    if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
         logging.info('%s HTTP assertion not found, Details=%s, %s',
                      http_session.url, expected_regex, 'OPEN')
         logging.info(the_page)
@@ -137,8 +137,11 @@ def has_put_method(url):
     return http_helper.has_method(url, 'PUT')
 
 
-def has_sqli(url, expect, params=None, data='', cookies={}):
+def has_sqli(url, expect=None, params=None, data='', cookies={}):
     """Check SQLi vuln by checking expected string."""
+    if expect is None:
+        expect = 'OLE.*Provider.*error'
+
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
