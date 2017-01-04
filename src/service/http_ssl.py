@@ -162,15 +162,15 @@ def is_sslv3_enabled(site, port=PORT):
         
         tls_conn.handshakeClientCert(settings=new_settings)
         
-        print('SSLv3 enabled on site, Details=%s, %s',
+        logging.info('SSLv3 enabled on site, Details=%s, %s',
                      site, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        print('SSLv3 not enabled on site, Details=%s, %s',
+        logging.info('SSLv3 not enabled on site, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     except socket.error:
-        print('Port is closed for SSLv3 check, Details=%s, %s',
+        logging.info('Port is closed for SSLv3 check, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     finally:
@@ -197,15 +197,15 @@ def is_tlsv1_enabled(site, port=PORT):
         
         tls_conn.handshakeClientCert(settings=new_settings)
         
-        print('TLSv1 enabled on site, Details=%s, %s',
+        logging.info('TLSv1 enabled on site, Details=%s, %s',
                      site, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        print('TLSv1 not enabled on site, Details=%s, %s',
+        logging.info('TLSv1 not enabled on site, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     except socket.error:
-        print('Port is closed for TLSv1 check, Details=%s, %s',
+        logging.info('Port is closed for TLSv1 check, Details=%s, %s',
                      site, 'CLOSE')
         result = False
     finally:
