@@ -72,8 +72,8 @@ class HTTPSession(object):
             self.response = ret
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
-                    self.cookies != ret.request._cookies:
-                        self.cookies = ret.request._cookies
+                   self.cookies != ret.request._cookies:
+                    self.cookies = ret.request._cookies
             else:
                 self.cookies = ret.cookies
             return ret
@@ -101,7 +101,7 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-                self.cookies != http_req.request._cookies:
+               self.cookies != http_req.request._cookies:
                 self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies
@@ -128,7 +128,7 @@ class HTTPSession(object):
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
-                self.cookies != http_req.request._cookies:
+               self.cookies != http_req.request._cookies:
                 self.cookies = http_req.request._cookies
         else:
             self.cookies = http_req.cookies

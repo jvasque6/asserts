@@ -26,7 +26,7 @@ def is_anonymous_bind_allowed(server):
     try:
         server = Server(server)
         conn = Connection(server)
-    except:
+    except Exception:
         logging.info('LDAP anonymous bind failed, Details=%s, %s',
                      server, 'CLOSED')
         return False
