@@ -22,7 +22,7 @@ try:
 
     _log_spec_file = 'conf.spec'
     _log_spec_location = resource_stream(__name__, _log_spec_file)
-except:
+except Exception:
     _log_config_location = 'conf/conf.cfg'
     _log_spec_location = 'conf/conf.spec'
 
