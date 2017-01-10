@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-DNS check module
-"""
+"""DNS check module."""
 
 # standard imports
 import logging
@@ -23,7 +21,7 @@ from dns.zone import NoSOA
 
 
 def is_xfr_enabled(domain, nameserver):
-    """Checks if zone transfer is enabled."""
+    """Check if zone transfer is enabled."""
     axfr_query = dns.query.xfr(nameserver, domain, timeout=5,
                                relativize=False, lifetime=10)
 
@@ -59,7 +57,7 @@ def is_xfr_enabled(domain, nameserver):
 
 
 def is_dynupdate_enabled(domain, nameserver):
-    """Checks if zone updating is enabled."""
+    """Check if zone updating is enabled."""
     newrecord = 'newrecord'
 
     update = dns.update.Update(domain)
@@ -80,12 +78,11 @@ def is_dynupdate_enabled(domain, nameserver):
 
 
 def has_cache_poison(domain, nameserver):
-    """function has_cache_poison
+    """Function has_cache_poison.
 
     Checks if cache poisoning is possible.
     The check is made by looking DNSSEC records
     """
-
     myresolver = dns.resolver.Resolver()
     myresolver.nameservers = [nameserver]
 
@@ -120,12 +117,11 @@ def has_cache_poison(domain, nameserver):
 
 
 def has_cache_snooping(nameserver):
-    """function has_cache_snooping
+    """Function has_cache_snooping.
 
     Checks if nameserver has cache snooping.
     (supports non recursive queries)
     """
-
     domain = 'google.com'
     name = dns.name.from_text(domain)
 

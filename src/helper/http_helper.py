@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo de ayuda HTTP.
-"""
+"""Modulo de ayuda HTTP."""
 
 # standard imports
 import logging
@@ -37,6 +36,7 @@ class HTTPSession(object):
 
     def __init__(self, url, params=None, headers=dict(),
                  cookies=None, data='', files=None, auth=None):
+        """Metodo constructur de la clase."""
         self.url = url
         self.params = params
         self.headers = headers

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Modulo OS os_linux_generic.
-"""
+"""Modulo OS os_linux_generic."""
 
 # standard imports
 import logging
