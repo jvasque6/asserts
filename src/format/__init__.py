@@ -2,7 +2,7 @@
 
 """Paquete format de FLUIDAsserts.
 
- Verificaciones de formatos específicos
+Verificaciones de formatos específicos
 """
 
 # standard imports

@@ -211,7 +211,7 @@ def has_insecure_upload(url, expect, file_param, file_path, params=None,
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,
                          data='', cookies={}):
-    """Checks if resulting URL has a session ID exposed."""
+    """Check if resulting URL has a session ID exposed."""
     http_session = http_helper.HTTPSession(url, params=params,
                                            data=data, cookies=cookies)
     response_url = http_session.response.url

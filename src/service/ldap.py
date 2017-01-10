@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Modulo LDAP
-"""
+"""Modulo LDAP."""
 
 # standard imports
 import logging
@@ -18,7 +16,7 @@ SSL_PORT = 636
 
 
 def is_anonymous_bind_allowed(server):
-    """function is_anonymous_bind_allowed
+    """Function is_anonymous_bind_allowed.
 
     Function to check whether anonymous binding is allowed on
     LDAP server

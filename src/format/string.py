@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Strings check module
-"""
+"""Strings check module."""
 
 # standard imports
 import logging
