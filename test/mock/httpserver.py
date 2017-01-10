@@ -184,6 +184,7 @@ def basic_fail():
 
 @APP.route('/http/headers/put_close', methods=['OPTIONS'])
 def put_close():
+    """Metodo PUT deshabilitado."""
     resp = Response("Method PUT not Allowed")
     resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
     return resp
@@ -191,6 +192,7 @@ def put_close():
 
 @APP.route('/http/headers/put_open', methods=['OPTIONS'])
 def put_open():
+    """Metodo PUT habilitado."""
     resp = Response("Method PUT Allowed")
     resp.headers['allow'] = 'PUT'
     return resp
@@ -198,6 +200,7 @@ def put_open():
 
 @APP.route('/http/headers/trace_close', methods=['OPTIONS'])
 def trace_close():
+    """Metodo TRACE deshabilitado."""
     resp = Response("Method TRACE not Allowed")
     resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
     return resp
@@ -205,6 +208,7 @@ def trace_close():
 
 @APP.route('/http/headers/trace_open', methods=['OPTIONS'])
 def trace_open():
+    """Metodo TRACE habilitado."""
     resp = Response("Method TRACE Allowed")
     resp.headers['allow'] = 'TRACE'
     return resp
@@ -212,6 +216,7 @@ def trace_open():
 
 @APP.route('/http/headers/delete_close', methods=['OPTIONS'])
 def delete_close():
+    """Metodo DELETE deshabilitado."""
     resp = Response("Method DELETE not Allowed")
     resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
     return resp
@@ -219,6 +224,7 @@ def delete_close():
 
 @APP.route('/http/headers/delete_open', methods=['OPTIONS'])
 def delete_open():
+    """Metodo DELETE habilitado."""
     resp = Response("Method DELETE Allowed")
     resp.headers['allow'] = 'DELETE'
     return resp
@@ -226,34 +232,40 @@ def delete_open():
 
 @APP.route('/http/headers/expected')
 def expected_string():
+    """Cadena Esperada."""
     return "Expected string"
 
 
 @APP.route('/http/headers/notfound')
 def notfound_string():
+    """Cadena no encontrada."""
     return "Randomstring"
 
 
 @APP.route('/http/headers/session_fixation_open')
 def session_fixation_open():
+    """Robo de sesion abierto."""
     return redirect(url_for('session_fixated_vuln', sessionid=12345678),
                     code=302)
 
 
 @APP.route('/http/headers/sessionfixated_url')
 def session_fixated_vuln():
+    """Vulnerable a robo de sesion."""
     resp = Response("Login successful")
     return resp
 
 
 @APP.route('/http/headers/session_fixation_close')
 def session_fixation_close():
+    """Robo de sesion Cerrado."""
     return redirect(url_for('session_fixated_not_vuln', sessionid=12345678),
                     code=302)
 
 
 @APP.route('/http/headers/session_not_fixated_url')
 def session_fixated_not_vuln():
+    """No vulnerable a robo de session."""
     if request.cookies.get('login_ok') is True:
         resp = Response('Login successful')
     else:
