@@ -18,17 +18,17 @@ from validate import Validator
 
 
 try:
-    _log_config_file = 'conf.cfg'
-    _log_config_location = resource_stream(__name__, _log_config_file)
+    _LOG_CONFIG_FILE = 'conf.cfg'
+    _LOG_CONFIG_LOCATION = resource_stream(__name__, _LOG_CONFIG_FILE)
 
-    _log_spec_file = 'conf.spec'
-    _log_spec_location = resource_stream(__name__, _log_spec_file)
+    _LOG_SPEC_FILE = 'conf.spec'
+    _LOG_SPEC_LOCATION = resource_stream(__name__, _LOG_SPEC_FILE)
 except Exception:
-    _log_config_location = 'conf/conf.cfg'
-    _log_spec_location = 'conf/conf.spec'
+    _LOG_CONFIG_LOCATION = 'conf/conf.cfg'
+    _LOG_SPEC_LOCATION = 'conf/conf.spec'
 
 # pylint: disable=C0103
-cfg = ConfigObj(_log_config_location, configspec=_log_spec_location)
+cfg = ConfigObj(_LOG_CONFIG_LOCATION, configspec=_LOG_SPEC_LOCATION)
 cfg.validate(Validator())  # exit si la validación falla
 
 logging.config.dictConfig(cfg['logging'])
