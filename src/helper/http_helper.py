@@ -13,6 +13,7 @@ from requests_oauthlib import OAuth1
 # local imports
 # none
 
+# pylint: disable=W0212
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
@@ -34,7 +35,7 @@ HDR_RGX = {
 class HTTPSession(object):
     """Class of HTTP request objects."""
 
-    def __init__(self, url, params=None, headers=dict(),
+    def __init__(self, url, params=None, headers=None,
                  cookies=None, data='', files=None, auth=None):
         """Metodo constructur de la clase."""
         self.url = url
@@ -46,6 +47,8 @@ class HTTPSession(object):
         self.files = files
         self.response = None
         self.is_auth = False
+        if self.headers is None:
+            self.headers = dict()
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
             AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
         self.headers['Accept'] = '*/*'

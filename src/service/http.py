@@ -21,8 +21,10 @@ from fluidasserts.helper import http_helper
 
 
 def generic_http_assert(url, expected_regex, params=None,
-                        data='', files=None, cookies={}):
+                        data='', files=None, cookies=None):
     """Generic HTTP assert method."""
+    if cookies is None:
+        cookies = dict()
     http_session = http_helper.HTTPSession(url, params=params,
                                            data=data, files=files,
                                            cookies=cookies)
@@ -137,7 +139,7 @@ def has_put_method(url):
     return http_helper.has_method(url, 'PUT')
 
 
-def has_sqli(url, expect=None, params=None, data='', cookies={}):
+def has_sqli(url, expect=None, params=None, data='', cookies=None):
     """Check SQLi vuln by checking expected string."""
     if expect is None:
         expect = 'OLE.*Provider.*error'
@@ -146,19 +148,19 @@ def has_sqli(url, expect=None, params=None, data='', cookies={}):
                                data=data, cookies=cookies)
 
 
-def has_xss(url, expect, params=None, data='', cookies={}):
+def has_xss(url, expect, params=None, data='', cookies=None):
     """Check XSS vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_command_injection(url, expect, params=None, data='', cookies={}):
+def has_command_injection(url, expect, params=None, data='', cookies=None):
     """Check command injection vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_php_command_injection(url, expect, params=None, data='', cookies={}):
+def has_php_command_injection(url, expect, params=None, data='', cookies=None):
     """Check PHP command injection by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
@@ -170,38 +172,38 @@ def has_session_fixation(url, expect, params=None, data=''):
                                data=data, cookies=None)
 
 
-def has_insecure_dor(url, expect, params=None, data='', cookies={}):
+def has_insecure_dor(url, expect, params=None, data='', cookies=None):
     """Check insecure direct object reference vuln."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_dirtraversal(url, expect, params=None, data='', cookies={}):
+def has_dirtraversal(url, expect, params=None, data='', cookies=None):
     """Check directory traversal vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_csrf(url, expect, params=None, data='', cookies={}):
+def has_csrf(url, expect, params=None, data='', cookies=None):
     """Check CSRF vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_lfi(url, expect, params=None, data='', cookies={}):
+def has_lfi(url, expect, params=None, data='', cookies=None):
     """Check local file inclusion vuln by checking expected string."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
-def has_hpp(url, expect, params=None, data='', cookies={}):
+def has_hpp(url, expect, params=None, data='', cookies=None):
     """Check HTTP Parameter Pollution vuln."""
     return generic_http_assert(url, expect, params=params,
                                data=data, cookies=cookies)
 
 
 def has_insecure_upload(url, expect, file_param, file_path, params=None,
-                        data='', cookies={}):
+                        data='', cookies=None):
     """Check insecure upload vuln."""
     exploit_file = {file_param: open(file_path)}
     return generic_http_assert(url, expect, params=params,
@@ -210,7 +212,7 @@ def has_insecure_upload(url, expect, file_param, file_path, params=None,
 
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,
-                         data='', cookies={}):
+                         data='', cookies=None):
     """Check if resulting URL has a session ID exposed."""
     http_session = http_helper.HTTPSession(url, params=params,
                                            data=data, cookies=cookies)

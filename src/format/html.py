@@ -101,16 +101,16 @@ def is_cacheable(filename):
     selector = 'html'
     tag = 'meta'
 
-    """ Validacion de la primera etiqueta
-    <META HTTP-EQUIV="Pragma" CONTENT="no-cache"> """
+    # Validacion de la primera etiqueta
+    # <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     attr = 'http-equiv'
     value = 'pragma'
     has_http_equiv = __has_attribute(
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
-        """Si no se tiene el atributo http-equiv="pragma" se califica como
-        vulnerable y sale del metodo. """
+        # Si no se tiene el atributo http-equiv="pragma" se califica como
+        # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
         logging.info('%s attribute in %s, Details=%s, %s',
@@ -119,13 +119,13 @@ def is_cacheable(filename):
         return result
 
     attr = 'content'
-    value = 'no\-cache'
+    value = 'no\-cache'  # pylint: disable=W1401
     has_content = __has_attribute(
         filename, selector, tag, attr, value)
 
     if has_content is False:
-        """Si no se tiene el atributo content="no-cache" se califica como
-        vulnerable y sale del metodo. """
+        # Si no se tiene el atributo content="no-cache" se califica como
+        # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
         logging.info('%s attribute in %s, Details=%s, %s',
@@ -133,16 +133,16 @@ def is_cacheable(filename):
 
         return result
 
-    """Validacion de la segunda etiqueta
-    <META HTTP-EQUIV="Expires" CONTENT="-1"> """
+    # Validacion de la segunda etiqueta
+    # <META HTTP-EQUIV="Expires" CONTENT="-1">
     attr = 'http-equiv'
     value = 'expires'
     has_http_equiv = __has_attribute(
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
-        """Si no se tiene el atributo http-equiv="expires" se califica como
-        vulnerable y sale del metodo. """
+        # Si no se tiene el atributo http-equiv="expires" se califica como
+        # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
         logging.info('%s attribute in %s, Details=%s, %s',
@@ -156,8 +156,8 @@ def is_cacheable(filename):
         filename, selector, tag, attr, value)
 
     if has_content is False:
-        """ Si no se tiene el atributo content="-1" se califica como
-        vulnerable y sale del metodo. """
+        # Si no se tiene el atributo content="-1" se califica como
+        # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
         logging.info('%s attribute in %s, Details=%s, %s',
