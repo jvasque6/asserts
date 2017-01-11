@@ -11,6 +11,9 @@ import re
 # local imports
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 
+# pylint: disable=W1401
+# pylint: disable=W1402
+
 
 def is_os_compilers_installed(server, username, password):
     """Check if there's any compiler installed in Windows Server."""
