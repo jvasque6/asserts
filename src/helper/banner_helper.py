@@ -31,6 +31,8 @@ import ssl
 # local imports
 # none
 
+# pylint: disable=R0903
+
 
 class Service(object):
     """Abstract class of service."""
@@ -60,10 +62,8 @@ class FTPService(Service):
     def __init__(self, port=21, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -80,10 +80,8 @@ class SSHService(Service):
     def __init__(self, port=22, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -96,10 +94,8 @@ class TELNETService(Service):
     def __init__(self, port=23, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -112,10 +108,8 @@ class SMTPService(Service):
     def __init__(self, port=25, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -132,10 +126,8 @@ class HTTPService(Service):
     def __init__(self, port=80, is_active=True, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -151,10 +143,8 @@ class HTTPSService(Service):
     def __init__(self, port=443, is_active=True, is_ssl=True,
                  payload=None):
         """Return a new Service object."""
-        self.port = port
-        self.is_active = is_active
-        self.is_ssl = is_ssl
-        self.payload = payload
+        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
+                         payload=payload)
 
     def get_version(self, banner):
         """Get version."""
