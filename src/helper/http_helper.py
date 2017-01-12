@@ -14,6 +14,8 @@ from requests_oauthlib import OAuth1
 # none
 
 # pylint: disable=W0212
+# pylint: disable=R0902
+# pylint: disable=R0913
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
