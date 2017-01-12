@@ -23,7 +23,7 @@ try:
 
     _LOG_SPEC_FILE = 'conf.spec'
     _LOG_SPEC_LOCATION = resource_stream(__name__, _LOG_SPEC_FILE)
-except Exception:
+except IOError:
     _LOG_CONFIG_LOCATION = 'conf/conf.cfg'
     _LOG_SPEC_LOCATION = 'conf/conf.spec'
 

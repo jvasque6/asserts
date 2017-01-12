@@ -6,6 +6,7 @@ import logging
 
 # 3rd party imports
 from ldap3 import Connection
+from ldap3.core.exceptions import LDAPExceptionError
 from ldap3 import Server
 
 # local imports
@@ -26,7 +27,7 @@ def is_anonymous_bind_allowed(server):
     try:
         server = Server(server)
         conn = Connection(server)
-    except Exception:
+    except LDAPExceptionError:
         logging.info('LDAP anonymous bind failed, Details=%s, %s',
                      server, 'CLOSED')
         return False
