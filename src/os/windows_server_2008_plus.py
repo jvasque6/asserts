@@ -123,7 +123,8 @@ def is_protected_users_disabled(server, username, password):
         result = False
     else:
         cmd = b'reg query \
-                "HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest" /v UseLogonCredential'
+                "HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest" \
+                /v UseLogonCredential'
 
         has_logon_credentials = winrm_exec_command(server,
                                                    username,

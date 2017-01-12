@@ -19,6 +19,8 @@ import re
 # local imports
 from fluidasserts.helper import http_helper
 
+# pylint: disable=R0913
+
 
 def generic_http_assert(url, expected_regex, params=None,
                         data='', files=None, cookies=None):

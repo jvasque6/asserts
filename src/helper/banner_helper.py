@@ -31,6 +31,7 @@ import ssl
 # local imports
 # none
 
+# pylint: disable=R0204
 # pylint: disable=R0903
 
 
