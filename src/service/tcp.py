@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo TCP.
+"""Modulo para verificacion del protocolo TCP.
 
 Este modulo permite verificar vulnerabilidades propias de TCP como:
 

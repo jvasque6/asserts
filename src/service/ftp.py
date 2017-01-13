@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo FTP.
+"""Modulo para verificacion del protocolo FTP.
 
 Este modulo permite verificar vulnerabilidades propias de FTP como:
 
     * is_a_valid_user: Usuario puede autenticarse,
     * is_admin_enabled: Administrador puede autenticarse,
-    * is_anonymous_enabled: Conexión al servicio de forma anonima,
+    * is_anonymous_enabled: Conexion al servicio de forma anonima,
     * user_without_password: Usuario sin clave puede autenticarse,
 
 Futuras funciones incluyen:
 
-    * is_encrypted: Transporte de información de forma plana,
+    * is_encrypted: Transporte de informacion de forma plana,
     * has_advisory: Tiene advisory de conexion ante login,
 """
 
@@ -58,7 +58,7 @@ def user_without_password(ip_address, username):
 
 
 def is_anonymous_enabled(ip_address):
-    """Determina si un servidor FTP tiene habilitado conexión anonima."""
+    """Determina si un servidor FTP tiene habilitado conexion anonima."""
     return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 

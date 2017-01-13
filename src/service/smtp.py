@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo SMTP.
+"""Modulo para verificacion del protocolo SMTP.
 
 Este modulo permite verificar vulnerabilidades propias de SMTP como:
 

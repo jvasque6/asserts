@@ -58,7 +58,7 @@ class HTTPSession(object):
         self.do_request()
 
     def do_request(self):
-        """Realiza una petición HTTP."""
+        """Realiza una peticion HTTP."""
         try:
             if self.data == '':
                 ret = requests.get(self.url, verify=False,

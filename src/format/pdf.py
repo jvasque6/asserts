@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del formato PDF.
+"""Modulo para verificacion del formato PDF.
 
 Este modulo permite verificar vulnerabilidades que se encuentran en un archivo
 con formato PDF.  Algunas de ellas son:
@@ -35,17 +35,17 @@ def __has_attribute(filename, metaname):
 
 
 def has_creator(filename):
-    """Verifica si el PDF tiene el atributo creator en la sección docinfo."""
+    """Verifica si el PDF tiene el atributo creator en la seccion docinfo."""
     return __has_attribute(filename, 'creator')
 
 
 def has_producer(filename):
-    """Verifica si el PDF tiene el atributo producer en la sección docinfo."""
+    """Verifica si el PDF tiene el atributo producer en la seccion docinfo."""
     return __has_attribute(filename, 'producer')
 
 
 def has_author(filename):
-    """Verifica si el PDF tiene el atributo author en la sección docinfo."""
+    """Verifica si el PDF tiene el atributo author en la seccion docinfo."""
     return __has_attribute(filename, 'author')
 
 

@@ -29,6 +29,6 @@ except IOError:
 
 # pylint: disable=C0103
 cfg = ConfigObj(_LOG_CONFIG_LOCATION, configspec=_LOG_SPEC_LOCATION)
-cfg.validate(Validator())  # exit si la validación falla
+cfg.validate(Validator())  # exit si la validacion falla
 
 logging.config.dictConfig(cfg['logging'])

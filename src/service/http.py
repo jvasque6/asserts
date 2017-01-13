@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo HTTP.
+"""Modulo para verificacion del protocolo HTTP.
 
 Este modulo permite verificar vulnerabilidades propias de HTTP como:
 
-    * Transporte plano de información,
+    * Transporte plano de informacion,
     * Headers de seguridad no establecidos,
     * Cookies no generadas de forma segura,
 """
