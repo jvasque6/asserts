@@ -19,7 +19,7 @@ import requests
 
 
 def __get_request(url):
-    """Realiza una petición GET HTTP ."""
+    """Realiza una peticion GET HTTP ."""
     try:
         return requests.get(url)
     except requests.ConnectionError:
