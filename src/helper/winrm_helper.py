@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo WinRM.
+"""Modulo para verificacion del protocolo WinRM.
 
 Se debe ejecutar en el servidor:
 winrm qc

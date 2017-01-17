@@ -91,7 +91,7 @@ def has_cache_poison(domain, nameserver):
     result = True
     try:
         response = myresolver.query(name, 'DNSKEY')
-    except Exception:
+    except DNSException:
         logging.info('Cache poisonig is possible on server, \
                      Details=%s:%s, %s', domain, nameserver, 'OPEN')
         return True

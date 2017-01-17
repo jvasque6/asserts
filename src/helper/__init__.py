@@ -2,7 +2,7 @@
 
 """Paquete helper de FLUIDAsserts.
 
-Módulos de ayuda
+Modulos de ayuda
 """
 
 # standard imports
@@ -23,12 +23,12 @@ try:
 
     _LOG_SPEC_FILE = 'conf.spec'
     _LOG_SPEC_LOCATION = resource_stream(__name__, _LOG_SPEC_FILE)
-except Exception:
+except IOError:
     _LOG_CONFIG_LOCATION = 'conf/conf.cfg'
     _LOG_SPEC_LOCATION = 'conf/conf.spec'
 
 # pylint: disable=C0103
 cfg = ConfigObj(_LOG_CONFIG_LOCATION, configspec=_LOG_SPEC_LOCATION)
-cfg.validate(Validator())  # exit si la validación falla
+cfg.validate(Validator())  # exit si la validacion falla
 
 logging.config.dictConfig(cfg['logging'])

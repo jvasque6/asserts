@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificación del protocolo SSH."""
+"""Modulo para verificacion del protocolo SSH."""
 
 # standard imports
 import os
@@ -10,6 +10,8 @@ import paramiko
 
 # local imports
 # none
+
+# pylint: disable=R0914
 
 
 def ssh_user_pass(server, username, password, command):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 r"""
-Modulo para verificación de banners de diferentes protocolos.
+Modulo para verificacion de banners de diferentes protocolos.
 
 Ejemplo de uso:
 
@@ -31,6 +31,7 @@ import ssl
 # local imports
 # none
 
+# pylint: disable=R0204
 # pylint: disable=R0903
 
 
