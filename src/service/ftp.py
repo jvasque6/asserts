@@ -34,7 +34,7 @@ ANONYMOUS_USERNAME = 'anonymous'
 ANONYMOUS_PASSWORD = 'anonymous'
 
 
-def is_a_valid_user(ip_address, username, password, port=PORT):
+def __is_a_valid_user(ip_address, username, password, port=PORT):
     """Determina via FTP si un usuario es valido o no."""
     result = False
     try:
@@ -54,17 +54,17 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
 
 def user_without_password(ip_address, username):
     """Determina si el usuario no tiene clave."""
-    return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
+    return __is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
 def is_anonymous_enabled(ip_address):
     """Determina si un servidor FTP tiene habilitado conexion anonima."""
-    return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
+    return __is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
 def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
     """Determina si un servidor FTP permite autenticar al administrador."""
-    return is_a_valid_user(ip_address, username, password)
+    return __is_a_valid_user(ip_address, username, password)
 
 
 def is_version_visible(ip_address):
