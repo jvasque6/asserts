@@ -1,0 +1,47 @@
+---
+- name: Configure container with postfix 
+  hosts: container 
+  become: yes 
+  vars:
+        server_name: localhost
+  tasks:
+        - name: Set Postfix option type as internet site
+          debconf: name=postfix question="postfix/main_mailer_type" value="'Internet Site'" vtype="string"
+          tags: basic
+
+        - name: Set Postfix hostname 
+          debconf: name=postifx question="postfix/mailname" value="{{ server_name }}" vtype="string"
+          tags: basic
+
+        - name: Install postfix 
+          apt: name=postfix update_cache=yes cache_valid_time=3600
+          tags: basic
+
+        - name: Start postfix
+          service: name=postfix state=started
+          tags: basic
+
+# tag: weak
+#
+        - name: Enable VRFY 
+          lineinfile:
+              dest: /etc/postfix/main.cf
+              regexp: ^disable_vrfy_command
+              line: disable_vrfy_command = no
+          notify: restart postfix
+          tags: weak
+
+
+# tag: hard 
+#
+        - name: Disable VRFY 
+          lineinfile:
+              dest: /etc/postfix/main.cf
+              regexp: ^disable_vrfy_command
+              line: disable_vrfy_command = yes
+          notify: restart postfix
+          tags: hard
+
+  handlers:
+        - name: restart postfix
+          command: /etc/init.d/postfix reload 
