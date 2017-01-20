@@ -17,17 +17,23 @@ import smtplib
 # local imports
 # none
 
+PORT = 25
 
-def has_vrfy(ip_address, port):
+
+def has_vrfy(ip_address, port=PORT):
     """Tiene habilitado comando VRFY."""
     server = smtplib.SMTP(ip_address, port)
-    vrfy = server.verify('Admin')
+    vrfy = server.verify('root')
 
-    if str('250') in vrfy:
+    result = True
+    if 502 not in vrfy:
         logging.info('SMTP "VRFY" method, Details=%s, %s',
                      ip_address + ':' + str(port), 'OPEN')
+        result = True
     else:
         logging.info('SMTP "VRFY" method, Details=%s, %s',
                      ip_address + ':' + str(port), 'CLOSE')
+        result = False
 
     server.quit()
+    return result
