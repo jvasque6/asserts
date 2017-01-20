@@ -12,14 +12,14 @@ env = Environment()
 env['ENV']['PATH'] = os.environ['PATH']
 env['ENV']['HOME'] = os.environ['HOME']
 # Variables que se propagan del entorno exterior en caso de existir
-if 'VERBOSE' in os.environ: 
+if 'VERBOSE' in os.environ:
     env['ENV']['VERBOSE'] = os.environ['VERBOSE']
-if 'CIRCLECI' in os.environ: 
+if 'CIRCLECI' in os.environ:
     env['ENV']['CIRCLECI'] = os.environ['CIRCLECI']
 
 #
 # Variables que se definen aqui para todos los entornos
-# 
+#
 
 # no generar pyc pyo o directorio __pycache__
 env['ENV']['PYTHONDONTWRITEBYTECODE'] = 1
@@ -27,7 +27,7 @@ env['ENV']['PYTHONDONTWRITEBYTECODE'] = 1
 env['ENV']['PYTHONWARNINGS'] = 'ignore'
 
 # ubicación del cache de cambio de archivos
-env.SConsignFile('build/decider') 
+env.SConsignFile('build/decider')
 
 # Codigo fuente
 source_files = Glob('#src/*.py')
@@ -70,7 +70,7 @@ bdist_run = env.BDist(target=bdist_results, source=bdist_needs)
 env.Alias('bdist', bdist_results)
 
 # Builder para pylint
-pylint_results = ['#build/lint/pylint.txt'] 
+pylint_results = ['#build/lint/pylint.txt']
 env.Command(
     source=[source_files, test_files, '#conf/pylintrc'],
     action=['tox -c conf/tox.ini -- \
@@ -81,7 +81,7 @@ env.Command(
 env.Alias('pylint', pylint_results)
 
 # Builder para flake8
-flake8_results = ['#build/lint/flake8.txt'] 
+flake8_results = ['#build/lint/flake8.txt']
 env.Command(
     source=[source_files, test_files, '#setup.cfg'],
     action=['tox -c conf/tox.ini -- \
@@ -92,7 +92,7 @@ env.Command(
 env.Alias('flake8', flake8_results)
 
 # Builder para pdocstyle
-docst_results = ['#build/lint/pydocstyle.txt'] 
+docst_results = ['#build/lint/pydocstyle.txt']
 env.Command(
     source=[source_files, test_files],
     action=['tox -c conf/tox.ini -- \
@@ -117,7 +117,7 @@ SConscript('#doc/sconscript', exports=['env', 'source_files', 'deps_results'])
 
 #
 # Alias Agrupadores
-# 
+#
 env.Alias('dist', [sdist_results,
                    bdist_results])
 env.Alias('lint', [docst_results,

@@ -10,7 +10,7 @@ ENV FLAVOR hardened
 RUN apk update \
     && apk upgrade \
     && apk add --no-cache openldap openldap-clients openldap-back-hdb openldap-back-bdb ldapvi \
-    && rm -rf /var/cache/apk/* 
+    && rm -rf /var/cache/apk/*
 
 # Expone los puertos LDAP
 EXPOSE 389 636

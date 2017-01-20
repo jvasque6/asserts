@@ -14,15 +14,15 @@
             line='umask 0022'
             backup=yes
           tags: weak
-          
+
 #        - name: Remove sudo
 #          apt: name=sudo state=absent purge=yes
 #          tags: weak
-          
+
         - name: Remove clamav
           apt: name=clamav state=absent purge=yes
           tags: weak
-        
+
         - name: Install compilers
           apt: name={{item}} state=installed
           with_items:
@@ -36,13 +36,13 @@
             line='PermitRootLogin yes'
             backup=yes
           tags: weak
-            
+
 #        - name: Disable SYN Cookies
 #          shell:
 #            sysctl -w net.ipv4.tcp_syncookies=0
 #          tags: weak
 
-# tag: hard 
+# tag: hard
 # OS seguro
 
         - name: Configure safe umask
@@ -69,7 +69,7 @@
         - name: Install clamav
           apt: name=clamav update_cache=yes cache_valid_time=3600
           tags: hard
-          
+
         - name: Deny root remote login
           lineinfile:
             dest=/etc/ssh/sshd_config

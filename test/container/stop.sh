@@ -16,10 +16,10 @@ source $(git rev-parse --show-toplevel)/env.sh
 
 # detener contenedor si esta encendido en ambiente diferente a CIRCLECI
 if [ -z $(docker ps -q -f name="$SERVICE") ]; then
-  echo "Contenedor ya apagado."	 
+  echo "Contenedor ya apagado."
 elif [ -n "$CIRCLECI" ]; then
   # este es un workaround debido a que en CIRCLECI no hay docker rm/kill
-  echo "Contenedor a) encendido, pero b) en CIRCLECI, reutilizando."	 
+  echo "Contenedor a) encendido, pero b) en CIRCLECI, reutilizando."
   CONTAINER_ACTIVE="yes"
 else
   echo "Contenedor a) encendido, y b) no en CIRCLECI, deteniendo."

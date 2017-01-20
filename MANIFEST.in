@@ -1,4 +1,4 @@
-# excluir por defecto todos los archivos 
+# excluir por defecto todos los archivos
 global-exclude *
 
 # debe incluir el setup.py para que funcione el instalador

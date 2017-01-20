@@ -26,7 +26,7 @@ fi
 
 # iniciar contenedor si no ha iniciado
 if [ -z $(docker ps -q -f name="$SERVICE") ]; then
-  echo "Contenedor no ha iniciado, iniciando contenedor..."	 
+  echo "Contenedor no ha iniciado, iniciando contenedor..."
 
   # Crear dinamicamente claves de acceso al contenedor
   # La ruta de configuración SSH tambien esta parametrizado en test/setup/hosts
