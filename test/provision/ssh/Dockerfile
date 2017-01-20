@@ -1,5 +1,5 @@
 # Imagen base oficial del linux mas seguro y pequeno
-# Para SSH esta imagen tiene el openssh compilado sin 
+# Para SSH esta imagen tiene el openssh compilado sin
 # soporte SSH1
 FROM alpine:3.4
 

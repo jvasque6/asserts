@@ -1,7 +1,7 @@
 ---
 - name: Configure container with nginx
   hosts: container
-  become: yes 
+  become: yes
   tasks:
         - name: install nginx
           apt: name=nginx update_cache=yes

@@ -1,4 +1,4 @@
-# FLUIDAsserts 
+# FLUIDAsserts
 build/
 
 # Coverage files
@@ -8,7 +8,7 @@ build/
 *.py[cod]
 __pycache__/
 
-# Vim cache 
+# Vim cache
 *.swp
 
 # Compatibilidad hacia atras

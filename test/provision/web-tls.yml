@@ -1,7 +1,7 @@
 ---
 - name: Configure container with nginx and TLS
-  hosts: container 
-  become: yes 
+  hosts: container
+  become: yes
   vars:
         key_file: /etc/nginx/ssl/nginx.key
         cert_file: /etc/nginx/ssl/nginx.crt
@@ -34,7 +34,7 @@
         - name: copy TLS key
           copy: src=nginx/nginx-hard.key dest={{ key_file }} owner=root mode=0600
           notify: restart nginx
-          tags: basic 
+          tags: basic
 
         - name: copy TLS certificate
           copy: src=nginx/nginx-hard.crt dest={{ cert_file }}
@@ -48,34 +48,34 @@
         - name: copy weak nginx config file
           template: src=nginx/nginx-tls-weak.conf.j2 dest={{ conf_file }}
           notify: restart nginx
-          tags: weak 
+          tags: weak
 
         - name: copy TLS key
           copy: src=nginx/nginx-weak.key dest={{ key_file }} owner=root mode=0600
           notify: restart nginx
-          tags: weak 
+          tags: weak
 
         - name: copy TLS certificate
           copy: src=nginx/nginx-weak.crt dest={{ cert_file }}
           notify: restart nginx
-          tags: weak 
+          tags: weak
 
-# tag: hard 
+# tag: hard
 # certificado seguro
         - name: copy weak nginx config file
           template: src=nginx/nginx-tls-hard.conf.j2 dest={{ conf_file }}
           notify: restart nginx
-          tags: hard 
+          tags: hard
 
         - name: copy TLS key
           copy: src=nginx/nginx-hard.key dest={{ key_file }} owner=root mode=0600
           notify: restart nginx
-          tags: hard 
+          tags: hard
 
         - name: copy TLS certificate
           copy: src=nginx/nginx-hard.crt dest={{ cert_file }}
           notify: restart nginx
-          tags: hard 
+          tags: hard
 
   handlers:
         - name: restart nginx

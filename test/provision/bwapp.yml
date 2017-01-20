@@ -1,7 +1,7 @@
 ---
-- name: Installs and configure bWAPP for OWASP TOP 10 testing 
-  hosts: container 
-  become: yes 
+- name: Installs and configure bWAPP for OWASP TOP 10 testing
+  hosts: container
+  become: yes
   vars:
     servername: localhost
     mysql_db: bWAPP
@@ -31,24 +31,24 @@
         - php5
         - php5-mysql
         - php-pear
-        - php5-gd 
+        - php5-gd
         - libapache2-mod-php5
-        - dnsutils 
-        
-    - name: Start and enable MySQL 
+        - dnsutils
+
+    - name: Start and enable MySQL
       service: name=mysql state=started enabled=yes
 
     - name: Remove existing bWAPP install directory
       file: path=/var/www/html/bWAPP state=absent
 
     - name: Unarchive bWAPP
-      unarchive: 
+      unarchive:
         src: http://downloads.sourceforge.net/project/bwapp/bWAPP/bWAPP_latest.zip
         dest: /var/www/html
         remote_src: yes
 
-      
-    - name: Fix perms 
+
+    - name: Fix perms
       file: name=/var/www/html/bWAPP/{{ item }} mode=777
       with_items:
       - passwords/
