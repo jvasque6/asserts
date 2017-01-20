@@ -26,9 +26,9 @@ dependencies:
     - pip install --upgrade pip setuptools
     - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
   override:
-    - sudo apt-get install scons ansible ruby flake8 pylint
+    - sudo apt-get install scons ansible ruby
     - gem install overcommit
-    - pip install tox tox-pyenv
+    - pip install tox tox-pyenv flake8 pylint
 # descargar imagen de docker
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
