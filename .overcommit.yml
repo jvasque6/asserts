@@ -116,6 +116,11 @@ CommitMsg:
 # other checks that you want to run before you allow a commit object to be
 # created.
 PreCommit:
+  AuthorName:
+    enabled: false
+  AuthorEmail:
+    enabled: false
+
   ALL:
     problem_on_unmodified_line: report
     requires_files: true
