@@ -12,7 +12,6 @@ from http.cookies import BaseCookie
 
 # 3rd party imports
 import logging
-import requests
 
 # local imports
 from fluidasserts.helper import http_helper
