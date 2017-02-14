@@ -1,84 +1,65 @@
 ---
 - name: Configure OS of container
   hosts: container
-  become: yes
+  become: "yes"
   tasks:
-
-# tag: weak
-# OS inseguro
-
-        - name: Configure unsafe umask
-          lineinfile:
+      - name: Configure unsafe umask
+        lineinfile:
             dest=/etc/profile
             regexp='^umask'
             line='umask 0022'
             backup=yes
-          tags: weak
+        tags: weak
+      - name: Remove clamav
+        apt: name=clamav state=absent purge=yes
+        tags: weak
 
-#        - name: Remove sudo
-#          apt: name=sudo state=absent purge=yes
-#          tags: weak
-
-        - name: Remove clamav
-          apt: name=clamav state=absent purge=yes
-          tags: weak
-
-        - name: Install compilers
-          apt: name={{item}} state=installed
-          with_items:
+      - name: Install compilers
+        apt: name={{item}} state=installed
+        with_items:
             - gcc
-          tags: weak
+        tags: weak
 
-        - name: Allow root remote login
-          lineinfile:
+      - name: Allow root remote login
+        lineinfile:
             dest=/etc/ssh/sshd_config
             regexp='^PermitRootLogin'
             line='PermitRootLogin yes'
             backup=yes
-          tags: weak
+        tags: weak
 
-#        - name: Disable SYN Cookies
-#          shell:
-#            sysctl -w net.ipv4.tcp_syncookies=0
-#          tags: weak
+        # tag: hard
+        # OS seguro
 
-# tag: hard
-# OS seguro
-
-        - name: Configure safe umask
-          lineinfile:
+      - name: Configure safe umask
+        lineinfile:
             dest=/etc/profile
             regexp='^umask'
             line='umask 0027'
             backup=yes
-          tags: hard
+        tags: hard
 
-        - name: Install sudo
-          apt: name=sudo update_cache=yes cache_valid_time=3600
-          tags: hard
+      - name: Install sudo
+        apt: name=sudo update_cache=yes cache_valid_time=3600
+        tags: hard
 
-        - name: Uninstall compilers
-          apt: name={{item}} state=absent purge=yes
-          with_items:
+      - name: Uninstall compilers
+        apt: name={{item}} state=absent purge=yes
+        with_items:
             - g++
             - gcc
             - nasm
             - binutils
-          tags: hard
+        tags: hard
 
-        - name: Install clamav
-          apt: name=clamav update_cache=yes cache_valid_time=3600
-          tags: hard
+      - name: Install clamav
+        apt: name=clamav update_cache=yes cache_valid_time=3600
+        tags: hard
 
-        - name: Deny root remote login
-          lineinfile:
+      - name: Deny root remote login
+        lineinfile:
             dest=/etc/ssh/sshd_config
             regexp='^PermitRootLogin'
             line='PermitRootLogin no'
             backup=yes
-          tags: hard
-
-#        - name: Enable SYN Cookies
-#          shell:
-#            sysctl -w net.ipv4.tcp_syncookies=1
-#          tags: hard
+        tags: hard

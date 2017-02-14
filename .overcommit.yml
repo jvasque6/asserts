@@ -236,7 +236,7 @@ PreCommit:
   LineEndings:
     description: 'Check line endings'
     enabled: false
-    eol: "\n" # or "\r\n" for Windows-style newlines
+    eol: "\n"
 
   YamlLint:
     enabled: true
