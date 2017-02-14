@@ -1,20 +1,20 @@
+---
 #
 # Archivo de configuracion del servicio de integración continua.
 #
 
+# Este parche se requiere para que docker soporte especificación de IPs
 machine:
   pre:
-# Este parche se requiere para que docker soporte especificación de IPs
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+    - curl -sSL \
+      https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh\
+      | bash -s -- 1.10.0
   timezone: America/Bogota
   services:
     - docker
-# version de python del sistema base de CI, se requiere por ansible en 2.7
   python:
     version: 2.7.10
   post:
-# versiones de python contra los cuales se probara el producto.
-# https://circleci.com/docs/build-image-trusty/#python
     - pyenv global 2.7.11 3.4.4 3.5.1
 
 dependencies:
@@ -29,7 +29,6 @@ dependencies:
     - sudo apt-get install scons ansible ruby
     - gem install overcommit
     - pip install tox tox-pyenv flake8 pylint yamllint
-# descargar imagen de docker
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
@@ -40,13 +39,13 @@ dependencies:
 
 test:
   pre:
-     - scons lint
-     - overcommit --sign
-     - overcommit --run
+    - scons lint
+    - overcommit --sign
+    - overcommit --run
   override:
-     - scons test
-     - scons dist
-     - scons doc
+    - scons test
+    - scons dist
+    - scons doc
   post:
     - cp build/test/results.* $CIRCLE_TEST_REPORTS
     - cp -r build/coverage $CIRCLE_ARTIFACTS
