@@ -28,7 +28,7 @@ dependencies:
   override:
     - sudo apt-get install scons ansible ruby
     - gem install overcommit
-    - pip install tox tox-pyenv flake8 pylint
+    - pip install tox tox-pyenv flake8 pylint yamllint
 # descargar imagen de docker
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
