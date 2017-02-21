@@ -23,13 +23,16 @@ dependencies:
     - sudo apt-get update
     - pip install --upgrade pip setuptools
     - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
+    - echo $VAULT > ~/.vault.txt
   override:
     - sudo apt-get install scons ansible ruby
     - gem install overcommit
-    - pip install tox tox-pyenv flake8 pylint yamllint
+    - pip install tox tox-pyenv flake8 pylint yamllint twine
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
+    - ansible-vault --vault-password-file ~/.vault.txt decrypt conf/dotpypirc
+    - mv conf/dotpypirc ~/.pypirc
     - scons self
     - scons smoke
 
@@ -50,3 +53,4 @@ test:
     - cp -r build/lint $CIRCLE_ARTIFACTS
     - cp -r build/doc $CIRCLE_ARTIFACTS
     - cp -r build/dist $CIRCLE_ARTIFACTS
+    - python setup.py sdist bdist_wheel upload

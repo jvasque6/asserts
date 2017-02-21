@@ -11,7 +11,7 @@ from setuptools import setup
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.1',
+    version='0.0.20170221-3',
     url='https://fluid.la/',
     author='FLUID Engineering Team',
     author_email='engineering@fluid.la',
