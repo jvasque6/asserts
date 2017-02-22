@@ -53,4 +53,4 @@ test:
     - cp -r build/lint $CIRCLE_ARTIFACTS
     - cp -r build/doc $CIRCLE_ARTIFACTS
     - cp -r build/dist $CIRCLE_ARTIFACTS
-    - python setup.py sdist bdist_wheel upload
+    - if [[ $CIRCLE_BRANCH == "master" ]] ; then python setup.py sdist bdist_wheel upload; fi
