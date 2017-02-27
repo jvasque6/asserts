@@ -1,9 +1,9 @@
+---
 # Default configuration that all Overcommit configurations inherit from.
 #
 # This is an opinionated list of which hooks are valuable to run and what their
 # out-of-the-box settings should be.
-#------------------------------------------------------------------------------
-
+# ----------------------------------------------------------------------------
 # Loads Bundler context from a Gemfile. If false, does nothing (default).
 #
 # Specifying a Gemfile for Bundler to load allows you to control which gems are
@@ -162,8 +162,8 @@ PreCommit:
     required_executable: 'grep'
     flags: ['-IEHnw']
     keywords: ['BROKEN', 'BUG', 'ERROR',
-'FIXME', 'HACK', 'NOTE', 'OPTIMIZE',
-'REVIEW', 'TODO', 'WTF', 'XXX']
+               'FIXME', 'HACK', 'NOTE', 'OPTIMIZE',
+               'REVIEW', 'TODO', 'WTF', 'XXX']
 
   ForbiddenBranches:
     enabled: false
@@ -236,10 +236,10 @@ PreCommit:
   LineEndings:
     description: 'Check line endings'
     enabled: false
-    eol: "\n" # or "\r\n" for Windows-style newlines
+    eol: "\n"
 
   YamlLint:
-    enabled: false
+    enabled: true
     description: 'Analyze with YAMLlint'
     required_executable: 'yamllint'
     flags: ['--format=parsable']
@@ -249,7 +249,7 @@ PreCommit:
       - '**/*.yml'
 
   YamlSyntax:
-    enabled: false
+    enabled: true
     description: 'Check YAML syntax'
     required_library: 'yaml'
     include:

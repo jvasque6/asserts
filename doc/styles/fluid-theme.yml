@@ -1,3 +1,4 @@
+---
 # Theming tutorial
 # https://github.com/asciidoctor/asciidoctor-pdf/blob/master/docs/theming-guide.adoc
 
@@ -14,7 +15,8 @@ font:
       bold: tahoma-bold.ttf
       italic: tahoma-italic.ttf
       bold_italic: tahoma-bold-italic.ttf
-    # Noto Serif supports Latin, Latin-1 Supplement, Latin Extended-A, Greek, Cyrillic, Vietnamese & an assortment of symbols
+    # Noto Serif supports Latin, Latin-1 Supplement, Latin Extended-A,
+    # Greek, Cyrillic, Vietnamese & an assortment of symbols
     #    Noto Serif:
     #      normal: notoserif-regular-subset.ttf
     #  bold: notoserif-bold-subset.ttf
@@ -44,11 +46,11 @@ base:
   # color as hex string (leading # is optional)
   font_color: 333333
   # color as RGB array
-  #font_color: [51, 51, 51]
+  # font_color: [51, 51, 51]
   # color as CMYK array (approximated)
-  #font_color: [0, 0, 0, 0.92]
-  #font_color: [0, 0, 0, 92%]
-  #  font_family: Noto Serif
+  # font_color: [0, 0, 0, 0.92]
+  # font_color: [0, 0, 0, 92%]
+  # font_family: Noto Serif
   font_family: Tahoma
   font_size: 12
   line_height_length: 15
@@ -61,7 +63,7 @@ base:
   border_radius: 4
   border_width: 0.5
 # FIXME vertical_rhythm is weird; we should think in terms of ems
-#vertical_rhythm: $base_line_height_length * 2 / 3
+# vertical_rhythm: $base_line_height_length * 2 / 3
 # correct line height for Noto Serif metrics (comes with built-in line height)
 vertical_rhythm: $base_line_height_length
 horizontal_rhythm: $base_line_height_length
@@ -74,7 +76,7 @@ literal:
   font_color: 194D73
   font_family: M+ 1mn
 heading:
-  #font_color: 181818
+  # font_color: 181818
   font_color: $base_font_color
   font_family: $base_font_family
   font_style: bold
@@ -86,7 +88,7 @@ heading:
   h4_font_size: $base_font_size_large
   h5_font_size: $base_font_size
   h6_font_size: $base_font_size_small
-  #line_height: 1.4
+  # line_height: 1.4
   # correct line height for Noto Serif metrics (comes with built-in line height)
   line_height: 1
   margin_top: $vertical_rhythm * 0.4
@@ -118,7 +120,7 @@ caption:
   font_style: italic
   # FIXME perhaps set line_height instead of / in addition to margins?
   margin_inside: $vertical_rhythm / 3
-  #margin_inside: $vertical_rhythm / 4
+  # margin_inside: $vertical_rhythm / 4
   margin_outside: 0
 lead:
   font_size: $base_font_size_large
@@ -201,14 +203,14 @@ outline_list:
   indent: $horizontal_rhythm * 1.5
   # NOTE item_spacing applies to list items that do not have complex content
   item_spacing: $vertical_rhythm / 2
-  #marker_font_color: 404040
+  # marker_font_color: 404040
 table:
   background_color: $page_background_color
-  #head_background_color: <hex value>
-  #head_font_color: $base_font_color
+  # head_background_color: <hex value>
+  # head_font_color: $base_font_color
   head_font_style: bold
   even_row_background_color: f9f9f9
-  #odd_row_background_color: <hex value>
+  # odd_row_background_color: <hex value>
   foot_background_color: f0f0f0
   border_color: dddddd
   border_width: $base_border_width
@@ -216,20 +218,21 @@ table:
   cell_padding: [3, 3, 6, 3]
 toc:
   dot_leader_color: dddddd
-  #dot_leader_content: '. '
+  # dot_leader_content: '. '
   indent: $horizontal_rhythm
   line_height: 1.4
 footer:
   font_size: $base_font_size_small
   font_color: $base_font_color
-  # NOTE if background_color is set, background and border will span width of page
+  # NOTE if background_color is set, background and border
+  # will span width of page
   border_color: dddddd
   border_width: 0.25
   height: $base_line_height_length * 2.5
   line_height: 1
   padding: [$base_line_height_length / 2, 1, 0, 1]
   vertical_align: top
-  #image_vertical_align: <alignment> or <number>
+  # image_vertical_align: <alignment> or <number>
   # additional attributes for content:
   # * {page-count}
   # * {page-number}
@@ -240,11 +243,11 @@ footer:
   # * {section-or-chapter-title}
   recto_content:
     left: 'Fluidsignal Group S.A. ({author})'
-    #center: '{page-number}'
+    # center: '{page-number}'
     right: '{page-number} de {page-count}'
   verso_content:
     left: 'Fluidsignal Group S.A. ({author})'
-    #center: '{page-number}'
+    # center: '{page-number}'
     right: '{page-number} de {page-count}'
 header:
   font_size: $base_font_size_small
@@ -257,9 +260,9 @@ header:
   vertical_align: center
   recto_content:
     left: '{document-title} - {document-subtitle}'
-    #center: '{page-number}'
+    # center: '{page-number}'
     right: '{revnumber} del {revdate}'
   verso_content:
     left: '{document-title} - {document-subtitle}'
-    #center: '{page-number}'
+    # center: '{page-number}'
     right: '{revnumber} del {revdate}'
