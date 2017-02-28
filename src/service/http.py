@@ -17,6 +17,7 @@ import re
 # None
 
 # local imports
+from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 
 # pylint: disable=R0913
@@ -231,4 +232,22 @@ def is_sessionid_exposed(url, argument='sessionid', params=None,
         result = False
         logging.info('Session ID is hidden in %s, Details=%s, %s',
                      response_url, argument, 'CLOSE')
+    return result
+
+
+def is_version_visible(ip_address):
+    """Check if banner is visible."""
+    service = banner_helper.HTTPService()
+    banner = banner_helper.get_banner(service, ip_address)
+    version = banner_helper.get_version(service, banner)
+
+    result = True
+    if version:
+        result = True
+        logging.info('HTTP version visible on %s, Details=%s, %s, %s',
+                     ip_address, banner, version, 'OPEN')
+    else:
+        result = False
+        logging.info('HTTP version not visible on %s, Details=None, %s',
+                     ip_address, 'CLOSE')
     return result

@@ -69,17 +69,17 @@ def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
 
 def is_version_visible(ip_address):
     """Check if banner is visible."""
-    ftp_service = banner_helper.FTPService()
-    banner = banner_helper.get_banner(ftp_service, ip_address)
-    version = banner_helper.get_version(ftp_service, banner)
+    service = banner_helper.FTPService()
+    banner = banner_helper.get_banner(service, ip_address)
+    version = banner_helper.get_version(service, banner)
 
     result = True
     if version:
         result = True
-        logging.info('FTP version visible on %s, Details=%s, %s',
-                     ip_address, banner, version)
+        logging.info('FTP version visible on %s, Details=%s, %s, %s',
+                     ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('FTP version not visible on %s, Details=None',
-                     ip_address)
+        logging.info('FTP version not visible on %s, Details=None, %s',
+                     ip_address, 'CLOSE')
     return result

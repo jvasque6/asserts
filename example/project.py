@@ -16,7 +16,8 @@ función.
 # none
 
 # local imports (solo fluidasserts)
-from fluidasserts import ftp, pdf
+from fluidasserts.service import ftp, pdf
+from fluidasserts.format import pdf
 
 # PDF
 PDF_HARDENED = 'test/data/non-vulnerable.pdf'
