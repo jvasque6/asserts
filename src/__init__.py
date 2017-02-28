@@ -7,6 +7,7 @@ Config
 
 # standard imports
 import logging.config
+import os
 from pkg_resources import resource_stream
 
 # 3rd party imports
@@ -23,8 +24,10 @@ try:
     _LOG_SPEC_FILE = 'conf.spec'
     _LOG_SPEC_LOCATION = resource_stream(__name__, _LOG_SPEC_FILE)
 except IOError:
-    _LOG_CONFIG_LOCATION = 'conf/conf.cfg'
-    _LOG_SPEC_LOCATION = 'conf/conf.spec'
+    _LOG_CONFIG_LOCATION = os.path.join(os.path.curdir, 'conf',
+                                        'conf.cfg')
+    _LOG_SPEC_LOCATION = os.path.join(os.path.curdir, 'conf',
+                                      'conf.spec')
 
 # pylint: disable=C0103
 cfg = ConfigObj(_LOG_CONFIG_LOCATION, configspec=_LOG_SPEC_LOCATION)
