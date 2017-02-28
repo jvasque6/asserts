@@ -91,21 +91,6 @@
             - {regexp: "^ServerName", line: "ServerName {{ servername }}"}
             - {regexp: "^ServerTokens", line: "ServerTokens Prod"}
             - {regexp: "^ServerSignature", line: "ServerSignature Off"}
-        tags: hard
-        notify: Restart apache2
-
-      - name: Configure Apache parameters weak
-        lineinfile:
-            dest: /etc/apache2/apache2.conf
-            regexp: "{{ item.regexp }}"
-            line: "{{ item.line }}"
-            regexp: '^ServerName'
-            line: 'ServerName {{ servername }}'
-        with_items:
-            - {regexp: "^ServerName", line: "ServerName {{ servername }}"}
-            - {regexp: "^ServerTokens", line: "ServerTokens Prod"}
-            - {regexp: "^ServerSignature", line: "ServerSignature Off"}
-        tags: weak
         notify: Restart apache2
 
       - name: Create bWAPP database
