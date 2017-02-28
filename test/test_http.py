@@ -54,7 +54,7 @@ def mock_http(request):
 def deploy_bwapp():
     """Despliega bWAPP."""
     print('Deploying bWAPP')
-    subprocess.call('ansible-playbook test/provision/bwapp.yml',
+    subprocess.call('ansible-playbook test/provision/bwapp.yml --tags=hard',
                     shell=True)
 
 

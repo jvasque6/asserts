@@ -16,7 +16,7 @@ from cryptography.x509 import load_pem_x509_certificate
 from cryptography.x509.oid import NameOID
 
 # local imports
-# None
+from fluidasserts.helper import banner_helper
 
 PORT = 443
 
@@ -205,4 +205,22 @@ def is_tlsv1_enabled(site, port=PORT):
         result = False
     finally:
         sock.close()
+    return result
+
+
+def is_version_visible(ip_address):
+    """Check if banner is visible."""
+    service = banner_helper.HTTPSService()
+    banner = banner_helper.get_banner(service, ip_address)
+    version = banner_helper.get_version(service, banner)
+
+    result = True
+    if version:
+        result = True
+        logging.info('HTTP version visible on %s, Details=%s, %s',
+                     ip_address, banner, version)
+    else:
+        result = False
+        logging.info('HTTP version not visible on %s, Details=None',
+                     ip_address)
     return result

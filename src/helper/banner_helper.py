@@ -125,14 +125,15 @@ class HTTPService(Service):
     """HTTP Service definition."""
 
     def __init__(self, port=80, is_active=True, is_ssl=False,
-                 payload=None):
+                 payload='GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
                          payload=payload)
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(b'Server: (.*)', banner)
+        regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
+                                banner)
         if regex_match:
             return regex_match.group(1)
         return None
@@ -142,14 +143,15 @@ class HTTPSService(Service):
     """HTTPS Service definition."""
 
     def __init__(self, port=443, is_active=True, is_ssl=True,
-                 payload=None):
+                 payload='GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
                          payload=payload)
 
     def get_version(self, banner):
         """Get version."""
-        regex_match = re.search(b'Server: (.*)', banner)
+        regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
+                                banner)
         if regex_match:
             return regex_match.group(1)
         return None
