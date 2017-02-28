@@ -244,10 +244,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logging.info('HTTP version visible on %s, Details=%s, %s',
-                     ip_address, banner, version)
+        logging.info('HTTP version visible on %s, Details=%s, %s, %s',
+                     ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('HTTP version not visible on %s, Details=None',
-                     ip_address)
+        logging.info('HTTP version not visible on %s, Details=None, %s',
+                     ip_address, 'CLOSE')
     return result

@@ -30,7 +30,7 @@ def is_xfr_enabled(domain, nameserver):
         zone = dns.zone.from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
             logging.info('Zone transfer not enabled on server, \
-                         Details=%s:%s, %s',
+Details=%s:%s, %s',
                          domain, nameserver, 'CLOSE')
             result = False
         result = True
@@ -67,7 +67,7 @@ def is_dynupdate_enabled(domain, nameserver):
     result = True
     if response.rcode() > 0:
         logging.info('Zone update not enabled on server, \
-                     Details=%s:%s, %s', domain, nameserver, 'CLOSE')
+Details=%s:%s, %s', domain, nameserver, 'CLOSE')
         result = False
     else:
         logging.info('Zone update enabled on server, Details=%s:%s, %s',
@@ -93,23 +93,23 @@ def has_cache_poison(domain, nameserver):
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
         logging.info('Cache poisonig is possible on server, \
-                     Details=%s:%s, %s', domain, nameserver, 'OPEN')
+Details=%s:%s, %s', domain, nameserver, 'OPEN')
         return True
 
     if response.response.rcode() != 0:
         logging.info('Cache poisonig is possible on server, \
-                     Details=%s:%s, %s', domain, nameserver, 'OPEN')
+Details=%s:%s, %s', domain, nameserver, 'OPEN')
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
             logging.info('Cache poisonig possible on server, \
-                         Details=%s:%s, %s', domain,
+Details=%s:%s, %s', domain,
                          nameserver, 'OPEN')
             return True
         else:
             logging.info('Cache poisonig not possible on server, \
-                         Details=%s:%s, %s', domain,
+Details=%s:%s, %s', domain,
                          nameserver, 'CLOSE')
             result = False
 
@@ -141,12 +141,12 @@ def has_cache_snooping(nameserver):
     result = True
     if response.rcode() == 0:
         logging.info('Cache snooping possible on server, \
-                     Details=%s:%s, %s', domain,
+Details=%s:%s, %s', domain,
                      nameserver, 'OPEN')
         result = True
     else:
         logging.info('Cache snooping not possible on server, \
-                     Details=%s:%s, %s', domain,
+Details=%s:%s, %s', domain,
                      nameserver, 'CLOSE')
         result = False
 

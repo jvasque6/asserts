@@ -52,14 +52,14 @@ def is_cert_inactive(site, port=PORT):
                                          default_backend())
 
     if cert_obj.not_valid_after > datetime.datetime.now():
-        logging.info('Certificate is still valid, Details=Not valid\
-                      after: %s, Current time: %s, %s',
+        logging.info('Certificate is still valid, Details=Not valid \
+after: %s, Current time: %s, %s',
                      cert_obj.not_valid_after.isoformat(),
                      datetime.datetime.now().isoformat(), 'CLOSE')
         result = False
     else:
-        logging.info('Certificate is not valid, Details=Not valid\
-                      after: %s, Current time: %s, %s',
+        logging.info('Certificate is not valid, Details=Not valid \
+after: %s, Current time: %s, %s',
                      cert_obj.not_valid_after.isoformat(),
                      datetime.datetime.now().isoformat(), 'OPEN')
         result = True
@@ -79,14 +79,14 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         cert_obj.not_valid_after - cert_obj.not_valid_before
 
     if cert_validity.days <= max_validity_days:
-        logging.info('Certificate has a secure lifespan, Details=Not\
-                      valid before: %s, Not valid after: %s, %s',
+        logging.info('Certificate has a secure lifespan, Details=Not \
+valid before: %s, Not valid after: %s, %s',
                      cert_obj.not_valid_before.isoformat(),
                      cert_obj.not_valid_after.isoformat(), 'CLOSE')
         result = False
     else:
-        logging.info('Certificate has an insecure lifespan, Details=Not\
-                      valid before: %s, Not valid after: %s, %s',
+        logging.info('Certificate has an insecure lifespan, Details=Not \
+valid before: %s, Not valid after: %s, %s',
                      cert_obj.not_valid_before.isoformat(),
                      cert_obj.not_valid_after.isoformat(), 'OPEN')
         result = True
@@ -217,10 +217,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logging.info('HTTP version visible on %s, Details=%s, %s',
-                     ip_address, banner, version)
+        logging.info('HTTP version visible on %s, Details=%s, %s, %s',
+                     ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('HTTP version not visible on %s, Details=None',
-                     ip_address)
+        logging.info('HTTP version not visible on %s, Details=None, %s',
+                     ip_address, 'CLOSE')
     return result
