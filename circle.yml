@@ -31,8 +31,8 @@ dependencies:
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
-    - ansible-vault --vault-password-file ~/.vault.txt decrypt conf/dotpypirc
-    - mv conf/dotpypirc ~/.pypirc
+    - cp conf/dotpypirc ~/.pypirc
+    - ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
     - scons self
     - scons smoke
 
