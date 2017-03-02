@@ -63,8 +63,14 @@ class FTPService(Service):
     def __init__(self, port=21, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -127,8 +133,14 @@ class HTTPService(Service):
     def __init__(self, port=80, is_active=True, is_ssl=False,
                  payload=b'GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""

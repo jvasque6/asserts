@@ -16,6 +16,8 @@ import logging
 # local imports
 from fluidasserts.helper import http_helper
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def has_not_http_only(url, cookie_name):
     """Verifica si la cookie tiene el atributo httponly."""
@@ -25,11 +27,11 @@ def has_not_http_only(url, cookie_name):
     if cookie_name in cookielist:
         if cookielist[cookie_name]['httponly']:
             result = 'CLOSE'
-        logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, cookielist[cookie_name], result)
+        logger.info('%s HTTP cookie %s, Details=%s, %s',
+                    cookie_name, url, cookielist[cookie_name], result)
     else:
-        logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, 'Not Present', 'OPEN')
+        logger.info('%s HTTP cookie %s, Details=%s, %s',
+                    cookie_name, url, 'Not Present', 'OPEN')
     return result == 'OPEN'
 
 
@@ -41,9 +43,9 @@ def has_not_secure(url, cookie_name):
     if cookie_name in cookielist:
         if cookielist[cookie_name]['secure']:
             result = 'CLOSE'
-        logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, cookielist[cookie_name], result)
+        logger.info('%s HTTP cookie %s, Details=%s, %s',
+                    cookie_name, url, cookielist[cookie_name], result)
     else:
-        logging.info('%s HTTP cookie %s, Details=%s, %s',
-                     cookie_name, url, 'Not Present', 'OPEN')
+        logger.info('%s HTTP cookie %s, Details=%s, %s',
+                    cookie_name, url, 'Not Present', 'OPEN')
     return result == 'OPEN'

@@ -19,6 +19,8 @@ import smtplib
 
 PORT = 25
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def has_vrfy(ip_address, port=PORT):
     """Tiene habilitado comando VRFY."""
@@ -27,12 +29,12 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        logging.info('SMTP "VRFY" method, Details=%s, %s',
-                     ip_address + ':' + str(port), 'OPEN')
+        logger.info('SMTP "VRFY" method, Details=%s, %s',
+                    ip_address + ':' + str(port), 'OPEN')
         result = True
     else:
-        logging.info('SMTP "VRFY" method, Details=%s, %s',
-                     ip_address + ':' + str(port), 'CLOSE')
+        logger.info('SMTP "VRFY" method, Details=%s, %s',
+                    ip_address + ':' + str(port), 'CLOSE')
         result = False
 
     server.quit()

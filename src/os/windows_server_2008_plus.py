@@ -11,10 +11,11 @@ import re
 # local imports
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 
+logger = logging.getLogger('FLUIDAsserts')
+
+
 # pylint: disable=W1401
 # pylint: disable=W1402
-
-
 def is_os_compilers_installed(server, username, password):
     """Check if there's any compiler installed in Windows Server."""
     common_compilers = ['Visual', 'Python', 'Mingw', 'CygWin']
@@ -36,14 +37,14 @@ def is_os_compilers_installed(server, username, password):
 
     result = True
     if installed_compilers > 0:
-        logging.info('%s server has compilers installed,\
-                     Details=%s, %s', server,
-                     installed_software, 'OPEN')
+        logger.info('%s server has compilers installed,\
+                    Details=%s, %s', server,
+                    installed_software, 'OPEN')
         result = True
     else:
-        logging.info('%s server has not compilers installed,\
-                     Details=%s, %s', server,
-                     installed_software, 'CLOSE')
+        logger.info('%s server has not compilers installed,\
+Details=%s, %s', server,
+                    installed_software, 'CLOSE')
         result = False
     return result
 
@@ -69,14 +70,14 @@ def is_os_antimalware_not_installed(server, username, password):
 
     result = True
     if installed_av > 0:
-        logging.info('%s server has an antivirus installed,\
-                     Details=%s, %s', server,
-                     installed_software, 'CLOSE')
+        logger.info('%s server has an antivirus installed,\
+Details=%s, %s', server,
+                    installed_software, 'CLOSE')
         result = False
     else:
-        logging.info('%s server has not an antivirus installed,\
-                     Details=%s, %s', server,
-                     installed_software, 'OPEN')
+        logger.info('%s server has not an antivirus installed,\
+Details=%s, %s', server,
+                    installed_software, 'OPEN')
         result = True
     return result
 
@@ -85,8 +86,8 @@ def is_os_syncookies_disabled(server):
     """Check if SynCookies or similar is enabled in Windows Server."""
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
-    logging.info('%s server has SYN Cookies enabled,\
-                     Details=%s', server, 'CLOSE')
+    logger.info('%s server has SYN Cookies enabled,\
+Details=%s', server, 'CLOSE')
     return False
 
 
@@ -117,9 +118,9 @@ def is_protected_users_disabled(server, username, password):
 
     result = True
     if installed_patches == len(security_patches):
-        logging.info('%s server has all required patches installed,\
-                     Details=%s, %s', server,
-                     ",".join(security_patches), 'CLOSE')
+        logger.info('%s server has all required patches installed,\
+Details=%s, %s', server,
+                    ",".join(security_patches), 'CLOSE')
         result = False
     else:
         cmd = b'reg query \
@@ -134,12 +135,12 @@ def is_protected_users_disabled(server, username, password):
                      has_logon_credentials,
                      re.IGNORECASE) is not None:
             result = False
-            logging.info('%s server has UseLogonCredentials\
-                         set to 0x0 Details=%s, %s', server,
-                         'UseLogonCredential', 'CLOSE')
+            logger.info('%s server has UseLogonCredentials\
+set to 0x0 Details=%s, %s', server,
+                        'UseLogonCredential', 'CLOSE')
         else:
             result = True
-            logging.info('%s server has not all required patches installed,\
-                         Details=%s, %s', server,
-                         ",".join(security_patches), 'OPEN')
+            logger.info('%s server has not all required patches installed,\
+Details=%s, %s', server,
+                        ",".join(security_patches), 'OPEN')
     return result

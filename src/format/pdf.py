@@ -17,6 +17,8 @@ from PyPDF2 import PdfFileReader
 
 # local imports
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def __has_attribute(filename, metaname):
     """Verifica si un atributo docinfo se encuentra en el PDF."""
@@ -24,12 +26,12 @@ def __has_attribute(filename, metaname):
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
-        logging.info('%s metadata in %s, Details=%s, %s',
-                     metaname, filename, metavalue, 'OPEN')
+        logger.info('%s metadata in %s, Details=%s, %s',
+                    metaname, filename, metavalue, 'OPEN')
         result = True
     else:
-        logging.info('%s metadata in %s, Details=%s, %s',
-                     metaname, filename, '', 'CLOSE')
+        logger.info('%s metadata in %s, Details=%s, %s',
+                    metaname, filename, '', 'CLOSE')
         result = False
     return result
 

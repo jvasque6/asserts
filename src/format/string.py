@@ -10,6 +10,8 @@ import logging
 # local imports
 # None
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def __check_password_strength(password, length):
     """Function to check if a user password is secure."""
@@ -26,26 +28,26 @@ def __check_password_strength(password, length):
     result = True
 
     if len(password) < length:
-        logging.info('%s is too short. Details=%s, %s',
-                     password, len(password), 'OPEN')
+        logger.info('%s is too short. Details=%s, %s',
+                    password, len(password), 'OPEN')
         result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
-        logging.info('%s is too weak. Details=%s, %s',
-                     password, "Caps: " + str(caps) +
-                     " Lower: " + str(lower) +
-                     " Numbers: " + str(nums) +
-                     " Special: " + str(special), 'OPEN')
+        logger.info('%s is too weak. Details=%s, %s',
+                    password, "Caps: " + str(caps) +
+                    " Lower: " + str(lower) +
+                    " Numbers: " + str(nums) +
+                    " Special: " + str(special), 'OPEN')
         result = True
     elif password in words:
-        logging.info('%s is a dictionary password. Details=%s',
-                     password, 'OPEN')
+        logger.info('%s is a dictionary password. Details=%s',
+                    password, 'OPEN')
         result = True
     else:
-        logging.info('%s password is secure. Details=%s, %s',
-                     password, "Caps: " + str(caps) +
-                     " Lower: " + str(lower) +
-                     " Numbers: " + str(nums) +
-                     " Special: " + str(special), 'CLOSE')
+        logger.info('%s password is secure. Details=%s, %s',
+                    password, "Caps: " + str(caps) +
+                    " Lower: " + str(lower) +
+                    " Numbers: " + str(nums) +
+                    " Special: " + str(special), 'CLOSE')
         result = False
 
     return result
@@ -71,12 +73,12 @@ def is_otp_token_insecure(password):
 
     result = True
     if len(password) < min_password_len:
-        logging.info('%s OTP token is too short. Details=%s, %s',
-                     password, len(password), 'OPEN')
+        logger.info('%s OTP token is too short. Details=%s, %s',
+                    password, len(password), 'OPEN')
         result = True
     else:
-        logging.info('%s OTP token is secure. Details=%s, %s',
-                     password, len(password), 'CLOSE')
+        logger.info('%s OTP token is secure. Details=%s, %s',
+                    password, len(password), 'CLOSE')
         result = False
 
     return result
@@ -91,12 +93,12 @@ def is_ssid_insecure(ssid):
 
     result = True
     if ssid in words:
-        logging.info('%s is a dictionary password. Details=%s',
-                     ssid, 'OPEN')
+        logger.info('%s is a dictionary password. Details=%s',
+                    ssid, 'OPEN')
         result = True
     else:
-        logging.info('%s is a secure SSID. Details=%s',
-                     ssid, 'CLOSE')
+        logger.info('%s is a secure SSID. Details=%s',
+                    ssid, 'CLOSE')
         result = False
 
     return result
