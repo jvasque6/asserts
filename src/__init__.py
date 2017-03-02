@@ -8,29 +8,36 @@ Config
 # standard imports
 import logging.config
 import os
-from pkg_resources import resource_stream
+import tempfile
 
 # 3rd party imports
-from configobj import ConfigObj
-from validate import Validator
+# none
 
 # local imports
 # none
 
-try:
-    _LOG_CONFIG_FILE = 'conf.cfg'
-    _LOG_CONFIG_LOCATION = resource_stream(__name__, _LOG_CONFIG_FILE)
 
-    _LOG_SPEC_FILE = 'conf.spec'
-    _LOG_SPEC_LOCATION = resource_stream(__name__, _LOG_SPEC_FILE)
-except IOError:
-    _LOG_CONFIG_LOCATION = os.path.join(os.path.curdir, 'conf',
-                                        'conf.cfg')
-    _LOG_SPEC_LOCATION = os.path.join(os.path.curdir, 'conf',
-                                      'conf.spec')
+# create logger
+logger = logging.getLogger('FLUIDAsserts')
+logger.setLevel(logging.DEBUG)
 
-# pylint: disable=C0103
-cfg = ConfigObj(_LOG_CONFIG_LOCATION, configspec=_LOG_SPEC_LOCATION)
-cfg.validate(Validator())  # exit si la validacion falla
+# create console handler and set level to debug
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+tmp_dir = tempfile.gettempdir()
+file_handler = logging.FileHandler(
+    os.path.join(tmp_dir, 'fluidasserts.log')
+    )
+file_handler.setLevel(logging.DEBUG)
 
-logging.config.dictConfig(cfg['logging'])
+# create formatter
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# add formatter to console_handler
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+# add handlers to logger
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)

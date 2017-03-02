@@ -17,6 +17,8 @@ import re
 # 3rd party imports
 from bs4 import BeautifulSoup
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def __has_attribute(filename, selector, tag, attr, value):
     """Funcion __has_attribute.
@@ -76,13 +78,13 @@ def has_not_autocomplete(filename, selector):
     if has_attr is False:
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, '', status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, '', status)
     else:
         status = 'CLOSE'
         result = False
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, value, status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, value, status)
 
     return result
 
@@ -113,8 +115,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, value, status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, value, status)
 
         return result
 
@@ -128,8 +130,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, value, status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, value, status)
 
         return result
 
@@ -145,8 +147,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, value, status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, value, status)
 
         return result
 
@@ -160,14 +162,14 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = 'OPEN'
         result = True
-        logging.info('%s attribute in %s, Details=%s, %s',
-                     attr, filename, value, status)
+        logger.info('%s attribute in %s, Details=%s, %s',
+                    attr, filename, value, status)
 
         return result
 
     status = 'CLOSE'
     result = False
-    logging.info('%s attribute in %s, Details=%s, %s',
-                 attr, filename, value, status)
+    logger.info('%s attribute in %s, Details=%s, %s',
+                attr, filename, value, status)
 
     return result

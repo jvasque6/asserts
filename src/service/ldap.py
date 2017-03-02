@@ -15,6 +15,8 @@ from ldap3 import Server
 PORT = 389
 SSL_PORT = 636
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def is_anonymous_bind_allowed(server):
     """Function is_anonymous_bind_allowed.
@@ -28,19 +30,19 @@ def is_anonymous_bind_allowed(server):
         server = Server(server)
         conn = Connection(server)
     except LDAPExceptionError:
-        logging.info('LDAP anonymous bind failed, Details=%s, %s',
-                     server, 'CLOSED')
+        logger.info('LDAP anonymous bind failed, Details=%s, %s',
+                    server, 'CLOSED')
         return False
     finally:
         conn.unbind()
 
     if conn.bind() is True:
-        logging.info('LDAP anonymous bind success, Details=%s, %s',
-                     server, 'OPEN')
+        logger.info('LDAP anonymous bind success, Details=%s, %s',
+                    server, 'OPEN')
         result = True
     else:
-        logging.info('LDAP anonymous bind failed, Details=%s, %s',
-                     server, 'CLOSED')
+        logger.info('LDAP anonymous bind failed, Details=%s, %s',
+                    server, 'CLOSED')
         result = False
 
     return result

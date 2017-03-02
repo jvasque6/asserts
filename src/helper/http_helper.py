@@ -33,6 +33,8 @@ HDR_RGX = {
     'www-authenticate': '^((?!Basic).)*$'
 }
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 class HTTPSession(object):
     """Class of HTTP request objects."""
@@ -95,14 +97,14 @@ class HTTPSession(object):
 
         if http_req.status_code == code:
             self.is_auth = True
-            logging.info('POST Authentication %s, Details=%s',
-                         self.url, 'Success with ' + str(self.data))
+            logger.info('POST Authentication %s, Details=%s',
+                        self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
-            logging.info('POST Authentication %s, Details=%s',
-                         self.url,
-                         'Error code (' + str(http_req.status_code) +
-                         ') ' + str(self.data))
+            logger.info('POST Authentication %s, Details=%s',
+                        self.url,
+                        'Error code (' + str(http_req.status_code) +
+                        ') ' + str(self.data))
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
@@ -122,11 +124,11 @@ class HTTPSession(object):
         http_req = self.do_request()
         if http_req.text.find(text) >= 0:
             self.is_auth = True
-            logging.info('POST Authentication %s, Details=%s',
-                         self.url, 'Success with ' + str(self.data))
+            logger.info('POST Authentication %s, Details=%s',
+                        self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
-            logging.info(
+            logger.info(
                 'POST Authentication %s, Details=%s',
                 self.url,
                 'Error text (' + http_req.text + ') ' + str(self.data))
@@ -154,19 +156,19 @@ class HTTPSession(object):
                 self.cookies = resp.cookies.get_dict()
                 self.response = resp
                 self.is_auth = True
-                logging.info(
+                logger.info(
                     'HTTPBasicAuth %s, Details=%s',
                     self.url,
                     'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                logging.info('HTTPBasicAuth %s, Details=%s',
-                             self.url,
-                             'Fail with [ ' + user + ' : ' + passw + ' ]')
+                logger.info('HTTPBasicAuth %s, Details=%s',
+                            self.url,
+                            'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
-            logging.info('HTTPBasicAuth %s, Details=%s', self.url,
-                         'HTTPBasicAuth Not present')
+            logger.info('HTTPBasicAuth %s, Details=%s', self.url,
+                        'HTTPBasicAuth Not present')
 
     def oauth_auth(self, user, passw):
         """XXXXXXXXXXXXXX."""
@@ -180,18 +182,18 @@ class HTTPSession(object):
                 self.cookies = resp.cookies.get_dict()
                 self.response = resp
                 self.is_auth = True
-                logging.info(
+                logger.info(
                     'HTTPOAuth %s, Details=%s',
                     self.url,
                     'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                logging.info('HTTPOAuth %s, Details=%s', self.url,
-                             'Fail with [ ' + user + ' : ' + passw + ' ]')
+                logger.info('HTTPOAuth %s, Details=%s', self.url,
+                            'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
-            logging.info('HTTPOAuth %s, Details=%s', self.url,
-                         'HTTPOAuth Not present')
+            logger.info('HTTPOAuth %s, Details=%s', self.url,
+                        'HTTPOAuth Not present')
 
 
 def options_request(url):
@@ -208,14 +210,14 @@ def has_method(url, method):
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            logging.info('%s HTTP Method %s, Details=%s, %s',
-                         url, method, 'Is Present', 'OPEN')
+            logger.info('%s HTTP Method %s, Details=%s, %s',
+                        url, method, 'Is Present', 'OPEN')
         else:
-            logging.info('%s HTTP Method %s, Details=%s, %s',
-                         url, method, 'Not Present', 'CLOSE')
+            logger.info('%s HTTP Method %s, Details=%s, %s',
+                        url, method, 'Not Present', 'CLOSE')
             result = False
     else:
-        logging.info('Method %s not allowed in %s', method, url)
+        logger.info('Method %s not allowed in %s', method, url)
         result = False
     return result
 
@@ -231,12 +233,12 @@ def has_insecure_header(url, header):
         state = (lambda val: 'CLOSE' if re.match(
             HDR_RGX[header],
             value) is not None else 'OPEN')(value)
-        logging.info('%s HTTP header %s, Details=%s, %s',
-                     header, url, value, state)
+        logger.info('%s HTTP header %s, Details=%s, %s',
+                    header, url, value, state)
         result = state != 'CLOSE'
     else:
-        logging.info('%s HTTP header %s, Details=%s, %s',
-                     header, url, 'Not Present', 'OPEN')
+        logger.info('%s HTTP header %s, Details=%s, %s',
+                    header, url, 'Not Present', 'OPEN')
         result = True
 
     return result

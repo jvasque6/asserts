@@ -19,6 +19,8 @@ from dns.zone import NoSOA
 # local imports
 # None
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def is_xfr_enabled(domain, nameserver):
     """Check if zone transfer is enabled."""
@@ -29,28 +31,28 @@ def is_xfr_enabled(domain, nameserver):
     try:
         zone = dns.zone.from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
-            logging.info('Zone transfer not enabled on server, \
+            logger.info('Zone transfer not enabled on server, \
 Details=%s:%s, %s',
-                         domain, nameserver, 'CLOSE')
+                        domain, nameserver, 'CLOSE')
             result = False
         result = True
-        logging.info('Zone transfer enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'OPEN')
+        logger.info('Zone transfer enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'OPEN')
     except NoSOA:
-        logging.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'CLOSE')
+        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
         result = False
     except NoNS:
-        logging.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'CLOSE')
+        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
         result = False
     except BadZone:
-        logging.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'CLOSE')
+        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
         result = False
     except DNSException:
-        logging.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'CLOSE')
+        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
         result = False
 
     return result
@@ -66,12 +68,12 @@ def is_dynupdate_enabled(domain, nameserver):
 
     result = True
     if response.rcode() > 0:
-        logging.info('Zone update not enabled on server, \
+        logger.info('Zone update not enabled on server, \
 Details=%s:%s, %s', domain, nameserver, 'CLOSE')
         result = False
     else:
-        logging.info('Zone update enabled on server, Details=%s:%s, %s',
-                     domain, nameserver, 'OPEN')
+        logger.info('Zone update enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'OPEN')
         result = True
 
     return result
@@ -92,25 +94,25 @@ def has_cache_poison(domain, nameserver):
     try:
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
-        logging.info('Cache poisonig is possible on server, \
+        logger.info('Cache poisonig is possible on server, \
 Details=%s:%s, %s', domain, nameserver, 'OPEN')
         return True
 
     if response.response.rcode() != 0:
-        logging.info('Cache poisonig is possible on server, \
+        logger.info('Cache poisonig is possible on server, \
 Details=%s:%s, %s', domain, nameserver, 'OPEN')
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
-            logging.info('Cache poisonig possible on server, \
+            logger.info('Cache poisonig possible on server, \
 Details=%s:%s, %s', domain,
-                         nameserver, 'OPEN')
+                        nameserver, 'OPEN')
             return True
         else:
-            logging.info('Cache poisonig not possible on server, \
+            logger.info('Cache poisonig not possible on server, \
 Details=%s:%s, %s', domain,
-                         nameserver, 'CLOSE')
+                        nameserver, 'CLOSE')
             result = False
 
     return result
@@ -140,14 +142,14 @@ def has_cache_snooping(nameserver):
 
     result = True
     if response.rcode() == 0:
-        logging.info('Cache snooping possible on server, \
+        logger.info('Cache snooping possible on server, \
 Details=%s:%s, %s', domain,
-                     nameserver, 'OPEN')
+                    nameserver, 'OPEN')
         result = True
     else:
-        logging.info('Cache snooping not possible on server, \
+        logger.info('Cache snooping not possible on server, \
 Details=%s:%s, %s', domain,
-                     nameserver, 'CLOSE')
+                    nameserver, 'CLOSE')
         result = False
 
     return result

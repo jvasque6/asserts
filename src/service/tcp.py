@@ -17,6 +17,8 @@ import socket
 # local imports
 # none
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def is_port_open(ipaddress, port):
     """Check if a given port on an IP address is open."""
@@ -34,6 +36,6 @@ def is_port_open(ipaddress, port):
     else:
         result = False
     sock.close()
-    logging.info('Checking port, Details=%s, %s',
-                 ipaddress + ':' + str(port), status)
+    logger.info('Checking port, Details=%s, %s',
+                ipaddress + ':' + str(port), status)
     return result

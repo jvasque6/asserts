@@ -20,6 +20,8 @@ from fluidasserts.helper import banner_helper
 
 PORT = 443
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def is_cert_cn_not_equal_to_site(site, port=PORT):
     """Function to check whether cert cn is equal to site."""
@@ -34,12 +36,12 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
     wildcard_site = '*.' + site
 
     if site != cert_cn and wildcard_site != cert_cn:
-        logging.info('%s CN not equals to site, Details=%s, %s',
-                     cert_cn, site, 'OPEN')
+        logger.info('%s CN not equals to site, Details=%s, %s',
+                    cert_cn, site, 'OPEN')
         result = True
     else:
-        logging.info('%s CN equals to site, Details=%s, %s',
-                     cert_cn, site, 'CLOSE')
+        logger.info('%s CN equals to site, Details=%s, %s',
+                    cert_cn, site, 'CLOSE')
         result = False
     return result
 
@@ -52,16 +54,16 @@ def is_cert_inactive(site, port=PORT):
                                          default_backend())
 
     if cert_obj.not_valid_after > datetime.datetime.now():
-        logging.info('Certificate is still valid, Details=Not valid \
+        logger.info('Certificate is still valid, Details=Not valid \
 after: %s, Current time: %s, %s',
-                     cert_obj.not_valid_after.isoformat(),
-                     datetime.datetime.now().isoformat(), 'CLOSE')
+                    cert_obj.not_valid_after.isoformat(),
+                    datetime.datetime.now().isoformat(), 'CLOSE')
         result = False
     else:
-        logging.info('Certificate is not valid, Details=Not valid \
+        logger.info('Certificate is not valid, Details=Not valid \
 after: %s, Current time: %s, %s',
-                     cert_obj.not_valid_after.isoformat(),
-                     datetime.datetime.now().isoformat(), 'OPEN')
+                    cert_obj.not_valid_after.isoformat(),
+                    datetime.datetime.now().isoformat(), 'OPEN')
         result = True
     return result
 
@@ -79,16 +81,16 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         cert_obj.not_valid_after - cert_obj.not_valid_before
 
     if cert_validity.days <= max_validity_days:
-        logging.info('Certificate has a secure lifespan, Details=Not \
+        logger.info('Certificate has a secure lifespan, Details=Not \
 valid before: %s, Not valid after: %s, %s',
-                     cert_obj.not_valid_before.isoformat(),
-                     cert_obj.not_valid_after.isoformat(), 'CLOSE')
+                    cert_obj.not_valid_before.isoformat(),
+                    cert_obj.not_valid_after.isoformat(), 'CLOSE')
         result = False
     else:
-        logging.info('Certificate has an insecure lifespan, Details=Not \
+        logger.info('Certificate has an insecure lifespan, Details=Not \
 valid before: %s, Not valid after: %s, %s',
-                     cert_obj.not_valid_before.isoformat(),
-                     cert_obj.not_valid_after.isoformat(), 'OPEN')
+                    cert_obj.not_valid_before.isoformat(),
+                    cert_obj.not_valid_after.isoformat(), 'OPEN')
         result = True
     return result
 
@@ -126,16 +128,16 @@ def is_pfs_disabled(site, port=PORT):
     try:
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet.encode('utf-8'))
-        logging.info('PFS enabled on site, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('PFS enabled on site, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     except ssl.SSLError:
-        logging.info('PFS not enabled on site, Details=%s, %s',
-                     site, 'OPEN')
+        logger.info('PFS not enabled on site, Details=%s, %s',
+                    site, 'OPEN')
         result = True
     except socket.error:
-        logging.info('Port is closed for PFS check, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('Port is closed for PFS check, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     finally:
         wrapped_socket.close()
@@ -159,16 +161,16 @@ def is_sslv3_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logging.info('SSLv3 enabled on site, Details=%s, %s',
-                     site, 'OPEN')
+        logger.info('SSLv3 enabled on site, Details=%s, %s',
+                    site, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logging.info('SSLv3 not enabled on site, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('SSLv3 not enabled on site, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     except socket.error:
-        logging.info('Port is closed for SSLv3 check, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('Port is closed for SSLv3 check, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     finally:
         sock.close()
@@ -192,16 +194,16 @@ def is_tlsv1_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logging.info('TLSv1 enabled on site, Details=%s, %s',
-                     site, 'OPEN')
+        logger.info('TLSv1 enabled on site, Details=%s, %s',
+                    site, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logging.info('TLSv1 not enabled on site, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('TLSv1 not enabled on site, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     except socket.error:
-        logging.info('Port is closed for TLSv1 check, Details=%s, %s',
-                     site, 'CLOSE')
+        logger.info('Port is closed for TLSv1 check, Details=%s, %s',
+                    site, 'CLOSE')
         result = False
     finally:
         sock.close()
@@ -217,10 +219,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logging.info('HTTP version visible on %s, Details=%s, %s, %s',
-                     ip_address, banner, version, 'OPEN')
+        logger.info('HTTP version visible on %s, Details=%s, %s, %s',
+                    ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('HTTP version not visible on %s, Details=None, %s',
-                     ip_address, 'CLOSE')
+        logger.info('HTTP version not visible on %s, Details=None, %s',
+                    ip_address, 'CLOSE')
     return result

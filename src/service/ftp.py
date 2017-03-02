@@ -33,6 +33,8 @@ ADMIN_USERNAME = 'root'
 ANONYMOUS_USERNAME = 'anonymous'
 ANONYMOUS_PASSWORD = 'anonymous'
 
+logger = logging.getLogger('FLUIDAsserts')
+
 
 def is_a_valid_user(ip_address, username, password, port=PORT):
     """Determina via FTP si un usuario es valido o no."""
@@ -43,11 +45,11 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.login(username, password)
         ftp.quit()
         result = True
-        logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip_address, username + ':' + password, 'OPEN')
+        logger.info('FTP Authentication %s, Details=%s, %s',
+                    ip_address, username + ':' + password, 'OPEN')
     except error_perm:
-        logging.info('FTP Authentication %s, Details=%s, %s',
-                     ip_address, username + ':' + password, 'CLOSE')
+        logger.info('FTP Authentication %s, Details=%s, %s',
+                    ip_address, username + ':' + password, 'CLOSE')
         result = False
     return result
 
@@ -76,10 +78,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logging.info('FTP version visible on %s, Details=%s, %s, %s',
-                     ip_address, banner, version, 'OPEN')
+        logger.info('FTP version visible on %s, Details=%s, %s, %s',
+                    ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('FTP version not visible on %s, Details=None, %s',
-                     ip_address, 'CLOSE')
+        logger.info('FTP version not visible on %s, Details=None, %s',
+                    ip_address, 'CLOSE')
     return result

@@ -20,9 +20,10 @@ import re
 from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 
+logger = logging.getLogger('FLUIDAsserts')
+
+
 # pylint: disable=R0913
-
-
 def generic_http_assert(url, expected_regex, params=None,
                         data='', files=None, cookies=None):
     """Generic HTTP assert method."""
@@ -35,14 +36,14 @@ def generic_http_assert(url, expected_regex, params=None,
     the_page = response.text
 
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
-        logging.info('%s HTTP assertion not found, Details=%s, %s',
-                     http_session.url, expected_regex, 'OPEN')
-        logging.info(the_page)
+        logger.info('%s HTTP assertion not found, Details=%s, %s',
+                    http_session.url, expected_regex, 'OPEN')
+        logger.info(the_page)
         return True
     else:
-        logging.info('%s HTTP assertion succeed, Details=%s, %s',
-                     http_session.url, expected_regex, 'CLOSE')
-        logging.info(the_page)
+        logger.info('%s HTTP assertion succeed, Details=%s, %s',
+                    http_session.url, expected_regex, 'CLOSE')
+        logger.info(the_page)
         return False
 
 
@@ -226,12 +227,12 @@ def is_sessionid_exposed(url, argument='sessionid', params=None,
     result = True
     if re.search(regex, response_url):
         result = True
-        logging.info('Session ID is exposed in %s, Details=%s, %s',
-                     response_url, argument, 'OPEN')
+        logger.info('Session ID is exposed in %s, Details=%s, %s',
+                    response_url, argument, 'OPEN')
     else:
         result = False
-        logging.info('Session ID is hidden in %s, Details=%s, %s',
-                     response_url, argument, 'CLOSE')
+        logger.info('Session ID is hidden in %s, Details=%s, %s',
+                    response_url, argument, 'CLOSE')
     return result
 
 
@@ -244,10 +245,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logging.info('HTTP version visible on %s, Details=%s, %s, %s',
-                     ip_address, banner, version, 'OPEN')
+        logger.info('HTTP version visible on %s, Details=%s, %s, %s',
+                    ip_address, banner, version, 'OPEN')
     else:
         result = False
-        logging.info('HTTP version not visible on %s, Details=None, %s',
-                     ip_address, 'CLOSE')
+        logger.info('HTTP version not visible on %s, Details=None, %s',
+                    ip_address, 'CLOSE')
     return result
