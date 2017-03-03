@@ -7,11 +7,17 @@ un instalador estandar de FLUIDAsserts.
 """
 
 from setuptools import setup, find_packages
+version_suffix = ''
+try:
+    with open('LOCAL-VERSION') as f:
+        version_suffix = f.readline().strip()
+except IOError:
+    pass
 
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.0.20170303.2',
+    version='0.2' + version_suffix,
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
@@ -54,6 +60,7 @@ setup(
         'lxml==3.7.1',     	     # src.http_helper
         'dnspython==1.15.0',         # src.dns
         'tlslite-ng==0.6.0',         # src.http_ssl
+        'pyOpenSSL==16.2.0',         # src.http_ssl
 
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in

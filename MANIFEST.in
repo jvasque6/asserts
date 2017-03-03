@@ -10,3 +10,4 @@ recursive-include src *.py
 # incluir los archivos de configuracion del software
 include conf/conf.cfg
 include conf/conf.spec
+include LOCAL-VERSION
