@@ -14,7 +14,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts.os import linux_generic
+from fluidasserts.system import linux_generic
 
 
 # Constants
