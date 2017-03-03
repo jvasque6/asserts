@@ -87,8 +87,14 @@ class SSHService(Service):
     def __init__(self, port=22, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -101,8 +107,14 @@ class TELNETService(Service):
     def __init__(self, port=23, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -115,8 +127,14 @@ class SMTPService(Service):
     def __init__(self, port=25, is_active=False, is_ssl=False,
                  payload=None):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""
@@ -157,8 +175,14 @@ class HTTPSService(Service):
     def __init__(self, port=443, is_active=True, is_ssl=True,
                  payload=b'GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
-        super().__init__(port=port, is_active=is_active, is_ssl=is_ssl,
-                         payload=payload)
+        try:
+            super(self.__class__, self).__init__(port=port,
+                                                 is_active=is_active,
+                                                 is_ssl=is_ssl,
+                                                 payload=payload)
+        except:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
 
     def get_version(self, banner):
         """Get version."""
