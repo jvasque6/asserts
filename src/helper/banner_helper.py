@@ -208,9 +208,11 @@ def service_connect(server, port, is_ssl, payload=None):
                 raise socket.error
         banner = sock.recv(5096)
     except socket.error:
+        raw_socket = False
         banner = ''
     finally:
-        sock.close()
+        if raw_socket:
+            raw_socket.close()
 
     return banner
 

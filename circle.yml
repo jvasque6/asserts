@@ -27,7 +27,7 @@ dependencies:
   override:
     - sudo apt-get install scons ansible ruby
     - gem install overcommit
-    - pip install tox tox-pyenv flake8 pylint yamllint twine
+    - pip install tox tox-pyenv flake8 pylint yamllint twine setupext-gitversion
     - docker -D pull fluidsignal/fluidasserts:container
     - scons deps
   post:
@@ -53,4 +53,4 @@ test:
     - cp -r build/lint $CIRCLE_ARTIFACTS
     - cp -r build/doc $CIRCLE_ARTIFACTS
     - cp -r build/dist $CIRCLE_ARTIFACTS
-    - if [[ $CIRCLE_BRANCH == "master" ]] ; then python setup.py sdist bdist_wheel upload; fi
+    - if [[ $CIRCLE_BRANCH == "master" ]] ; then python setup.py git_version sdist bdist_wheel upload; python setup.py git_version bdist_egg upload; fi

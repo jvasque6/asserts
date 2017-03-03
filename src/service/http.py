@@ -89,11 +89,6 @@ def is_header_server_insecure(url):
     return http_helper.has_insecure_header(url, 'server')
 
 
-def is_header_x_powered_by_missing(url):
-    """Check if x-powered-by header is missing."""
-    return http_helper.has_insecure_header(url, 'x-powered-by')
-
-
 def is_header_x_content_type_options_missing(url):
     """Check if x-content-type-options header is missing."""
     return http_helper.has_insecure_header(url,
@@ -105,10 +100,10 @@ def is_header_x_frame_options_missing(url):
     return http_helper.has_insecure_header(url, 'x-frame-options')
 
 
-def is_header_x_permitted_cross_domain_policies_missing(url):
-    """Check if x-permitted-cross-domain-policies header is missing."""
+def is_header_permitted_cross_domain_policies_missing(url):
+    """Check if permitted-cross-domain-policies header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'x-permitted-cross-domain-policies')
+                                           'permitted-cross-domain-policies')
 
 
 def is_header_x_xxs_protection_missing(url):
