@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.0.20170303.1',
+    version='0.0.20170303.2',
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
