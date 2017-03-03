@@ -28,7 +28,7 @@ HDR_RGX = {
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',
-    'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
+    'permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
     'x-xss-protection': '^1(; mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$'
 }
