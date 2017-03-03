@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.0.20170302.1',
+    version='0.0.20170302.2',
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
@@ -20,7 +20,7 @@ setup(
         'fluidasserts',
         'fluidasserts.format',
         'fluidasserts.helper',
-        'fluidasserts.os',
+        'fluidasserts.system',
         'fluidasserts.service',
     ],
     data_files=[
