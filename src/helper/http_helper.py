@@ -6,7 +6,6 @@
 import logging
 import re
 import requests
-import urllib3
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
@@ -35,7 +34,6 @@ HDR_RGX = {
 }
 
 logger = logging.getLogger('FLUIDAsserts')
-urllib3.disable_warnings()
 
 
 class HTTPSession(object):
