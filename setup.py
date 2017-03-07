@@ -53,6 +53,7 @@ setup(
         'requests==2.12.4',          # src.http
         'requests-oauthlib==0.7.0',  # src.http
         'cryptography==1.7.1',       # src.http_ssl
+        'certifi==2017.1.23',        # src.http_ssl
         'ldap3==2.1.1',              # src.ldap
         'paramiko==2.1.1',           # src.ssh_helper
         'pywinrm==0.2.2',            # src.winrm_helper
