@@ -43,7 +43,7 @@
 
       - name: Unarchive bWAPP
         unarchive:
-            src: http://downloads.sourceforge.net/project/bwapp/bWAPP/bWAPP_latest.zip
+            src: http://sourceforge.net/projects/bwapp/files/bWAPP/bWAPP_latest.zip/download
             dest: /var/www/html
             remote_src: "yes"
 
