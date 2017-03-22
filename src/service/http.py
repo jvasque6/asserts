@@ -100,7 +100,7 @@ def is_header_x_frame_options_missing(url):
     return http_helper.has_insecure_header(url, 'x-frame-options')
 
 
-def is_header_permitted_cross_domain_policies_missing(url):
+def is_header_perm_cross_dom_pol_missing(url):
     """Check if permitted-cross-domain-policies header is missing."""
     return http_helper.has_insecure_header(url,
                                            'permitted-cross-domain-policies')
