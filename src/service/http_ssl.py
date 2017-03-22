@@ -121,7 +121,6 @@ def is_pfs_disabled(site, port=PORT):
                ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA'
 
     wrapped_socket = ssl.wrap_socket(sock,
-                                     ssl_version=ssl.PROTOCOL_TLSv1,
                                      ciphers=ciphers)
 
     result = True
