@@ -58,7 +58,6 @@ setup(
         'paramiko==2.1.1',           # src.ssh_helper
         'pywinrm==0.2.2',            # src.winrm_helper
         'beautifulsoup4==4.5.1',     # src.html
-        'lxml==3.7.1',     	     # src.http_helper
         'dnspython==1.15.0',         # src.dns
         'tlslite-ng==0.6.0',         # src.http_ssl
         'pyOpenSSL==16.2.0',         # src.http_ssl
