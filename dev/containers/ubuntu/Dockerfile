@@ -12,7 +12,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 RUN apt-get install -y sudo python apt-transport-https ca-certificates curl software-properties-common bash
 RUN echo "deb https://download.docker.com/linux/ubuntu trusty stable" >> /etc/apt/sources.list.d/docker.list
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
 RUN apt-get update
 RUN apt-get -y install python-pip python3-pip docker-ce
 RUN apt-get -y install scons libssl-dev libffi-dev python3-dev python-dev g++ gcc
