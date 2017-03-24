@@ -1,0 +1,7 @@
+Dependencias:
+TODO
+
+1. Ejecutar build.sh
+2. Para obtener una shell en el contenedor, ejecutar:
+	docker run -it fluidsignal/fluidasserts-dev:debian bash
+3. En la shell, clonar repositorio de asserts
