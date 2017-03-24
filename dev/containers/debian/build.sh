@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# habilitar depuración
-if [ -n "$VERBOSE" ]; then
-  set -x
-fi
-
 # Salir inmediatamente si algun comando retorna diferente de cero.
 set -e
 
@@ -12,4 +7,4 @@ set -e
 echo "---### Compilando contenedor."
 
 # construir la imagen
-docker build -t fluidsignal/fluidasserts-dev:debian containers/debian
+docker build -t fluidsignal/fluidasserts-dev:debian .
