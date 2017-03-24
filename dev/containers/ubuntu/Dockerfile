@@ -5,6 +5,7 @@ FROM ubuntu:14.04
 MAINTAINER FLUID Engineering Team <engineering@fluid.la>
 
 ENV DEBIAN_FRONTEND noninteractive      # instalación no interactiva
+ENV USER root
 
 # Instala SSH, Python y SUDO para administracion por Ansible
 RUN apt-get update
