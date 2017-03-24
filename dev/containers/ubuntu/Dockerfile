@@ -18,8 +18,6 @@ RUN apt-get -y install scons libssl-dev libffi-dev python3-dev python-dev g++ gc
 RUN pip install -U pip setuptools
 RUN pip3 install -U pip setuptools
 RUN apt-get -y purge python-setuptools python3-setuptools
-#RUN /usr/local/bin/pip install -U pip setuptools
-#RUN /usr/local/bin/pip3 install -U pip setuptools
 RUN pip install -U tox ansible
 RUN pip3 install -U tox ansible
 
