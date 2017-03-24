@@ -1,4 +1,4 @@
-# Imagen base de linux RedHat 
+# Imagen base de linux Fedora
 FROM ubuntu:14.04
 
 # Dudas sobre la imagen en cuestion
