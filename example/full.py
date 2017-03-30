@@ -1,3 +1,5 @@
+#/usr/bin/python
+
 from fluidasserts.system import linux_generic
 from fluidasserts.system import windows_server_2008_plus
 from fluidasserts.format import string
