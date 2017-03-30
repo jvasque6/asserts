@@ -212,6 +212,10 @@ def is_tlsv1_enabled(site, port=PORT):
         logger.info('TLSv1 not enabled on site, Details=%s, %s',
                     site, 'CLOSE')
         result = False
+    except tlslite.errors.TLSLocalAlert:
+        logger.info('TLSv1 not enabled on site, Details=%s, %s',
+                    site, 'CLOSE')
+        result = False
     except socket.error:
         logger.info('Port is closed for TLSv1 check, Details=%s, %s',
                     site, 'CLOSE')
