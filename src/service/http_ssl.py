@@ -171,6 +171,10 @@ def is_sslv3_enabled(site, port=PORT):
         logger.info('SSLv3 not enabled on site, Details=%s, %s',
                     site, 'CLOSE')
         result = False
+    except tlslite.errors.TLSLocalAlert:
+        logger.info('SSLv3 not enabled on site, Details=%s, %s',
+                    site, 'CLOSE')
+        result = False
     except socket.error:
         logger.info('Port is closed for SSLv3 check, Details=%s, %s',
                     site, 'CLOSE')
