@@ -15,7 +15,7 @@ logger = logging.getLogger('FLUIDAsserts')
 
 def __check_password_strength(password, length):
     """Function to check if a user password is secure."""
-    dictionary = 'test/static/wordlists/password.lst'
+    dictionary = 'static/wordlists/password.lst'
 
     caps = sum(1 for c in password if c.isupper())
     lower = sum(1 for c in password if c.islower())
@@ -86,7 +86,7 @@ def is_otp_token_insecure(password):
 
 def is_ssid_insecure(ssid):
     """Function to check if a given SSID is secure."""
-    dictionary = 'test/static/wordlists/password.lst'
+    dictionary = 'static/wordlists/password.lst'
 
     with open(dictionary) as dict_fd:
         words = [x.rstrip() for x in dict_fd.readlines()]

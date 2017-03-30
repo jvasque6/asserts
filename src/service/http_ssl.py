@@ -225,7 +225,7 @@ def is_tlsv1_enabled(site, port=PORT):
     return result
 
 
-def is_version_visible(ip_address):
+def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
     service = banner_helper.HTTPSService()
     banner = banner_helper.get_banner(service, ip_address)

@@ -15,6 +15,7 @@ import dns.zone
 from dns.zone import BadZone
 from dns.zone import NoNS
 from dns.zone import NoSOA
+import socket
 
 # local imports
 # None
@@ -54,6 +55,10 @@ Details=%s:%s, %s',
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
                     domain, nameserver, 'CLOSE')
         result = False
+    except socket.error:
+        logger.info('Port closed for zone transfer, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
+        result = False
 
     return result
 
@@ -62,20 +67,25 @@ def is_dynupdate_enabled(domain, nameserver):
     """Check if zone updating is enabled."""
     newrecord = 'newrecord'
 
-    update = dns.update.Update(domain)
-    update.add(newrecord, 3600, dns.rdatatype.A, '10.10.10.10')
-    response = dns.query.tcp(update, nameserver)
+    try:
+        update = dns.update.Update(domain)
+        update.add(newrecord, 3600, dns.rdatatype.A, '10.10.10.10')
+        response = dns.query.tcp(update, nameserver)
 
-    result = True
-    if response.rcode() > 0:
-        logger.info('Zone update not enabled on server, \
-Details=%s:%s, %s', domain, nameserver, 'CLOSE')
-        result = False
-    else:
-        logger.info('Zone update enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'OPEN')
         result = True
 
+        if response.rcode() > 0:
+            logger.info('Zone update not enabled on server, \
+    Details=%s:%s, %s', domain, nameserver, 'CLOSE')
+            result = False
+        else:
+            logger.info('Zone update enabled on server, Details=%s:%s, %s',
+                        domain, nameserver, 'OPEN')
+            result = True
+    except socket.error:
+        logger.info('Port closed for DNS update, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
+        result = False
     return result
 
 
@@ -127,26 +137,32 @@ def has_cache_snooping(nameserver):
     domain = 'google.com'
     name = dns.name.from_text(domain)
 
-    # Make a recursive request to fill out the cache
-    request = dns.message.make_query(name, dns.rdatatype.A,
-                                     dns.rdataclass.IN)
+    try:
+        # Make a recursive request to fill out the cache
+        request = dns.message.make_query(name, dns.rdatatype.A,
+                                         dns.rdataclass.IN)
 
-    response = dns.query.udp(request, nameserver)
+        response = dns.query.udp(request, nameserver)
 
-    # Make a non-recursive request
-    request = dns.message.make_query(name, dns.rdatatype.A,
-                                     dns.rdataclass.IN)
-    request.flags ^= dns.flags.RD
+        # Make a non-recursive request
+        request = dns.message.make_query(name, dns.rdatatype.A,
+                                         dns.rdataclass.IN)
+        request.flags ^= dns.flags.RD
 
-    response = dns.query.udp(request, nameserver)
+        response = dns.query.udp(request, nameserver)
 
-    result = True
-    if response.rcode() == 0:
-        logger.info('Cache snooping possible on server, \
-Details=%s:%s, %s', domain,
-                    nameserver, 'OPEN')
         result = True
-    else:
+        if response.rcode() == 0:
+            logger.info('Cache snooping possible on server, \
+Details=%s:%s, %s', domain,
+                        nameserver, 'OPEN')
+            result = True
+        else:
+            logger.info('Cache snooping not possible on server, \
+Details=%s:%s, %s', domain,
+                        nameserver, 'CLOSE')
+            result = False
+    except dns.exception.SyntaxError:
         logger.info('Cache snooping not possible on server, \
 Details=%s:%s, %s', domain,
                     nameserver, 'CLOSE')
