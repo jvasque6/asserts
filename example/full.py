@@ -3,19 +3,17 @@
 from fluidasserts.system import linux_generic
 from fluidasserts.system import windows_server_2008_plus
 from fluidasserts.format import string
-#from fluidasserts.format import cookie 
-from fluidasserts.format import html 
-from fluidasserts.format import pdf 
+#from fluidasserts.format import cookie
+from fluidasserts.format import html
+from fluidasserts.format import pdf
 from fluidasserts.service import smtp
-#from fluidasserts.service import webservices 
-from fluidasserts.service import moddns 
-from fluidasserts.service import tcp 
+#from fluidasserts.service import webservices
+from fluidasserts.service import moddns
+from fluidasserts.service import tcp
 from fluidasserts.service import http
-from fluidasserts.service import http_ssl 
-from fluidasserts.service import ldap 
-from fluidasserts.service import ftp 
-
- 
+from fluidasserts.service import http_ssl
+from fluidasserts.service import ldap
+from fluidasserts.service import ftp
 
 
 #linux_generic.is_os_min_priv_disabled(server, username, password, ssh_config=None)
