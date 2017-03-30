@@ -45,11 +45,11 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.login(username, password)
         ftp.quit()
         result = True
-        logger.info('FTP Authentication %s, Details=%s, %s',
-                    ip_address, username + ':' + password, 'OPEN')
+        logger.info('FTP Authentication %s:%s, Details=%s, %s',
+                    ip_address, port, username + ':' + password, 'OPEN')
     except error_perm:
-        logger.info('FTP Authentication %s, Details=%s, %s',
-                    ip_address, username + ':' + password, 'CLOSE')
+        logger.info('FTP Authentication %s:%s, Details=%s, %s',
+                    ip_address, port, username + ':' + password, 'CLOSE')
         result = False
     return result
 
@@ -69,7 +69,7 @@ def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
     return is_a_valid_user(ip_address, username, password)
 
 
-def is_version_visible(ip_address):
+def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
     service = banner_helper.FTPService()
     banner = banner_helper.get_banner(service, ip_address)
@@ -78,8 +78,8 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logger.info('FTP version visible on %s, Details=%s, %s, %s',
-                    ip_address, banner, version, 'OPEN')
+        logger.info('FTP version visible on %s:%s, Details=%s, %s, %s',
+                    ip_address, port, banner, version, 'OPEN')
     else:
         result = False
         logger.info('FTP version not visible on %s, Details=None, %s',

@@ -5,6 +5,7 @@ environment:
     - PYTHON: "C:\\Python27"
     - PYTHON: "C:\\Python34"
     - PYTHON: "C:\\Python35"
+    - PYTHON: "C:\\Python36"
 
 install:
   # We need wheel installed to build wheels

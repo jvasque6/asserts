@@ -231,7 +231,7 @@ def is_sessionid_exposed(url, argument='sessionid', params=None,
     return result
 
 
-def is_version_visible(ip_address):
+def is_version_visible(ip_address, port=80):
     """Check if banner is visible."""
     service = banner_helper.HTTPService()
     banner = banner_helper.get_banner(service, ip_address)
@@ -240,10 +240,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logger.info('HTTP version visible on %s, Details=%s, %s, %s',
-                    ip_address, banner, version, 'OPEN')
+        logger.info('HTTP version visible on %s:%s, Details=%s, %s, %s',
+                    ip_address, port, banner, version, 'OPEN')
     else:
         result = False
-        logger.info('HTTP version not visible on %s, Details=None, %s',
-                    ip_address, 'CLOSE')
+        logger.info('HTTP version not visible on %s:%s, Details=None, %s',
+                    ip_address, port, 'CLOSE')
     return result

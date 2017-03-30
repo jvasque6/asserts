@@ -29,7 +29,6 @@ def is_os_compilers_installed(server, username, password):
 
     installed_compilers = 0
 
-    # I'm sure there's a better way to do this
     for compiler in common_compilers:
         if re.search(compiler, installed_software,
                      re.IGNORECASE) is not None:
@@ -62,7 +61,6 @@ def is_os_antimalware_not_installed(server, username, password):
 
     installed_av = 0
 
-    # I'm sure there's a better way to do this
     for antivirus in common_av:
         if re.search(antivirus, installed_software,
                      re.IGNORECASE) is not None:
@@ -110,7 +108,6 @@ def is_protected_users_disabled(server, username, password):
 
     installed_patches = 0
 
-    # I'm sure there's a better way to do this
     for patch in security_patches:
         if re.search(patch, installed_software,
                      re.IGNORECASE) is not None:

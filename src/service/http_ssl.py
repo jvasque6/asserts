@@ -36,12 +36,12 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
     wildcard_site = '*.' + site
 
     if site != cert_cn and wildcard_site != cert_cn:
-        logger.info('%s CN not equals to site, Details=%s, %s',
-                    cert_cn, site, 'OPEN')
+        logger.info('%s CN not equals to site, Details=%s:%s, %s',
+                    cert_cn, site, port, 'OPEN')
         result = True
     else:
-        logger.info('%s CN equals to site, Details=%s, %s',
-                    cert_cn, site, 'CLOSE')
+        logger.info('%s CN equals to site, Details=%s:%s, %s',
+                    cert_cn, site, port, 'CLOSE')
         result = False
     return result
 
@@ -127,16 +127,16 @@ def is_pfs_disabled(site, port=PORT):
     try:
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet.encode('utf-8'))
-        logger.info('PFS enabled on site, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('PFS enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     except ssl.SSLError:
-        logger.info('PFS not enabled on site, Details=%s, %s',
-                    site, 'OPEN')
+        logger.info('PFS not enabled on site, Details=%s:%s, %s',
+                    site, port, 'OPEN')
         result = True
     except socket.error:
-        logger.info('Port is closed for PFS check, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('Port is closed for PFS check, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     finally:
         wrapped_socket.close()
@@ -160,20 +160,24 @@ def is_sslv3_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logger.info('SSLv3 enabled on site, Details=%s, %s',
-                    site, 'OPEN')
+        logger.info('SSLv3 enabled on site, Details=%s:%s, %s',
+                    site, port, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logger.info('SSLv3 not enabled on site, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        logger.info('SSLv3 not enabled on site, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
+        result = False
+    except tlslite.errors.TLSLocalAlert:
+        logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     except socket.error:
-        logger.info('Port is closed for SSLv3 check, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('Port is closed for SSLv3 check, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     finally:
         sock.close()
@@ -197,20 +201,24 @@ def is_tlsv1_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logger.info('TLSv1 enabled on site, Details=%s, %s',
-                    site, 'OPEN')
+        logger.info('TLSv1 enabled on site, Details=%s:%s, %s',
+                    site, port, 'OPEN')
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logger.info('TLSv1 not enabled on site, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        logger.info('TLSv1 not enabled on site, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
+        result = False
+    except tlslite.errors.TLSLocalAlert:
+        logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     except socket.error:
-        logger.info('Port is closed for TLSv1 check, Details=%s, %s',
-                    site, 'CLOSE')
+        logger.info('Port is closed for TLSv1 check, Details=%s:%s, %s',
+                    site, port, 'CLOSE')
         result = False
     finally:
         sock.close()
@@ -226,10 +234,10 @@ def is_version_visible(ip_address):
     result = True
     if version:
         result = True
-        logger.info('HTTP version visible on %s, Details=%s, %s, %s',
-                    ip_address, banner, version, 'OPEN')
+        logger.info('HTTP version visible on %s:%s, Details=%s, %s, %s',
+                    ip_address, port, banner, version, 'OPEN')
     else:
         result = False
-        logger.info('HTTP version not visible on %s, Details=None, %s',
-                    ip_address, 'CLOSE')
+        logger.info('HTTP version not visible on %s:%s, Details=None, %s',
+                    ip_address, port, 'CLOSE')
     return result
