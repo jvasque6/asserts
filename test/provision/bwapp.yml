@@ -62,7 +62,7 @@
             line: "{{ item.line }}"
             backup: "yes"
         with_items:
-            - {regexp: "db_password", line: "$db_password = \"password\";"}
+            - {regexp: "db_password", line: "$db_password = \"{{ mysql_root_password }}\";"}
 
       - name: Configure php.ini allow_url_include
         ini_file:
