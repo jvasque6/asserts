@@ -10,4 +10,5 @@ recursive-include src *.py
 # incluir los archivos de configuracion del software
 include conf/conf.cfg
 include conf/conf.spec
+include static/wordlists/password.lst
 include LOCAL-VERSION
