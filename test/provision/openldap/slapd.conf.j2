@@ -47,7 +47,7 @@ backend		@BACKEND@
 # Specific Directives for database #1, of type @BACKEND@:
 # Database specific directives apply to this databasse until another
 # 'database' directive occurs
-database        hdb 
+database        hdb
 
 # The base of your directory in database #1
 suffix "{{ openldap_client_base }}"
@@ -91,7 +91,7 @@ access to attrs=userPassword,shadowLastChange
 # Note that this is covered by the 'access to *'
 # ACL below too but if you change that as people
 # are wont to do you'll still need this if you
-# want SASL (and possible other things) to work 
+# want SASL (and possible other things) to work
 # happily.
 access to dn.base="" by * read
 
