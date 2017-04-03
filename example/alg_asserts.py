@@ -1,6 +1,6 @@
 from fluidasserts.service import http
 from fluidasserts.service import http_ssl
-from fluidasserts.service import moddns
+from fluidasserts.service import dns
 
 url = 'https://fluid.la'
 http.is_header_x_asp_net_version_missing(url)
@@ -30,4 +30,4 @@ http_ssl.is_cert_validity_lifespan_unsafe(server)
 http_ssl.is_pfs_disabled(server)
 http_ssl.is_sslv3_enabled(server)
 http_ssl.is_tlsv1_enabled(server)
-moddns.has_cache_poison(server, 'ns-79.awsdns-09.com.')
+dns.has_cache_poison(server, 'ns-79.awsdns-09.com.')

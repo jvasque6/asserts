@@ -22,7 +22,7 @@ loglevel        none
 
 # Where the dynamically loaded modules are stored
 modulepath	/usr/lib/ldap
-moduleload	back_@BACKEND@
+moduleload	back_hdb
 
 # The maximum number of entries that is returned for a search operation
 sizelimit 500
@@ -35,7 +35,7 @@ tool-threads 1
 # Specific Backend Directives for @BACKEND@:
 # Backend specific directives apply to this backend until another
 # 'backend' directive occurs
-backend		@BACKEND@
+backend		hdb
 
 #######################################################################
 # Specific Backend Directives for 'other':
