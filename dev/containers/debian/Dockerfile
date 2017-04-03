@@ -10,7 +10,7 @@ ENV USER root
 # Instala SSH, Python y SUDO para administracion por Ansible
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get install -y sudo python apt-transport-https ca-certificates curl software-properties-common bash
+RUN apt-get install -y sudo python apt-transport-https ca-certificates curl software-properties-common bash ruby2.0 ruby2.0-dev
 RUN echo "deb https://download.docker.com/linux/debian jessie stable" >> /etc/apt/sources.list.d/docker.list
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN apt-get update
@@ -21,4 +21,4 @@ RUN pip3 install -U pip setuptools
 RUN apt-get -y purge python-setuptools python3-setuptools
 RUN pip install -U tox ansible
 RUN pip3 install -U tox ansible
-
+RUN gem install overcommit
