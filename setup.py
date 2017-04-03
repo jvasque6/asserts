@@ -17,7 +17,7 @@ except IOError:
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.20170401.1',
+    version='0.20170401.2',
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
