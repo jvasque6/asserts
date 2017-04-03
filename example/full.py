@@ -8,7 +8,7 @@ from fluidasserts.format import html
 from fluidasserts.format import pdf
 from fluidasserts.service import smtp
 #from fluidasserts.service import webservices
-from fluidasserts.service import moddns
+from fluidasserts.service import dns
 from fluidasserts.service import tcp
 from fluidasserts.service import http
 from fluidasserts.service import http_ssl
@@ -54,10 +54,10 @@ smtp.has_vrfy(server, port=25)
 
 domain = 'fluid.la'
 nameserver = 'ns-79.awsdns-09.com.'
-moddns.is_xfr_enabled(domain, nameserver)
-moddns.is_dynupdate_enabled(domain, nameserver)
-moddns.has_cache_poison(domain, nameserver)
-moddns.has_cache_snooping(nameserver)
+dns.is_xfr_enabled(domain, nameserver)
+dns.is_dynupdate_enabled(domain, nameserver)
+dns.has_cache_poison(domain, nameserver)
+dns.has_cache_snooping(nameserver)
 
 server = 'fluid.la'
 tcp.is_port_open(server, port=3389)
