@@ -12,15 +12,16 @@ jobs:
       - image: python:2.7.13
     steps:
       # Deps first
+      - run: apt-get -qq update; apt-get -y install git
       - checkout
       - run: sudo apt-get update
-      - run: sudo apt-get install software-properties-common
+      - run: sudo apt-get -y install software-properties-common
       - run: sudo apt-add-repository -y ppa:ansible/ansible
       - run: sudo apt-get update
       - run: pip install --upgrade pip setuptools
       - run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
-      - run: sudo apt-get install scons ansible ruby
+      - run: sudo apt-get -y install scons ansible ruby
       - run: gem install overcommit
       - run: pip install tox tox-pyenv flake8 pylint yamllint \
                 twine setupext-gitversion certifi
