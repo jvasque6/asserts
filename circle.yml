@@ -1,9 +1,9 @@
 ---
 #
-# Archivo de configuracion del servicio de integración continua.
+# Archivo de configuracion del servicio de integraciÃ³n continua.
 #
 
-# Este parche se requiere para que docker soporte especificación de IPs
+# Este parche se requiere para que docker soporte especificaciÃ³n de IPs
 machine:
   pre:
     - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0

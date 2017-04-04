@@ -21,4 +21,3 @@ RUN pip3 install -U pip setuptools
 RUN apt-get -y purge python-setuptools python3-setuptools
 RUN pip install -U tox ansible
 RUN pip3 install -U tox ansible
-RUN gem install overcommit
