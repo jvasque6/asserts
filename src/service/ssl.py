@@ -2,6 +2,7 @@
 """Modulo SSL."""
 
 # standard imports
+from __future__ import absolute_import
 import logging
 import socket
 
@@ -222,22 +223,4 @@ def is_tlsv1_enabled(site, port=PORT):
         result = False
     finally:
         sock.close()
-    return result
-
-
-def is_version_visible(ip_address, port=PORT):
-    """Check if banner is visible."""
-    service = banner_helper.HTTPSService()
-    banner = banner_helper.get_banner(service, ip_address)
-    version = banner_helper.get_version(service, banner)
-
-    result = True
-    if version:
-        result = True
-        logger.info('HTTP version visible on %s:%s, Details=%s, %s, %s',
-                    ip_address, port, banner, version, 'OPEN')
-    else:
-        result = False
-        logger.info('HTTP version not visible on %s:%s, Details=None, %s',
-                    ip_address, port, 'CLOSE')
     return result

@@ -14,7 +14,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts.service import http_ssl
+from fluidasserts.service import ssl
 
 # Constants
 CONTAINER_IP = '172.30.216.100'
@@ -49,13 +49,13 @@ def hard_ssl():
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_cn_equal_to_site_open():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert http_ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
+    assert ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_pfs_enabled_open():
     """PFS habilitado en sitio?"""
-    assert http_ssl.is_pfs_disabled(CONTAINER_IP)
+    assert ssl.is_pfs_disabled(CONTAINER_IP)
 
 
 # There's no way to check this on Debian/Jessie because openssl dropped
@@ -64,25 +64,25 @@ def test_pfs_enabled_open():
 # @pytest.mark.usefixtures('container', 'weak_ssl')
 # def test_sslv3_enabled_open():
 #     """SSLv3 habilitado en sitio?"""
-#     assert http_ssl.is_sslv3_enabled(CONTAINER_IP)
+#     assert ssl.is_sslv3_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_tlsv1_enabled_open():
     """TLSv1 habilitado en sitio?"""
-    assert http_ssl.is_tlsv1_enabled(CONTAINER_IP)
+    assert ssl.is_tlsv1_enabled(CONTAINER_IP)
 
 
 # @pytest.mark.usefixtures('container', 'weak_ssl')
 # def test_httpssl_cert_active_open():
 #     """Certificado aun esta vigente?"""
-#     assert http_ssl.is_cert_inactive(CONTAINER_IP)
+#     assert ssl.is_cert_inactive(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'weak_ssl')
 def test_cert_lifespan_safe_open():
     """Vigencia del certificado es segura?"""
-    assert http_ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
+    assert ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
 
 #
 # Closing tests
@@ -92,36 +92,36 @@ def test_cert_lifespan_safe_open():
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_cn_equal_to_site_close():
     """CN del cert concuerda con el nombre del sitio?"""
-    assert not http_ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
+    assert not ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_pfs_enabled_close():
     """PFS habilitado en sitio?"""
-    assert not http_ssl.is_pfs_disabled(CONTAINER_IP)
+    assert not ssl.is_pfs_disabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_sslv3_enabled_close():
     """SSLv3 habilitado en sitio?"""
-    assert not http_ssl.is_sslv3_enabled(CONTAINER_IP)
+    assert not ssl.is_sslv3_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_tlsv1_enabled_close():
     """TLSv1 habilitado en sitio?"""
-    assert not http_ssl.is_tlsv1_enabled(CONTAINER_IP)
+    assert not ssl.is_tlsv1_enabled(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_cert_active_close():
     """Certificado aun esta vigente?"""
-    assert not http_ssl.is_cert_inactive(CONTAINER_IP)
+    assert not ssl.is_cert_inactive(CONTAINER_IP)
 
 
 @pytest.mark.usefixtures('container', 'hard_ssl')
 def test_cert_lifespan_safe_close():
     """Vigencia del certificado es segura?"""
-    assert not http_ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
+    assert not ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)
 
 # Pendente implementar resto de metodos
