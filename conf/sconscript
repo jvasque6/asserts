@@ -11,7 +11,10 @@ lenv=Environment()
 #   el pager LESS funcionará sin errores.  Si esto se desactiva
 #   estos targets siempre se ven sin colores y con:
 #   WARNING: terminal is not fully functional.
-lenv['USER']=os.environ['USER']
+try:
+    lenv['USER']=os.environ['USER']
+except:
+    lenv['USER']='root'
 lenv['ENV']=os.environ
 
 # Crear facilmente Phony Targets
