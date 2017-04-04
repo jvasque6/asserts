@@ -3,54 +3,46 @@
 # Archivo de configuracion del servicio de integración continua.
 #
 
-# Este parche se requiere para que docker soporte especificación de IPs
-machine:
-  pre:
-    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
-  timezone: America/Bogota
-  services:
-    - docker
-  python:
-    version: 2.7.10
-  post:
-    - pyenv global 2.7.11 3.4.4 3.5.1
+version: 2
+jobs:
+  build:
+    working_directory: /tmp
+    docker:
+      - image: ubuntu:14.04
+      - image: python:2.7.13
+    steps:
+      # Deps first
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install software-properties-common
+      - run: sudo apt-add-repository -y ppa:ansible/ansible
+      - run: sudo apt-get update
+      - run: pip install --upgrade pip setuptools
+      - run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
+      - run: echo $VAULT > ~/.vault.txt
+      - run: sudo apt-get install scons ansible ruby
+      - run: gem install overcommit
+      - run: pip install tox tox-pyenv flake8 pylint yamllint \
+                twine setupext-gitversion certifi
+      - run: docker -D pull fluidsignal/fluidasserts:container
+      - run: scons deps
+      - run: cp conf/dotpypirc ~/.pypirc
+      - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
+      - run: scons self
+      - run: scons smoke
 
-dependencies:
-  pre:
-    - sudo apt-get update
-    - sudo apt-get install software-properties-common
-    - sudo apt-add-repository -y ppa:ansible/ansible
-    - sudo apt-get update
-    - pip install --upgrade pip setuptools
-    - docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
-    - echo $VAULT > ~/.vault.txt
-  override:
-    - sudo apt-get install scons ansible ruby
-    - gem install overcommit
-    - pip install tox tox-pyenv flake8 pylint yamllint twine setupext-gitversion certifi
-    - docker -D pull fluidsignal/fluidasserts:container
-    - scons deps
-  post:
-    - cp conf/dotpypirc ~/.pypirc
-    - ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
-    - scons self
-    - scons smoke
-
-# Antes de este punto todo es cacheable.  Pendiente investigar como.
-
-test:
-  pre:
-    - scons lint
-    - overcommit --sign
-    - overcommit --run
-  override:
-    - scons test
-    - scons dist
-    - scons doc
-  post:
-    - cp build/test/results.* $CIRCLE_TEST_REPORTS
-    - cp -r build/coverage $CIRCLE_ARTIFACTS
-    - cp -r build/lint $CIRCLE_ARTIFACTS
-    - cp -r build/doc $CIRCLE_ARTIFACTS
-    - cp -r build/dist $CIRCLE_ARTIFACTS
-    - if [[ $CIRCLE_BRANCH == "master" ]] ; then python setup.py sdist bdist_wheel upload; fi
+      # Tests
+      - run: scons lint
+      - run: overcommit --sign
+      - run: overcommit --run
+      - run: scons test
+      - run: scons dist
+      - run: scons doc
+      - run: cp build/test/results.* $CIRCLE_TEST_REPORTS
+      - run: cp -r build/coverage $CIRCLE_ARTIFACTS
+      - run: cp -r build/lint $CIRCLE_ARTIFACTS
+      - run: cp -r build/doc $CIRCLE_ARTIFACTS
+      - run: cp -r build/dist $CIRCLE_ARTIFACTS
+      - run: if [[ $CIRCLE_BRANCH == "master" ]] ; then \
+                python setup.py sdist bdist_wheel upload; \
+                fi

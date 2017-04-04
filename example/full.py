@@ -69,7 +69,6 @@ ssl.is_cert_validity_lifespan_unsafe(site, port=443)
 ssl.is_pfs_disabled(site, port=443)
 ssl.is_sslv3_enabled(site, port=443)
 ssl.is_tlsv1_enabled(site, port=443)
-ssl.is_version_visible(site)
 
 #ldap.is_anonymous_bind_allowed(ldap_server, port=PORT)
 
@@ -111,3 +110,4 @@ http.has_put_method(url)
 http.is_sessionid_exposed(url)
 server = 'fluid.la'
 http.is_version_visible(server, port=80)
+http.is_version_visible(server, ssl=True, port=443)
