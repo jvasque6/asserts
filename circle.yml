@@ -26,7 +26,7 @@ jobs:
         #- run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
         #- run: gem install overcommit
-      - run: pip install -U tox tox-pyenv flake8 pylint yamllint \
+      - run: pip install -U tox flake8 pylint yamllint \
                 twine setupext-gitversion certifi ansible
                 #- run: docker -D pull fluidsignal/fluidasserts:container
       - run: scons deps
