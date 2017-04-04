@@ -12,7 +12,6 @@ install:
   - "mkdir build"
   - "%PYTHON%\\python.exe -m pip install fluidasserts"
   - "%PYTHON%\\python.exe setup.py install"
-    #- "%PYTHON%\\python.exe -m pip install build/dist/*.zip"
 
 build: off
 
