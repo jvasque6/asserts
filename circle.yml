@@ -29,6 +29,7 @@ jobs:
       - run: pip install -U tox tox-pyenv flake8 pylint yamllint \
                 twine setupext-gitversion certifi ansible scons
                 #- run: docker -D pull fluidsignal/fluidasserts:container
+      - run: export SCONS_LIB_DIR=/usr/local/lib/python2.7/dist-packages/scons-2.5.1/
       - run: scons deps
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
