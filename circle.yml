@@ -22,7 +22,7 @@ jobs:
       - run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
       - run: apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
       - run: apt-get update
-      - run: apt-get -y install docker-ce python-dev libssl-dev libffi-dev scons python-virtualenv
+      - run: apt-get -y install docker-ce python-dev libssl-dev libffi-dev scons python-virtualenv || true
       - run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
         #- run: gem install overcommit
