@@ -11,7 +11,7 @@ from fluidasserts.service import smtp
 from fluidasserts.service import dns
 from fluidasserts.service import tcp
 from fluidasserts.service import http
-from fluidasserts.service import http_ssl
+from fluidasserts.service import ssl
 from fluidasserts.service import ldap
 from fluidasserts.service import ftp
 
@@ -63,13 +63,13 @@ server = 'fluid.la'
 tcp.is_port_open(server, port=3389)
 
 site = 'fluid.la'
-http_ssl.is_cert_cn_not_equal_to_site(site, port=443)
-http_ssl.is_cert_inactive(site, port=443)
-http_ssl.is_cert_validity_lifespan_unsafe(site, port=443)
-http_ssl.is_pfs_disabled(site, port=443)
-http_ssl.is_sslv3_enabled(site, port=443)
-http_ssl.is_tlsv1_enabled(site, port=443)
-http_ssl.is_version_visible(site)
+ssl.is_cert_cn_not_equal_to_site(site, port=443)
+ssl.is_cert_inactive(site, port=443)
+ssl.is_cert_validity_lifespan_unsafe(site, port=443)
+ssl.is_pfs_disabled(site, port=443)
+ssl.is_sslv3_enabled(site, port=443)
+ssl.is_tlsv1_enabled(site, port=443)
+ssl.is_version_visible(site)
 
 #ldap.is_anonymous_bind_allowed(ldap_server, port=PORT)
 
