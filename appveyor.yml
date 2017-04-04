@@ -10,8 +10,8 @@ environment:
 install:
   # We need wheel installed to build wheels
   - "mkdir build"
-  - "%PYTHON%\\python.exe setup.py sdist"
-  - "%PYTHON%\\python.exe -m pip install build/dist/*.zip"
+  - "%PYTHON%\\python.exe setup.py install"
+    #- "%PYTHON%\\python.exe -m pip install build/dist/*.zip"
 
 build: off
 
