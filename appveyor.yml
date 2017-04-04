@@ -9,7 +9,8 @@ environment:
 
 install:
   # We need wheel installed to build wheels
-  - "%PYTHON%\\python.exe -m pip install fluidasserts"
+  - "%PYTHON%\\python.exe setup.py sdist"
+  - "%PYTHON%\\python.exe -m pip install build/dist/FLUIDAsserts*.zip"
 
 build: off
 
