@@ -23,15 +23,13 @@ jobs:
       - run: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
       - run: apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
       - run: apt-get update
-      - run: apt-get -y install docker-ce ruby2.0 ruby2.0-dev python-dev libssl-dev libffi-dev
+      - run: apt-get -y install docker-ce ruby2.0 ruby2.0-dev python-dev libssl-dev libffi-dev scons
         #- run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
         #- run: gem install overcommit
       - run: pip install -U tox tox-pyenv flake8 pylint yamllint \
-                twine setupext-gitversion certifi ansible scons
+                twine setupext-gitversion certifi ansible
                 #- run: docker -D pull fluidsignal/fluidasserts:container
-      - run: export SCONS_LIB_DIR=/usr/local/lib/python2.7/dist-packages/scons-2.5.1/
-      - run: export PYTHONPATH=/usr/local/lib/python2.7/dist-packages/scons-2.5.1/
       - run: scons deps
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
