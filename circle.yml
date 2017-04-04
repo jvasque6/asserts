@@ -27,7 +27,7 @@ jobs:
       - run: echo $VAULT > ~/.vault.txt
         #- run: gem install overcommit
       - run: pip install -U tox tox-pyenv flake8 pylint yamllint \
-                twine setupext-gitversion certifi ansible
+                twine setupext-gitversion certifi ansible pyenv
                 #- run: docker -D pull fluidsignal/fluidasserts:container
       - run: scons deps
       - run: cp conf/dotpypirc ~/.pypirc
