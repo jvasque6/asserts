@@ -15,16 +15,14 @@ jobs:
       - run: apt-get -qq update; apt-get -y install git
       - checkout
       - run: sudo apt-get update
-      - run: sudo apt-get -y install software-properties-common
-      - run: sudo apt-add-repository -y ppa:ansible/ansible
-      - run: sudo apt-get update
+      - run: apt-get -y install python-pip python3-pip
       - run: pip install --upgrade pip setuptools
       - run: docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
       - run: sudo apt-get -y install scons ansible ruby
       - run: gem install overcommit
       - run: pip install tox tox-pyenv flake8 pylint yamllint \
-                twine setupext-gitversion certifi
+                twine setupext-gitversion certifi ansible scons
       - run: docker -D pull fluidsignal/fluidasserts:container
       - run: scons deps
       - run: cp conf/dotpypirc ~/.pypirc
