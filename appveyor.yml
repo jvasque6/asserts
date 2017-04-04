@@ -9,9 +9,7 @@ environment:
 
 install:
   # We need wheel installed to build wheels
-  #- "%PYTHON%\\python.exe -m pip install fluidasserts"
-  - "%PYTHON%\\python.exe setup.py sdist"
-  - "%PYTHON%\\python.exe -m pip install build/dist/FLUIDAsserts*.zip"
+  - "%PYTHON%\\python.exe -m pip install fluidasserts"
 
 build: off
 
@@ -25,9 +23,16 @@ test_script:
   # to put the Python evrsion you want to use on PATH.
   - "%PYTHON%\\python.exe example/alg_asserts.py"
 
+#after_test:
+  # This step builds your wheels.
+  # Again, you only need build.cmd if you're building C extensions for
+  # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
+  # interpreter
+#  - "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
+
 #artifacts:
   # bdist_wheel puts your built wheel in the dist directory
-  #- path: build\dist\*
+#  - path: dist\*
 
 #on_success:
 #  You can use this step to upload your artifacts to a public website.
