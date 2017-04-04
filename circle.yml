@@ -10,6 +10,8 @@ jobs:
     docker:
       - image: ubuntu:14.04
       - image: python:2.7.13
+    evironment:
+      - SCONS_LIB_DIR: /usr/local/lib/python2.7/dist-packages/scons-2.5.1/
     steps:
       # Deps first
       - run: apt-get -qq update; apt-get -y install git
