@@ -36,13 +36,13 @@ jobs:
       - run: overcommit --sign
       - run: overcommit --run
       - run: scons test
-      - run: scons dist
+        #- run: scons dist
       - run: scons doc
       - run: cp build/test/results.* $CIRCLE_TEST_REPORTS
       - run: cp -r build/coverage $CIRCLE_ARTIFACTS
       - run: cp -r build/lint $CIRCLE_ARTIFACTS
       - run: cp -r build/doc $CIRCLE_ARTIFACTS
-      - run: cp -r build/dist $CIRCLE_ARTIFACTS
+        #- run: cp -r build/dist $CIRCLE_ARTIFACTS
 
       # Deploy
       - deploy:
