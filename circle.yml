@@ -7,9 +7,7 @@ version: 2
 jobs:
   build:
     working_directory: /tmp/fluid-asserts
-    docker:
-      - image: ubuntu:14.04
-      - image: python:2.7.13
+    machine: true
     evironment:
       - USER: root 
     steps:
