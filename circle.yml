@@ -51,7 +51,7 @@ jobs:
 
       # Deploy
       - deploy: 
-        command: |
-          if [[ $CIRCLE_BRANCH == "master" ]] ; then 
+          command: |
+            if [[ $CIRCLE_BRANCH == "master" ]] ; then 
                 python setup.py sdist bdist_wheel upload 
-          fi
+            fi
