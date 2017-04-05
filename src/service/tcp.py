@@ -26,6 +26,7 @@ def is_port_open(ipaddress, port):
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
