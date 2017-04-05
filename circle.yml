@@ -9,7 +9,7 @@ jobs:
     working_directory: /tmp/fluid-asserts
     machine: true
     evironment:
-      - USER: root 
+      - USER: root
     steps:
       # Deps first
       - checkout
@@ -44,8 +44,8 @@ jobs:
       - run: cp -r build/dist $CIRCLE_ARTIFACTS
 
       # Deploy
-      - deploy: 
+      - deploy:
           command: |
-            if [[ $CIRCLE_BRANCH == "master" ]] ; then 
-                python setup.py sdist bdist_wheel upload 
+            if [[ $CIRCLE_BRANCH == "master" ]] ; then
+                python setup.py sdist bdist_wheel upload
             fi
