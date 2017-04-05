@@ -30,7 +30,7 @@ PhonyTargets(lenv, self=[
     'id',
     'lsb_release -a 2>&1',
     'python --version',
-    'python3 --version',
+    'python3 --version || true',
     'scons --version',
     'docker --version',
     'ansible --version',
