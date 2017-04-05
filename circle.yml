@@ -12,7 +12,6 @@ jobs:
       - USER: root 
     steps:
       # Deps first
-      - run: sudo apt-get -qq update; apt-get -y install git
       - checkout
       - run: sudo apt-get -y install python-pip python3-pip curl apt-transport-https
       - run: sudo pip install --upgrade pip setuptools
