@@ -48,5 +48,5 @@ jobs:
             if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then
                 cp conf/dotpypirc ~/.pypirc
                 ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
-                python setup.py sdist bdist_wheel bdist_egg upload
+                python setup.py sdist bdist bdist_egg upload
             fi
