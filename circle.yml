@@ -44,9 +44,9 @@ jobs:
 
       # Deploy
       - deploy:
+          command: cp conf/dotpypirc ~/.pypirc
+          command: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
           command: |
             if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then
-                cp conf/dotpypirc ~/.pypirc
-                ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
                 python setup.py sdist bdist bdist_egg upload
             fi
