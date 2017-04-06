@@ -13,20 +13,20 @@ jobs:
     steps:
       # Deps first
       - checkout
-      - run: sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
-      - run: sudo docker -D pull fluidsignal/fluidasserts:container
-      - run: sudo apt-get -y install python-pip python3-pip curl apt-transport-https
-      - run: sudo pip install --upgrade pip setuptools
-        #- run: sudo apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
+        #- run: sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
+        #- run: sudo docker -D pull fluidsignal/fluidasserts:container
       - run: sudo apt-get update
       - run: sudo apt-get -y install python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv
+      - run: sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools
+      - run: sudo pip install --upgrade pip setuptools
+        #- run: sudo apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
         #- run: pyenv global 2.7.6 3.4.3
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
       - run: sudo pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel
       - run: scons deps
       - run: scons self
-      - run: scons smoke
+        #- run: scons smoke
 
       # Tests
       - run: scons lint
