@@ -38,15 +38,13 @@ jobs:
       - run: scons doc
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
+
+      # Deploy
+      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then \
+                python setup.py sdist bdist bdist_egg upload; \
+             fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
         #- run: cp -r build/coverage $CIRCLE_ARTIFACTS
         #- run: cp -r build/lint $CIRCLE_ARTIFACTS
         #- run: cp -r build/doc $CIRCLE_ARTIFACTS
         #- run: cp -r build/dist $CIRCLE_ARTIFACTS
-
-      # Deploy
-      - deploy:
-          command: |
-            if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then
-                python setup.py sdist bdist bdist_egg upload
-            fi
