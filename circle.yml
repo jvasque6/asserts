@@ -21,6 +21,7 @@ jobs:
         #- run: pyenv global 2.7.6 3.4.3
       - run: sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
+      - run: cat ~/.vault.txt
       - run: gem install overcommit
       - run: sudo pip install -U tox tox-pyenv flake8 pylint yamllint \
                 twine setupext-gitversion certifi ansible wheel
