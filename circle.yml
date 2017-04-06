@@ -21,10 +21,8 @@ jobs:
         #- run: pyenv global 2.7.6 3.4.3
       - run: sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: echo $VAULT > ~/.vault.txt
-      - run: cat ~/.vault.txt
       - run: gem install overcommit
-      - run: sudo pip install -U tox tox-pyenv flake8 pylint yamllint \
-                twine setupext-gitversion certifi ansible wheel
+      - run: sudo pip install -U tox tox-pyenv flake8 pylint yamllint twine setupext-gitversion certifi ansible wheel
       - run: sudo docker -D pull fluidsignal/fluidasserts:container
       - run: scons deps
       - run: scons self
@@ -41,7 +39,8 @@ jobs:
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
 
       # Deploy
-      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then python setup.py sdist bdist bdist_egg upload; fi
+      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then python setup.py sdist bdist_wheel; fi
+      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then twine upload build/dist/*.whl; fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
         #- run: cp -r build/coverage $CIRCLE_ARTIFACTS
         #- run: cp -r build/lint $CIRCLE_ARTIFACTS
