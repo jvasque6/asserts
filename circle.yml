@@ -8,8 +8,6 @@ jobs:
   build:
     working_directory: /tmp/fluid-asserts
     machine: true
-    evironment:
-      - USER: root
     steps:
       # Deps first
       - checkout
@@ -36,14 +34,14 @@ jobs:
       - run: overcommit --sign
       - run: overcommit --run
       - run: scons test
-        #- run: scons dist
+      - run: scons dist
       - run: scons doc
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
 
       # Deploy
-      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then python setup.py sdist bdist_wheel; fi
-      - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then twine upload build/dist/*.whl; fi
+      - run: if [[ $CIRCLE_BRANCH == "master" ]]; then python setup.py sdist bdist_wheel; fi
+      - run: if [[ $CIRCLE_BRANCH == "master" ]]; then twine upload build/dist/*.whl; fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
         #- run: cp -r build/coverage $CIRCLE_ARTIFACTS
         #- run: cp -r build/lint $CIRCLE_ARTIFACTS
