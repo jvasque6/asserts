@@ -31,9 +31,9 @@ Version preeliminar
 
 
 def soap_is_enable(wsdl):
-	"""
-	wsdl: Ruta al contenedor htttp:....?wsdl
-	"""
+    """
+    wsdl: Ruta al contenedor htttp:....?wsdl
+    """
     try:
         client = Client(wsdl)
         temp = str(client)
@@ -42,5 +42,5 @@ def soap_is_enable(wsdl):
     except Exception as e:
         print(e)
 
- def rest_is_enable(rest):
- 	pass
+def rest_is_enable(rest):
+    pass
