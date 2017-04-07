@@ -18,15 +18,15 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get -y install python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv
       - run: sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools
-      - run: sudo pip install --upgrade --force pip setuptools
+      - run: pip install --upgrade --force pip setuptools
       - run: sudo apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
       - run: pyenv install 2.7.11 --skip-existing
       - run: pyenv install 3.4.3 --skip-existing
       - run: pyenv install 3.5.2 --skip-existing
       - run: pyenv global 2.7.11 3.4.3 3.5.2
+      - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
-      - run: sudo pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel
       - run: scons deps
       - run: scons self
       - run: scons smoke
@@ -42,7 +42,6 @@ jobs:
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
 
       # Deploy
-      - run: sudo pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel
       - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then python setup.py sdist bdist_wheel; fi
       - run: if [[ $CIRCLE_BRANCH == "master" ]] || [[ $CIRCLE_BRANCH == "aroldan" ]]; then twine upload build/dist/*.whl; fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
