@@ -8,6 +8,7 @@ Config
 # standard imports
 import logging.config
 import os
+from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
 
 # 3rd party imports
@@ -41,3 +42,18 @@ file_handler.setFormatter(formatter)
 # add handlers to logger
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
+
+
+# Set __version__
+try:
+    _dist = get_distribution('fluidasserts')
+    # Normalize case for Windows systems
+    dist_loc = os.path.normcase(_dist.location)
+    here = os.path.normcase(__file__)
+    if not here.startswith(os.path.join(dist_loc, 'fluidasserts')):
+        # not installed, but there is another version that *is*
+        raise DistributionNotFound
+except DistributionNotFound:
+    __version__ = 'Please install this project with setup.py'
+else:
+    __version__ = _dist.version
