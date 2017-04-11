@@ -6,7 +6,7 @@ if [ -n "$VERBOSE" ]; then
 fi
 
 # importar entorno
-source $(git rev-parse --show-toplevel)/env.sh
+source $(git rev-parse --show-toplevel)/test/env.sh
 
 docker network create \
 		--subnet="$NET_IP" \

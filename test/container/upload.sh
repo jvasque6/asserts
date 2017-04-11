@@ -12,7 +12,7 @@ set -e
 echo "---### Actualizando contenedor en la nube."
 
 # importar entorno
-source $(git rev-parse --show-toplevel)/env.sh
+source $(git rev-parse --show-toplevel)/test/env.sh
 
 # subirla al repositorio
 docker push fluidsignal/fluidasserts:"$SERVICE"

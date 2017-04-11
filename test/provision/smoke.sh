@@ -9,7 +9,7 @@ fi
 set -e
 
 # importar entorno (ANSIBLE_*)
-source $(git rev-parse --show-toplevel)/env.sh
+source $(git rev-parse --show-toplevel)/test/env.sh
 
 # Probando modulo de root
 ansible container ${VERBOSE:+-vvv} -m ping

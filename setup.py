@@ -7,17 +7,12 @@ un instalador estandar de FLUIDAsserts.
 """
 
 from setuptools import setup, find_packages
-version_suffix = ''
-try:
-    with open('LOCAL-VERSION') as f:
-        version_suffix = f.readline().strip()
-except IOError:
-    pass
+import time
 
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version='0.20170407.2',
+    version=time.strftime('0.%Y%m%d.%H%M'),
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',

@@ -12,7 +12,7 @@ echo "---### Pruebas básicas sobre contenedor."
 set -e
 
 # importar entorno (SSH_AUTH_SOCK reseteado)
-source $(git rev-parse --show-toplevel)/env.sh
+source $(git rev-parse --show-toplevel)/test/env.sh
 
 # Probando conexion SSH
 ssh ${VERBOSE:+-vvv} -F ~/.ssh/config.facont "$IP" -l nonpriv \
