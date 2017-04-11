@@ -12,7 +12,7 @@ import time
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
-    version=time.strftime('0.%Y%m%d.%H%M')
+    version=time.strftime('0.%Y%m%d.%H%M'),
     url='https://fluid.la/',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
