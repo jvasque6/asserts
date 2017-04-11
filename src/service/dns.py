@@ -170,3 +170,38 @@ Details=%s:%s, %s', domain,
         result = False
 
     return result
+
+
+def has_recursion(nameserver):
+    """Function has_recursion.
+
+    Checks if nameserver has recursion enabled.
+    """
+    domain = 'google.com'
+    name = dns.name.from_text(domain)
+
+    try:
+        # Make a recursive request
+        request = dns.message.make_query(name, dns.rdatatype.A,
+                                         dns.rdataclass.IN)
+
+        response = dns.query.udp(request, nameserver)
+
+        result = True
+        if response.rcode() == 0:
+            logger.info('Recursion possible on server, \
+Details=%s:%s, %s', domain,
+                        nameserver, 'OPEN')
+            result = True
+        else:
+            logger.info('Recursion not possible on server, \
+Details=%s:%s, %s', domain,
+                        nameserver, 'CLOSE')
+            result = False
+    except dns.exception.SyntaxError:
+        logger.info('Recursion not possible on server, \
+Details=%s:%s, %s', domain,
+                    nameserver, 'CLOSE')
+        result = False
+
+    return result
