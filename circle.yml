@@ -48,7 +48,7 @@ jobs:
       - deploy:
           command: |
             if [[ $CIRCLE_BRANCH == "master" ]]; then
-                twine upload build/dist/*.whl;
+                twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload;
             fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
         #- run: cp -r build/coverage $CIRCLE_ARTIFACTS
