@@ -33,6 +33,7 @@ ssl.is_sslv3_enabled(server)
 ssl.is_tlsv1_enabled(server)
 
 dns.has_cache_poison(server, 'ns-79.awsdns-09.com.')
+dns.has_recursion('ns-79.awsdns-09.com.')
 
 server = 'smtp.gmail.com'
 ssl.is_cert_cn_not_equal_to_site(server, port=993)
