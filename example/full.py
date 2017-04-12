@@ -58,6 +58,7 @@ dns.is_xfr_enabled(domain, nameserver)
 dns.is_dynupdate_enabled(domain, nameserver)
 dns.has_cache_poison(domain, nameserver)
 dns.has_cache_snooping(nameserver)
+dns.has_recursion(nameserver)
 
 server = 'fluid.la'
 tcp.is_port_open(server, port=3389)

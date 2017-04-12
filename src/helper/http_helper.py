@@ -6,6 +6,7 @@
 import logging
 import re
 import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
@@ -16,6 +17,8 @@ from requests_oauthlib import OAuth1
 # pylint: disable=W0212
 # pylint: disable=R0902
 # pylint: disable=R0913
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
