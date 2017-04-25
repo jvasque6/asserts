@@ -43,7 +43,6 @@ def generic_http_assert(url, expected_regex, params=None,
     else:
         logger.info('%s HTTP assertion succeed, Details=%s, %s',
                     http_session.url, expected_regex, 'CLOSE')
-        logger.info(the_page)
         return False
 
 
