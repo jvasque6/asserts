@@ -59,11 +59,7 @@ Details=%s:%s, %s',
         result = False
     except dns.query.BadResponse:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
-        result = False
-    except dns.query.BadResponse:
-        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except socket.error:
         logger.info('Port closed for zone transfer, Details=%s:%s, %s',
@@ -94,7 +90,7 @@ def is_dynupdate_enabled(domain, nameserver):
             result = True
     except dns.query.BadResponse:
         logger.info('Zone update not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except socket.error:
         logger.info('Port closed for DNS update, Details=%s:%s, %s',

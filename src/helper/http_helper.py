@@ -221,7 +221,7 @@ def has_method(url, method):
                         url, method, 'Not Present', colored('CLOSE', 'green'))
             result = False
     else:
-        logger.info('Method %s not allowed in %s', method, url)
+        logger.info('Method %s not allowed in %s, %s', method, url, colored('CLOSE', 'green'))
         result = False
     return result
 
