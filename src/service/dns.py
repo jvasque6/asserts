@@ -61,6 +61,10 @@ Details=%s:%s, %s',
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
                     domain, nameserver, 'CLOSE')
         result = False
+    except dns.query.BadResponse:
+        logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
+                    domain, nameserver, 'CLOSE')
+        result = False
     except socket.error:
         logger.info('Port closed for zone transfer, Details=%s:%s, %s',
                     domain, nameserver, colored('CLOSE', 'green'))
