@@ -14,6 +14,7 @@ import logging
 
 # 3rd party imports
 from PyPDF2 import PdfFileReader
+from termcolor import colored
 
 # local imports
 
@@ -27,11 +28,11 @@ def __has_attribute(filename, metaname):
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
         logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, metavalue, 'OPEN')
+                    metaname, filename, metavalue, colored('OPEN', 'red'))
         result = True
     else:
         logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, '', 'CLOSE')
+                    metaname, filename, '', colored('CLOSE', 'green'))
         result = False
     return result
 

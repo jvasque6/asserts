@@ -5,7 +5,7 @@
 import logging
 
 # 3rd party imports
-# None
+from termcolor import colored
 
 # local imports
 # None
@@ -29,25 +29,25 @@ def __check_password_strength(password, length):
 
     if len(password) < length:
         logger.info('%s is too short. Details=%s, %s',
-                    password, len(password), 'OPEN')
+                    password, len(password), colored('OPEN', 'red'))
         result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
         logger.info('%s is too weak. Details=%s, %s',
                     password, "Caps: " + str(caps) +
                     " Lower: " + str(lower) +
                     " Numbers: " + str(nums) +
-                    " Special: " + str(special), 'OPEN')
+                    " Special: " + str(special), colored('OPEN', 'red'))
         result = True
     elif password in words:
         logger.info('%s is a dictionary password. Details=%s',
-                    password, 'OPEN')
+                    password, colored('OPEN', 'red'))
         result = True
     else:
         logger.info('%s password is secure. Details=%s, %s',
                     password, "Caps: " + str(caps) +
                     " Lower: " + str(lower) +
                     " Numbers: " + str(nums) +
-                    " Special: " + str(special), 'CLOSE')
+                    " Special: " + str(special), colored('CLOSE', 'green'))
         result = False
 
     return result
@@ -74,11 +74,11 @@ def is_otp_token_insecure(password):
     result = True
     if len(password) < min_password_len:
         logger.info('%s OTP token is too short. Details=%s, %s',
-                    password, len(password), 'OPEN')
+                    password, len(password), colored('OPEN', 'red'))
         result = True
     else:
         logger.info('%s OTP token is secure. Details=%s, %s',
-                    password, len(password), 'CLOSE')
+                    password, len(password), colored('CLOSE', 'green'))
         result = False
 
     return result
@@ -94,11 +94,11 @@ def is_ssid_insecure(ssid):
     result = True
     if ssid in words:
         logger.info('%s is a dictionary password. Details=%s',
-                    ssid, 'OPEN')
+                    ssid, colored('OPEN', 'red'))
         result = True
     else:
         logger.info('%s is a secure SSID. Details=%s',
-                    ssid, 'CLOSE')
+                    ssid, colored('CLOSE', 'green'))
         result = False
 
     return result

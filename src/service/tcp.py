@@ -12,7 +12,7 @@ import logging
 import socket
 
 # third party imports
-# none
+from termcolor import colored
 
 # local imports
 # none
@@ -22,7 +22,7 @@ logger = logging.getLogger('FLUIDAsserts')
 
 def is_port_open(ipaddress, port):
     """Check if a given port on an IP address is open."""
-    status = 'CLOSE'
+    status = colored('CLOSE', 'green')
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,9 +30,9 @@ def is_port_open(ipaddress, port):
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        status = 'CLOSE'
+        status = colored('CLOSE', 'green')
     if result == 0:
-        status = 'OPEN'
+        status = colored('OPEN', 'red')
         result = True
     else:
         result = False

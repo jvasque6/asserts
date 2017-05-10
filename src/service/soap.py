@@ -12,7 +12,7 @@ import logging
 import socket
 
 # third party imports
-# none
+from termcolor import colored
 
 # local imports
 # none
