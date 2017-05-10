@@ -36,7 +36,11 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
 
     wildcard_site = '*.' + site
 
-    if site != cert_cn and wildcard_site != cert_cn:
+    main_domain = 'NONE'
+    if cert_cn.startswith('*.'):
+        main_domain = '.' + cert_cn.split('*.')[1]
+
+    if site != cert_cn and wildcard_site != cert_cn and not site.endswith(main_domain):
         logger.info('%s CN not equals to site, Details=%s:%s, %s',
                     cert_cn, site, port, 'OPEN')
         result = True
