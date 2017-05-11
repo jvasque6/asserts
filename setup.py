@@ -56,7 +56,7 @@ setup(
         'dnspython==1.15.0',         # src.dns
         'tlslite-ng==0.7.0-alpha3',  # src.http_ssl
         'pyOpenSSL==16.2.0',         # src.http_ssl
-        'termcolor==1.1.0',          # logging
+        'colorama==0.3.9',           # logging
 
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
