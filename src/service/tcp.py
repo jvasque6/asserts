@@ -12,11 +12,11 @@ import logging
 import socket
 
 # third party imports
-from fluidasserts import show_close
-from fluidasserts import show_open
+# None
 
 # local imports
-# none
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 

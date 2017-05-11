@@ -8,11 +8,10 @@ import logging
 from ldap3 import Connection
 from ldap3.core.exceptions import LDAPExceptionError
 from ldap3 import Server
-from fluidasserts import show_close
-from fluidasserts import show_open
 
 # local imports
-# None
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 PORT = 389
 SSL_PORT = 636

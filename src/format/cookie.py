@@ -12,10 +12,10 @@ from http.cookies import BaseCookie
 
 # 3rd party imports
 import logging
-from fluidasserts import show_close
-from fluidasserts import show_open
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 from fluidasserts.helper import http_helper
 
 logger = logging.getLogger('FLUIDAsserts')

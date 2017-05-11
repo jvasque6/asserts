@@ -14,10 +14,10 @@ import logging
 
 # 3rd party imports
 from PyPDF2 import PdfFileReader
-from fluidasserts import show_close
-from fluidasserts import show_open
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 

@@ -17,11 +17,10 @@ from dns.zone import BadZone
 from dns.zone import NoNS
 from dns.zone import NoSOA
 import socket
-from fluidasserts import show_close
-from fluidasserts import show_open
 
 # local imports
-# None
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 

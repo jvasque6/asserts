@@ -10,11 +10,10 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
-from fluidasserts import show_close
-from fluidasserts import show_open
 
 # local imports
-# none
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # pylint: disable=W0212
 # pylint: disable=R0902

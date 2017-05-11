@@ -5,10 +5,11 @@
 import logging
 
 # 3rd party imports
-from fluidasserts import show_close
-from fluidasserts import show_open
+# None
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 from fluidasserts.helper.ssh_helper import ssh_exec_command
 
 logger = logging.getLogger('FLUIDAsserts')

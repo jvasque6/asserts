@@ -14,11 +14,13 @@ import logging
 import re
 
 # 3rd party imports
+# None
 
 # local imports
 from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
-from fluidasserts import show_close 
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 

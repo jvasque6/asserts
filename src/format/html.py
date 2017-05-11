@@ -16,6 +16,8 @@ import re
 
 # 3rd party imports
 from bs4 import BeautifulSoup
+
+# local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 

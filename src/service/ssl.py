@@ -10,14 +10,13 @@ import socket
 import datetime
 import ssl
 import tlslite
-from fluidasserts import show_close
-from fluidasserts import show_open
-
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.x509.oid import NameOID
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 from fluidasserts.helper import banner_helper
 
 PORT = 443

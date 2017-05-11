@@ -5,11 +5,11 @@
 import logging
 
 # 3rd party imports
-from fluidasserts import show_close
-from fluidasserts import show_open
+# None
 
 # local imports
-# None
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 
