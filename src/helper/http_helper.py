@@ -10,6 +10,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # 3rd party imports
 from requests_oauthlib import OAuth1
+from termcolor import colored
 
 # local imports
 # none
@@ -214,13 +215,13 @@ def has_method(url, method):
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
             logger.info('%s HTTP Method %s, Details=%s, %s',
-                        url, method, 'Is Present', 'OPEN')
+                        url, method, 'Is Present', colored('OPEN', 'red'))
         else:
             logger.info('%s HTTP Method %s, Details=%s, %s',
-                        url, method, 'Not Present', 'CLOSE')
+                        url, method, 'Not Present', colored('CLOSE', 'green'))
             result = False
     else:
-        logger.info('Method %s not allowed in %s', method, url)
+        logger.info('Method %s not allowed in %s, %s', method, url, colored('CLOSE', 'green'))
         result = False
     return result
 
@@ -233,15 +234,15 @@ def has_insecure_header(url, header):
     result = True
     if header in headers_info:
         value = headers_info[header]
-        state = (lambda val: 'CLOSE' if re.match(
+        state = (lambda val: colored('CLOSE', 'green') if re.match(
             HDR_RGX[header],
-            value) is not None else 'OPEN')(value)
+            value) is not None else colored('OPEN', 'red'))(value)
         logger.info('%s HTTP header %s, Details=%s, %s',
                     header, url, value, state)
-        result = state != 'CLOSE'
+        result = state != colored('CLOSE', 'green')
     else:
         logger.info('%s HTTP header %s, Details=%s, %s',
-                    header, url, 'Not Present', 'OPEN')
+                    header, url, 'Not Present', colored('OPEN', 'red'))
         result = True
 
     return result

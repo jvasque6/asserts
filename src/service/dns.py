@@ -17,6 +17,7 @@ from dns.zone import BadZone
 from dns.zone import NoNS
 from dns.zone import NoSOA
 import socket
+from termcolor import colored
 
 # local imports
 # None
@@ -35,34 +36,34 @@ def is_xfr_enabled(domain, nameserver):
         if not str(zone.origin).rstrip('.'):
             logger.info('Zone transfer not enabled on server, \
 Details=%s:%s, %s',
-                        domain, nameserver, 'CLOSE')
+                        domain, nameserver, colored('CLOSE', 'green'))
             result = False
         result = True
         logger.info('Zone transfer enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'OPEN')
+                    domain, nameserver, colored('OPEN', 'red'))
     except NoSOA:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except NoNS:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except BadZone:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except DNSException:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except dns.query.BadResponse:
         logger.info('Zone transfer not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except socket.error:
         logger.info('Port closed for zone transfer, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
 
     return result
@@ -81,19 +82,19 @@ def is_dynupdate_enabled(domain, nameserver):
 
         if response.rcode() > 0:
             logger.info('Zone update not enabled on server, \
-    Details=%s:%s, %s', domain, nameserver, 'CLOSE')
+    Details=%s:%s, %s', domain, nameserver, colored('CLOSE', 'green'))
             result = False
         else:
             logger.info('Zone update enabled on server, Details=%s:%s, %s',
-                        domain, nameserver, 'OPEN')
+                        domain, nameserver, colored('OPEN', 'red'))
             result = True
     except dns.query.BadResponse:
         logger.info('Zone update not enabled on server, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     except socket.error:
         logger.info('Port closed for DNS update, Details=%s:%s, %s',
-                    domain, nameserver, 'CLOSE')
+                    domain, nameserver, colored('CLOSE', 'green'))
         result = False
     return result
 
@@ -114,24 +115,24 @@ def has_cache_poison(domain, nameserver):
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
         logger.info('Cache poisonig is possible on server, \
-Details=%s:%s, %s', domain, nameserver, 'OPEN')
+Details=%s:%s, %s', domain, nameserver, colored('OPEN', 'red'))
         return True
 
     if response.response.rcode() != 0:
         logger.info('Cache poisonig is possible on server, \
-Details=%s:%s, %s', domain, nameserver, 'OPEN')
+Details=%s:%s, %s', domain, nameserver, colored('OPEN', 'red'))
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
             logger.info('Cache poisonig possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'OPEN')
+                        nameserver, colored('OPEN', 'red'))
             return True
         else:
             logger.info('Cache poisonig not possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'CLOSE')
+                        nameserver, colored('CLOSE', 'green'))
             result = False
 
     return result
@@ -164,17 +165,17 @@ def has_cache_snooping(nameserver):
         if response.rcode() == 0:
             logger.info('Cache snooping possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'OPEN')
+                        nameserver, colored('OPEN', 'red'))
             result = True
         else:
             logger.info('Cache snooping not possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'CLOSE')
+                        nameserver, colored('CLOSE', 'green'))
             result = False
     except dns.exception.SyntaxError:
         logger.info('Cache snooping not possible on server, \
 Details=%s:%s, %s', domain,
-                    nameserver, 'CLOSE')
+                    nameserver, colored('CLOSE', 'green'))
         result = False
 
     return result
@@ -199,17 +200,17 @@ def has_recursion(nameserver):
         if response.rcode() == 0:
             logger.info('Recursion possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'OPEN')
+                        nameserver, colored('OPEN', 'red'))
             result = True
         else:
             logger.info('Recursion not possible on server, \
 Details=%s:%s, %s', domain,
-                        nameserver, 'CLOSE')
+                        nameserver, colored('CLOSE', 'green'))
             result = False
     except dns.exception.SyntaxError:
         logger.info('Recursion not possible on server, \
 Details=%s:%s, %s', domain,
-                    nameserver, 'CLOSE')
+                    nameserver, colored('CLOSE', 'green'))
         result = False
 
     return result

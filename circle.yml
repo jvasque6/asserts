@@ -22,7 +22,7 @@ jobs:
       - run: pyenv install 3.4.3 --skip-existing
       - run: pyenv install 3.5.2 --skip-existing
       - run: pyenv global 2.7.11 3.4.3 3.5.2
-      - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel
+      - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel termcolor
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
       - run: scons deps

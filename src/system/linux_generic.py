@@ -5,7 +5,7 @@
 import logging
 
 # 3rd party imports
-# None
+from termcolor import colored
 
 # local imports
 from fluidasserts.helper.ssh_helper import ssh_exec_command
@@ -22,11 +22,11 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
 
     if out is '0027':
         logger.info('%s server has secure default privileges,\
-Details=umask %s, %s', server, out, 'CLOSE')
+Details=umask %s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has too open default privileges,\
-Details=umask %s, %s', server, out, 'OPEN')
+Details=umask %s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
 
@@ -40,11 +40,11 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
 
     if len(out) > 0:
         logger.info('%s server has sudo (or like) installed,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has not sudo (or like) installed,\
-Details=%s, %s', server, out, 'OPEN')
+Details=%s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
 
@@ -59,11 +59,11 @@ def is_os_compilers_installed(server, username, password,
 
     if len(out) == 0:
         logger.info('%s server has not compilers installed,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has compilers installed,\
-Details=%s, %s', server, out, 'OPEN')
+Details=%s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
 
@@ -78,11 +78,11 @@ def is_os_antimalware_not_installed(server, username, password,
 
     if len(out) > 0:
         logger.info('%s server has an antivirus installed,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has not an antivirus installed,\
-Details=%s, %s', server, out, 'OPEN')
+Details=%s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
 
@@ -97,11 +97,11 @@ def is_os_remote_admin_enabled(server, username, password,
 
     if len(out) == 0:
         logger.info('%s server has not remote admin login enabled,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has remote admin login enabled,\
-Details=%s, %s', server, out, 'OPEN')
+Details=%s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
 
@@ -116,15 +116,15 @@ def is_os_syncookies_disabled(server, username, password,
 
     if len(out) == 0:
         logger.info('%s server has syncookies enabled,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         return False
 
     if int(out) == 1:
         logger.info('%s server has syncookies enabled,\
-Details=%s, %s', server, out, 'CLOSE')
+Details=%s, %s', server, out, colored('CLOSE', 'green'))
         result = False
     else:
         logger.info('%s server has syncookies disabled,\
-Details=%s, %s', server, out, 'OPEN')
+Details=%s, %s', server, out, colored('OPEN', 'red'))
         result = True
     return result
