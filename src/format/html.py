@@ -16,7 +16,10 @@ import re
 
 # 3rd party imports
 from bs4 import BeautifulSoup
-from termcolor import colored
+
+# local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -77,12 +80,12 @@ def has_not_autocomplete(filename, selector):
         filename, selector, '[form|input]', attr, value)
 
     if has_attr is False:
-        status = colored('OPEN', 'red')
+        status = show_open()
         result = True
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, '', status)
     else:
-        status = colored('CLOSE', 'green')
+        status = show_close()
         result = False
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, value, status)
@@ -114,7 +117,7 @@ def is_cacheable(filename):
     if has_http_equiv is False:
         # Si no se tiene el atributo http-equiv="pragma" se califica como
         # vulnerable y sale del metodo.
-        status = colored('OPEN', 'red')
+        status = show_open()
         result = True
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, value, status)
@@ -129,7 +132,7 @@ def is_cacheable(filename):
     if has_content is False:
         # Si no se tiene el atributo content="no-cache" se califica como
         # vulnerable y sale del metodo.
-        status = colored('OPEN', 'red')
+        status = show_open()
         result = True
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, value, status)
@@ -146,7 +149,7 @@ def is_cacheable(filename):
     if has_http_equiv is False:
         # Si no se tiene el atributo http-equiv="expires" se califica como
         # vulnerable y sale del metodo.
-        status = colored('OPEN', 'red')
+        status = show_open()
         result = True
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, value, status)
@@ -161,14 +164,14 @@ def is_cacheable(filename):
     if has_content is False:
         # Si no se tiene el atributo content="-1" se califica como
         # vulnerable y sale del metodo.
-        status = colored('OPEN', 'red')
+        status = show_open()
         result = True
         logger.info('%s attribute in %s, Details=%s, %s',
                     attr, filename, value, status)
 
         return result
 
-    status = colored('CLOSE', 'green')
+    status = show_close()
     result = False
     logger.info('%s attribute in %s, Details=%s, %s',
                 attr, filename, value, status)

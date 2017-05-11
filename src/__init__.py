@@ -12,7 +12,7 @@ from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
 
 # 3rd party imports
-# none
+from colorama import Fore, Back, Style
 
 # local imports
 # none
@@ -57,3 +57,18 @@ except DistributionNotFound:
     __version__ = 'Please install this project with setup.py'
 else:
     __version__ = _dist.version
+
+def show_close(message=None):
+    if message is None:
+        text_to_show = 'CLOSE'
+    else:
+        text_to_show = message
+    return Fore.WHITE + Back.GREEN + text_to_show + Style.RESET_ALL
+
+
+def show_open(message=None):
+    if message is None:
+        text_to_show = 'OPEN'
+    else:
+        text_to_show = message
+    return Fore.WHITE + Back.RED + text_to_show + Style.RESET_ALL

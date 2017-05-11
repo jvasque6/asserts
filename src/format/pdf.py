@@ -14,9 +14,10 @@ import logging
 
 # 3rd party imports
 from PyPDF2 import PdfFileReader
-from termcolor import colored
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -28,11 +29,11 @@ def __has_attribute(filename, metaname):
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
         logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, metavalue, colored('OPEN', 'red'))
+                    metaname, filename, metavalue, show_open())
         result = True
     else:
         logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, '', colored('CLOSE', 'green'))
+                    metaname, filename, '', show_close())
         result = False
     return result
 

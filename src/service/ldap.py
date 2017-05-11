@@ -8,10 +8,10 @@ import logging
 from ldap3 import Connection
 from ldap3.core.exceptions import LDAPExceptionError
 from ldap3 import Server
-from termcolor import colored
 
 # local imports
-# None
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 PORT = 389
 SSL_PORT = 636
@@ -39,7 +39,7 @@ def is_anonymous_bind_allowed(ldap_server, port=PORT):
 
     if conn.bind() is True:
         logger.info('LDAP anonymous bind success, Details=%s:%s, %s',
-                    server, port, colored('OPEN', 'red'))
+                    server, port, show_open())
         result = True
     else:
         logger.info('LDAP anonymous bind failed, Details=%s:%s, %s',

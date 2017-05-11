@@ -10,13 +10,13 @@ import socket
 import datetime
 import ssl
 import tlslite
-from termcolor import colored
-
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.x509.oid import NameOID
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
 from fluidasserts.helper import banner_helper
 
 PORT = 443
@@ -31,7 +31,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
         cert = ssl.get_server_certificate((site, port))
     except socket.error:
         logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -48,11 +48,11 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
 
     if site != cert_cn and wildcard_site != cert_cn and not site.endswith(main_domain):
         logger.info('%s CN not equals to site, Details=%s:%s, %s',
-                    cert_cn, site, port, colored('OPEN', 'red'))
+                    cert_cn, site, port, show_open())
         result = True
     else:
         logger.info('%s CN equals to site, Details=%s:%s, %s',
-                    cert_cn, site, port, colored('CLOSE', 'green'))
+                    cert_cn, site, port, show_close())
         result = False
     return result
 
@@ -64,7 +64,7 @@ def is_cert_inactive(site, port=PORT):
         cert = ssl.get_server_certificate((site, port))
     except socket.error:
         logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -74,13 +74,13 @@ def is_cert_inactive(site, port=PORT):
         logger.info('Certificate is still valid, Details=Not valid \
 after: %s, Current time: %s, %s',
                     cert_obj.not_valid_after.isoformat(),
-                    datetime.datetime.now().isoformat(), colored('CLOSE', 'green'))
+                    datetime.datetime.now().isoformat(), show_close())
         result = False
     else:
         logger.info('Certificate is not valid, Details=Not valid \
 after: %s, Current time: %s, %s',
                     cert_obj.not_valid_after.isoformat(),
-                    datetime.datetime.now().isoformat(), colored('OPEN', 'red'))
+                    datetime.datetime.now().isoformat(), show_open())
         result = True
     return result
 
@@ -94,7 +94,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         cert = ssl.get_server_certificate((site, port))
     except socket.error:
         logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -107,13 +107,13 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         logger.info('Certificate has a secure lifespan, Details=Not \
 valid before: %s, Not valid after: %s, %s',
                     cert_obj.not_valid_before.isoformat(),
-                    cert_obj.not_valid_after.isoformat(), colored('CLOSE', 'green'))
+                    cert_obj.not_valid_after.isoformat(), show_close())
         result = False
     else:
         logger.info('Certificate has an insecure lifespan, Details=Not \
 valid before: %s, Not valid after: %s, %s',
                     cert_obj.not_valid_before.isoformat(),
-                    cert_obj.not_valid_after.isoformat(), colored('OPEN', 'red'))
+                    cert_obj.not_valid_after.isoformat(), show_open())
         result = True
     return result
 
@@ -151,15 +151,15 @@ def is_pfs_disabled(site, port=PORT):
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet.encode('utf-8'))
         logger.info('PFS enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except ssl.SSLError:
         logger.info('PFS not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('OPEN', 'red'))
+                    site, port, show_open())
         result = True
     except socket.error:
         logger.info('Port is closed for PFS check, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     finally:
         wrapped_socket.close()
@@ -184,23 +184,23 @@ def is_sslv3_enabled(site, port=PORT):
         tls_conn.handshakeClientCert(settings=new_settings)
 
         logger.info('SSLv3 enabled on site, Details=%s:%s, %s',
-                    site, port, colored('OPEN', 'red'))
+                    site, port, show_open())
         result = True
     except tlslite.errors.TLSRemoteAlert:
         logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except tlslite.errors.TLSAbruptCloseError:
         logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except tlslite.errors.TLSLocalAlert:
         logger.info('SSLv3 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except socket.error:
         logger.info('Port is closed for SSLv3 check, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     finally:
         sock.close()
@@ -225,23 +225,23 @@ def is_tlsv1_enabled(site, port=PORT):
         tls_conn.handshakeClientCert(settings=new_settings)
 
         logger.info('TLSv1 enabled on site, Details=%s:%s, %s',
-                    site, port, colored('OPEN', 'red'))
+                    site, port, show_open())
         result = True
     except tlslite.errors.TLSRemoteAlert:
         logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except tlslite.errors.TLSAbruptCloseError:
         logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except tlslite.errors.TLSLocalAlert:
         logger.info('TLSv1 not enabled on site, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     except socket.error:
         logger.info('Port is closed for TLSv1 check, Details=%s:%s, %s',
-                    site, port, colored('CLOSE', 'green'))
+                    site, port, show_close())
         result = False
     finally:
         sock.close()
