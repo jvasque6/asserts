@@ -21,7 +21,8 @@ from ftplib import FTP
 import logging
 
 # 3rd party imports
-from termcolor import colored
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # local imports
 from fluidasserts.helper import banner_helper
@@ -45,10 +46,10 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.quit()
         result = True
         logger.info('FTP Authentication %s:%s, Details=%s, %s',
-                    ip_address, port, username + ':' + password, colored('OPEN', 'red'))
+                    ip_address, port, username + ':' + password, show_open())
     except error_perm:
         logger.info('FTP Authentication %s:%s, Details=%s, %s',
-                    ip_address, port, username + ':' + password, colored('CLOSE', 'green'))
+                    ip_address, port, username + ':' + password, show_close())
         result = False
     return result
 
@@ -78,9 +79,9 @@ def is_version_visible(ip_address, port=PORT):
     if version:
         result = True
         logger.info('FTP version visible on %s:%s, Details=%s, %s, %s',
-                    ip_address, port, banner, version, colored('OPEN', 'red'))
+                    ip_address, port, banner, version, show_open())
     else:
         result = False
         logger.info('FTP version not visible on %s, Details=None, %s',
-                    ip_address, colored('CLOSE', 'green'))
+                    ip_address, show_close())
     return result

@@ -12,7 +12,8 @@ import logging
 import smtplib
 
 # 3rd party imports
-from termcolor import colored
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # local imports
 # none
@@ -30,11 +31,11 @@ def has_vrfy(ip_address, port=PORT):
     result = True
     if 502 not in vrfy:
         logger.info('SMTP "VRFY" method, Details=%s, %s',
-                    ip_address + ':' + str(port), colored('OPEN', 'red'))
+                    ip_address + ':' + str(port), show_open())
         result = True
     else:
         logger.info('SMTP "VRFY" method, Details=%s, %s',
-                    ip_address + ':' + str(port), colored('CLOSE', 'green'))
+                    ip_address + ':' + str(port), show_close())
         result = False
 
     server.quit()

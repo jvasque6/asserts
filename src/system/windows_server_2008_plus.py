@@ -6,7 +6,8 @@ import logging
 import re
 
 # 3rd party imports
-from termcolor import colored
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # local imports
 from fluidasserts.helper.winrm_helper import winrm_exec_command
@@ -38,12 +39,12 @@ def is_os_compilers_installed(server, username, password):
     if installed_compilers > 0:
         logger.info('%s server has compilers installed,\
                     Details=%s, %s', server,
-                    installed_software, colored('OPEN', 'red'))
+                    installed_software, show_open())
         result = True
     else:
         logger.info('%s server has not compilers installed,\
 Details=%s, %s', server,
-                    installed_software, colored('CLOSE', 'green'))
+                    installed_software, show_close())
         result = False
     return result
 
@@ -70,12 +71,12 @@ def is_os_antimalware_not_installed(server, username, password):
     if installed_av > 0:
         logger.info('%s server has an antivirus installed,\
 Details=%s, %s', server,
-                    installed_software, colored('CLOSE', 'green'))
+                    installed_software, show_close())
         result = False
     else:
         logger.info('%s server has not an antivirus installed,\
 Details=%s, %s', server,
-                    installed_software, colored('OPEN', 'red'))
+                    installed_software, show_open())
         result = True
     return result
 
@@ -85,7 +86,7 @@ def is_os_syncookies_disabled(server):
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
     logger.info('%s server has SYN Cookies enabled,\
-Details=%s', server, colored('CLOSE', 'green'))
+Details=%s', server, show_close())
     return False
 
 
@@ -117,7 +118,7 @@ def is_protected_users_disabled(server, username, password):
     if installed_patches == len(security_patches):
         logger.info('%s server has all required patches installed,\
 Details=%s, %s', server,
-                    ",".join(security_patches), colored('CLOSE', 'green'))
+                    ",".join(security_patches), show_close())
         result = False
     else:
         cmd = b'reg query \
@@ -134,10 +135,10 @@ Details=%s, %s', server,
             result = False
             logger.info('%s server has UseLogonCredentials\
 set to 0x0 Details=%s, %s', server,
-                        'UseLogonCredential', colored('CLOSE', 'green'))
+                        'UseLogonCredential', show_close())
         else:
             result = True
             logger.info('%s server has not all required patches installed,\
 Details=%s, %s', server,
-                        ",".join(security_patches), colored('OPEN', 'red'))
+                        ",".join(security_patches), show_open())
     return result

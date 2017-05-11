@@ -12,7 +12,8 @@ import logging
 import socket
 
 # third party imports
-from termcolor import colored
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # local imports
 # none

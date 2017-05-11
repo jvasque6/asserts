@@ -12,7 +12,8 @@ from http.cookies import BaseCookie
 
 # 3rd party imports
 import logging
-from termcolor import colored
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 # local imports
 from fluidasserts.helper import http_helper
@@ -24,29 +25,29 @@ def has_not_http_only(url, cookie_name):
     """Verifica si la cookie tiene el atributo httponly."""
     http_req = http_helper.HTTPSession(url)
     cookielist = BaseCookie(http_req.headers['set-cookie'])
-    result = colored('OPEN', 'red')
+    result = show_open()
     if cookie_name in cookielist:
         if cookielist[cookie_name]['httponly']:
-            result = colored('CLOSE', 'green')
+            result = show_close()
         logger.info('%s HTTP cookie %s, Details=%s, %s',
                     cookie_name, url, cookielist[cookie_name], result)
     else:
         logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, 'Not Present', colored('OPEN', 'red'))
-    return result == colored('OPEN', 'red')
+                    cookie_name, url, 'Not Present', show_open())
+    return result == show_open()
 
 
 def has_not_secure(url, cookie_name):
     """Verifica si la cookie tiene el atributo secure."""
     http_req = http_helper.HTTPSession(url)
     cookielist = BaseCookie(http_req.headers['set-cookie'])
-    result = colored('OPEN', 'red')
+    result = show_open()
     if cookie_name in cookielist:
         if cookielist[cookie_name]['secure']:
-            result = colored('CLOSE', 'green')
+            result = show_close()
         logger.info('%s HTTP cookie %s, Details=%s, %s',
                     cookie_name, url, cookielist[cookie_name], result)
     else:
         logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, 'Not Present', colored('OPEN', 'red'))
-    return result == colored('OPEN', 'red')
+                    cookie_name, url, 'Not Present', show_open())
+    return result == show_open()

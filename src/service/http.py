@@ -14,11 +14,11 @@ import logging
 import re
 
 # 3rd party imports
-from termcolor import colored
 
 # local imports
 from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
+from fluidasserts import show_close 
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -37,12 +37,12 @@ def generic_http_assert(url, expected_regex, params=None,
 
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
         logger.info('%s HTTP assertion not found, Details=%s, %s',
-                    http_session.url, expected_regex, colored('OPEN', 'red'))
+                    http_session.url, expected_regex, show_open())
         logger.info(the_page)
         return True
     else:
         logger.info('%s HTTP assertion succeed, Details=%s, %s',
-                    http_session.url, expected_regex, colored('CLOSE', 'green'))
+                    http_session.url, expected_regex, show_close())
         return False
 
 
@@ -222,11 +222,11 @@ def is_sessionid_exposed(url, argument='sessionid', params=None,
     if re.search(regex, response_url):
         result = True
         logger.info('Session ID is exposed in %s, Details=%s, %s',
-                    response_url, argument, colored('OPEN', 'red'))
+                    response_url, argument, show_open())
     else:
         result = False
         logger.info('Session ID is hidden in %s, Details=%s, %s',
-                    response_url, argument, colored('CLOSE', 'green'))
+                    response_url, argument, show_close())
     return result
 
 
@@ -243,9 +243,9 @@ def is_version_visible(ip_address, ssl=False, port=80):
     if version:
         result = True
         logger.info('HTTP version visible on %s:%s, Details=%s, %s, %s',
-                    ip_address, port, banner, version, colored('OPEN', 'red'))
+                    ip_address, port, banner, version, show_open())
     else:
         result = False
         logger.info('HTTP version not visible on %s:%s, Details=None, %s',
-                    ip_address, port, colored('CLOSE', 'green'))
+                    ip_address, port, show_close())
     return result
