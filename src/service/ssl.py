@@ -80,19 +80,22 @@ def is_cert_inactive(site, port=PORT):
     """Function to check whether cert is still valid."""
     result = True
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
-                                       server_hostname=site)
-        wrapped_socket.connect((site, port))
-        __cert = wrapped_socket.getpeercert(True)
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
-    except socket.error:
-        logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, show_close())
-        return False
+        cert = ssl.get_server_certificate((site, port))
+    except:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(10)
+            wrapped_socket = ssl.SSLSocket(sock=sock,
+                                           ca_certs=certifi.where(),
+                                           cert_reqs=ssl.CERT_REQUIRED,
+                                           server_hostname=site)
+            wrapped_socket.connect((site, port))
+            __cert = wrapped_socket.getpeercert(True)
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+        except socket.error:
+            logger.info('Port closed, Details=%s:%s, %s',
+                        site, port, show_close())
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -118,19 +121,22 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
     result = True
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
-                                       server_hostname=site)
-        wrapped_socket.connect((site, port))
-        __cert = wrapped_socket.getpeercert(True)
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
-    except socket.error:
-        logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, show_close())
-        return False
+        cert = ssl.get_server_certificate((site, port))
+    except:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(10)
+            wrapped_socket = ssl.SSLSocket(sock=sock,
+                                           ca_certs=certifi.where(),
+                                           cert_reqs=ssl.CERT_REQUIRED,
+                                           server_hostname=site)
+            wrapped_socket.connect((site, port))
+            __cert = wrapped_socket.getpeercert(True)
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+        except socket.error:
+            logger.info('Port closed, Details=%s:%s, %s',
+                        site, port, show_close())
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())

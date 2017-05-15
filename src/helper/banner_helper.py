@@ -26,7 +26,7 @@ import socket
 import ssl
 
 # 3rd party imports
-# none
+import certifi
 
 # local imports
 # none
@@ -197,11 +197,15 @@ def service_connect(server, port, is_ssl, payload=None):
     """Get the banner of the service on a given port of an IP address."""
     banner = ''
     try:
-        raw_socket = socket.create_connection((server, port))
+        raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if is_ssl:
-            sock = ssl.wrap_socket(raw_socket)
+            sock = ssl.SSLSocket(sock=raw_socket,
+                                 ca_certs=certifi.where(),
+                                 cert_reqs=ssl.CERT_REQUIRED,
+                                 server_hostname=server)
         else:
             sock = raw_socket
+        sock.connect((server, port))
         if payload is not None:
             sent_bytes = sock.send(payload)
             if sent_bytes < len(payload):
