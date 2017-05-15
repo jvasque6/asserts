@@ -11,7 +11,7 @@ install:
   # We need wheel installed to build wheels
   - "mkdir build"
   - "%PYTHON%\\python.exe -m pip install -U pip setuptools"
-    #- "%PYTHON%\\python.exe -m pip install fluidasserts wheel"
+  - "%PYTHON%\\python.exe -m pip install wheel"
   - "%PYTHON%\\python.exe setup.py bdist_wheel"
   - "%PYTHON%\\python.exe setup.py bdist_egg"
   - for %%x in (build\dist\*.zip) do %PYTHON%\\python.exe -m pip install -U %%x
