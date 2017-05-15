@@ -7,6 +7,7 @@ import logging
 import socket
 
 # 3rd party imports
+import certifi
 import datetime
 import ssl
 import tlslite
@@ -27,12 +28,25 @@ logger = logging.getLogger('FLUIDAsserts')
 def is_cert_cn_not_equal_to_site(site, port=PORT):
     """Function to check whether cert cn is equal to site."""
     result = True
+    has_sni = False
     try:
         cert = ssl.get_server_certificate((site, port))
-    except socket.error:
-        logger.info('Port closed, Details=%s:%s, %s',
-                    site, port, show_close())
-        return False
+    except:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(10)
+            wrapped_socket = ssl.SSLSocket(sock=sock,
+                                           ca_certs=certifi.where(),
+                                           cert_reqs=ssl.CERT_REQUIRED,
+                                           server_hostname=site)
+            wrapped_socket.connect((site, port))
+            __cert = wrapped_socket.getpeercert(True)
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+            has_sni = True
+        except socket.error:
+            logger.info('Port closed, Details=%s:%s, %s',
+                        site, port, show_close())
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -47,9 +61,14 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
         main_domain = '.' + cert_cn.split('*.')[1]
 
     if site != cert_cn and wildcard_site != cert_cn and not site.endswith(main_domain):
-        logger.info('%s CN not equals to site, Details=%s:%s, %s',
-                    cert_cn, site, port, show_open())
-        result = True
+        if has_sni:
+            logger.info('%s CN not equals to site. However server \
+supports SNI, Details=%s:%s, %s', cert_cn, site, port, show_close())
+            result = False
+        else:
+            logger.info('%s CN not equals to site, Details=%s:%s, %s',
+                        cert_cn, site, port, show_open())
+            result = True
     else:
         logger.info('%s CN equals to site, Details=%s:%s, %s',
                     cert_cn, site, port, show_close())
@@ -61,7 +80,15 @@ def is_cert_inactive(site, port=PORT):
     """Function to check whether cert is still valid."""
     result = True
     try:
-        cert = ssl.get_server_certificate((site, port))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=site)
+        wrapped_socket.connect((site, port))
+        __cert = wrapped_socket.getpeercert(True)
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
         logger.info('Port closed, Details=%s:%s, %s',
                     site, port, show_close())
@@ -91,7 +118,15 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
     result = True
     try:
-        cert = ssl.get_server_certificate((site, port))
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=site)
+        wrapped_socket.connect((site, port))
+        __cert = wrapped_socket.getpeercert(True)
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
         logger.info('Port closed, Details=%s:%s, %s',
                     site, port, show_close())
@@ -143,8 +178,11 @@ def is_pfs_disabled(site, port=PORT):
                ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:\
                ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA'
 
-    wrapped_socket = ssl.wrap_socket(sock,
-                                     ciphers=ciphers)
+    wrapped_socket = ssl.SSLSocket(sock=sock,
+                                   ca_certs=certifi.where(),
+                                   cert_reqs=ssl.CERT_REQUIRED,
+                                   server_hostname=site,
+                                   ciphers=ciphers)
 
     result = True
     try:
