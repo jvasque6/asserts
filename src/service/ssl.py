@@ -163,9 +163,6 @@ def is_pfs_disabled(site, port=PORT):
     """Function to check whether PFS is enabled."""
     packet = '<packet>SOME_DATA</packet>'
 
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(10)
-
     ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:\
                ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:\
                ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:\
@@ -184,23 +181,34 @@ def is_pfs_disabled(site, port=PORT):
                ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:\
                ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA'
 
-    wrapped_socket = ssl.SSLSocket(sock=sock,
-                                   ca_certs=certifi.where(),
-                                   cert_reqs=ssl.CERT_REQUIRED,
-                                   server_hostname=site,
-                                   ciphers=ciphers)
-
-    result = True
     try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock, ciphers=ciphers)
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet.encode('utf-8'))
         logger.info('PFS enabled on site, Details=%s:%s, %s',
                     site, port, show_close())
         result = False
     except ssl.SSLError:
-        logger.info('PFS not enabled on site, Details=%s:%s, %s',
-                    site, port, show_open())
-        result = True
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(10)
+            wrapped_socket = ssl.SSLSocket(sock=sock,
+                                           ca_certs=certifi.where(),
+                                           cert_reqs=ssl.CERT_REQUIRED,
+                                           server_hostname=site,
+                                           ciphers=ciphers)
+            wrapped_socket.connect((site, port))
+            wrapped_socket.send(packet.encode('utf-8'))
+            logger.info('PFS enabled on site, Details=%s:%s, %s',
+                        site, port, show_close())
+            result = False
+        except ssl.SSLError:
+            logger.info('PFS not enabled on site, Details=%s:%s, %s',
+                        site, port, show_open())
+            return True
+
     except socket.error:
         logger.info('Port is closed for PFS check, Details=%s:%s, %s',
                     site, port, show_close())

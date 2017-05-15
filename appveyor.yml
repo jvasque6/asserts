@@ -14,7 +14,7 @@ install:
   - "%PYTHON%\\python.exe -m pip install fluidasserts wheel"
   - "%PYTHON%\\python.exe setup.py bdist_wheel"
   - "%PYTHON%\\python.exe setup.py bdist_egg"
-  - "%PYTHON%\\python.exe setup.py install"
+  - "%PYTHON%\\python.exe -m pip install -U build/dist/FLUIDAsserts.*zip"
 
 build: off
 
