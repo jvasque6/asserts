@@ -38,14 +38,12 @@ def is_os_compilers_installed(server, username, password):
 
     result = True
     if installed_compilers > 0:
-        logger.info('%s server has compilers installed,\
-                    Details=%s, %s', server,
-                    installed_software, show_open())
+        logger.info('%s: %s server has compilers installed,\
+Details=%s', show_open(), server, installed_software)
         result = True
     else:
-        logger.info('%s server has not compilers installed,\
-Details=%s, %s', server,
-                    installed_software, show_close())
+        logger.info('%s: %s server has not compilers installed,\
+Details=%s', show_close(), server, installed_software)
         result = False
     return result
 
@@ -70,14 +68,12 @@ def is_os_antimalware_not_installed(server, username, password):
 
     result = True
     if installed_av > 0:
-        logger.info('%s server has an antivirus installed,\
-Details=%s, %s', server,
-                    installed_software, show_close())
+        logger.info('%s: %s server has an antivirus installed, \
+Details=%s', show_close(), server, installed_software)
         result = False
     else:
-        logger.info('%s server has not an antivirus installed,\
-Details=%s, %s', server,
-                    installed_software, show_open())
+        logger.info('%s: %s server has not an antivirus installed, \
+Details=%s', show_open(), server, installed_software)
         result = True
     return result
 
@@ -86,8 +82,8 @@ def is_os_syncookies_disabled(server):
     """Check if SynCookies or similar is enabled in Windows Server."""
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
-    logger.info('%s server has SYN Cookies enabled,\
-Details=%s', server, show_close())
+    logger.info('%s: %s server has SYN Cookies enabled.', show_close(),
+                server)
     return False
 
 
@@ -117,14 +113,13 @@ def is_protected_users_disabled(server, username, password):
 
     result = True
     if installed_patches == len(security_patches):
-        logger.info('%s server has all required patches installed,\
-Details=%s, %s', server,
-                    ",".join(security_patches), show_close())
+        logger.info('%s: %s server has all required patches installed, \
+Details=%s', show_close(), server, ",".join(security_patches))
         result = False
     else:
         cmd = b'reg query \
-                "HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest" \
-                /v UseLogonCredential'
+"HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest" \
+/v UseLogonCredential'
 
         has_logon_credentials = winrm_exec_command(server,
                                                    username,
@@ -134,12 +129,10 @@ Details=%s, %s', server,
                      has_logon_credentials,
                      re.IGNORECASE) is not None:
             result = False
-            logger.info('%s server has UseLogonCredentials\
-set to 0x0 Details=%s, %s', server,
-                        'UseLogonCredential', show_close())
+            logger.info('%s: %s server has UseLogonCredentials\
+set to 0x0 Details=%s', show_close(), server, 'UseLogonCredential')
         else:
             result = True
-            logger.info('%s server has not all required patches installed,\
-Details=%s, %s', server,
-                        ",".join(security_patches), show_open())
+            logger.info('%s: %s server has not all required patches \
+installed, Details=%s', show_open(), server, ",".join(security_patches))
     return result

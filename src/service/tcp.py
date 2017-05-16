@@ -30,14 +30,14 @@ def is_port_open(ipaddress, port):
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        logger.info('Port is close, Details=%s, %s',
-                    ipaddress + ':' + str(port), show_close())
+        logger.info('%s: Port is close, Details=%s',
+                    show_close(), ipaddress + ':' + str(port))
     if result == 0:
-        logger.info('Port is open, Details=%s, %s',
-                    ipaddress + ':' + str(port), show_open())
+        logger.info('%s: Port is open, Details=%s',
+                    show_open(), ipaddress + ':' + str(port))
         result = True
     else:
         result = False
-        logger.info('Port is close, Details=%s, %s',
-                    ipaddress + ':' + str(port), show_close())
+        logger.info('%s: Port is close, Details=%s',
+                    show_close(), ipaddress + ':' + str(port))
     return result

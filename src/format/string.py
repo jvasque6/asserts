@@ -29,26 +29,26 @@ def __check_password_strength(password, length):
     result = True
 
     if len(password) < length:
-        logger.info('%s is too short. Details=%s, %s',
-                    password, len(password), show_open())
+        logger.info('%s: %s is too short. Details=%s',
+                    show_open(), password, len(password))
         result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
-        logger.info('%s is too weak. Details=%s, %s',
-                    password, "Caps: " + str(caps) +
+        logger.info('%s: %s is too weak. Details=%s',
+                    show_open(), password, "Caps: " + str(caps) +
                     " Lower: " + str(lower) +
                     " Numbers: " + str(nums) +
-                    " Special: " + str(special), show_open())
+                    " Special: " + str(special))
         result = True
     elif password in words:
-        logger.info('%s is a dictionary password. Details=%s',
-                    password, show_open())
+        logger.info('%s: %s is a dictionary password',
+                    show_open(), password)
         result = True
     else:
-        logger.info('%s password is secure. Details=%s, %s',
-                    password, "Caps: " + str(caps) +
+        logger.info('%s: %s password is secure. Details=%s',
+                    show_close(), password, "Caps: " + str(caps) +
                     " Lower: " + str(lower) +
                     " Numbers: " + str(nums) +
-                    " Special: " + str(special), show_close())
+                    " Special: " + str(special))
         result = False
 
     return result
@@ -74,12 +74,12 @@ def is_otp_token_insecure(password):
 
     result = True
     if len(password) < min_password_len:
-        logger.info('%s OTP token is too short. Details=%s, %s',
-                    password, len(password), show_open())
+        logger.info('%s: %s OTP token is too short. Details=%s',
+                    show_open(), password, len(password))
         result = True
     else:
-        logger.info('%s OTP token is secure. Details=%s, %s',
-                    password, len(password), show_close())
+        logger.info('%s: %s OTP token is secure. Details=%s',
+                    show_close(), password, len(password))
         result = False
 
     return result
@@ -94,12 +94,12 @@ def is_ssid_insecure(ssid):
 
     result = True
     if ssid in words:
-        logger.info('%s is a dictionary password. Details=%s',
-                    ssid, show_open())
+        logger.info('%s: %s is a dictionary password.',
+                    show_open(), ssid)
         result = True
     else:
-        logger.info('%s is a secure SSID. Details=%s',
-                    ssid, show_close())
+        logger.info('%s: %s is a secure SSID.',
+                    show_close(), ssid)
         result = False
 
     return result

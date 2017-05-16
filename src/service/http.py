@@ -38,13 +38,13 @@ def generic_http_assert(url, expected_regex, params=None,
     the_page = response.text
 
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
-        logger.info('%s HTTP assertion not found, Details=%s, %s',
-                    http_session.url, expected_regex, show_open())
+        logger.info('%s: %s HTTP assertion not found, Details=%s',
+                    show_open(), http_session.url, expected_regex)
         logger.info(the_page)
         return True
     else:
-        logger.info('%s HTTP assertion succeed, Details=%s, %s',
-                    http_session.url, expected_regex, show_close())
+        logger.info('%s: %s HTTP assertion succeed, Details=%s',
+                    show_close(), http_session.url, expected_regex)
         return False
 
 
@@ -223,12 +223,12 @@ def is_sessionid_exposed(url, argument='sessionid', params=None,
     result = True
     if re.search(regex, response_url):
         result = True
-        logger.info('Session ID is exposed in %s, Details=%s, %s',
-                    response_url, argument, show_open())
+        logger.info('%s: Session ID is exposed in %s, Details=%s',
+                    show_open(), response_url, argument)
     else:
         result = False
-        logger.info('Session ID is hidden in %s, Details=%s, %s',
-                    response_url, argument, show_close())
+        logger.info('%s: Session ID is hidden in %s, Details=%s',
+                    show_close(), response_url, argument)
     return result
 
 
@@ -244,10 +244,10 @@ def is_version_visible(ip_address, ssl=False, port=80):
     result = True
     if version:
         result = True
-        logger.info('HTTP version visible on %s:%s, Details=%s, %s, %s',
-                    ip_address, port, banner, version, show_open())
+        logger.info('%s: HTTP version visible on %s:%s, Details=%s',
+                    show_open(), ip_address, port, banner, version)
     else:
         result = False
-        logger.info('HTTP version not visible on %s:%s, Details=None, %s',
-                    ip_address, port, show_close())
+        logger.info('%s: HTTP version not visible on %s:%s, Details=None',
+                    show_close(), ip_address, port)
     return result

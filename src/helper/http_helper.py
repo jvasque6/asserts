@@ -214,14 +214,15 @@ def has_method(url, method):
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            logger.info('%s HTTP Method %s, Details=%s, %s',
-                        url, method, 'Is Present', show_open())
+            logger.info('%s: %s HTTP Method %s, Details=%s',
+                        show_open(), url, method, 'Is Present')
         else:
-            logger.info('%s HTTP Method %s, Details=%s, %s',
-                        url, method, 'Not Present', show_close())
+            logger.info('%s: %s HTTP Method %s, Details=%s',
+                        show_close(), url, method, 'Not Present')
             result = False
     else:
-        logger.info('Method %s not allowed in %s, %s', method, url, show_close())
+        logger.info('%s: Method %s not allowed in %s', show_close(),
+                    method, url)
         result = False
     return result
 
@@ -237,12 +238,12 @@ def has_insecure_header(url, header):
         state = (lambda val: show_close() if re.match(
             HDR_RGX[header],
             value) is not None else show_open())(value)
-        logger.info('%s HTTP header %s, Details=%s, %s',
-                    header, url, value, state)
+        logger.info('%s: %s HTTP header %s, Details=%s',
+                    state, header, url, value)
         result = state != show_close()
     else:
-        logger.info('%s HTTP header %s, Details=%s, %s',
-                    header, url, 'Not Present', show_open())
+        logger.info('%s: %s HTTP header %s, Details=%s',
+                    show_open(), header, url, 'Not Present')
         result = True
 
     return result

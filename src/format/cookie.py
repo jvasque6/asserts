@@ -29,11 +29,11 @@ def has_not_http_only(url, cookie_name):
     if cookie_name in cookielist:
         if cookielist[cookie_name]['httponly']:
             result = show_close()
-        logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, cookielist[cookie_name], result)
+        logger.info('%s: %s HTTP cookie %s, Details=%s',
+                    result, cookie_name, url, cookielist[cookie_name])
     else:
-        logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, 'Not Present', show_open())
+        logger.info('%s: %s HTTP cookie %s, Details=%s',
+                    show_open(), cookie_name, url, 'Not Present')
     return result == show_open()
 
 
@@ -45,9 +45,9 @@ def has_not_secure(url, cookie_name):
     if cookie_name in cookielist:
         if cookielist[cookie_name]['secure']:
             result = show_close()
-        logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, cookielist[cookie_name], result)
+        logger.info('%s: %s HTTP cookie %s, Details=%s',
+                    result, cookie_name, url, cookielist[cookie_name])
     else:
-        logger.info('%s HTTP cookie %s, Details=%s, %s',
-                    cookie_name, url, 'Not Present', show_open())
+        logger.info('%s: %s HTTP cookie %s, Details=%s',
+                    show_open(), cookie_name, url, 'Not Present')
     return result == show_open()

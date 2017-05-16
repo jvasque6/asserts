@@ -28,12 +28,12 @@ def __has_attribute(filename, metaname):
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
-        logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, metavalue, show_open())
+        logger.info('%s: %s metadata in %s, Details=%s',
+                    show_open(), metaname, filename, metavalue)
         result = True
     else:
-        logger.info('%s metadata in %s, Details=%s, %s',
-                    metaname, filename, '', show_close())
+        logger.info('%s: %s metadata in %s, Details=%s',
+                    show_close(), metaname, filename, '')
         result = False
     return result
 

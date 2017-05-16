@@ -82,13 +82,13 @@ def has_not_autocomplete(filename, selector):
     if has_attr is False:
         status = show_open()
         result = True
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, '', status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, '')
     else:
         status = show_close()
         result = False
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, value, status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, value)
 
     return result
 
@@ -119,8 +119,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = show_open()
         result = True
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, value, status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, value)
 
         return result
 
@@ -134,8 +134,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = show_open()
         result = True
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, value, status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, value)
 
         return result
 
@@ -151,8 +151,8 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = show_open()
         result = True
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, value, status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, value)
 
         return result
 
@@ -166,14 +166,14 @@ def is_cacheable(filename):
         # vulnerable y sale del metodo.
         status = show_open()
         result = True
-        logger.info('%s attribute in %s, Details=%s, %s',
-                    attr, filename, value, status)
+        logger.info('%s: %s attribute in %s, Details=%s',
+                    status, attr, filename, value)
 
         return result
 
     status = show_close()
     result = False
-    logger.info('%s attribute in %s, Details=%s, %s',
-                attr, filename, value, status)
+    logger.info('%s: %s attribute in %s, Details=%s',
+                status, attr, filename, value)
 
     return result

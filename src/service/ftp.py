@@ -46,11 +46,13 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.login(username, password)
         ftp.quit()
         result = True
-        logger.info('FTP Authentication %s:%s, Details=%s, %s',
-                    ip_address, port, username + ':' + password, show_open())
+        logger.info('%s: FTP Authentication %s:%s, Details=%s',
+                    show_open(), ip_address, port,
+                    username + ':' + password)
     except error_perm:
-        logger.info('FTP Authentication %s:%s, Details=%s, %s',
-                    ip_address, port, username + ':' + password, show_close())
+        logger.info('%s: FTP Authentication %s:%s, Details=%s',
+                    show_close(), ip_address, port,
+                    username + ':' + password)
         result = False
     return result
 
@@ -79,10 +81,10 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        logger.info('FTP version visible on %s:%s, Details=%s, %s, %s',
-                    ip_address, port, banner, version, show_open())
+        logger.info('%s: FTP version visible on %s:%s, Details=%s, %s',
+                    show_open(), ip_address, port, banner, version)
     else:
         result = False
-        logger.info('FTP version not visible on %s, Details=None, %s',
-                    ip_address, show_close())
+        logger.info('%s: FTP version not visible on %s, Details=None',
+                    show_close(), ip_address)
     return result

@@ -30,12 +30,12 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        logger.info('SMTP "VRFY" method, Details=%s, %s',
-                    ip_address + ':' + str(port), show_open())
+        logger.info('%s: SMTP "VRFY" method, Details=%s',
+                    show_open(), ip_address + ':' + str(port))
         result = True
     else:
-        logger.info('SMTP "VRFY" method, Details=%s, %s',
-                    ip_address + ':' + str(port), show_close())
+        logger.info('%s: SMTP "VRFY" method, Details=%s',
+                    show_close(), ip_address + ':' + str(port))
         result = False
 
     server.quit()
