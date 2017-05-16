@@ -16,7 +16,7 @@ install:
   - "%PYTHON%\\python.exe setup.py bdist_egg"
   - cmd: >-
     FOR %%P IN ( 'dir /b /S "build\dist\*.zip"' ) DO ( ^
-        %PYTHON%\\python.exe pip install -U %%P
+        %PYTHON%\\python.exe pip install -U %%P ^
     )
 
 build: off
