@@ -23,12 +23,12 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
                               ssh_config)
 
     if out is '0027':
-        logger.info('%s server has secure default privileges,\
-Details=umask %s, %s', server, out, show_close())
+        logger.info('%s: %s server has secure default privileges,\
+Details=umask %s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has too open default privileges,\
-Details=umask %s, %s', server, out, show_open())
+        logger.info('%s: %s server has too open default privileges,\
+Details=umask %s', show_open(), server, out)
         result = True
     return result
 
@@ -41,12 +41,12 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
                               ssh_config)
 
     if len(out) > 0:
-        logger.info('%s server has sudo (or like) installed,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has sudo (or like) installed,\
+Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has not sudo (or like) installed,\
-Details=%s, %s', server, out, show_open())
+        logger.info('%s: %s server has not sudo (or like) installed,\
+Details=%s', show_open(), server, out)
         result = True
     return result
 
@@ -60,12 +60,12 @@ def is_os_compilers_installed(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s server has not compilers installed,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has not compilers installed,\
+Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has compilers installed,\
-Details=%s, %s', server, out, show_open())
+        logger.info('%s: %s server has compilers installed,\
+Details=%s', show_open(), server, out)
         result = True
     return result
 
@@ -79,12 +79,12 @@ def is_os_antimalware_not_installed(server, username, password,
                               ssh_config)
 
     if len(out) > 0:
-        logger.info('%s server has an antivirus installed,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has an antivirus installed,\
+Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has not an antivirus installed,\
-Details=%s, %s', server, out, show_open())
+        logger.info('%s: %s server has not an antivirus installed,\
+Details=%s', show_open(), server, out)
         result = True
     return result
 
@@ -98,12 +98,12 @@ def is_os_remote_admin_enabled(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s server has not remote admin login enabled,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has not remote admin login enabled,\
+Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has remote admin login enabled,\
-Details=%s, %s', server, out, show_open())
+        logger.info('%s: %s server has remote admin login enabled,\
+Details=%s', show_open(), server, out)
         result = True
     return result
 
@@ -117,16 +117,16 @@ def is_os_syncookies_disabled(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s server has syncookies enabled,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has syncookies enabled,\
+Details=%s', show_close(), server, out)
         return False
 
     if int(out) == 1:
-        logger.info('%s server has syncookies enabled,\
-Details=%s, %s', server, out, show_close())
+        logger.info('%s: %s server has syncookies enabled,\
+Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s server has syncookies disabled,\
-Details=%s, %s', server, out, show_open())
+        logger.info('%s: %s server has syncookies disabled,\
+Details=%s', show_open(), server, out)
         result = True
     return result
