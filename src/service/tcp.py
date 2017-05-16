@@ -23,21 +23,21 @@ logger = logging.getLogger('FLUIDAsserts')
 
 def is_port_open(ipaddress, port):
     """Check if a given port on an IP address is open."""
-    status = show_close()
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
+        sock.settimeout(3)
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        status = show_close()
+        logger.info('Port is close, Details=%s, %s',
+                    ipaddress + ':' + str(port), show_close())
     if result == 0:
-        status = show_open()
+        logger.info('Port is open, Details=%s, %s',
+                    ipaddress + ':' + str(port), show_open())
         result = True
     else:
         result = False
-    sock.close()
-    logger.info('Checking port, Details=%s, %s',
-                ipaddress + ':' + str(port), status)
+        logger.info('Port is close, Details=%s, %s',
+                    ipaddress + ':' + str(port), show_close())
     return result
