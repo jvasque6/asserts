@@ -14,7 +14,7 @@ install:
   - "%PYTHON%\\python.exe -m pip install wheel"
   - "%PYTHON%\\python.exe setup.py bdist_wheel"
   - "%PYTHON%\\python.exe setup.py bdist_egg"
-  - FOR %%P IN ( 'dir /b /S "build\dist\*.zip"' ) DO ( %PYTHON%\\python.exe -m pip install -U %%P )
+  - FOR /F %%P IN ('dir /b /S "build\dist\*.zip"') DO %PYTHON%\\python.exe -m pip install -U %%P
 
 build: off
 
