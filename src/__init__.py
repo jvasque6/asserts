@@ -12,11 +12,12 @@ from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
 
 # 3rd party imports
-from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style, init
 
 # local imports
 # none
 
+init(autoreset=True)
 
 # create logger
 logger = logging.getLogger('FLUIDAsserts')

@@ -40,12 +40,19 @@ def generic_http_assert(url, expected_regex, params=None,
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
         logger.info('%s: %s HTTP assertion not found, Details=%s',
                     show_open(), http_session.url, expected_regex)
-        logger.info(the_page)
         return True
     else:
         logger.info('%s: %s HTTP assertion succeed, Details=%s',
                     show_close(), http_session.url, expected_regex)
         return False
+
+
+def has_text(*args, **kwargs):
+    return not generic_http_assert(*args, **kwargs)
+
+
+def has_not_text(*args, **kwargs):
+    return generic_http_assert(*args, **kwargs)
 
 
 def is_header_x_asp_net_version_missing(url):

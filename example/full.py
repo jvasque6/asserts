@@ -113,8 +113,8 @@ server = 'fluid.la'
 http.is_version_visible(server, port=80)
 http.is_version_visible(server, ssl=True, port=443)
 text = 'in customers and users of the applications'
-http.generic_http_assert('https://fluid.la', text)
+http.has_not_text('https://fluid.la', text)
 text = 'Blog de FLUID | Expertos en Ethical Hacking - Pentesting'
-http.generic_http_assert('https://fluid.la/blog', text)
+http.has_not_text('https://fluid.la/blog', text)
 text = 'Sus datos han sido registrados y pronto nos comunicaremos con usted.'
-http.generic_http_assert('https://fluid.la/es/servicios/confirmacion/', text)
+http.has_not_text('https://fluid.la/es/servicios/confirmacion/', text)

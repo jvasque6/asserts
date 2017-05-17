@@ -292,11 +292,19 @@ def test_basic_open():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_notfound_string():
+def test_notfound_string_open():
     """Expected string not found?"""
     url = '%s/notfound' % (BASE_URL)
     expected = 'Expected string'
-    assert http.generic_http_assert(url, expected)
+    assert http.has_not_text(url, expected)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_found_string_open():
+    """Expected string not found?"""
+    url = '%s/expected' % (BASE_URL)
+    expected = 'Expected string'
+    assert http.has_text(url, expected)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -560,12 +568,19 @@ def test_delete_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_expected_string():
-    """Expected string found?"""
+def test_notfound_string_close():
+    """Expected string not found?"""
+    url = '%s/notfound' % (BASE_URL)
+    expected = 'Expected string'
+    assert not http.has_text(url, expected)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_found_string_close():
+    """Expected string not found?"""
     url = '%s/expected' % (BASE_URL)
     expected = 'Expected string'
-
-    assert not http.generic_http_assert(url, expected)
+    assert not http.has_not_text(url, expected)
 
 
 @pytest.mark.usefixtures('mock_http')
