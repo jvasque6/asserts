@@ -30,6 +30,7 @@ test_script:
   - "%PYTHON%\\python.exe example/full.py"
   - "%PYTHON%\\python.exe example/***REMOVED***.py"
   - "%PYTHON%\\python.exe example/***REMOVED***.py"
+  - "%PYTHON%\\python.exe example/***REMOVED***.py"
 
 #after_test:
   # This step builds your wheels.
