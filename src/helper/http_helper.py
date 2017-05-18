@@ -60,7 +60,7 @@ class HTTPSession(object):
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
 AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
         self.headers['Accept'] = '*/*'
-        self.headers['Accept-Languaje'] = 'en-US,en;q=0.5' 
+        self.headers['Accept-Languaje'] = 'en-US,en;q=0.5'
 
         self.do_request()
 
