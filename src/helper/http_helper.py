@@ -58,8 +58,9 @@ class HTTPSession(object):
         if self.headers is None:
             self.headers = dict()
         self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
-            AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
+AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
         self.headers['Accept'] = '*/*'
+        self.headers['Accept-Languaje'] = 'en-US,en;q=0.5' 
 
         self.do_request()
 
@@ -128,11 +129,11 @@ class HTTPSession(object):
         http_req = self.do_request()
         if http_req.text.find(text) >= 0:
             self.is_auth = True
-            logger.info('POST Authentication %s, Details=%s',
+            logger.debug('POST Authentication %s, Details=%s',
                         self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
-            logger.info(
+            logger.debug(
                 'POST Authentication %s, Details=%s',
                 self.url,
                 'Error text (' + http_req.text + ') ' + str(self.data))

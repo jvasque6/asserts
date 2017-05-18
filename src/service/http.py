@@ -27,12 +27,14 @@ logger = logging.getLogger('FLUIDAsserts')
 
 # pylint: disable=R0913
 def generic_http_assert(url, expected_regex, params=None,
-                        data='', files=None, cookies=None):
+                        data='', files=None, headers=None,
+                        cookies=None):
     """Generic HTTP assert method."""
     if cookies is None:
         cookies = dict()
     http_session = http_helper.HTTPSession(url, params=params,
                                            data=data, files=files,
+                                           headers=headers,
                                            cookies=cookies)
     response = http_session.response
     the_page = response.text
