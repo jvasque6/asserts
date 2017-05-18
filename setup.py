@@ -23,6 +23,7 @@ setup(
         'fluidasserts.helper',
         'fluidasserts.system',
         'fluidasserts.service',
+        'fluidasserts.utils',
     ],
     data_files=[
         ('', ['conf/conf.cfg', 'conf/conf.spec']),
