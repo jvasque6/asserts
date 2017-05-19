@@ -83,6 +83,8 @@ AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
                                     headers=self.headers,
                                     files=self.files)
             self.response = ret
+            if self.response.url != self.url:
+                self.url = self.response.url
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                    self.cookies != ret.request._cookies:
