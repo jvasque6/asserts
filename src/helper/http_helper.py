@@ -5,11 +5,12 @@
 # standard imports
 import logging
 import re
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # 3rd party imports
+from bs4 import *
 from requests_oauthlib import OAuth1
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
 from fluidasserts import show_close
@@ -82,6 +83,8 @@ AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
                                     headers=self.headers,
                                     files=self.files)
             self.response = ret
+            if self.response.url != self.url:
+                self.url = self.response.url
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                    self.cookies != ret.request._cookies:
@@ -130,7 +133,7 @@ AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
         if http_req.text.find(text) >= 0:
             self.is_auth = True
             logger.debug('POST Authentication %s, Details=%s',
-                        self.url, 'Success with ' + str(self.data))
+                         self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
             logger.debug(
@@ -199,6 +202,12 @@ AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
             self.is_auth = False
             logger.info('HTTPOAuth %s, Details=%s', self.url,
                         'HTTPOAuth Not present')
+
+    def get_html_value(self, field_type, field_name, field='value'):
+        soup = BeautifulSoup(self.response.text, 'html.parser')
+        text_to_get = soup.find(field_type,
+                                {'name': field_name})[field]
+        return text_to_get
 
 
 def options_request(url):

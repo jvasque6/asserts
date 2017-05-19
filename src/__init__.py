@@ -73,3 +73,4 @@ def show_open(message=None):
     else:
         text_to_show = message
     return Fore.WHITE + Back.RED + text_to_show + Style.RESET_ALL
+
