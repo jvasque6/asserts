@@ -8,7 +8,10 @@ tal las cookies son parte de dicho protocolo.
 
 
 # standard imports
-from http.cookies import BaseCookie
+try:
+    from http.cookies import BaseCookie
+except ImportError:
+    from Cookie import BaseCookie
 
 # 3rd party imports
 import logging
@@ -21,33 +24,35 @@ from fluidasserts.helper import http_helper
 logger = logging.getLogger('FLUIDAsserts')
 
 
-def has_not_http_only(url, cookie_name):
+def __has_not_attribute(url, cookie_name, attribute):
     """Verifica si la cookie tiene el atributo httponly."""
     http_req = http_helper.HTTPSession(url)
-    cookielist = BaseCookie(http_req.headers['set-cookie'])
+    try:
+        cookielist = BaseCookie(http_req.headers['set-cookie'])
+    except KeyError:
+        logger.info('%s: %s HTTP cookie %s, Details=%s',
+                    show_close(), cookie_name, url, 'Not Present')
+        return False
     result = show_open()
     if cookie_name in cookielist:
-        if cookielist[cookie_name]['httponly']:
+        if cookielist[cookie_name][attribute]:
             result = show_close()
-        logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    result, cookie_name, url, cookielist[cookie_name])
+        logger.info('%s: %s HTTP cookie %s, Details=%s:%s',
+                    result, cookie_name, url, cookielist[cookie_name],
+                    attribute)
     else:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    show_open(), cookie_name, url, 'Not Present')
+                    result, cookie_name, url, 'Not Present')
     return result == show_open()
+
+
+def has_not_http_only(url, cookie_name):
+    """Verifica si la cookie tiene el atributo httponly."""
+    attribute = 'httponly'
+    return __has_not_attribute(url, cookie_name, attribute)
 
 
 def has_not_secure(url, cookie_name):
     """Verifica si la cookie tiene el atributo secure."""
-    http_req = http_helper.HTTPSession(url)
-    cookielist = BaseCookie(http_req.headers['set-cookie'])
-    result = show_open()
-    if cookie_name in cookielist:
-        if cookielist[cookie_name]['secure']:
-            result = show_close()
-        logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    result, cookie_name, url, cookielist[cookie_name])
-    else:
-        logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    show_open(), cookie_name, url, 'Not Present')
-    return result == show_open()
+    attribute = 'secure'
+    return __has_not_attribute(url, cookie_name, attribute)
