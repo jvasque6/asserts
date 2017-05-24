@@ -277,3 +277,16 @@ def is_version_visible(ip_address, ssl=False, port=80):
         logger.info('%s: HTTP version not visible on %s:%s, Details=None',
                     show_close(), ip_address, port)
     return result
+
+def is_not_https_required(url):
+    """Check if HTTPS is always forced on a given url."""
+    http_session = http_helper.HTTPSession(url)
+    if http_session.url.startswith('https'):
+        logger.info('%s: HTTPS is forced on URL, Details=%s',
+                    show_close(), http_session.url)
+        return False
+    else:
+        logger.info('%s: HTTPS is not forced on URL, Details=%s',
+                    show_open(), http_session.url)
+        return True
+
