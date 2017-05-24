@@ -170,14 +170,14 @@ def has_sqli(url, expect=None, params=None, data='', cookies=None):
     if expect is None:
         expect = 'OLE.*Provider.*error'
 
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_xss(url, expect, params=None, data='', cookies=None):
     """Check XSS vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_command_injection(url, expect, params=None, data='', cookies=None):
@@ -271,7 +271,7 @@ def is_version_visible(ip_address, ssl=False, port=80):
     if version:
         result = True
         logger.info('%s: HTTP version visible on %s:%s, Details=%s',
-                    show_open(), ip_address, port, banner, version)
+                    show_open(), ip_address, port, version)
     else:
         result = False
         logger.info('%s: HTTP version not visible on %s:%s, Details=None',

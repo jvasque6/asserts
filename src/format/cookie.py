@@ -37,9 +37,9 @@ def __has_not_attribute(url, cookie_name, attribute):
     if cookie_name in cookielist:
         if cookielist[cookie_name][attribute]:
             result = show_close()
-        logger.info('%s: %s HTTP cookie %s, Details=%s:%s',
-                    result, cookie_name, url, cookielist[cookie_name],
-                    attribute)
+        logger.info('%s: %s HTTP cookie check for "%s" in %s, Details=%s',
+                    result, cookie_name, attribute, url,
+                    cookielist[cookie_name])
     else:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
                     result, cookie_name, url, 'Not Present')
