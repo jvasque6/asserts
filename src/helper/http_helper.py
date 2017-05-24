@@ -75,6 +75,8 @@ AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
                                    cookies=self.cookies,
                                    headers=self.headers)
             else:
+                self.headers['Content-Type'] = \
+                    'application/x-www-form-urlencoded'
                 ret = requests.post(self.url, verify=False,
                                     data=self.data,
                                     auth=self.auth,
