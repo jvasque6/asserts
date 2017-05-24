@@ -28,7 +28,7 @@ def __has_not_attribute(url, cookie_name, attribute):
     """Verifica si la cookie tiene el atributo httponly."""
     http_req = http_helper.HTTPSession(url)
     try:
-        cookielist = BaseCookie(http_req.headers['set-cookie'])
+        cookielist = BaseCookie(http_req.response.headers['set-cookie'])
     except KeyError:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
                     show_close(), cookie_name, url, 'Not Present')
@@ -37,9 +37,9 @@ def __has_not_attribute(url, cookie_name, attribute):
     if cookie_name in cookielist:
         if cookielist[cookie_name][attribute]:
             result = show_close()
-        logger.info('%s: %s HTTP cookie %s, Details=%s:%s',
-                    result, cookie_name, url, cookielist[cookie_name],
-                    attribute)
+        logger.info('%s: %s HTTP cookie check for "%s" in %s, Details=%s',
+                    result, cookie_name, attribute, url,
+                    cookielist[cookie_name])
     else:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
                     result, cookie_name, url, 'Not Present')

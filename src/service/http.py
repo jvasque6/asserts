@@ -40,21 +40,38 @@ def generic_http_assert(url, expected_regex, params=None,
     the_page = response.text
 
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
-        logger.info('%s: %s HTTP assertion not found, Details=%s',
-                    show_open(), http_session.url, expected_regex)
-        return True
-    else:
-        logger.info('%s: %s HTTP assertion succeed, Details=%s',
-                    show_close(), http_session.url, expected_regex)
         return False
+    return True
 
 
 def has_text(*args, **kwargs):
-    return not generic_http_assert(*args, **kwargs)
+    url = args[0]
+    expected_text = args[1]
+
+    ret = generic_http_assert(*args, **kwargs)
+    if ret:
+        logger.info('%s: %s Bad text present, Details=%s',
+                    show_open(), url, expected_text)
+        return True
+    else:
+        logger.info('%s: %s Bad text not present, Details=%s',
+                    show_close(), url, expected_text)
+        return False
 
 
 def has_not_text(*args, **kwargs):
-    return generic_http_assert(*args, **kwargs)
+    url = args[0]
+    expected_text = args[1]
+
+    ret = generic_http_assert(*args, **kwargs)
+    if not ret:
+        logger.info('%s: %s Expected text not present, Details=%s',
+                    show_open(), url, expected_text)
+        return True
+    else:
+        logger.info('%s: %s Expected text present, Details=%s',
+                    show_close(), url, expected_text)
+        return False
 
 
 def is_header_x_asp_net_version_missing(url):
@@ -153,71 +170,70 @@ def has_sqli(url, expect=None, params=None, data='', cookies=None):
     if expect is None:
         expect = 'OLE.*Provider.*error'
 
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_xss(url, expect, params=None, data='', cookies=None):
     """Check XSS vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_command_injection(url, expect, params=None, data='', cookies=None):
     """Check command injection vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params, data=data,
+                    cookies=cookies)
 
 
 def has_php_command_injection(url, expect, params=None, data='', cookies=None):
     """Check PHP command injection by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_session_fixation(url, expect, params=None, data=''):
     """Check session fixation by no passing cookies and authenticating."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=None)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=None)
 
 
 def has_insecure_dor(url, expect, params=None, data='', cookies=None):
     """Check insecure direct object reference vuln."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_dirtraversal(url, expect, params=None, data='', cookies=None):
     """Check directory traversal vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_csrf(url, expect, params=None, data='', cookies=None):
     """Check CSRF vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_lfi(url, expect, params=None, data='', cookies=None):
     """Check local file inclusion vuln by checking expected string."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_hpp(url, expect, params=None, data='', cookies=None):
     """Check HTTP Parameter Pollution vuln."""
-    return generic_http_assert(url, expect, params=params,
-                               data=data, cookies=cookies)
+    return has_text(url, expect, params=params,
+                    data=data, cookies=cookies)
 
 
 def has_insecure_upload(url, expect, file_param, file_path, params=None,
                         data='', cookies=None):
     """Check insecure upload vuln."""
     exploit_file = {file_param: open(file_path)}
-    return generic_http_assert(url, expect, params=params,
-                               data=data, files=exploit_file,
-                               cookies=cookies)
+    return has_text(url, expect, params=params, data=data,
+                    files=exploit_file, cookies=cookies)
 
 
 def is_sessionid_exposed(url, argument='sessionid', params=None,
@@ -254,9 +270,22 @@ def is_version_visible(ip_address, ssl=False, port=80):
     if version:
         result = True
         logger.info('%s: HTTP version visible on %s:%s, Details=%s',
-                    show_open(), ip_address, port, banner, version)
+                    show_open(), ip_address, port, version)
     else:
         result = False
         logger.info('%s: HTTP version not visible on %s:%s, Details=None',
                     show_close(), ip_address, port)
     return result
+
+
+def is_not_https_required(url):
+    """Check if HTTPS is always forced on a given url."""
+    http_session = http_helper.HTTPSession(url)
+    if http_session.url.startswith('https'):
+        logger.info('%s: HTTPS is forced on URL, Details=%s',
+                    show_close(), http_session.url)
+        return False
+    else:
+        logger.info('%s: HTTPS is not forced on URL, Details=%s',
+                    show_open(), http_session.url)
+        return True
