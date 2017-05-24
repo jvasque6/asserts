@@ -91,8 +91,8 @@ def test_a1_sqli_open():
 
     expected = 'No movies were found'
 
-    assert http.has_sqli(vulnerable_url, expected, params,
-                         cookies=bwapp_cookie)
+    assert not http.has_sqli(vulnerable_url, expected, params,
+                             cookies=bwapp_cookie)
 
 
 def test_a1_os_injection_open():
@@ -107,8 +107,8 @@ def test_a1_os_injection_open():
 
     expected = 'uname'
 
-    assert http.has_command_injection(vulnerable_url, expected,
-                                      data=data, cookies=bwapp_cookie)
+    assert not http.has_command_injection(vulnerable_url, expected,
+                                          data=data, cookies=bwapp_cookie)
 
 
 def test_a1_php_injection_open():
@@ -123,9 +123,9 @@ def test_a1_php_injection_open():
 
     expected = '<p><i>test;phpinfo()'
 
-    assert http.has_php_command_injection(vulnerable_url, expected,
-                                          params=params,
-                                          cookies=bwapp_cookie)
+    assert not http.has_php_command_injection(vulnerable_url, expected,
+                                              params=params,
+                                              cookies=bwapp_cookie)
 
 
 def test_a1_hpp_open():
@@ -138,7 +138,8 @@ def test_a1_hpp_open():
 
     expected = 'HTTP Parameter Pollution detected'
 
-    assert http.has_hpp(vulnerable_url, expected, cookies=bwapp_cookie)
+    assert not http.has_hpp(vulnerable_url, expected,
+                            cookies=bwapp_cookie)
 
 
 def test_a1_insecure_upload_open():
@@ -155,9 +156,9 @@ def test_a1_insecure_upload_open():
 
     expected = 'Sorry, the file extension is not allowed'
 
-    assert http.has_insecure_upload(vulnerable_url, expected,
-                                    file_param, file_path, data=data,
-                                    cookies=bwapp_cookie)
+    assert not http.has_insecure_upload(vulnerable_url, expected,
+                                        file_param, file_path, data=data,
+                                        cookies=bwapp_cookie)
 
 
 def test_a2_sessionid_exposed_open():
@@ -176,7 +177,7 @@ def test_a2_sessionid_exposed_open():
 @pytest.mark.usefixtures('mock_http')
 def test_a2_session_fixation_open():
     """Session fixation posible?"""
-    assert http.has_session_fixation(
+    assert not http.has_session_fixation(
         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
@@ -192,8 +193,8 @@ def test_a3_xss_open():
 
     expected = 'Welcome &lt;script'
 
-    assert http.has_xss(vulnerable_url, expected, params,
-                        cookies=bwapp_cookie)
+    assert not http.has_xss(vulnerable_url, expected, params,
+                            cookies=bwapp_cookie)
 
 
 def test_a4_insecure_dor_open():
@@ -209,8 +210,8 @@ def test_a4_insecure_dor_open():
 
     expected = '<b>15 EUR</b>'
 
-    assert http.has_insecure_dor(vulnerable_url, expected, data=data,
-                                 cookies=bwapp_cookie)
+    assert not http.has_insecure_dor(vulnerable_url, expected, data=data,
+                                     cookies=bwapp_cookie)
 
 
 def test_a7_dirtraversal_open():
@@ -225,8 +226,8 @@ def test_a7_dirtraversal_open():
 
     expected = 'An error occurred, please try again'
 
-    assert http.has_dirtraversal(vulnerable_url, expected, params=params,
-                                 cookies=bwapp_cookie)
+    assert not http.has_dirtraversal(vulnerable_url, expected, params=params,
+                                     cookies=bwapp_cookie)
 
 
 def test_a7_lfi_open():
@@ -241,8 +242,8 @@ def test_a7_lfi_open():
 
     expected = 'Try to climb higher Spidy'
 
-    assert not http.has_lfi(vulnerable_url, expected, params=params,
-                            cookies=bwapp_cookie)
+    assert http.has_lfi(vulnerable_url, expected, params=params,
+                        cookies=bwapp_cookie)
 
 
 def test_a8_csrf_open():
@@ -258,8 +259,8 @@ def test_a8_csrf_open():
 
     expected = 'Current password'
 
-    assert http.has_csrf(vulnerable_url, expected, params=params,
-                         cookies=bwapp_cookie)
+    assert not http.has_csrf(vulnerable_url, expected, params=params,
+                             cookies=bwapp_cookie)
 
 
 
@@ -347,8 +348,8 @@ def test_a1_sqli_close():
     params = {'title': 'a\'', 'action': 'search'}
 
     expected = 'No movies were found'
-    assert not http.has_sqli(vulnerable_url, expected, params,
-                             cookies=bwapp_cookie)
+    assert http.has_sqli(vulnerable_url, expected, params,
+                         cookies=bwapp_cookie)
 
 
 def test_a1_os_injection_close():
@@ -363,9 +364,9 @@ def test_a1_os_injection_close():
 
     expected = 'uname'
 
-    assert not http.has_command_injection(vulnerable_url, expected,
-                                          data=data,
-                                          cookies=bwapp_cookie)
+    assert http.has_command_injection(vulnerable_url, expected,
+                                      data=data,
+                                      cookies=bwapp_cookie)
 
 
 def test_a1_php_injection_close():
@@ -380,9 +381,9 @@ def test_a1_php_injection_close():
 
     expected = '<p><i>test;phpinfo()'
 
-    assert not http.has_php_command_injection(vulnerable_url, expected,
-                                              params=params,
-                                              cookies=bwapp_cookie)
+    assert http.has_php_command_injection(vulnerable_url, expected,
+                                          params=params,
+                                          cookies=bwapp_cookie)
 
 
 def test_a1_hpp_close():
@@ -395,8 +396,7 @@ def test_a1_hpp_close():
 
     expected = 'HTTP Parameter Pollution detected'
 
-    assert not http.has_hpp(vulnerable_url, expected,
-                            cookies=bwapp_cookie)
+    assert http.has_hpp(vulnerable_url, expected, cookies=bwapp_cookie)
 
 
 def test_a1_insecure_upload_close():
@@ -413,9 +413,9 @@ def test_a1_insecure_upload_close():
 
     expected = 'Sorry, the file extension is not allowed'
 
-    assert not http.has_insecure_upload(vulnerable_url, expected,
-                                        file_param, file_path, data=data,
-                                        cookies=bwapp_cookie)
+    assert http.has_insecure_upload(vulnerable_url, expected,
+                                    file_param, file_path, data=data,
+                                    cookies=bwapp_cookie)
 
 
 def test_a2_sessionid_exposed_close():
@@ -434,7 +434,7 @@ def test_a2_sessionid_exposed_close():
 @pytest.mark.usefixtures('mock_http')
 def test_a2_session_fixation_close():
     """Session fixation posible?"""
-    assert not http.has_session_fixation(
+    assert http.has_session_fixation(
         '%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
@@ -450,8 +450,8 @@ def test_a3_xss_close():
 
     expected = 'Welcome &lt;script'
 
-    assert not http.has_xss(vulnerable_url, expected, params,
-                            cookies=bwapp_cookie)
+    assert http.has_xss(vulnerable_url, expected, params,
+                        cookies=bwapp_cookie)
 
 
 def test_a4_insecure_dor_close():
@@ -467,8 +467,8 @@ def test_a4_insecure_dor_close():
 
     expected = '<b>15 EUR</b>'
 
-    assert not http.has_insecure_dor(vulnerable_url, expected, data=data,
-                                     cookies=bwapp_cookie)
+    assert http.has_insecure_dor(vulnerable_url, expected, data=data,
+                                 cookies=bwapp_cookie)
 
 
 def test_a7_dirtraversal_close():
@@ -483,9 +483,9 @@ def test_a7_dirtraversal_close():
 
     expected = 'An error occurred, please try again'
 
-    assert not http.has_dirtraversal(vulnerable_url, expected,
-                                     params=params,
-                                     cookies=bwapp_cookie)
+    assert http.has_dirtraversal(vulnerable_url, expected,
+                                 params=params,
+                                 cookies=bwapp_cookie)
 
 
 def test_a7_lfi_close():
@@ -500,8 +500,8 @@ def test_a7_lfi_close():
 
     expected = 'Try to climb higher Spidy'
 
-    assert http.has_lfi(vulnerable_url, expected, params=params,
-                        cookies=bwapp_cookie)
+    assert not http.has_lfi(vulnerable_url, expected, params=params,
+                            cookies=bwapp_cookie)
 
 
 def test_a8_csrf_close():
@@ -517,8 +517,8 @@ def test_a8_csrf_close():
 
     expected = 'Current password'
 
-    assert not http.has_csrf(vulnerable_url, expected, params=params,
-                             cookies=bwapp_cookie)
+    assert http.has_csrf(vulnerable_url, expected, params=params,
+                         cookies=bwapp_cookie)
 
 
 @pytest.mark.usefixtures('mock_http')
