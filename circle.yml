@@ -19,9 +19,8 @@ jobs:
       - run: pip install --upgrade --force pip setuptools
       - run: sudo apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
       - run: pyenv install 2.7.11 --skip-existing
-      - run: pyenv install 3.4.3 --skip-existing
-      - run: pyenv install 3.5.2 --skip-existing
-      - run: pyenv global 2.7.11 3.4.3 3.5.2
+      - run: pyenv install 3.6.1 --skip-existing
+      - run: pyenv global 2.7.11 3.6.1
       - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
