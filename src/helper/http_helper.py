@@ -58,8 +58,8 @@ class HTTPSession(object):
         self.is_auth = False
         if self.headers is None:
             self.headers = dict()
-        self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64) \
-AppleWebKit/537.36 (KHTML, like Gecko) FLUIDAsserts/1.0'
+        self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64; \
+rv:45.0) Gecko/20100101 Firefox/45.0'
         self.headers['Accept'] = '*/*'
         self.headers['Accept-Languaje'] = 'en-US,en;q=0.5'
 
