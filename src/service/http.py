@@ -38,6 +38,7 @@ def generic_http_assert(url, expected_regex, params=None,
                                            cookies=cookies)
     response = http_session.response
     the_page = response.text
+    logger.debug(the_page)
 
     if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
         return False
