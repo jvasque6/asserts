@@ -289,3 +289,9 @@ def is_not_https_required(url):
         logger.info('%s: HTTPS is not forced on URL, Details=%s',
                     show_open(), http_session.url)
         return True
+
+
+def has_dirlisting(url):
+    """Check if url has directory listing enabled."""
+    bad_text = 'Index of'
+    return has_text(url, bad_text)
