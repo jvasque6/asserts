@@ -97,6 +97,7 @@ http.is_basic_auth_enabled(url)
 http.has_trace_method(url)
 http.has_delete_method(url)
 http.has_put_method(url)
+http.has_dirlisting('https://fluid.la/icons')
 #http.has_sqli(url, expect=None, params=None, data='', cookies=None)
 #http.has_xss(url, expect, params=None, data='', cookies=None)
 #http.has_command_injection(url, expect, params=None, data='', cookies=None)
@@ -118,3 +119,6 @@ text = 'Blog de FLUID | Expertos en Ethical Hacking - Pentesting'
 http.has_not_text('https://fluid.la/blog', text)
 text = 'Sus datos han sido registrados y pronto nos comunicaremos con usted.'
 http.has_not_text('https://fluid.la/es/servicios/confirmacion/', text)
+
+
+http.is_not_https_required('http://fluid.la')
