@@ -14,7 +14,7 @@ import subprocess
 import pytest
 
 # local imports
-from fluidasserts.service import smb 
+from fluidasserts.service import smb
 
 # Constants
 CONTAINER_IP = '172.30.216.100'
@@ -29,7 +29,7 @@ def weak_smb():
     """Configura perfil de SMB vulnerable."""
     print('Running SMB vulnerable playbook')
     subprocess.call('ansible-playbook test/provision/samba.yml \
-            --tags basic,weak', shell=True)
+            --tags=basic,weak', shell=True)
 
 
 @pytest.fixture(scope='module')
@@ -37,7 +37,7 @@ def hard_smb():
     """Configura perfil de SMB endurecido."""
     print('Running SMB hardened playbook')
     subprocess.call('ansible-playbook test/provision/samba.yml \
-            --tags basic,hard', shell=True)
+            --tags=basic,hard', shell=True)
 
 
 #

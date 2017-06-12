@@ -64,10 +64,10 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
         domain=domain)
 
     if not conn:
-        print('%s: Anonymous login not possible, \
+        logger.info('%s: Anonymous login not possible, \
 Details=%s\%s:%s', show_close(), domain, user, server)
 
         return False
-    print('%s: Anonymous login enabled, Details=%s\%s:%s',
+    logger.info('%s: Anonymous login enabled, Details=%s\%s:%s',
         show_open(), domain, user, server)
     return True
