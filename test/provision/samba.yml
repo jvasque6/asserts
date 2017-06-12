@@ -22,19 +22,40 @@
         state: installed
         update_cache: yes
       with_items: "{{ samba_packages }}"
+      tags: basic
 
-    - name: Copy the Customize smb.conf file
+    - name: Copy the default smb.conf file
       template:
-        src: samba/etc_samba_smb.conf.j2
+        src: samba/etc_samba_smb.conf-weak.j2
         dest: /etc/samba/smb.conf
         backup: yes
       notify:
         - restart samba
+      tags: basic
+
+    - name: Copy the weak smb.conf file
+      template:
+        src: samba/etc_samba_smb.conf-weak.j2
+        dest: /etc/samba/smb.conf
+        backup: yes
+      notify:
+        - restart samba
+      tags: weak
+
+    - name: Copy the hard smb.conf file
+      template:
+        src: samba/etc_samba_smb.conf-hard.j2
+        dest: /etc/samba/smb.conf
+        backup: yes
+      notify:
+        - restart samba
+      tags: hard
 
     - name: Create Samba users restricted group
       group:
         name: "{{ samba_group_name }}"
         state: present
+      tags: basic
 
     - name: Add the User(s) to Samba group
       user:
@@ -42,15 +63,18 @@
         groups: "{{ samba_group_name }}"
         append: yes
       with_items: "{{ samba_users }}"
+      tags: basic
 
     - name: Create Samba Password for User(s)
       shell: "(echo {{ item.smbpasswd }}; echo {{ item.smbpasswd }}) | smbpasswd -s -a {{ item.name }}"
       with_items: "{{ samba_users }}"
+      tags: basic
 
     - name: "Check that {{ public_share_path }} exist"
       stat:
         path: "{{ public_share_path }}"
       register: public_dir_exists
+      tags: basic
 
     - name: "Create {{ public_share_path }} directory"
       file:
@@ -61,11 +85,13 @@
         mode: 0755
         recurse: yes
       when: public_dir_exists.stat.exists == False
+      tags: basic
 
     - name: "Check that {{ private_share_path }} exist"
       stat:
         path: "{{ private_share_path }}"
       register: private_dir_exists
+      tags: basic
 
     - name: "Create {{ private_share_path }} directory"
       file:
@@ -75,7 +101,9 @@
         group: "{{ samba_group_name }}"
         mode: 1770
       when: private_dir_exists.stat.exists == False
+      tags: basic
 
+  handlers:
     - name: restart samba
       service:
         name: "{{ item }}"
@@ -83,4 +111,3 @@
       with_items:
         - nmbd
         - smbd
-
