@@ -1,14 +1,14 @@
-#======================= Global Settings ===================================== 
+#======================= Global Settings =====================================
 #{{ ansible_managed }}
 [global]
  workgroup = {{ workgroup }}
  server string = Samba Asserts Server %v
- netbios name = assertsserver 
+ netbios name = assertsserver
  security = user
  map to guest = bad user
  dns proxy = no
 #============================ Share Definitions ==============================
- 
+
 #### Public Share ####
 [{{ public_share_name }}]
  path = {{ public_share_path }}
