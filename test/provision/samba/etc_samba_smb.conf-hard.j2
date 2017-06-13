@@ -5,6 +5,10 @@
  server string = Samba Asserts Server %v
  netbios name = assertsserver
  security = user
+ server role = standalone server
+ passdb backend = tdbsam
+ obey pam restrictions = yes
+ unix password sync = yes
  map to guest = never
  dns proxy = no
  restrict anonymous = 2

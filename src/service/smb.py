@@ -23,15 +23,14 @@ def __smb_connect(server=None, user=None, password=None,
     try:
         client_machine_name = 'assertspc'
         conn = SMBConnection.SMBConnection(user, password,
-            client_machine_name, server, domain=domain, use_ntlm_v2=True,
-            is_direct_tcp=True)
+        client_machine_name, server, domain=domain, use_ntlm_v2=True,
+        is_direct_tcp=True)
 
-        if conn.connect(server, 445):
+        if conn.connect(server, port=445):
             return conn
         return False
     except socket.error:
         return False
-
 
 def has_dirlisting(share=None, *args, **kwargs):
     """Check if a SMB share has dirlisting."""
@@ -55,7 +54,6 @@ Details=%s\%s:%s', show_close(), domain, user, server)
 
         return False
 
-
 def is_anonymous_enabled(server=None, domain='WORKGROUP'):
     """Check if a SMB share has dirlisting."""
     user = 'anonymous'
@@ -71,3 +69,4 @@ Details=%s\%s:%s', show_close(), domain, user, server)
     logger.info('%s: Anonymous login enabled, Details=%s\%s:%s',
         show_open(), domain, user, server)
     return True
+

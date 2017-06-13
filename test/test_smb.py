@@ -9,6 +9,7 @@ SMB se encuentra adecuadamente implementado.
 # standard imports
 from __future__ import print_function
 import subprocess
+import time
 
 # 3rd party imports
 import pytest
@@ -48,6 +49,7 @@ def hard_smb():
 @pytest.mark.usefixtures('container', 'weak_smb')
 def test_is_anonymous_enabled_open():
     """Conexion anonima habilitada?"""
+    time.sleep(5)
     assert smb.is_anonymous_enabled(CONTAINER_IP)
 
 
@@ -59,6 +61,7 @@ def test_is_anonymous_enabled_open():
 @pytest.mark.usefixtures('container', 'hard_smb')
 def test_is_anonymous_enabled_close():
     """Conexion anonima habilitada?"""
+    time.sleep(5)
     assert not smb.is_anonymous_enabled(CONTAINER_IP)
 
 # Pendente implementar resto de metodos
