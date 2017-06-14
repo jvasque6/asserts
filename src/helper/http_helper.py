@@ -250,7 +250,7 @@ def has_insecure_header(url, header):
         value = headers_info[header]
         state = (lambda val: show_close() if re.match(
             HDR_RGX[header],
-            value) is not None else show_open())(value)
+            value, re.IGNORECASE) is not None else show_open())(value)
         logger.info('%s: %s HTTP header %s, Details=%s',
                     state, header, url, value)
         result = state != show_close()
