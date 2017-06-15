@@ -59,10 +59,13 @@ class HTTPSession(object):
         self.is_auth = False
         if self.headers is None:
             self.headers = dict()
-        self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64; \
+        if 'User-Agent' not in self.headers:
+            self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64; \
 rv:45.0) Gecko/20100101 Firefox/45.0'
-        self.headers['Accept'] = '*/*'
-        self.headers['Accept-Languaje'] = 'en-US,en;q=0.5'
+        if 'Accept' not in self.headers:
+            self.headers['Accept'] = '*/*'
+        if 'Accept-Language' not in self.headers:
+            self.headers['Accept-Language'] = 'en-US,en;q=0.5'
 
         self.do_request()
 
@@ -77,8 +80,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                    headers=self.headers)
             else:
                 if not self.files:
-                    self.headers['Content-Type'] = \
-                        'application/x-www-form-urlencoded'
+                    if 'Content-Type' not in self.headers:
+                        self.headers['Content-Type'] = \
+                            'application/x-www-form-urlencoded'
                 ret = requests.post(self.url, verify=False,
                                     data=self.data,
                                     auth=self.auth,
