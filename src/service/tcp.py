@@ -17,6 +17,7 @@ import socket
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 
 logger = logging.getLogger('FLUIDAsserts')
 

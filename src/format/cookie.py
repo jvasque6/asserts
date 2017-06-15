@@ -19,6 +19,7 @@ import logging
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper import http_helper
 
 logger = logging.getLogger('FLUIDAsserts')
@@ -31,7 +32,7 @@ def __has_not_attribute(url, cookie_name, attribute):
         cookielist = BaseCookie(http_req.response.headers['set-cookie'])
     except KeyError:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    show_close(), cookie_name, url, 'Not Present')
+                    show_unknown(), cookie_name, url, 'Not Present')
         return False
     result = show_open()
     if cookie_name in cookielist:
@@ -42,7 +43,7 @@ def __has_not_attribute(url, cookie_name, attribute):
                     cookielist[cookie_name])
     else:
         logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    result, cookie_name, url, 'Not Present')
+                    show_unknown(), cookie_name, url, 'Not Present')
     return result == show_open()
 
 

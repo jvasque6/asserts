@@ -21,6 +21,7 @@ import socket
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -63,7 +64,7 @@ Details=%s:%s',
         result = False
     except socket.error:
         logger.info('%s: Port closed for zone transfer, Details=%s:%s',
-                    show_close(), domain, nameserver)
+                    show_unknown(), domain, nameserver)
         result = False
 
     return result
@@ -94,7 +95,7 @@ def is_dynupdate_enabled(domain, nameserver):
         result = False
     except socket.error:
         logger.info('%s: Port closed for DNS update, Details=%s:%s',
-                    show_close(), domain, nameserver)
+                    show_unknown(), domain, nameserver)
         result = False
     return result
 

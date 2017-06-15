@@ -26,16 +26,9 @@ logger = logging.getLogger('FLUIDAsserts')
 
 
 # pylint: disable=R0913
-def generic_http_assert(url, expected_regex, params=None,
-                        data='', files=None, headers=None,
-                        cookies=None):
+def generic_http_assert(url, expected_regex, *args, **kwargs):
     """Generic HTTP assert method."""
-    if cookies is None:
-        cookies = dict()
-    http_session = http_helper.HTTPSession(url, params=params,
-                                           data=data, files=files,
-                                           headers=headers,
-                                           cookies=cookies)
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
     the_page = response.text
 
@@ -44,11 +37,9 @@ def generic_http_assert(url, expected_regex, params=None,
     return True
 
 
-def has_text(*args, **kwargs):
-    url = args[0]
-    expected_text = args[1]
-
-    ret = generic_http_assert(*args, **kwargs)
+def has_text(url, expected_text, *args, **kwargs):
+    """Check if a bad text is present."""
+    ret = generic_http_assert(url, expected_text, *args, **kwargs)
     if ret:
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, expected_text)
@@ -59,11 +50,9 @@ def has_text(*args, **kwargs):
         return False
 
 
-def has_not_text(*args, **kwargs):
-    url = args[0]
-    expected_text = args[1]
-
-    ret = generic_http_assert(*args, **kwargs)
+def has_not_text(url, expected_text, *args, **kwargs):
+    """Check if a required text is not present."""
+    ret = generic_http_assert(url, expected_text, *args, **kwargs)
     if not ret:
         logger.info('%s: %s Expected text not present, Details=%s',
                     show_open(), url, expected_text)
@@ -165,67 +154,57 @@ def has_put_method(url):
     return http_helper.has_method(url, 'PUT')
 
 
-def has_sqli(url, expect=None, params=None, data='', cookies=None):
+def has_sqli(url, expect=None, *args, **kwargs):
     """Check SQLi vuln by checking expected string."""
     if expect is None:
         expect = 'OLE.*Provider.*error'
 
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_xss(url, expect, params=None, data='', cookies=None):
+def has_xss(url, expect, *args, **kwargs):
     """Check XSS vuln by checking expected string."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect,  *args, **kwargs)
 
 
-def has_command_injection(url, expect, params=None, data='', cookies=None):
+def has_command_injection(url, expect, *args, **kwargs):
     """Check command injection vuln by checking expected string."""
-    return has_text(url, expect, params=params, data=data,
-                    cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_php_command_injection(url, expect, params=None, data='', cookies=None):
+def has_php_command_injection(url, expect, *args, **kwargs):
     """Check PHP command injection by checking expected string."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_session_fixation(url, expect, params=None, data=''):
+def has_session_fixation(url, expect, *args, **kwargs):
     """Check session fixation by no passing cookies and authenticating."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=None)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_insecure_dor(url, expect, params=None, data='', cookies=None):
+def has_insecure_dor(url, expect, *args, **kwargs):
     """Check insecure direct object reference vuln."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_dirtraversal(url, expect, params=None, data='', cookies=None):
+def has_dirtraversal(url, expect, *args, **kwargs):
     """Check directory traversal vuln by checking expected string."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_csrf(url, expect, params=None, data='', cookies=None):
+def has_csrf(url, expect, *args, **kwargs):
     """Check CSRF vuln by checking expected string."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_lfi(url, expect, params=None, data='', cookies=None):
+def has_lfi(url, expect, *args, **kwargs):
     """Check local file inclusion vuln by checking expected string."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
-def has_hpp(url, expect, params=None, data='', cookies=None):
+def has_hpp(url, expect, *args, **kwargs):
     """Check HTTP Parameter Pollution vuln."""
-    return has_text(url, expect, params=params,
-                    data=data, cookies=cookies)
+    return has_text(url, expect, *args, **kwargs)
 
 
 def has_insecure_upload(url, expect, file_param, file_path, params=None,
@@ -236,11 +215,9 @@ def has_insecure_upload(url, expect, file_param, file_path, params=None,
                     files=exploit_file, cookies=cookies)
 
 
-def is_sessionid_exposed(url, argument='sessionid', params=None,
-                         data='', cookies=None):
+def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     """Check if resulting URL has a session ID exposed."""
-    http_session = http_helper.HTTPSession(url, params=params,
-                                           data=data, cookies=cookies)
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response_url = http_session.response.url
 
     regex = r'\b' + argument + r'\b'

@@ -15,6 +15,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 
 # pylint: disable=W0212
 # pylint: disable=R0902
