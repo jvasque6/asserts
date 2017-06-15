@@ -64,8 +64,8 @@ class HTTPSession(object):
 rv:45.0) Gecko/20100101 Firefox/45.0'
         if 'Accept' not in self.headers:
             self.headers['Accept'] = '*/*'
-        if 'Accept-Languaje' not in self.headers:
-            self.headers['Accept-Languaje'] = 'en-US,en;q=0.5'
+        if 'Accept-Language' not in self.headers:
+            self.headers['Accept-Language'] = 'en-US,en;q=0.5'
 
         self.do_request()
 
