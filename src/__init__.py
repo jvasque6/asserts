@@ -74,3 +74,10 @@ def show_open(message=None):
         text_to_show = message
     return Fore.WHITE + Back.RED + text_to_show + Style.RESET_ALL
 
+
+def show_unknown(message=None):
+    if message is None:
+        text_to_show = 'UNKNOWN'
+    else:
+        text_to_show = message
+    return Fore.WHITE + Back.YELLOW + text_to_show + Style.RESET_ALL

@@ -18,6 +18,7 @@ from cryptography.x509.oid import NameOID
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper import banner_helper
 
 PORT = 443
@@ -45,7 +46,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
             has_sni = True
         except socket.error:
             logger.info('%s: Port closed, Details=%s:%s',
-                         show_close(), site, port)
+                         show_unknown(), site, port)
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -94,7 +95,7 @@ def is_cert_inactive(site, port=PORT):
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
             logger.info('%s: Port closed, Details=%s:%s',
-                        show_close(), site, port)
+                        show_unknown(), site, port)
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -135,7 +136,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
             logger.info('%s: Port closed, Details=%s:%s',
-                        show_close(), site, port)
+                        show_unknown(), site, port)
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -211,7 +212,7 @@ def is_pfs_disabled(site, port=PORT):
 
     except socket.error:
         logger.info('%s: Port is closed for PFS check, Details=%s:%s',
-                    show_close(), site, port)
+                    show_unknown(), site, port)
         result = False
     finally:
         wrapped_socket.close()
@@ -252,7 +253,7 @@ def is_sslv3_enabled(site, port=PORT):
         result = False
     except socket.error:
         logger.info('%s: Port is closed for SSLv3 check, Details=%s:%s',
-                    show_close(), site, port)
+                    show_unknown(), site, port)
         result = False
     finally:
         sock.close()
@@ -293,7 +294,7 @@ def is_tlsv1_enabled(site, port=PORT):
         result = False
     except socket.error:
         logger.info('%s: Port is closed for TLSv1 check, Details=%s:%s',
-                    show_close(), site, port)
+                    show_unknown(), site, port)
         result = False
     finally:
         sock.close()
