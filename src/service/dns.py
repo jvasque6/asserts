@@ -115,22 +115,22 @@ def has_cache_poison(domain, nameserver):
     try:
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
-        logger.info('%s: Cache poisonig is possible on server, \
+        logger.info('%s: Cache poisoning is possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
         return True
 
     if response.response.rcode() != 0:
-        logger.info('%s: Cache poisonig is possible on server, \
+        logger.info('%s: Cache poisoning is possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
-            logger.info('%s: Cache poisonig possible on server, \
+            logger.info('%s: Cache poisoning possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
             return True
         else:
-            logger.info('%s: Cache poisonig not possible on server, \
+            logger.info('%s: Cache poisoning not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
             result = False
 
