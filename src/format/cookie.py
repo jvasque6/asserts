@@ -21,6 +21,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import http_helper
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -47,12 +48,14 @@ def __has_not_attribute(url, cookie_name, attribute):
     return result == show_open()
 
 
+@track
 def has_not_http_only(url, cookie_name):
     """Verifica si la cookie tiene el atributo httponly."""
     attribute = 'httponly'
     return __has_not_attribute(url, cookie_name, attribute)
 
 
+@track
 def has_not_secure(url, cookie_name):
     """Verifica si la cookie tiene el atributo secure."""
     attribute = 'secure'

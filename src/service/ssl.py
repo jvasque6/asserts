@@ -20,12 +20,14 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import banner_helper
+from fluidasserts.utils.decorators import track
 
 PORT = 443
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_cert_cn_not_equal_to_site(site, port=PORT):
     """Function to check whether cert cn is equal to site."""
     result = True
@@ -77,6 +79,7 @@ supports SNI, Details=%s:%s', show_close(), cert_cn, site, port)
     return result
 
 
+@track
 def is_cert_inactive(site, port=PORT):
     """Function to check whether cert is still valid."""
     result = True
@@ -116,6 +119,7 @@ after: %s, Current time: %s',
     return result
 
 
+@track
 def is_cert_validity_lifespan_unsafe(site, port=PORT):
     """Function to check whether cert lifespan is safe."""
     max_validity_days = 365
@@ -160,6 +164,7 @@ valid before: %s, Not valid after: %s',
     return result
 
 
+@track
 def is_pfs_disabled(site, port=PORT):
     """Function to check whether PFS is enabled."""
     packet = '<packet>SOME_DATA</packet>'
@@ -219,6 +224,7 @@ def is_pfs_disabled(site, port=PORT):
     return result
 
 
+@track
 def is_sslv3_enabled(site, port=PORT):
     """Function to check whether SSLv3 suites are enabled."""
     result = True
@@ -260,6 +266,7 @@ def is_sslv3_enabled(site, port=PORT):
     return result
 
 
+@track
 def is_tlsv1_enabled(site, port=PORT):
     """Function to check whether TLSv1 suites are enabled."""
     result = True

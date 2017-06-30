@@ -12,12 +12,14 @@ import re
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.helper.winrm_helper import winrm_exec_command
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
 # pylint: disable=W1401
 # pylint: disable=W1402
+@track
 def is_os_compilers_installed(server, username, password):
     """Check if there's any compiler installed in Windows Server."""
     common_compilers = ['Visual', 'Python', 'Mingw', 'CygWin']
@@ -48,6 +50,7 @@ Details=%s', show_close(), server, installed_software)
     return result
 
 
+@track
 def is_os_antimalware_not_installed(server, username, password):
     """Check if there's any antimalware installed in Windows Server."""
     common_av = ['Symantec', 'Norton', 'AVG', 'Kaspersky', 'TrendMicro',
@@ -78,6 +81,7 @@ Details=%s', show_open(), server, installed_software)
     return result
 
 
+@track
 def is_os_syncookies_disabled(server):
     """Check if SynCookies or similar is enabled in Windows Server."""
     # On Windows, SYN Cookies are enabled by default and there's no
@@ -87,6 +91,7 @@ def is_os_syncookies_disabled(server):
     return False
 
 
+@track
 def is_protected_users_disabled(server, username, password):
     """Function is_protected_users_disabled.
 

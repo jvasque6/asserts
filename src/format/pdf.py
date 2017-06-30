@@ -18,6 +18,7 @@ from PyPDF2 import PdfFileReader
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -38,16 +39,19 @@ def __has_attribute(filename, metaname):
     return result
 
 
+@track
 def has_creator(filename):
     """Verifica si el PDF tiene el atributo creator en la seccion docinfo."""
     return __has_attribute(filename, 'creator')
 
 
+@track
 def has_producer(filename):
     """Verifica si el PDF tiene el atributo producer en la seccion docinfo."""
     return __has_attribute(filename, 'producer')
 
 
+@track
 def has_author(filename):
     """Verifica si el PDF tiene el atributo author en la seccion docinfo."""
     return __has_attribute(filename, 'author')

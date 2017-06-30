@@ -12,6 +12,7 @@ from ldap3 import Server
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 PORT = 389
 SSL_PORT = 636
@@ -19,6 +20,7 @@ SSL_PORT = 636
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_anonymous_bind_allowed(ldap_server, port=PORT):
     """Function is_anonymous_bind_allowed.
 

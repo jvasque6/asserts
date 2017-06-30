@@ -4,8 +4,8 @@
 
 Este modulo permite verificar vulnerabilidades sobre webservices:
 
-	* Uso de REST API sin credenciales o token
-	* Uso de SOAP sin credenciales o token
+    * Uso de REST API sin credenciales o token
+    * Uso de SOAP sin credenciales o token
 """
 # standard imports
 import logging
@@ -17,6 +17,7 @@ from suds.client import Client
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -30,6 +31,7 @@ Version preeliminar
 """
 
 
+@track
 def soap_is_enable(wsdl):
     """
     wsdl: Ruta al contenedor htttp:....?wsdl

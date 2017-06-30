@@ -17,12 +17,14 @@ import smtplib
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 PORT = 25
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def has_vrfy(ip_address, port=PORT):
     """Tiene habilitado comando VRFY."""
     server = smtplib.SMTP(ip_address, port)

@@ -27,6 +27,7 @@ import logging
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.helper import banner_helper
+from fluidasserts.utils.decorators import track
 
 PORT = 21
 NULL_PASSWORD = ''
@@ -37,6 +38,7 @@ ANONYMOUS_PASSWORD = 'anonymous'
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_a_valid_user(ip_address, username, password, port=PORT):
     """Determina via FTP si un usuario es valido o no."""
     result = False
@@ -57,21 +59,25 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
     return result
 
 
+@track
 def user_without_password(ip_address, username):
     """Determina si el usuario no tiene clave."""
     return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
+@track
 def is_anonymous_enabled(ip_address):
     """Determina si un servidor FTP tiene habilitado conexion anonima."""
     return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
+@track
 def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
     """Determina si un servidor FTP permite autenticar al administrador."""
     return is_a_valid_user(ip_address, username, password)
 
 
+@track
 def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
     service = banner_helper.FTPService()
