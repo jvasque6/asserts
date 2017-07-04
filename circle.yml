@@ -37,7 +37,6 @@ jobs:
       - run: scons doc
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
-      - run: python src/utils/send_mail.py
 
       # Deploy
       - deploy:
