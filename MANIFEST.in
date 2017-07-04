@@ -12,3 +12,6 @@ include conf/conf.cfg
 include conf/conf.spec
 include static/wordlists/password.lst
 include LOCAL-VERSION
+
+# excluir modulo que envia email cuando hay nueva version
+exclude send_mail.py

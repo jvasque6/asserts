@@ -21,7 +21,7 @@ jobs:
       - run: pyenv install 2.7.11 --skip-existing
       - run: pyenv install 3.6.1 --skip-existing
       - run: pyenv global 2.7.11 3.6.1
-      - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama
+      - run: pip install tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
       - run: scons deps
@@ -37,6 +37,7 @@ jobs:
       - run: scons doc
       - run: cp conf/dotpypirc ~/.pypirc
       - run: ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
+      - run: python src/utils/send_mail.py
 
       # Deploy
       - deploy:
@@ -48,6 +49,7 @@ jobs:
           command: |
             if [[ $CIRCLE_BRANCH == "master" ]]; then
                 twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload;
+                python src/utils/send_mail.py
             fi
         #- run: cp build/test/results.* $CIRCLE_TEST_REPORTS
         #- run: cp -r build/coverage $CIRCLE_ARTIFACTS
