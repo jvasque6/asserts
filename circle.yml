@@ -7,9 +7,6 @@ version: 2
 jobs:
   build:
     working_directory: /tmp/fluid-asserts
-    environment:
-      - FLUIDASSERTS_LICENSE_KEY: "035d630fbdf734e00a302c92e54b8b4063dd7cc50a71f1e0ecb4cf9ed486769b"
-      - FLUIDASSERTS_USER_EMAIL: "engineering@fluid.la"
     machine: true
     steps:
       # Deps first
@@ -35,6 +32,8 @@ jobs:
       - run: scons lint
       - run: overcommit --sign
       - run: overcommit --run
+      - run: export FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+      - run: export FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
       - run: scons test
       - run: scons dist
       - run: scons doc
