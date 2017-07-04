@@ -7,9 +7,11 @@ Config
 
 # standard imports
 import logging.config
+import mixpanel
 import os
 from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
+import sys
 
 # 3rd party imports
 from colorama import Fore, Back, Style, init
@@ -58,6 +60,27 @@ except DistributionNotFound:
     __version__ = 'Please install this project with setup.py'
 else:
     __version__ = _dist.version
+
+
+PROJECT_TOKEN = 'bf2c390e732c4aa0e9b89c8dec78360b'
+
+KEYS = ['FLUIDASSERTS_LICENSE_KEY','FLUIDASSERTS_USER_EMAIL']
+
+for key in KEYS:
+    try:
+        os.environ[key]
+    except KeyError:
+        print(key +' env variable must be set')
+        sys.exit(-1)
+
+CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
+USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
+
+try:
+    mp = mixpanel.Mixpanel(PROJECT_TOKEN)
+    mp.people_set(CLIENT_ID, {'$email': USER_EMAIL})
+except mixpanel.MixpanelException:
+    pass
 
 def show_close(message=None):
     if message is None:

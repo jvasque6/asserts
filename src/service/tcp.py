@@ -18,10 +18,12 @@ import socket
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_port_open(ipaddress, port):
     """Check if a given port on an IP address is open."""
     result = True

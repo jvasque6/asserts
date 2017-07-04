@@ -11,10 +11,12 @@ import logging
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.helper.ssh_helper import ssh_exec_command
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_os_min_priv_disabled(server, username, password, ssh_config=None):
     """Check if umask or similar is secure in os_linux_generic."""
     result = True
@@ -51,6 +53,7 @@ Details=%s', show_open(), server, out)
     return result
 
 
+@track
 def is_os_compilers_installed(server, username, password,
                               ssh_config=None):
     """Check if there's any compiler installed in os_linux_generic."""
@@ -89,6 +92,7 @@ Details=%s', show_open(), server, out)
     return result
 
 
+@track
 def is_os_remote_admin_enabled(server, username, password,
                                ssh_config=None):
     """Check if admins can remotely login in os_linux_generic."""
@@ -108,6 +112,7 @@ Details=%s', show_open(), server, out)
     return result
 
 
+@track
 def is_os_syncookies_disabled(server, username, password,
                               ssh_config=None):
     """Check if SynCookies or similar is enabled in os_linux_generic."""

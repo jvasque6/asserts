@@ -11,6 +11,8 @@ env = Environment()
 # Variables que se propagan del entorno exterior a todos los entornos
 env['ENV']['PATH'] = os.environ['PATH']
 env['ENV']['HOME'] = os.environ['HOME']
+env['ENV']['FLUIDASSERTS_LICENSE_KEY'] = os.environ['FLUIDASSERTS_LICENSE_KEY']
+env['ENV']['FLUIDASSERTS_USER_EMAIL'] = os.environ['FLUIDASSERTS_USER_EMAIL']
 # Variables que se propagan del entorno exterior en caso de existir
 if 'VERBOSE' in os.environ:
     env['ENV']['VERBOSE'] = os.environ['VERBOSE']

@@ -13,6 +13,7 @@ from smb import *
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -32,6 +33,8 @@ def __smb_connect(server=None, user=None, password=None,
     except socket.error:
         return False
 
+
+@track
 def has_dirlisting(share=None, *args, **kwargs):
     """Check if a SMB share has dirlisting."""
     conn = __smb_connect(*args, **kwargs)
@@ -54,6 +57,8 @@ Details=%s\%s:%s', show_close(), domain, user, server)
 
         return False
 
+
+@track
 def is_anonymous_enabled(server=None, domain='WORKGROUP'):
     """Check if a SMB share has dirlisting."""
     user = 'anonymous'

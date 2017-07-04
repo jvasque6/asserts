@@ -56,6 +56,7 @@ def __check_password_strength(password, length):
 
 
 @test_level(Low)
+@track
 def is_user_password_insecure(password):
     """Function to check if a user password is secure."""
     min_password_len = 8
@@ -64,6 +65,7 @@ def is_user_password_insecure(password):
 
 
 @test_level(Low)
+@track
 def is_system_password_insecure(password):
     """Function to check if a system password is secure."""
     min_password_len = 20
@@ -72,6 +74,7 @@ def is_system_password_insecure(password):
 
 
 @test_level(Low)
+@track
 def is_otp_token_insecure(password):
     """Function to check if a system password is secure."""
     min_password_len = 6
@@ -90,6 +93,7 @@ def is_otp_token_insecure(password):
 
 
 @test_level(Low)
+@track
 def is_ssid_insecure(ssid):
     """Function to check if a given SSID is secure."""
     dictionary = 'static/wordlists/password.lst'

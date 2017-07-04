@@ -22,10 +22,12 @@ import socket
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
 
+@track
 def is_xfr_enabled(domain, nameserver):
     """Check if zone transfer is enabled."""
     axfr_query = dns.query.xfr(nameserver, domain, timeout=5,
@@ -70,6 +72,7 @@ Details=%s:%s',
     return result
 
 
+@track
 def is_dynupdate_enabled(domain, nameserver):
     """Check if zone updating is enabled."""
     newrecord = 'newrecord'
@@ -100,6 +103,7 @@ def is_dynupdate_enabled(domain, nameserver):
     return result
 
 
+@track
 def has_cache_poison(domain, nameserver):
     """Function has_cache_poison.
 
@@ -137,6 +141,7 @@ Details=%s:%s', show_close(), domain, nameserver)
     return result
 
 
+@track
 def has_cache_snooping(nameserver):
     """Function has_cache_snooping.
 
@@ -177,6 +182,7 @@ Details=%s:%s', show_close(), domain, nameserver)
     return result
 
 
+@track
 def has_recursion(nameserver):
     """Function has_recursion.
 

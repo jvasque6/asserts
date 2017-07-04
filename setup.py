@@ -59,6 +59,7 @@ setup(
         'pyOpenSSL==16.2.0',         # src.service.http_ssl
         'colorama==0.3.9',           # logging
         'pysmb==1.1.19',             # src.service.smb
+        'mixpanel==4.3.2',           # src.utils.decorators
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

@@ -20,6 +20,7 @@ from bs4 import BeautifulSoup
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -60,6 +61,7 @@ def __has_attribute(filename, selector, tag, attr, value):
     return match is not None
 
 
+@track
 def has_not_autocomplete(filename, selector):
     """Funcion has_not_autocomplete.
 
@@ -93,6 +95,7 @@ def has_not_autocomplete(filename, selector):
     return result
 
 
+@track
 def is_cacheable(filename):
     """Funcion is_cacheable.
 
