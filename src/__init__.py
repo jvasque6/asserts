@@ -11,6 +11,7 @@ import mixpanel
 import os
 from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
+import sys
 
 # 3rd party imports
 from colorama import Fore, Back, Style, init

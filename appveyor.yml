@@ -25,6 +25,8 @@ test_script:
   # Note that you must use the environment variable %PYTHON% to refer to
   # the interpreter you're using - Appveyor does not do anything special
   # to put the Python evrsion you want to use on PATH.
+  - set FLUIDASSERTS_LICENSE_KEY=035d630fbdf734e00a302c92e54b8b4063dd7cc50a71f1e0ecb4cf9ed486769b
+  - set FLUIDASSERTS_USER_EMAIL=engineering@fluid.la
   - "%PYTHON%\\python.exe example/full.py"
   - "%PYTHON%\\python.exe example/***REMOVED***.py"
 
