@@ -28,7 +28,7 @@ def track(func):
     def decorated(*args, **kwargs):
         return func(*args, **kwargs)
     try:
-        mp.track(CLIENT_ID, func.__module__ + ' ->' + func.__name__)
+        mp.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
     except mixpanel.MixpanelException:
         pass
     return decorated

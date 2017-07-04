@@ -77,6 +77,7 @@ CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
 USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
 
 try:
+    print ('Loading modules...')
     mp = mixpanel.Mixpanel(PROJECT_TOKEN)
     mp.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
@@ -103,4 +104,4 @@ def show_unknown(message=None):
         text_to_show = 'UNKNOWN'
     else:
         text_to_show = message
-    return Fore.WHITE + Back.YELLOW + text_to_show + Style.RESET_ALL
+    return Fore.BLACK + Back.WHITE + text_to_show + Style.RESET_ALL
