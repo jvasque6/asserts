@@ -8,10 +8,7 @@ tal las cookies son parte de dicho protocolo.
 
 
 # standard imports
-try:
-    from http.cookies import BaseCookie
-except ImportError:
-    from Cookie import BaseCookie
+# None
 
 # 3rd party imports
 import logging
@@ -25,40 +22,30 @@ from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
-
-def __has_not_attribute(url, cookie_name, attribute, *args, **kwargs):
+@track
+def has_not_http_only(cookie_jar, cookie_name):
     """Verifica si la cookie tiene el atributo httponly."""
-    http_req = http_helper.HTTPSession(url, *args, **kwargs)
-    try:
-        cookielist = BaseCookie(http_req.response.headers['set-cookie'])
-    except KeyError:
-        logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    show_unknown(), cookie_name, url, 'Not Present')
-        return False
-    result = show_open()
-    if cookie_name in cookielist:
-        if cookielist[cookie_name][attribute]:
-            result = show_close()
-        logger.info('%s: %s HTTP cookie check for "%s" in %s, Details=%s',
-                    result, cookie_name, attribute, url,
-                    cookielist[cookie_name])
-    else:
-        logger.info('%s: %s HTTP cookie %s, Details=%s',
-                    show_unknown(), cookie_name, url, 'Not Present')
+    result = show_unknown()
+    for cookie in cookie_jar:
+        if cookie.name == cookie_name:
+            if cookie.has_nonstandard_attr('httponly'):
+                result = show_close()
+            else:
+                result = show_open()
+    logger.info('%s: Cookie check for "%s", Details=%s', result,
+                cookie_name, 'HttpOnly')
     return result == show_open()
 
-
 @track
-def has_not_http_only(url, cookie_name, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo httponly."""
-    attribute = 'httponly'
-    return __has_not_attribute(url, cookie_name, attribute,
-                               *args, **kwargs)
-
-
-@track
-def has_not_secure(url, cookie_name, *args, **kwargs):
+def has_not_secure(cookie_jar, cookie_name):
     """Verifica si la cookie tiene el atributo secure."""
-    attribute = 'secure'
-    return __has_not_attribute(url, cookie_name, attribute,
-                               *args, **kwargs)
+    result = show_unknown()
+    for cookie in cookie_jar:
+        if cookie.name == cookie_name:
+            if cookie.secure:
+                result = show_close()
+            else:
+                result = show_open()
+    logger.info('%s: Cookie check for "%s", Details=%s', result,
+                cookie_name, 'Secure')
+    return result == show_open()
