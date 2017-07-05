@@ -67,93 +67,107 @@ def has_not_text(url, expected_text, *args, **kwargs):
 
 
 @track
-def is_header_x_asp_net_version_missing(url):
+def is_header_x_asp_net_version_missing(url, *args, **kwargs):
     """Check if x-aspnet-version header is missing."""
-    return http_helper.has_insecure_header(url, 'x-aspnet-version')
+    return http_helper.has_insecure_header(url, 'x-aspnet-version',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_access_control_allow_origin_missing(url):
+def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
     """Check if access-control-allow-origin header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'access-control-allow-origin')
+                                           'access-control-allow-origin',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_cache_control_missing(url):
+def is_header_cache_control_missing(url, *args, **kwargs):
     """Check if cache-control header is missing."""
-    return http_helper.has_insecure_header(url, 'cache-control')
+    return http_helper.has_insecure_header(url, 'cache-control',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_content_security_policy_missing(url):
+def is_header_content_security_policy_missing(url, *args, **kwargs):
     """Check if content-security-policy header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'content-security-policy')
+                                           'content-security-policy',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_content_type_missing(url):
+def is_header_content_type_missing(url, *args, **kwargs):
     """Check if content-security-policy header is missing."""
-    return http_helper.has_insecure_header(url, 'content-type')
+    return http_helper.has_insecure_header(url, 'content-type',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_expires_missing(url):
+def is_header_expires_missing(url, *args, **kwargs):
     """Check if content-security-policy header is missing."""
-    return http_helper.has_insecure_header(url, 'expires')
+    return http_helper.has_insecure_header(url, 'expires',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_pragma_missing(url):
+def is_header_pragma_missing(url, *args, **kwargs):
     """Check if pragma header is missing."""
-    return http_helper.has_insecure_header(url, 'pragma')
+    return http_helper.has_insecure_header(url, 'pragma',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_server_insecure(url):
+def is_header_server_insecure(url, *args, **kwargs):
     """Check if server header is insecure."""
-    return http_helper.has_insecure_header(url, 'server')
+    return http_helper.has_insecure_header(url, 'server',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_x_content_type_options_missing(url):
+def is_header_x_content_type_options_missing(url, *args, **kwargs):
     """Check if x-content-type-options header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'x-content-type-options')
+                                           'x-content-type-options',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_x_frame_options_missing(url):
+def is_header_x_frame_options_missing(url, *args, **kwargs):
     """Check if x-frame-options header is missing."""
-    return http_helper.has_insecure_header(url, 'x-frame-options')
+    return http_helper.has_insecure_header(url, 'x-frame-options',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_perm_cross_dom_pol_missing(url):
+def is_header_perm_cross_dom_pol_missing(url, *args, **kwargs):
     """Check if permitted-cross-domain-policies header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'permitted-cross-domain-policies')
+                                           'permitted-cross-domain-policies',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_x_xxs_protection_missing(url):
+def is_header_x_xxs_protection_missing(url, *args, **kwargs):
     """Check if x-xss-protection header is missing."""
-    return http_helper.has_insecure_header(url, 'x-xss-protection')
+    return http_helper.has_insecure_header(url, 'x-xss-protection',
+                                           *args, **kwargs)
 
 
 @track
-def is_header_hsts_missing(url):
+def is_header_hsts_missing(url, *args, **kwargs):
     """Check if strict-transport-security header is missing."""
     return http_helper.has_insecure_header(url,
-                                           'strict-transport-security')
+                                           'strict-transport-security',
+                                           *args, **kwargs)
 
 
 @track
-def is_basic_auth_enabled(url):
+def is_basic_auth_enabled(url, *args, **kwargs):
     """Check if BASIC authentication is enabled."""
     return http_helper.has_insecure_header(url,
-                                           'www-authenticate')
+                                           'www-authenticate',
+                                           *args, **kwargs)
 
 
 @track
@@ -303,7 +317,7 @@ def is_not_https_required(url):
 
 
 @track
-def has_dirlisting(url):
+def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
-    return has_text(url, bad_text)
+    return has_text(url, bad_text, *args, **kwargs)

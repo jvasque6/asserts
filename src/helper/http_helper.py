@@ -245,9 +245,9 @@ def has_method(url, method):
     return result
 
 
-def has_insecure_header(url, header):
+def has_insecure_header(url, header, *args, **kwargs):
     """Check if header is present."""
-    http_session = HTTPSession(url)
+    http_session = HTTPSession(url, *args, **kwargs)
     headers_info = http_session.response.headers
 
     result = True
