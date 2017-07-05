@@ -77,7 +77,7 @@ CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
 USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
 
 try:
-    print ('Loading modules...')
+    print('Loading modules...')
     mp = mixpanel.Mixpanel(PROJECT_TOKEN)
     mp.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
