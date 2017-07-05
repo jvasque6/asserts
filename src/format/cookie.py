@@ -26,9 +26,9 @@ from fluidasserts.utils.decorators import track
 logger = logging.getLogger('FLUIDAsserts')
 
 
-def __has_not_attribute(url, cookie_name, attribute):
+def __has_not_attribute(url, cookie_name, attribute, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
-    http_req = http_helper.HTTPSession(url)
+    http_req = http_helper.HTTPSession(url, *args, **kwargs)
     try:
         cookielist = BaseCookie(http_req.response.headers['set-cookie'])
     except KeyError:
@@ -49,14 +49,16 @@ def __has_not_attribute(url, cookie_name, attribute):
 
 
 @track
-def has_not_http_only(url, cookie_name):
+def has_not_http_only(url, cookie_name, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
     attribute = 'httponly'
-    return __has_not_attribute(url, cookie_name, attribute)
+    return __has_not_attribute(url, cookie_name, attribute,
+                               *args, **kwargs)
 
 
 @track
-def has_not_secure(url, cookie_name):
+def has_not_secure(url, cookie_name, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
     attribute = 'secure'
-    return __has_not_attribute(url, cookie_name, attribute)
+    return __has_not_attribute(url, cookie_name, attribute,
+                               *args, **kwargs)
