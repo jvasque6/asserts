@@ -22,8 +22,8 @@ from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
-@track
-def has_not_http_only(cookie_name, url=None, cookie_jar=None):
+
+def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo httponly."""
     result = show_unknown()
     if url is None and cookie_jar is None:
@@ -45,8 +45,8 @@ def has_not_http_only(cookie_name, url=None, cookie_jar=None):
                 cookie_name, 'HttpOnly')
     return result != show_close()
 
-@track
-def has_not_secure(cookie_name, url=None, cookie_jar=None):
+
+def __has_not_secure(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo secure."""
     result = show_unknown()
     if url is None and cookie_jar is None:
@@ -67,3 +67,23 @@ def has_not_secure(cookie_name, url=None, cookie_jar=None):
     logger.info('%s: Cookie check for "%s", Details=%s', result,
                 cookie_name, 'Secure')
     return result != show_close()
+
+
+@track
+def has_not_httponly_set(cookie_name, url):
+    return __has_not_http_only(cookie_name, url=url)
+
+
+@track
+def has_not_httponly_in_cookiejar(cookie_name, cookie_jar):
+    return __has_not_http_only(cookie_name, cookie_jar=cookie_jar)
+
+
+@track
+def has_not_secure_set(cookie_name, url):
+    return __has_not_secure(cookie_name, url=url)
+
+
+@track
+def has_not_secure_in_cookiejar(cookie_name, cookie_jar):
+    return __has_not_secure(cookie_name, cookie_jar=cookie_jar)
