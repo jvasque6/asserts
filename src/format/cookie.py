@@ -35,6 +35,9 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
         cookielist = s.cookies
     else:
         cookielist = cookie_jar
+    if cookielist is None:
+        logger.info('%s: %s Cookie not present', result, cookie_name)
+        return result != show_close()
     for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.has_nonstandard_attr('httponly'):
@@ -58,6 +61,9 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
         cookielist = s.cookies
     else:
         cookielist = cookie_jar
+    if cookielist is None:
+        logger.info('%s: %s Cookie not present', result, cookie_name)
+        return result != show_close()
     for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.secure:
