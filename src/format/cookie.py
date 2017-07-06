@@ -23,10 +23,19 @@ from fluidasserts.utils.decorators import track
 logger = logging.getLogger('FLUIDAsserts')
 
 @track
-def has_not_http_only(cookie_jar, cookie_name):
+def has_not_http_only(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo httponly."""
     result = show_unknown()
-    for cookie in cookie_jar:
+    if url is None and cookie_jar is None:
+        logger.info('%s: Cookie check for "%s", Details=%s', result,
+                    cookie_name, 'HttpOnly')
+        return result != show_close()
+    if url is not None:
+        s = http_helper.HTTPSession(url)
+        cookielist = s.cookies
+    else:
+        cookielist = cookie_jar
+    for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.has_nonstandard_attr('httponly'):
                 result = show_close()
@@ -34,13 +43,22 @@ def has_not_http_only(cookie_jar, cookie_name):
                 result = show_open()
     logger.info('%s: Cookie check for "%s", Details=%s', result,
                 cookie_name, 'HttpOnly')
-    return result == show_open()
+    return result != show_close()
 
 @track
-def has_not_secure(cookie_jar, cookie_name):
+def has_not_secure(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo secure."""
     result = show_unknown()
-    for cookie in cookie_jar:
+    if url is None and cookie_jar is None:
+        logger.info('%s: Cookie check for "%s", Details=%s', result,
+                    cookie_name, 'Secure')
+        return result != show_close()
+    if url is not None:
+        s = http_helper.HTTPSession(url)
+        cookielist = s.cookies
+    else:
+        cookielist = cookie_jar
+    for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.secure:
                 result = show_close()
@@ -48,4 +66,4 @@ def has_not_secure(cookie_jar, cookie_name):
                 result = show_open()
     logger.info('%s: Cookie check for "%s", Details=%s', result,
                 cookie_name, 'Secure')
-    return result == show_open()
+    return result != show_close()
