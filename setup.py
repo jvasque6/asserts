@@ -48,7 +48,7 @@ setup(
         'PyPDF2==1.26.0',            # src.format.pdf
         'requests==2.13.0',          # src.service.http
         'requests-oauthlib==0.8.0',  # src.service.http
-        'cryptography==1.8.1',       # src.service.http_ssl
+        'cryptography==1.9',       # src.service.http_ssl
         'certifi==2017.1.23',        # src.service.http_ssl
         'ldap3==2.2.2',              # src.service.ldap
         'paramiko==2.1.2',           # src.helper.ssh_helper
