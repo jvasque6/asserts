@@ -27,7 +27,7 @@ logger = logging.getLogger('FLUIDAsserts')
 
 
 # pylint: disable=R0913
-def generic_http_assert(url, expected_regex, *args, **kwargs):
+def __generic_http_assert(url, expected_regex, *args, **kwargs):
     """Generic HTTP assert method."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
@@ -41,7 +41,7 @@ def generic_http_assert(url, expected_regex, *args, **kwargs):
 @track
 def has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
-    ret = generic_http_assert(url, expected_text, *args, **kwargs)
+    ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if ret:
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, expected_text)
@@ -55,7 +55,7 @@ def has_text(url, expected_text, *args, **kwargs):
 @track
 def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
-    ret = generic_http_assert(url, expected_text, *args, **kwargs)
+    ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if not ret:
         logger.info('%s: %s Expected text not present, Details=%s',
                     show_open(), url, expected_text)
