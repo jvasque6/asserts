@@ -10,6 +10,7 @@ import re
 from bs4 import *
 from requests_oauthlib import OAuth1
 import requests
+from requests.cookies import merge_cookies as merge
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
@@ -93,12 +94,13 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             self.response = ret
             if self.response.url != self.url:
                 self.url = self.response.url
+
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                    self.cookies != ret.request._cookies:
-                    self.cookies = ret.request._cookies
+                    self.cookies = merge(ret.request._cookies, self.cookies)
             else:
-                self.cookies = ret.cookies
+                self.cookies = merge(ret.cookies, self.cookies)
             return ret
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
