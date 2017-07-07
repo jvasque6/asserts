@@ -98,9 +98,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                    self.cookies != ret.request._cookies:
-                    self.cookies = merge(ret.request._cookies, self.cookies)
+                    self.cookies = ret.request._cookies
             else:
-                self.cookies = merge(ret.cookies, self.cookies)
+                self.cookies = ret.cookies
             return ret
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
