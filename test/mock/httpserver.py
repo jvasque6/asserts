@@ -69,8 +69,7 @@ def cache_control_ok():
     """Header para Control de Cache bien establecido."""
     resp = Response('Cache-Control OK')
     resp.headers[
-        'Cache-Control'] = ('private, no-cache, no-store, max-age=0, '
-                            'no-transform')
+        'Cache-Control'] = ('no-cache, no-store, must-revalidate')
     return resp
 
 

@@ -25,7 +25,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
-    'cache-control': 'private, no-cache, no-store, max-age=0, no-transform',
+    'cache-control': '(?=.*must-revalidate)(?=.*no-cache)(?=.*no-store)',
     'content-security-policy': '^([a-zA-Z]+\\-[a-zA-Z]+|sandbox).*$',
     'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
     'expires': '^\\s*0\\s*$',
