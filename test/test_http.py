@@ -166,8 +166,6 @@ def test_a2_sessionid_exposed_open():
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie.set('security_level', '0', domain=CONTAINER_IP, path='/')
 
-    print (bwapp_cookie)
-
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/smgmt_sessionid_url.php'
 

@@ -10,7 +10,6 @@ import re
 from bs4 import *
 from requests_oauthlib import OAuth1
 import requests
-from requests.cookies import merge_cookies as merge
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
