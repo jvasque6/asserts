@@ -93,6 +93,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             self.response = ret
             if self.response.url != self.url:
                 self.url = self.response.url
+
             if ret.cookies == {}:
                 if ret.request._cookies != {} and \
                    self.cookies != ret.request._cookies:
@@ -138,6 +139,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             'application/x-www-form-urlencoded'
 
         http_req = self.do_request()
+        if http_req is None:
+            return None
         if http_req.text.find(text) >= 0:
             self.is_auth = True
             logger.debug('POST Authentication %s, Details=%s',
