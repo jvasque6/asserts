@@ -89,10 +89,9 @@ def test_a1_sqli_open():
         '/bWAPP/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
 
-    expected = 'No movies were found'
+    #expected = 'No movies were found'
 
-    assert not http.has_sqli(vulnerable_url, expected, params,
-                             cookies=bwapp_cookie)
+    assert http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
 def test_a1_os_injection_open():
@@ -347,9 +346,8 @@ def test_a1_sqli_close():
         '/bWAPP/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
 
-    expected = 'No movies were found'
-    assert http.has_sqli(vulnerable_url, expected, params,
-                         cookies=bwapp_cookie)
+    #expected = 'No movies were found'
+    assert not http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
 def test_a1_os_injection_close():

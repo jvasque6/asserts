@@ -25,6 +25,92 @@ from fluidasserts.utils.decorators import track
 
 logger = logging.getLogger('FLUIDAsserts')
 
+# Regex taken from SQLmap project
+SQLI_ERROR_MSG = {
+    'SQL syntax.*MySQL',  # MySQL
+    'Warning.*mysql_.*',  # MySQL
+    'MySqlException \(0x',  # MySQL
+    'valid MySQL result',  # MySQL
+    'check the manual that corresponds to your (MySQL|MariaDB) server version',  # MySQL
+    'MySqlClient.',  # MySQL
+    'com.mysql.jdbc.exceptions',  # MySQL
+    'com.mysql.jdbc.exceptions',  # PostgreSQL
+    'PostgreSQL.*ERROR',  # PostgreSQL
+    'Warning.*Wpg_.*',  # PostgreSQL
+    'valid PostgreSQL result',  # PostgreSQL
+    'Npgsql.',  # PostgreSQL
+    'PG::SyntaxError:',  # PostgreSQL
+    'org.postgresql.util.PSQLException',  # PostgreSQL
+    'ERROR:sssyntax error at or near ',  # PostgreSQL
+    'ERROR:sssyntax error at or near ',  # Microsoft SQL Server
+    'Driver.* SQL[-_ ]*Server',  # Microsoft SQL Server
+    'OLE DB.* SQL Server',  # Microsoft SQL Server
+    'bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
+    'Warning.*(mssql|sqlsrv)_',  # Microsoft SQL Server
+    'bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
+    'System.Data.SqlClient.SqlException',  # Microsoft SQL Server
+    '(?s)Exception.*WRoadhouse.Cms.',  # Microsoft SQL Server
+    'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # Microsoft SQL Server
+    'com.microsoft.sqlserver.jdbc.SQLServerException',  # Microsoft SQL Server
+    'ODBC SQL Server Driver',  # Microsoft SQL Server
+    'SQLServer JDBC Driver',  # Microsoft SQL Server
+    'macromedia.jdbc.sqlserver',  # Microsoft SQL Server
+    'com.jnetdirect.jsql',  # Microsoft SQL Server
+    'com.jnetdirect.jsql',  # Microsoft Access
+    'Microsoft Access (d+ )?Driver',  # Microsoft Access
+    'JET Database Engine',  # Microsoft Access
+    'Access Database Engine',  # Microsoft Access
+    'ODBC Microsoft Access',  # Microsoft Access
+    'Syntax error (missing operator) in query expression',  # Microsoft Access
+    'Syntax error (missing operator) in query expression',  # Oracle
+    'bORA-d{5}',  # Oracle
+    'Oracle error',  # Oracle
+    'Oracle.*Driver',  # Oracle
+    'Warning.*Woci_.*',  # Oracle
+    'Warning.*Wora_.*',  # Oracle
+    'oracle.jdbc.driver',  # Oracle
+    'quoted string not properly terminated',  # Oracle
+    'quoted string not properly terminated',  # IBM DB2
+    'CLI Driver.*DB2',  # IBM DB2
+    'DB2 SQL error',  # IBM DB2
+    'bdb2_w+\(',  # IBM DB2
+    'SQLSTATE.+SQLCODE',  # IBM DB2
+    'SQLSTATE.+SQLCODE',  # Informix
+    'Exception.*Informix',  # Informix
+    'Informix ODBC Driver',  # Informix
+    'com.informix.jdbc',  # Informix
+    'weblogic.jdbc.informix',  # Informix
+    'weblogic.jdbc.informix',  # Firebird
+    'Dynamic SQL Error',  # Firebird
+    'Warning.*ibase_.*',  # Firebird
+    'Warning.*ibase_.*',  # SQLite
+    'SQLite/JDBCDriver',  # SQLite
+    'SQLite.Exception',  # SQLite
+    'System.Data.SQLite.SQLiteException',  # SQLite
+    'Warning.*sqlite_.*',  # SQLite
+    'Warning.*SQLite3::',  # SQLite
+    '\[SQLITE_ERROR\]',  # SQLite
+    '\[SQLITE_ERROR\]',  # SAP MaxDB
+    'SQL error.*POS([0-9]+).*',  # SAP MaxDB
+    'Warning.*maxdb.*',  # SAP MaxDB
+    'Warning.*maxdb.*',  # Sybase
+    'Warning.*sybase.*',  # Sybase
+    'Sybase message',  # Sybase
+    'Sybase.*Server message.*',  # Sybase
+    'SybSQLException',  # Sybase
+    'com.sybase.jdbc',  # Sybase
+    'com.sybase.jdbc',  # Ingres
+    'Warning.*ingres_',  # Ingres
+    'Ingres SQLSTATE',  # Ingres
+    'IngresW.*Driver',  # Ingres
+    'IngresW.*Driver',  # Frontbase
+    'Exception (condition )?d+. Transaction rollback.',  # Frontbase
+    'Exception (condition )?d+. Transaction rollback.',  # HSQLDB
+    'org.hsqldb.jdbc',  # HSQLDB
+    'Unexpected end of command in statement \[',  # HSQLDB
+    'Unexpected token.*in statement \[',  # HSQLDB
+}
+
 
 # pylint: disable=R0913
 def __generic_http_assert(url, expected_regex, *args, **kwargs):
@@ -33,9 +119,36 @@ def __generic_http_assert(url, expected_regex, *args, **kwargs):
     response = http_session.response
     the_page = response.text
 
-    if re.search(str(expected_regex), the_page, re.IGNORECASE) is None:
+    if re.search(str(expected_regex), the_page, re.IGNORECASE):
+        return True
+    return False
+
+
+# pylint: disable=R0913
+def __multi_generic_http_assert(url, regex_list, *args, **kwargs):
+    """Generic HTTP assert method."""
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    response = http_session.response
+    the_page = response.text
+
+    for regex in regex_list:
+        if re.search(regex, the_page, re.IGNORECASE):
+            return regex
+    return False
+
+
+@track
+def has_multiple_text(url, regex_list, *args, **kwargs):
+    """Check if a bad text is present."""
+    ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
+    if ret:
+        logger.info('%s: %s Bad text present, Details=%s',
+                    show_open(), url, ret)
+        return True
+    else:
+        logger.info('%s: %s Bad text not present',
+                    show_close(), url)
         return False
-    return True
 
 
 @track
@@ -189,12 +302,11 @@ def has_put_method(url):
 
 
 @track
-def has_sqli(url, expect=None, *args, **kwargs):
+def has_sqli(url, *args, **kwargs):
     """Check SQLi vuln by checking expected string."""
-    if expect is None:
-        expect = 'OLE.*Provider.*error'
+    expect = SQLI_ERROR_MSG
 
-    return has_text(url, expect, *args, **kwargs)
+    return has_multiple_text(url, expect, *args, **kwargs)
 
 
 @track
