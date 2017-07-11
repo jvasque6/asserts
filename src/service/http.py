@@ -45,9 +45,9 @@ SQLI_ERROR_MSG = {
     'ERROR:sssyntax error at or near ',  # Microsoft SQL Server
     'Driver.* SQL[-_ ]*Server',  # Microsoft SQL Server
     'OLE DB.* SQL Server',  # Microsoft SQL Server
-    'bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
+    '\bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
     'Warning.*(mssql|sqlsrv)_',  # Microsoft SQL Server
-    'bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
+    '\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
     'System.Data.SqlClient.SqlException',  # Microsoft SQL Server
     '(?s)Exception.*WRoadhouse.Cms.',  # Microsoft SQL Server
     'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # Microsoft SQL Server
@@ -63,7 +63,7 @@ SQLI_ERROR_MSG = {
     'ODBC Microsoft Access',  # Microsoft Access
     'Syntax error (missing operator) in query expression',  # Microsoft Access
     'Syntax error (missing operator) in query expression',  # Oracle
-    'bORA-d{5}',  # Oracle
+    '\bORA-d{5}',  # Oracle
     'Oracle error',  # Oracle
     'Oracle.*Driver',  # Oracle
     'Warning.*Woci_.*',  # Oracle
@@ -73,7 +73,7 @@ SQLI_ERROR_MSG = {
     'quoted string not properly terminated',  # IBM DB2
     'CLI Driver.*DB2',  # IBM DB2
     'DB2 SQL error',  # IBM DB2
-    'bdb2_w+\(',  # IBM DB2
+    '\bdb2_w+\(',  # IBM DB2
     'SQLSTATE.+SQLCODE',  # IBM DB2
     'SQLSTATE.+SQLCODE',  # Informix
     'Exception.*Informix',  # Informix
