@@ -40,8 +40,9 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
         return result != show_close()
     for cookie in cookielist:
         if cookie.name == cookie_name:
-            if cookie.has_nonstandard_attr('httponly'):
-                result = show_close()
+            if cookie.has_nonstandard_attr('HttpOnly') or \
+                cookie.has_nonstandard_attr('httponly'):
+                    result = show_close()
             else:
                 result = show_open()
     logger.info('%s: Cookie check for "%s", Details=%s', result,
