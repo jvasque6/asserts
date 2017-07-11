@@ -47,7 +47,7 @@ class HTTPSession(object):
 
     def __init__(self, url, params=None, headers=None,
                  cookies=None, data='', files=None, auth=None):
-        """Metodo constructur de la clase."""
+        """Metodo constructor de la clase."""
         self.url = url
         self.params = params
         self.headers = headers
