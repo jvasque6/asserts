@@ -62,7 +62,7 @@ else:
     __version__ = _dist.version
 
 
-PROJECT_TOKEN = 'bf2c390e732c4aa0e9b89c8dec78360b'
+PROJECT_TOKEN = 'd6992587dea9caad619299d54a0f00f0'
 
 KEYS = ['FLUIDASSERTS_LICENSE_KEY','FLUIDASSERTS_USER_EMAIL']
 
