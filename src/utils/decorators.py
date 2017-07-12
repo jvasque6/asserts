@@ -26,9 +26,9 @@ def test_level(level):
 def track(func):
     @functools.wraps(func)
     def decorated(*args, **kwargs):
+        try:
+            mp.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
+        except mixpanel.MixpanelException:
+            pass
         return func(*args, **kwargs)
-    try:
-        mp.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
-    except mixpanel.MixpanelException:
-        pass
     return decorated
