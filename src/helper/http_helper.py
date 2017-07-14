@@ -10,6 +10,7 @@ import re
 from bs4 import *
 from requests_oauthlib import OAuth1
 import requests
+from requests_ntlm import HttpNtlmAuth
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
@@ -164,55 +165,42 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         return http_req
 
     def basic_auth(self, user, passw):
-        """Autentica usando BASIC HTTP."""
-        self.auth = (user, passw)
-        resp = self.do_request()
+        self.__do_auth('BASIC', user, passw)
 
-        self.auth = None
-        request_no_auth = self.do_request()
-        if request_no_auth.status_code == 401:
-            if resp.status_code == 200:
-                self.cookies = resp.cookies.get_dict()
-                self.response = resp
-                self.is_auth = True
-                logger.info(
-                    'HTTPBasicAuth %s, Details=%s',
-                    self.url,
-                    'Success with [ ' + user + ' : ' + passw + ' ]')
-            else:
-                self.is_auth = False
-                logger.info('HTTPBasicAuth %s, Details=%s',
-                            self.url,
-                            'Fail with [ ' + user + ' : ' + passw + ' ]')
-        else:
-            self.is_auth = False
-            logger.info('HTTPBasicAuth %s, Details=%s', self.url,
-                        'HTTPBasicAuth Not present')
+    def ntlm_auth(self, user, passw):
+        self.__do_auth('NTLM', user, passw)
 
     def oauth_auth(self, user, passw):
-        """XXXXXXXXXXXXXX."""
-        self.auth = OAuth1(user, passw)
+        self.__do_auth('OAUTH', user, passw)
+
+    def __do_auth(self, method, user, passw):
+        """Autentica usando HTTP."""
+        if method == 'BASIC':
+            self.auth = (user, passw)
+        elif method == 'NTLM':
+            self.auth = HttpNtlmAuth(user, passw)
+        elif method == 'OAUTH':
+            self.auth = OAuth1(user, passw)
         resp = self.do_request()
 
         self.auth = None
         request_no_auth = self.do_request()
         if request_no_auth.status_code == 401:
             if resp.status_code == 200:
-                self.cookies = resp.cookies.get_dict()
+                self.cookies = resp.cookies
                 self.response = resp
                 self.is_auth = True
                 logger.info(
-                    'HTTPOAuth %s, Details=%s',
-                    self.url,
+                    '%s Auth: %s, Details=%s', method,  self.url,
                     'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                logger.info('HTTPOAuth %s, Details=%s', self.url,
+                logger.info(' %s Auth: %s, Details=%s', method, self.url,
                             'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
-            logger.info('HTTPOAuth %s, Details=%s', self.url,
-                        'HTTPOAuth Not present')
+            logger.info('%s Auth: %s, Details=%s', method, self.url,
+                        'Not present')
 
     def get_html_value(self, field_type, field_name, field='value'):
         soup = BeautifulSoup(self.response.text, 'html.parser')
