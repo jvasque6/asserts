@@ -34,7 +34,7 @@ HDR_RGX = {
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',
-    'permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
+    'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
     'x-xss-protection': '^1(; mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$'
 }
@@ -257,7 +257,7 @@ def has_insecure_header(url, header, *args, **kwargs):
     if header in headers_info:
         value = headers_info[header]
         state = (lambda val: show_close() if re.match(
-            HDR_RGX[header],
+            HDR_RGX[header.lower()],
             value, re.IGNORECASE) is not None else show_open())(value)
         logger.info('%s: %s HTTP header %s, Details=%s',
                     state, header, url, value)
