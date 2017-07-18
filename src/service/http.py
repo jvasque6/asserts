@@ -417,6 +417,7 @@ def is_version_visible(ip_address, ssl=False, port=80):
 @track
 def is_not_https_required(url):
     """Check if HTTPS is always forced on a given url."""
+    assert url.startswith('http://')
     http_session = http_helper.HTTPSession(url)
     if http_session.url.startswith('https'):
         logger.info('%s: HTTPS is forced on URL, Details=%s',
