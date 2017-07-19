@@ -104,6 +104,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return ret
         except requests.ConnectionError:
             logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
+            raise
 
     def formauth_by_statuscode(self, code):
         """Autentica y verifica autenticacion usando codigo HTTP."""
@@ -238,9 +239,13 @@ def has_method(url, method):
 
 def has_insecure_header(url, header, *args, **kwargs):
     """Check if header is present."""
-    http_session = HTTPSession(url, *args, **kwargs)
-    headers_info = http_session.response.headers
-
+    try:
+        http_session = HTTPSession(url, *args, **kwargs)
+        headers_info = http_session.response.headers
+    except requests.ConnectionError:
+        logger.info('%s: %s HTTP header %s, Details=Not present',
+                    show_unknown(), header, url)
+        return True
     result = True
     if header in headers_info:
         value = headers_info[header]
