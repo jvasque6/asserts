@@ -24,8 +24,8 @@ def __smb_connect(server=None, user=None, password=None,
     try:
         client_machine_name = 'assertspc'
         conn = SMBConnection.SMBConnection(user, password,
-        client_machine_name, server, domain=domain, use_ntlm_v2=True,
-        is_direct_tcp=True)
+            client_machine_name, server, domain=domain, use_ntlm_v2=True,
+            is_direct_tcp=True)
 
         if conn.connect(server, port=445):
             return conn
@@ -64,7 +64,7 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
     user = 'anonymous'
     password = ''
     conn = __smb_connect(server=server, user=user, password=password,
-        domain=domain)
+                         domain=domain)
 
     if not conn:
         logger.info('%s: Anonymous login not possible, \
@@ -72,6 +72,5 @@ Details=%s\%s:%s', show_close(), domain, user, server)
 
         return False
     logger.info('%s: Anonymous login enabled, Details=%s\%s:%s',
-        show_open(), domain, user, server)
+                show_open(), domain, user, server)
     return True
-

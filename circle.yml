@@ -14,7 +14,7 @@ jobs:
       - run: sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS -e $DOCKER_EMAIL
       - run: sudo docker -D pull fluidsignal/fluidasserts:container
       - run: sudo apt-get update
-      - run: sudo apt-get -y install python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv
+      - run: sudo apt-get -y install python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv sed curl grep gawk
       - run: sudo apt-get -y install python-pip python3-pip python-setuptools python3-setuptools
       - run: pip install --upgrade --force pip setuptools
       - run: sudo apt-get -y purge python-setuptools python3-setuptools python-pip python3-pip
@@ -29,6 +29,11 @@ jobs:
       - run: scons smoke
 
       # Tests
+      - run:
+          name: Run SourceClear agent
+          command: >
+                sed -n -e '/install_requires=/,/^[\t ]*\],[\t ]*$/p' setup.py  | grep == | sed -e "s/[',]//g" | awk '{print $1}' > requirements.txt;
+                curl -sSL https://download.sourceclear.com/ci.sh | sh
       - run: scons lint
       - run: overcommit --sign
       - run: overcommit --run
