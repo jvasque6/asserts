@@ -29,6 +29,11 @@ jobs:
       - run: scons smoke
 
       # Tests
+      - run:
+          name: Run SourceClear agent
+          command: >
+                sed -n -e '/install_requires=/,/^[\t ]*\],[\t ]*$/p' setup.py  | grep == | sed -e "s/[',]//g" | awk '{print $1}' > requirements.txt
+                curl -sSL https://download.sourceclear.com/ci.sh | sh
       - run: scons lint
       - run: overcommit --sign
       - run: overcommit --run
