@@ -293,8 +293,6 @@ def is_sha1_used(site, port=PORT):
 
     sign_algorith = cert_obj.signature_hash_algorithm.name
 
-    print sign_algorith
-
 
     cert_validity = \
         cert_obj.not_valid_after - cert_obj.not_valid_before
