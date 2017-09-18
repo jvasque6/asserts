@@ -265,6 +265,52 @@ def is_sslv3_enabled(site, port=PORT):
         sock.close()
     return result
 
+@track
+def is_sha1_used(site, port=PORT):
+    """Function to check whether cert use sha1 in their signature algorithm"""
+
+    result = True
+    try:
+        cert = ssl.get_server_certificate((site, port))
+    except:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(10)
+            wrapped_socket = ssl.SSLSocket(sock=sock,
+                                           ca_certs=certifi.where(),
+                                           cert_reqs=ssl.CERT_REQUIRED,
+                                           server_hostname=site)
+            wrapped_socket.connect((site, port))
+            __cert = wrapped_socket.getpeercert(True)
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+        except socket.error:
+            logger.info('%s: Port closed, Details=%s:%s',
+                        show_unknown(), site, port)
+            return False
+    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
+                                         default_backend())
+
+
+    sign_algorith = cert_obj.signature_hash_algorithm.name
+
+    print sign_algorith
+
+
+    cert_validity = \
+        cert_obj.not_valid_after - cert_obj.not_valid_before
+
+    if not "sha1" in sign_algorith:
+        logger.info('%s: Certificate has an insecure signature algorithm, \
+Details= Signature Algorithm: %s',
+                    show_close(), sign_algorith)
+        result = False
+    else:
+        logger.info('%s: Certificate has an insecure signature algorithm, \
+Details= Signature Algorithm: %s',
+                    show_open(), sign_algorith)
+        result = True
+
+    return result
 
 @track
 def is_tlsv1_enabled(site, port=PORT):
