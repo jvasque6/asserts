@@ -25,7 +25,7 @@ def has_access(url, *args, **kwargs):
     """Check if a bad text is present."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     ok_access_list = [200]
-    if http_session.response.status_code in ok_access_list():
+    if http_session.response.status_code in ok_access_list:
         logger.info('%s: Access available to %s', show_open(), url)
         return True
     logger.info('%s: Access not available to %s', show_close(), url)
