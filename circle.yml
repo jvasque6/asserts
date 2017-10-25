@@ -21,7 +21,7 @@ jobs:
       - run: pyenv install 2.7.11 --skip-existing
       - run: pyenv install 3.6.1 --skip-existing
       - run: pyenv global 2.7.11 3.6.1
-      - run: pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill cryptography
+      - run: pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill cryptography==2.0
       - run: echo $VAULT > ~/.vault.txt
       - run: gem install overcommit
       - run: scons deps
