@@ -145,10 +145,8 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, ret)
         return True
-    else:
-        logger.info('%s: %s Bad text not present',
-                    show_close(), url)
-        return False
+    logger.info('%s: %s Bad text not present', show_close(), url)
+    return False
 
 
 @track
@@ -159,10 +157,9 @@ def has_text(url, expected_text, *args, **kwargs):
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    else:
-        logger.info('%s: %s Bad text not present, Details=%s',
-                    show_close(), url, expected_text)
-        return False
+    logger.info('%s: %s Bad text not present, Details=%s',
+                show_close(), url, expected_text)
+    return False
 
 
 @track
@@ -173,10 +170,9 @@ def has_not_text(url, expected_text, *args, **kwargs):
         logger.info('%s: %s Expected text not present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    else:
-        logger.info('%s: %s Expected text present, Details=%s',
-                    show_close(), url, expected_text)
-        return False
+    logger.info('%s: %s Expected text present, Details=%s',
+                show_close(), url, expected_text)
+    return False
 
 
 @track
