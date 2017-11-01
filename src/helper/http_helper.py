@@ -46,7 +46,7 @@ logger = logging.getLogger('FLUIDAsserts')
 class HTTPSession(object):
     """Class of HTTP request objects."""
 
-    def __init__(self, url, params=None, headers=None,
+    def __init__(self, url, params=None, headers=None, method=None,
                  cookies=None, data='', files=None, auth=None):
         """Metodo constructor de la clase."""
         self.url = url
@@ -56,6 +56,9 @@ class HTTPSession(object):
         self.data = data
         self.auth = auth
         self.files = files
+        self.method = method
+        if self.method:
+            assert self.method in ['PUT','DELETE']
         self.response = None
         self.is_auth = False
         if self.headers is None:
@@ -73,6 +76,20 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
     def do_request(self):
         """Realiza una peticion HTTP."""
         try:
+            if self.method == 'PUT':
+                ret = requests.put(self.url, verify=False,
+                                   auth=self.auth,
+                                   params=self.params,
+                                   cookies=self.cookies,
+                                   data=self.data,
+                                   headers=self.headers)
+            if self.method == 'DELETE':
+                ret = requests.delete(self.url, verify=False,
+                                   auth=self.auth,
+                                   params=self.params,
+                                   cookies=self.cookies,
+                                   data=self.data,
+                                   headers=self.headers)
             if self.data == '':
                 ret = requests.get(self.url, verify=False,
                                    auth=self.auth,
