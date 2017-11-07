@@ -15,6 +15,7 @@ import logging
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 
@@ -54,13 +55,42 @@ def has_put_method(url):
 @track
 def accepts_empty_content_type(url, *args, **kwargs):
     """Check if given URL accepts empty Content-Type requests."""
-    expected_codes = [403, 406, 415]
+    expected_codes = [406, 415]
+    error_codes = [401, 403, 404, 500]
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
+    if session.response.status_code in error_codes:
+        logger.info('%s: URL %s returned error',
+                    show_unknown(), url)
+        return True
     if session.response.status_code not in expected_codes:
         logger.info('%s: URL %s accepts empty Content-Type requests',
                     show_open(), url)
         return True
     logger.info('%s: URL %s rejects empty Content-Type requests',
+                show_close(), url)
+    return False
+
+
+@track
+def accepts_insecure_accept_header(url, *args, **kwargs):
+    """Check if given URL accepts insecure Accept request header value."""
+    expected_codes = [406, 415]
+    error_codes = [401, 403, 404, 500]
+    if 'headers' in kwargs:
+        kwargs['headers'].update({'Accept': '*/*'})
+    else:
+        kwargs = {'headers': {'Accept': '*/*'}}
+    session = http_helper.HTTPSession(url, *args, **kwargs)
+
+    if session.response.status_code in error_codes:
+        logger.info('%s: URL %s returned error',
+                    show_unknown(), url)
+        return True
+    if session.response.status_code not in expected_codes:
+        logger.info('%s: URL %s accepts insecure Accept request header value',
+                    show_open(), url)
+        return True
+    logger.info('%s: URL %s rejects insecure Accept request header value',
                 show_close(), url)
     return False

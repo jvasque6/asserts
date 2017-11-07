@@ -3,6 +3,7 @@ before_script:
     - sudo apt-get install -y python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv sed curl grep gawk lsb-release
     - sudo apt-get install -y python-pip python3-pip python-setuptools python3-setuptools
     - sudo pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
+    - sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS
 
 stages:
     - build
