@@ -55,6 +55,8 @@ def has_put_method(url):
 @track
 def accepts_empty_content_type(url, *args, **kwargs):
     """Check if given URL accepts empty Content-Type requests."""
+    if 'headers' in kwargs:
+        assert not 'Content-Type' in kwargs['headers']
     expected_codes = [406, 415]
     error_codes = [400, 401, 403, 404, 500]
     session = http_helper.HTTPSession(url, *args, **kwargs)
