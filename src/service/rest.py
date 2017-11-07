@@ -14,6 +14,7 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
+from fluidasserts.service import http
 
 logger = logging.getLogger('FLUIDAsserts')
 
@@ -28,24 +29,6 @@ def has_access(url, *args, **kwargs):
         return True
     logger.info('%s: Access not available to %s', show_close(), url)
     return False
-
-
-@track
-def has_trace_method(url):
-    """Check HTTP TRACE."""
-    return http_helper.has_method(url, 'TRACE')
-
-
-@track
-def has_delete_method(url):
-    """Check HTTP DELETE."""
-    return http_helper.has_method(url, 'DELETE')
-
-
-@track
-def has_put_method(url):
-    """Check HTTP PUT."""
-    return http_helper.has_method(url, 'PUT')
 
 
 @track
@@ -94,62 +77,57 @@ def accepts_insecure_accept_header(url, *args, **kwargs):
     return False
 
 
+# Inherited methods from http module
+
+
 @track
-def is_header_x_content_type_options_missing(url, *args, **kwargs):
+def has_trace_method(*args, **kwargs):
+    """Check HTTP TRACE."""
+    return http.has_trace_method(*args, **kwargs)
+
+
+@track
+def has_delete_method(*args, **kwargs):
+    """Check HTTP DELETE."""
+    return http.has_delete_method(*args, **kwargs)
+
+
+@track
+def has_put_method(*args, **kwargs):
+    """Check HTTP PUT."""
+    return http.has_put_method(*args, **kwargs)
+
+
+@track
+def is_header_x_content_type_options_missing(*args, **kwargs):
     """Check if x-content-type-options header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'X-Content-Type-Options',
-                                           *args, **kwargs)
+    return http.is_header_x_content_type_options_missing(*args, **kwargs)
 
 
 @track
-def is_header_x_frame_options_missing(url, *args, **kwargs):
+def is_header_x_frame_options_missing(*args, **kwargs):
     """Check if x-frame-options header is missing."""
-    return http_helper.has_insecure_header(url, 'X-Frame-Options',
-                                           *args, **kwargs)
+    return http.is_header_x_frame_options_missing(*args, **kwargs)
 
 
 @track
-def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
+def is_header_access_control_allow_origin_missing(*args, **kwargs):
     """Check if access-control-allow-origin header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'Access-Control-Allow-Origin',
-                                           *args, **kwargs)
+    return http.is_header_access_control_allow_origin_missing(*args, **kwargs)
 
 
 @track
-def is_not_https_required(url):
+def is_not_https_required(*args, **kwargs):
     """Check if HTTPS is always forced on a given url."""
-    assert url.startswith('http://')
-    http_session = http_helper.HTTPSession(url)
-    if http_session.url.startswith('https'):
-        logger.info('%s: HTTPS is forced on URL, Details=%s',
-                    show_close(), http_session.url)
-        return False
-    logger.info('%s: HTTPS is not forced on URL, Details=%s',
-                show_open(), http_session.url)
-    return True
+    return http.is_not_https_required(*args, **kwargs)
 
 
 @track
-def is_response_delayed(url, *args, **kwargs):
+def is_response_delayed(*args, **kwargs):
     """
     Check if the response time is acceptable.
 
     Values taken from:
     https://www.nngroup.com/articles/response-times-3-important-limits/
     """
-
-    max_response_time = 60
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
-
-    response_time = http_session.response.elapsed.total_seconds()
-    delta = max_response_time - response_time
-
-    if delta >= 0:
-        logger.info('%s: Response time is acceptable for %s, Details=%s',
-                    show_close(), http_session.url, str(response_time))
-        return False
-    logger.info('%s: Response time is not acceptable for %s, Details=%s',
-                show_open(), http_session.url, str(response_time))
-    return True
+    return http.is_response_delayed(*args, **kwargs)
