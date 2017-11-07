@@ -117,3 +117,18 @@ def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
     return http_helper.has_insecure_header(url,
                                            'Access-Control-Allow-Origin',
                                            *args, **kwargs)
+
+
+@track
+def is_not_https_required(url):
+    """Check if HTTPS is always forced on a given url."""
+    assert url.startswith('http://')
+    http_session = http_helper.HTTPSession(url)
+    if http_session.url.startswith('https'):
+        logger.info('%s: HTTPS is forced on URL, Details=%s',
+                    show_close(), http_session.url)
+        return False
+    else:
+        logger.info('%s: HTTPS is not forced on URL, Details=%s',
+                    show_open(), http_session.url)
+        return True
