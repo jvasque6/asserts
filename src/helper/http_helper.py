@@ -257,6 +257,11 @@ def has_method(url, method):
 def has_insecure_header(url, header, *args, **kwargs):
     """Check if header is present."""
     try:
+        if header == 'Access-Control-Allow-Origin':
+            if 'headers' in kwargs:
+                kwargs['headers'].update({'Origin': 'https://www.malicious.com'})
+            else:
+                kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
     except requests.ConnectionError:

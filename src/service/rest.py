@@ -94,3 +94,26 @@ def accepts_insecure_accept_header(url, *args, **kwargs):
     logger.info('%s: URL %s rejects insecure Accept request header value',
                 show_close(), url)
     return False
+
+
+@track
+def is_header_x_content_type_options_missing(url, *args, **kwargs):
+    """Check if x-content-type-options header is missing."""
+    return http_helper.has_insecure_header(url,
+                                           'X-Content-Type-Options',
+                                           *args, **kwargs)
+
+
+@track
+def is_header_x_frame_options_missing(url, *args, **kwargs):
+    """Check if x-frame-options header is missing."""
+    return http_helper.has_insecure_header(url, 'X-Frame-Options',
+                                           *args, **kwargs)
+
+
+@track
+def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
+    """Check if access-control-allow-origin header is missing."""
+    return http_helper.has_insecure_header(url,
+                                           'Access-Control-Allow-Origin',
+                                           *args, **kwargs)
