@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del webservices expuestos o vulnerables.
+"""Modulo para verificacion del webservices expuestos o vulnerables."""
 
-Este modulo permite verificar vulnerabilidades sobre webservices:
-
-    * Uso de REST API sin credenciales o token
-"""
 # standard imports
 import logging
 
@@ -56,7 +52,7 @@ def has_put_method(url):
 def accepts_empty_content_type(url, *args, **kwargs):
     """Check if given URL accepts empty Content-Type requests."""
     if 'headers' in kwargs:
-        assert not 'Content-Type' in kwargs['headers']
+        assert 'Content-Type' not in kwargs['headers']
     expected_codes = [406, 415]
     error_codes = [400, 401, 403, 404, 500]
     session = http_helper.HTTPSession(url, *args, **kwargs)
@@ -130,7 +126,30 @@ def is_not_https_required(url):
         logger.info('%s: HTTPS is forced on URL, Details=%s',
                     show_close(), http_session.url)
         return False
-    else:
-        logger.info('%s: HTTPS is not forced on URL, Details=%s',
-                    show_open(), http_session.url)
-        return True
+    logger.info('%s: HTTPS is not forced on URL, Details=%s',
+                show_open(), http_session.url)
+    return True
+
+
+@track
+def is_response_delayed(url, *args, **kwargs):
+    """
+    Check if the response time is acceptable.
+
+    Values taken from:
+    https://www.nngroup.com/articles/response-times-3-important-limits/
+    """
+
+    max_response_time = 60
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+
+    response_time = http_session.response.elapsed.total_seconds()
+    delta = max_response_time - response_time
+
+    if delta >= 0:
+        logger.info('%s: Response time is acceptable for %s, Details=%s',
+                    show_close(), http_session.url, str(response_time))
+        return False
+    logger.info('%s: Response time is not acceptable for %s, Details=%s',
+                show_open(), http_session.url, str(response_time))
+    return True
