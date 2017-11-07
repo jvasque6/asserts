@@ -56,7 +56,7 @@ def has_put_method(url):
 def accepts_empty_content_type(url, *args, **kwargs):
     """Check if given URL accepts empty Content-Type requests."""
     expected_codes = [406, 415]
-    error_codes = [401, 403, 404, 500]
+    error_codes = [400, 401, 403, 404, 500]
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
     if session.response.status_code in error_codes:
@@ -76,7 +76,7 @@ def accepts_empty_content_type(url, *args, **kwargs):
 def accepts_insecure_accept_header(url, *args, **kwargs):
     """Check if given URL accepts insecure Accept request header value."""
     expected_codes = [406, 415]
-    error_codes = [401, 403, 404, 500]
+    error_codes = [400, 401, 403, 404, 500]
     if 'headers' in kwargs:
         kwargs['headers'].update({'Accept': '*/*'})
     else:
