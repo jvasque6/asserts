@@ -145,10 +145,8 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, ret)
         return True
-    else:
-        logger.info('%s: %s Bad text not present',
-                    show_close(), url)
-        return False
+    logger.info('%s: %s Bad text not present', show_close(), url)
+    return False
 
 
 @track
@@ -159,10 +157,9 @@ def has_text(url, expected_text, *args, **kwargs):
         logger.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    else:
-        logger.info('%s: %s Bad text not present, Details=%s',
-                    show_close(), url, expected_text)
-        return False
+    logger.info('%s: %s Bad text not present, Details=%s',
+                show_close(), url, expected_text)
+    return False
 
 
 @track
@@ -173,10 +170,9 @@ def has_not_text(url, expected_text, *args, **kwargs):
         logger.info('%s: %s Expected text not present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    else:
-        logger.info('%s: %s Expected text present, Details=%s',
-                    show_close(), url, expected_text)
-        return False
+    logger.info('%s: %s Expected text present, Details=%s',
+                show_close(), url, expected_text)
+    return False
 
 
 @track
@@ -423,10 +419,9 @@ def is_not_https_required(url):
         logger.info('%s: HTTPS is forced on URL, Details=%s',
                     show_close(), http_session.url)
         return False
-    else:
-        logger.info('%s: HTTPS is not forced on URL, Details=%s',
-                    show_open(), http_session.url)
-        return True
+    logger.info('%s: HTTPS is not forced on URL, Details=%s',
+                show_open(), http_session.url)
+    return True
 
 
 @track
@@ -434,3 +429,27 @@ def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
     return has_text(url, bad_text, *args, **kwargs)
+
+
+@track
+def is_response_delayed(url, *args, **kwargs):
+    """
+    Check if the response time is acceptable.
+
+    Values taken from:
+    https://www.nngroup.com/articles/response-times-3-important-limits/
+    """
+
+    max_response_time = 60
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+
+    response_time = http_session.response.elapsed.total_seconds()
+    delta = max_response_time - response_time
+
+    if delta >= 0:
+        logger.info('%s: Response time is acceptable for %s, Details=%s',
+                    show_close(), http_session.url, str(response_time))
+        return False
+    logger.info('%s: Response time is not acceptable for %s, Details=%s',
+                show_open(), http_session.url, str(response_time))
+    return True

@@ -9,7 +9,7 @@ export IP="172.30.216.100"
 
 # Setup (ansible)
 export ANSIBLE_HOSTS="$PROJECT_DIR"/test/provision/hosts
-export ANSIBLE_CONFIG="$PROJECT_DIR"/test/provision/config
+export ANSIBLE_CONFIG="$PROJECT_DIR"/test/provision/config.cfg
 export ANSIBLE_SCP_IF_SSH=y
 
 # Desahibilitar agentes SSH

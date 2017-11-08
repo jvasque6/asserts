@@ -43,6 +43,3 @@ def soap_is_enable(wsdl):
                     wsdl, temp)
     except Exception as e:
         print(e)
-
-def rest_is_enable(rest):
-    pass
