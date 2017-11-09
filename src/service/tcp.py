@@ -54,12 +54,11 @@ def is_port_insecure(ipaddress, port):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(3)
         ssl_sock = ssl.wrap_socket(sock)
-        result = ssl_sock.connect_ex((ipaddress, port))
-        result = False
+        ssl_sock.connect_ex((ipaddress, port))
         logger.info('%s: Port is secure, Details=%s',
                     show_close(), ipaddress + ':' + str(port))
         return False
     except ssl.SSLError:
         logger.info('%s: Port is not secure, Details=%s',
                     show_open(), ipaddress + ':' + str(port))
-        return False
+        return True
