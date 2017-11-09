@@ -4,6 +4,7 @@ before_script:
     - sudo apt-get install -y python-pip python3-pip python-setuptools python3-setuptools
     - sudo pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
     - sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS
+    - sudo docker -D pull fluidsignal/fluidasserts:container
 
 stages:
     - build
