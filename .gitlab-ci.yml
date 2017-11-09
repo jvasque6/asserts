@@ -7,12 +7,8 @@ services:
 - docker:dind
 
 before_script:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv sed curl grep gawk lsb-release
-    - sudo apt-get install -y python-pip python3-pip python-setuptools python3-setuptools
-    - sudo pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
-    - sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS
-    - sudo docker -D pull fluidsignal/fluidasserts:container
+    - docker -D login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker build -t asserts .
 
 codequality:
   image: docker:latest
@@ -35,14 +31,15 @@ stages:
 build:
     stage: build
     script:
-        - scons deps
+        - docker run -it -v $(pwd):/usr/src/app asserts scons deps
 
 test:
     stage: test
     script:
-        - scons self
-        - scons smoke
-        - scons test
+        - docker run -it -v $(pwd):/usr/src/app asserts scons dist
+#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons self
+#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons smoke
+#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons test
 
 deploy:
     stage: deploy
@@ -50,7 +47,7 @@ deploy:
         - echo $VAULT > ~/.vault.txt
         - cp conf/dotpypirc ~/.pypirc
         - ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
-        - scons dist
+        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons dist
         - twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload;
         - python src/utils/send_mail.py
     only:
