@@ -1,14 +1,17 @@
-= README: FLUIDAsserts
+= FLUIDAsserts
 :lang:                   es
 :author:                 Enginering Team
 :email:		         engineering@fluid.la
 :revnumber:              v1.0
 :revdate:                2016
 :toc:                    macro
-:toc-title:              Contenido
+:toc-title:              Tabla de Contenido
 :icons:                  font
 :source-highlighter:     pygments
 :keywords:               fluidasserts, fluidsignal, fsg, unit testing
+
+image:https://gitlab.com/fluidsignal/asserts/badges/master/pipeline.svg[link="https://gitlab.com/fluidsignal/asserts/commits/master",title="pipeline status"]
+image:https://gitlab.com/fluidsignal/asserts/badges/master/coverage.svg[link="https://gitlab.com/fluidsignal/asserts/commits/master",title="coverage report"]
 
 toc::[]
 
@@ -820,7 +823,7 @@ Evite a toda costa los nombres de archivo en mayuscula y con caracteres
 especiales de forma que se maximice la compatibilidad con multiples
 sistemas operativos.
 
-include::include/footer.asc[]
+include::doc/include/footer.asc[]
 
 ////
 
