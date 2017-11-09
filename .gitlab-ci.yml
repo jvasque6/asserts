@@ -5,6 +5,7 @@ before_script:
     - sudo pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
     - sudo docker -D login -u $DOCKER_USER -p $DOCKER_PASS
     - sudo docker -D pull fluidsignal/fluidasserts:container
+<<<<<<< HEAD
 
 codequality:
   image: docker:latest
@@ -18,6 +19,8 @@ codequality:
     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -f json > codeclimate.json
   artifacts:
     paths: [codeclimate.json]
+=======
+>>>>>>> c9bd37c531087ee5a9c75b9af306ed04242bbe00
 
 stages:
     - build
