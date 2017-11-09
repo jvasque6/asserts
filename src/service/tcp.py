@@ -8,6 +8,7 @@ Este modulo permite verificar vulnerabilidades propias de TCP como:
 """
 
 # standard imports
+from __future__ import absolute_import
 import logging
 import socket
 import ssl
