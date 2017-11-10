@@ -1,5 +1,6 @@
 # FLUIDAsserts
 build/
+builds/
 
 # Coverage files
 .coverage
