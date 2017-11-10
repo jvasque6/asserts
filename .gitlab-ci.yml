@@ -36,19 +36,19 @@ build_images:
 build:
     stage: build
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/build:latest
+        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deps
 test:
     stage: test
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/build:latest
+        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons self
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
 
 deploy:
     stage: deploy
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/build:latest
+        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deploy
     only:
