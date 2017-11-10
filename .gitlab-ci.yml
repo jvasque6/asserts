@@ -37,7 +37,7 @@ test:
     stage: test
     script:
         - docker run -it -v $(pwd):/usr/src/app asserts scons dist
-#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons self
+        - docker run -it -v $(pwd):/usr/src/app asserts scons self
 #        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons smoke
 #        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons test
 

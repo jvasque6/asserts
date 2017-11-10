@@ -40,7 +40,6 @@ PhonyTargets(lenv, self=[
     'git --no-pager log -1',
     'git status',
     'git remote -v',
-    'git remote show origin',
 ])
 
 # Target de descarga
