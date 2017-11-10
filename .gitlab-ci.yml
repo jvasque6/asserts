@@ -31,25 +31,21 @@ stages:
 build:
     stage: build
     script:
-        - docker run -it -v $(pwd):/usr/src/app asserts scons deps
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons deps
 
 test:
     stage: test
     script:
-        - docker run -it -v $(pwd):/usr/src/app asserts scons dist
-        - docker run -it -v $(pwd):/usr/src/app asserts scons self
-#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons smoke
-#        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons test
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons dist
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons self
+#        - docker run -t -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons smoke
+#        - docker run -t -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons test
 
 deploy:
     stage: deploy
     script:
-        - echo $VAULT > ~/.vault.txt
-        - cp conf/dotpypirc ~/.pypirc
-        - ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc
-        - docker run -it -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock asserts scons dist
-        - twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload;
-        - python src/utils/send_mail.py
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons dist
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL asserts scons deploy
     only:
     - master
 
