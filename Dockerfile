@@ -3,7 +3,7 @@ FROM debian:stable-slim
 WORKDIR /usr/src/app
 
 RUN apt-get update -qq && \
-    apt-get install -y python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv sed curl grep gawk lsb-release netcat && \
+    apt-get install -y python3 python3-dev python-dev libssl-dev libffi-dev scons python-virtualenv sed curl grep gawk lsb-release netcat-traditional && \
     apt-get install -y python-pip python3-pip python-setuptools python3-setuptools apt-transport-https ca-certificates && \
     pip install -U tox tox-pyenv flake8 pylint yamllint twine certifi ansible wheel colorama mandrill
 

@@ -48,7 +48,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
             has_sni = True
         except socket.error:
             logger.info('%s: Port closed, Details=%s:%s',
-                         show_unknown(), site, port)
+                        show_unknown(), site, port)
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -265,6 +265,7 @@ def is_sslv3_enabled(site, port=PORT):
         sock.close()
     return result
 
+
 @track
 def is_sha1_used(site, port=PORT):
     """Function to check whether cert use sha1 in their signature algorithm"""
@@ -290,15 +291,10 @@ def is_sha1_used(site, port=PORT):
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
 
-
     sign_algorith = cert_obj.signature_hash_algorithm.name
 
-
-    cert_validity = \
-        cert_obj.not_valid_after - cert_obj.not_valid_before
-
-    if not "sha1" in sign_algorith:
-        logger.info('%s: Certificate has an insecure signature algorithm, \
+    if "sha1" not in sign_algorith:
+        logger.info('%s: Certificate has an secure signature algorithm, \
 Details= Signature Algorithm: %s',
                     show_close(), sign_algorith)
         result = False
@@ -309,6 +305,7 @@ Details= Signature Algorithm: %s',
         result = True
 
     return result
+
 
 @track
 def is_tlsv1_enabled(site, port=PORT):
