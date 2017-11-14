@@ -10,11 +10,6 @@ before_script:
     - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
 
 codequality:
-  #image: docker:latest
-  #variables:
-    #DOCKER_DRIVER: overlay
-  #services:
-    #- docker:dind
   script:
     - docker pull codeclimate/codeclimate
     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate init
@@ -27,17 +22,12 @@ stages:
     - test
     - deploy
 
-build_images:
-    stage: build
-    script:
-        - docker build -t registry.gitlab.com/fluidsignal/asserts/base:latest .
-        - docker push registry.gitlab.com/fluidsignal/asserts/base:latest
-
 build:
     stage: build
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
+        - docker build -t registry.gitlab.com/fluidsignal/asserts/base:latest .
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deps
+        - docker push registry.gitlab.com/fluidsignal/asserts/base:latest
 test:
     stage: test
     script:
@@ -51,5 +41,14 @@ deploy:
         - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deploy
+    only:
+    - master
+
+push_container:
+    stage: deploy
+    script:
+        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
+        - docker tag registry.gitlab.com/fluidsignal/asserts/base:latest registry.gitlab.com/fluidsignal/asserts/base:master
+        - docker push registry.gitlab.com/fluidsignal/asserts/base:master
     only:
     - master

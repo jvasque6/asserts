@@ -20,3 +20,6 @@ Exploiting/
 
 # Temporal local
 tmp/
+
+# Failed ansible playbook runs
+*.retry

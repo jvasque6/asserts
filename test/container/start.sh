@@ -42,6 +42,7 @@ if [ -z $(docker ps -q -f name="$SERVICE") ]; then
 		--ip "$IP" \
 		--publish-all \
 		--volume=/tmp:/host/tmp \
+		--volume=/var/run/docker.sock:/var/run/docker.sock \
 		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
 		fluidsignal/fluidasserts:"$SERVICE"
 
