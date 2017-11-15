@@ -19,6 +19,7 @@ codequality:
 
 stages:
     - build
+    - lint
     - test
     - deploy
 
@@ -28,6 +29,13 @@ build:
         - docker build -t registry.gitlab.com/fluidsignal/asserts/base:latest .
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deps
         - docker push registry.gitlab.com/fluidsignal/asserts/base:latest
+
+lint:
+    stage: lint
+    script:
+        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
+        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons lint
+
 test:
     stage: test
     script:
