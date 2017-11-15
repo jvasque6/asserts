@@ -13,8 +13,8 @@ docker network create \
 		"$NET_NAME"
 
 # crear claves de acceso al contenedor
-cp "$PROJECT_DIR"/test/setup/ssh_config ~/.ssh/config.facont
-echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f ~/.ssh/facont_id_rsa -q -N ""
+cp "$PROJECT_DIR"/test/setup/ssh_config "$PROJECT_DIR"/build/config.facont
+echo -e "y\n" | ssh-keygen -b 2048 -t rsa -f "$PROJECT_DIR"/build/facont_id_rsa -q -N ""
 
 docker run \
 		--tty \
@@ -27,7 +27,7 @@ docker run \
                 --entrypoint=/bin/bash \
 		--volume=/tmp:/host/tmp \
 		--volume=/var/run/docker.sock:/var/run/docker.sock \
-		-e SSH_KEY="$(cat ~/.ssh/facont_id_rsa.pub)" \
+		-e SSH_KEY="$(cat "$PROJECT_DIR"/build/facont_id_rsa.pub)" \
 		fluidsignal/fluidasserts:"$SERVICE"
 
 docker rm "$SERVICE"-inside
@@ -36,5 +36,5 @@ docker rm "$SERVICE"-inside
 docker network rm fluidasserts
 
 # eliminar claves de accesso a contenedor
-rm -f ~/.ssh/config.facont
-rm -f ~/.ssh/facont_id_rsa*
+rm -f "$PROJECT_DIR"/build/config.facont
+rm -f "$PROJECT_DIR"/build/facont_id_rsa*

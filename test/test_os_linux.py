@@ -21,7 +21,7 @@ from fluidasserts.system import linux_generic
 CONTAINER_IP = '172.30.216.100'
 CONTAINER_USER = 'root'
 CONTAINER_PASS = 'doesnotexist'
-CONTAINER_CONFIG = '~/.ssh/config.facont'
+CONTAINER_CONFIG = '/usr/src/app/build/config.facont'
 
 
 #

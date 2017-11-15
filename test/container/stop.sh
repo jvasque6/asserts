@@ -27,8 +27,8 @@ else
   docker rm "$SERVICE"
 
   # eliminar claves de accesso a contenedor
-  rm -f ~/.ssh/config.facont
-  rm -f ~/.ssh/facont_id_rsa*
+  rm -f "$PROJECT_DIR"/build/config.facont
+  rm -f "$PROJECT_DIR"/build/facont_id_rsa*
 fi
 
 # eliminar red de contenedores si esta establecida

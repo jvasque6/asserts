@@ -32,8 +32,10 @@ test:
     stage: test
     script:
         - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
+        - docker network create --subnet="172.30.216.0/16" fluidasserts
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons self
         - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
+        - docker run -t --net "fluidasserts" -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons test
 
 deploy:
     stage: deploy
