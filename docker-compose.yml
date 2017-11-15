@@ -1,0 +1,88 @@
+version: '3'
+services:
+  deps:
+    build: .
+    command: scons deps
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+  self:
+    build: .
+    depends_on:
+     - deps
+    command: scons self
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+  lint:
+    build: .
+    depends_on:
+     - deps
+    command: scons lint
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+  dist:
+    build: .
+    depends_on:
+     - deps
+    command: scons dist
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+  test:
+    build: .
+    depends_on:
+     - deps
+    command: scons test
+    networks:
+     - fluidasserts
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+  deploy:
+    build: .
+    depends_on:
+     - deps
+     - dist
+     - test
+    command: scons deploy
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - .:/usr/src/app
+    environment:
+     - VAULT=$VAULT
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+
+networks:
+  fluidasserts:
+    ipam:
+      config:
+        - subnet: 172.16.216.0/24
+
