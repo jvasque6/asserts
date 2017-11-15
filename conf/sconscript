@@ -114,7 +114,7 @@ PhonyTargets(lenv, deploy=[
     'echo ' + lenv['ENV']['VAULT'] + ' > ~/.vault.txt',
     'cp conf/dotpypirc ~/.pypirc',
     'ansible-vault --vault-password-file ~/.vault.txt decrypt ~/.pypirc',
-    'twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload',
-    'python src/utils/send_mail.py'
+    #'twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload',
+    #'python src/utils/send_mail.py'
 ])
 

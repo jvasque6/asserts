@@ -33,7 +33,7 @@ docker run \
 docker rm "$SERVICE"-inside
 
 # eliminar red de contenedores
-docker network rm fluidasserts
+docker network rm fluidasserts_fluidasserts
 
 # eliminar claves de accesso a contenedor
 rm -f "$PROJECT_DIR"/build/config.facont

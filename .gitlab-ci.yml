@@ -8,6 +8,10 @@ services:
 
 before_script:
     - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
+    - apk update
+    - apk upgrade
+    - apk add python python-dev py-pip build-base
+    - pip install docker-compose
 
 codequality:
   script:
@@ -26,31 +30,23 @@ stages:
 build:
     stage: build
     script:
-        - docker build -t registry.gitlab.com/fluidsignal/asserts/base:latest .
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deps
+        - docker-compose run deps
         - docker push registry.gitlab.com/fluidsignal/asserts/base:latest
 
 lint:
     stage: lint
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons lint
+        - docker-compose run lint
 
 test:
     stage: test
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
-        - docker network create --subnet="172.30.216.0/16" fluidasserts
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons self
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
-        - docker run -t --net "fluidasserts" -v $(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons test
+        - docker-compose run test
 
 deploy:
     stage: deploy
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons dist
-        - docker run -t -v $(pwd):/usr/src/app -e VAULT=$VAULT -e FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY -e FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL registry.gitlab.com/fluidsignal/asserts/base:latest scons deploy
+        - docker-compose run deploy
     only:
     - master
 
