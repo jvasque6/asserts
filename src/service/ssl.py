@@ -294,7 +294,7 @@ def is_sha1_used(site, port=PORT):
     sign_algorith = cert_obj.signature_hash_algorithm.name
 
     if "sha1" not in sign_algorith:
-        logger.info('%s: Certificate has an secure signature algorithm, \
+        logger.info('%s: Certificate has a secure signature algorithm, \
 Details= Signature Algorithm: %s',
                     show_close(), sign_algorith)
         result = False

@@ -1,5 +1,5 @@
-# Imagen base del ultimo linux estable de Debian (jessie)
-FROM debian:jessie
+# Imagen base del ultimo linux estable de Debian
+FROM debian:stable-slim
 
 # Dudas sobre la imagen en cuestion
 MAINTAINER FLUID Engineering Team <engineering@fluid.la>
