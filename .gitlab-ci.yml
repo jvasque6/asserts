@@ -30,6 +30,7 @@ stages:
 build:
     stage: build
     script:
+        - docker-compose build
         - docker-compose run deps
         - docker-compose push
 
@@ -53,8 +54,8 @@ deploy:
 push_container:
     stage: deploy
     script:
-        - docker pull registry.gitlab.com/fluidsignal/asserts/base:latest
-        - docker tag registry.gitlab.com/fluidsignal/asserts/base:latest registry.gitlab.com/fluidsignal/asserts/base:master
-        - docker push registry.gitlab.com/fluidsignal/asserts/base:master
+        - docker pull registry.gitlab.com/fluidsignal/asserts:dev
+        - docker tag registry.gitlab.com/fluidsignal/asserts:dev registry.gitlab.com/fluidsignal/asserts:master
+        - docker push registry.gitlab.com/fluidsignal/asserts:master
     only:
     - master
