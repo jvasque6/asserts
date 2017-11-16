@@ -3,7 +3,7 @@ export PROJECT_DIR=$(git rev-parse --show-toplevel)
 
 # Container (docker)
 export NET_IP="172.30.216.0/16"
-export NET_NAME="fluidasserts_fluidasserts"
+export NET_NAME="asserts_fluidasserts"
 export SERVICE="container"
 export IP="172.30.216.100"
 
