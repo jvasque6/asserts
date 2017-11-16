@@ -39,6 +39,7 @@ services:
 
   dist:
     build: .
+    image: registry.gitlab.com/fluidsignal/asserts/base:latest
     depends_on:
      - deps
     command: scons dist
