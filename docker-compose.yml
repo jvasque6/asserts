@@ -39,7 +39,7 @@ services:
 
   dist:
     build: .
-    container_name: asserts:dev
+    container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
