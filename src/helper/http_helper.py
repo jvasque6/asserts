@@ -47,7 +47,7 @@ class HTTPSession(object):
     """Class of HTTP request objects."""
 
     def __init__(self, url, params=None, headers=None, method=None,
-                 cookies=None, data='', files=None, auth=None):
+                 cookies=None, data='', files=None, auth=None, stream=False):
         """Metodo constructor de la clase."""
         self.url = url
         self.params = params
@@ -58,9 +58,10 @@ class HTTPSession(object):
         self.files = files
         self.method = method
         if self.method:
-            assert self.method in ['PUT','DELETE']
+            assert self.method in ['PUT', 'DELETE']
         self.response = None
         self.is_auth = False
+        self.stream = stream
         if self.headers is None:
             self.headers = dict()
         if 'User-Agent' not in self.headers:
@@ -85,17 +86,18 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                    headers=self.headers)
             if self.method == 'DELETE':
                 ret = requests.delete(self.url, verify=False,
-                                   auth=self.auth,
-                                   params=self.params,
-                                   cookies=self.cookies,
-                                   data=self.data,
-                                   headers=self.headers)
+                                      auth=self.auth,
+                                      params=self.params,
+                                      cookies=self.cookies,
+                                      data=self.data,
+                                      headers=self.headers)
             if self.data == '':
                 ret = requests.get(self.url, verify=False,
                                    auth=self.auth,
                                    params=self.params,
                                    cookies=self.cookies,
-                                   headers=self.headers)
+                                   headers=self.headers,
+                                   stream=self.stream)
             else:
                 if not self.files:
                     if 'Content-Type' not in self.headers:
@@ -107,7 +109,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                     params=self.params,
                                     cookies=self.cookies,
                                     headers=self.headers,
-                                    files=self.files)
+                                    files=self.files,
+                                    stream=self.stream)
             self.response = ret
             if self.response.url != self.url:
                 self.url = self.response.url

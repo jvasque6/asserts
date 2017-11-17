@@ -60,7 +60,9 @@ setup(
         'colorama==0.3.9',           # logging
         'pysmb==1.1.19',             # src.service.smb
         'mixpanel==4.3.2',           # src.utils.decorators
-        'requests_ntlm==1.0.0'       # src.helper.http_helper
+        'requests_ntlm==1.0.0',      # src.helper.http_helper
+        'pytesseract==0.1.7',        # src.format.captcha
+        'pillow==4.3.0',             # src.format.captcha
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
