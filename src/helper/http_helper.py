@@ -7,6 +7,13 @@ import logging
 import re
 
 # 3rd party imports
+try:
+    from urlparse import parse_qsl as parse_qsl
+    from urllib import quote as quote
+except ImportError:
+    from urllib.parse import parse_qsl as parse_qsl
+    from urllib.parse import quote as quote
+
 from bs4 import *
 from requests_oauthlib import OAuth1
 import requests
@@ -223,11 +230,24 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             logger.info('%s Auth: %s, Details=%s', method, self.url,
                         'Not present')
 
-    def get_html_value(self, field_type, field_name, field='value'):
+    def get_html_value(self, field_type, field_name, field='value', enc=False):
         soup = BeautifulSoup(self.response.text, 'html.parser')
         text_to_get = soup.find(field_type,
                                 {'name': field_name})[field]
+        if enc:
+            return quote(text_to_get)
         return text_to_get
+
+
+def create_dataset(field, value_list, query_string):
+    dataset = []
+    if type(query_string) == str:
+        data_dict = dict(parse_qsl(query_string))
+    data_dict = {quote(k): quote(v) for k, v in data_dict.items()}
+    for value in value_list:
+        data_dict[field] = value
+        dataset.append(data_dict.copy())
+    return dataset
 
 
 def options_request(url):

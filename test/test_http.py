@@ -25,7 +25,8 @@ from test.mock import httpserver
 #
 
 CONTAINER_IP = '172.30.216.100'
-BASE_URL = 'http://localhost:5000/http/headers'
+MOCK_SERVICE = 'http://localhost:5000'
+BASE_URL = MOCK_SERVICE + '/http/headers'
 
 #
 # Fixtures
@@ -72,8 +73,6 @@ def get_bwapp_cookies():
         return {}
     return http_session.cookies
 
-
-
 #
 # Open tests
 #
@@ -88,8 +87,6 @@ def test_a1_sqli_open():
     vulnerable_url = 'http://' + CONTAINER_IP + \
         '/bWAPP/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
-
-    #expected = 'No movies were found'
 
     assert http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
@@ -262,7 +259,6 @@ def test_a8_csrf_open():
                              cookies=bwapp_cookie)
 
 
-
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_open():
     """Header Access-Control-Allow-Origin no establecido?"""
@@ -332,6 +328,15 @@ def test_version_open():
         '%s/version/fail' % (BASE_URL))
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_userenum_open():
+    """Enumeracion de usuarios posible?"""
+    data = 'username=pepe&password=grillo'
+    assert http.has_user_enumeration(
+        '%s/userenum/fail' % (MOCK_SERVICE),
+        'username', data=data)
+
+
 #
 # Close tests
 #
@@ -346,7 +351,6 @@ def test_a1_sqli_close():
         '/bWAPP/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
 
-    #expected = 'No movies were found'
     assert not http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
@@ -587,6 +591,14 @@ def test_version_close():
     assert not http.is_header_server_insecure(
         '%s/version/ok' % (BASE_URL))
 
+
+@pytest.mark.usefixtures('mock_http')
+def test_userenum_close():
+    """Enumeracion de usuarios posible?"""
+    data = 'username=pepe&password=grillo'
+    assert not http.has_user_enumeration(
+        '%s/userenum/ok' % (MOCK_SERVICE),
+        'username', data=data)
 
 #
 # TODO(glopez) Functions in HTTP library

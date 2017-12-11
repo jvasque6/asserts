@@ -48,6 +48,21 @@ def home():
     return 'Mock HTTP Server'
 
 
+@APP.route('/userenum/fail', methods=['POST'])
+def user_enumeration_fail():
+    """Respuesta a directorio raiz."""
+    if request.values['username'] == 'admin':
+        return 'Login incorrect'
+    else:
+        return 'User not found'
+
+
+@APP.route('/userenum/ok', methods=['POST'])
+def user_enumeration_ok():
+    """Respuesta a directorio raiz."""
+    return 'Login incorrect'
+
+
 @APP.route('/http/headers/access_control_allow_origin/ok')
 def access_control_allow_origin_ok():
     """Header AC Allow Origin bien establecido."""

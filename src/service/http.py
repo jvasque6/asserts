@@ -453,3 +453,64 @@ def is_response_delayed(url, *args, **kwargs):
     logger.info('%s: Response time is not acceptable for %s, Details=%s',
                 show_open(), http_session.url, str(response_time))
     return True
+
+
+@track
+def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
+                         *args, **kwargs):
+    assert 'data' in kwargs
+    assert user_field in kwargs['data']
+    if not user_list:
+        user_list = ['admin', 'administrator', 'guest', 'test']
+
+    if not fake_users:
+        fake_users = ['iuaksiuiadbuqywdaskj1234', 'ajahdsjahdjhbaj',
+                      'aksjdads@asd.com', 'osvtxodahidhiis@gmail.com',
+                      'something@example.com', '12312314511231']
+
+    orig_data = kwargs['data']
+    # Evaluate the response with non-existant users
+    datasets = http_helper.create_dataset(user_field, fake_users,
+                                          kwargs['data'])
+
+    fake_res = list()
+    for dataset in datasets:
+        kwargs['data'] = dataset
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        fake_res.append((len(sess.response.text),
+                         sess.response.status_code))
+
+    kwargs['data'] = orig_data
+    datasets = http_helper.create_dataset(user_field, user_list,
+                                          kwargs['data'])
+
+    user_res = list()
+    for dataset in datasets:
+        kwargs['data'] = dataset
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        user_res.append((len(sess.response.text),
+                         sess.response.status_code))
+
+    num_comp = len(fake_res) * len(user_res)
+
+    merged = []
+    for i in fake_res:
+        for j in user_res:
+            merged.append((i, j))
+
+    from difflib import SequenceMatcher
+    res = 0
+    for x, y in merged:
+        res += SequenceMatcher(lambda x: type(x) == int, x, y).ratio()
+
+    rat = round(res / num_comp, 2)
+
+    if rat > 0.95:
+        logger.info('%s: User enumeration not possible for %s, \
+Details=%s%% of similar answers',
+                    show_close(), url, str(rat*100))
+        return False
+    logger.info('%s: User enumeration is possible for %s, \
+Details=%s%% of similar answers',
+                show_open(), url, str(rat*100))
+    return True

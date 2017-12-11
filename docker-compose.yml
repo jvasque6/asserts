@@ -56,7 +56,6 @@ services:
     build: .
     depends_on:
      - deps
-     - self
      - dist
     command: scons test
     networks:
