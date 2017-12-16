@@ -337,6 +337,19 @@ def test_userenum_open():
         'username', data=data)
 
 
+@pytest.mark.usefixtures('mock_http')
+def test_bruteforce_open():
+    """Bruteforce posible?"""
+    data = 'username=pepe&password=grillo'
+    assert http.can_brute_force(
+        '%s/bruteforce/fail' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data)
+
 #
 # Close tests
 #
@@ -599,6 +612,20 @@ def test_userenum_close():
     assert not http.has_user_enumeration(
         '%s/userenum/ok' % (MOCK_SERVICE),
         'username', data=data)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_bruteforce_close():
+    """Bruteforce posible?"""
+    data = 'username=pepe&password=grillo'
+    assert not http.can_brute_force(
+        '%s/bruteforce/ok' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data)
 
 #
 # TODO(glopez) Functions in HTTP library
