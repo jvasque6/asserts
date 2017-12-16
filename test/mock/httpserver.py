@@ -50,7 +50,7 @@ def home():
 
 @APP.route('/userenum/fail', methods=['POST'])
 def user_enumeration_fail():
-    """Respuesta a directorio raiz."""
+    """Form vuln a user enumeration."""
     if request.values['username'] == 'admin':
         return 'Login incorrect'
     else:
@@ -59,8 +59,16 @@ def user_enumeration_fail():
 
 @APP.route('/userenum/ok', methods=['POST'])
 def user_enumeration_ok():
-    """Respuesta a directorio raiz."""
+    """Form segura a user enumeration."""
     return 'Login incorrect'
+
+@APP.route('/bruteforce/fail', methods=['POST'])
+def brute_force_fail():
+    """Form con brute forcing."""
+    if request.values['username'] == 'admin' and request.values['password'] == 'password':
+        return 'You are admin now'
+    else:
+        return 'User not found'
 
 
 @APP.route('/http/headers/access_control_allow_origin/ok')

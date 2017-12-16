@@ -514,3 +514,40 @@ Details=%s%% of similar answers',
 Details=%s%% of similar answers',
                 show_open(), url, str(rat*100))
     return True
+
+
+@track
+def can_brute_force(url, ok_regex, user_field, pass_field, user_list=[],
+                    pass_list=[], *args, **kwargs):
+
+    assert 'params' in kwargs or 'data' in kwargs
+    if 'params' in kwargs:
+        query_string = kwargs['params']
+    elif 'data' in kwargs:
+        query_string = kwargs['data']
+
+    assert type(user_list) is list
+    assert type(pass_list) is list
+
+    users_dataset = http_helper.create_dataset(user_field, user_list,
+                                               query_string)
+
+    dataset = []
+    for password in pass_list:
+        for user_ds in users_dataset:
+            ds = http_helper.create_dataset(pass_field, [password], user_ds)
+            dataset.append(ds[0])
+
+    for ds in dataset:
+        if 'params' in kwargs:
+            kwargs['params'] = ds
+        elif 'data' in kwargs:
+            kwargs['data'] = ds
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        if ok_regex in sess.response.text:
+            logger.info('%s: Brute forcing possible for %s, \
+Details=%s params were used', url, show_open(), str(ds))
+            return True
+    logger.info('%s: Brute forcing was not successful for %s',
+                show_close(), url)
+    return False
