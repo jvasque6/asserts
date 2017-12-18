@@ -242,10 +242,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 def create_dataset(field, value_list, query_string):
     dataset = []
     if type(query_string) == str:
-        _data_dict = dict(parse_qsl(query_string))
+        data_dict = dict(parse_qsl(query_string))
     else:
-        _data_dict = query_string.copy()
-    data_dict = {quote(k): quote(v) for k, v in _data_dict.items()}
+        data_dict = query_string.copy()
     for value in value_list:
         data_dict[field] = value
         dataset.append(data_dict.copy())
