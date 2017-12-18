@@ -12,6 +12,7 @@ Este modulo permite verificar vulnerabilidades propias de HTTP como:
 # standard imports
 import logging
 import re
+import string
 
 # 3rd party imports
 # None
@@ -501,7 +502,7 @@ def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
     from difflib import SequenceMatcher
     res = 0
     for x, y in merged:
-        res += SequenceMatcher(lambda x: type(x) == int, x, y).ratio()
+        res += SequenceMatcher(lambda x: x in string.digits, x, y).ratio()
 
     rat = round(res / num_comp, 2)
 
@@ -546,7 +547,7 @@ def can_brute_force(url, ok_regex, user_field, pass_field, user_list=[],
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         if ok_regex in sess.response.text:
             logger.info('%s: Brute forcing possible for %s, \
-Details=%s params were used', url, show_open(), str(ds))
+Details=%s params were used', show_open(), url, str(ds))
             return True
     logger.info('%s: Brute forcing was not successful for %s',
                 show_close(), url)
