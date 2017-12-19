@@ -14,4 +14,4 @@ nonpass_user = nonpass
 
 # Ansible Variables
 ansible_user = nonpriv
-ansible_ssh_common_args = -F /usr/src/app/build/config.facont
+ansible_ssh_common_args = -F /usr/src/asserts/build/config.facont

@@ -29,7 +29,7 @@ stages:
 build:
     stage: build
     script:
-        - docker-compose build
+        - docker build --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS -t registry.gitlab.com/fluidsignal/asserts:dev .
         - docker-compose run deps
         - docker-compose push
 
@@ -38,10 +38,10 @@ lint:
     script:
         - docker-compose run lint
 
-test:
-    stage: test
-    script:
-        - docker-compose run test
+          #test:
+          #stage: test
+          #script:
+          #- docker-compose run test
 
 deploy:
     stage: deploy

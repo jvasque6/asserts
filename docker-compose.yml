@@ -3,57 +3,53 @@ services:
   deps:
     build: .
     command: scons deps
+    container_name: asserts
+    image: registry.gitlab.com/fluidsignal/asserts:dev
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
 
   self:
-    build: .
+    image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
     command: scons self
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
 
   lint:
-    build: .
+    image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
     command: scons lint
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
 
   dist:
-    build: .
-    container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
     command: scons dist
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
 
   test:
-    build: .
+    image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
      - dist
@@ -62,21 +58,19 @@ services:
      - fluidasserts
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
 
   deploy:
-    build: .
+    image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
      - dist
     command: scons deploy
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
-     - .:/usr/src/app
     environment:
      - VAULT=$VAULT
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
@@ -87,4 +81,3 @@ networks:
     ipam:
       config:
         - subnet: 172.30.216.0/24
-
