@@ -1,7 +1,7 @@
 #======================= Global Settings =====================================
-#{{ ansible_managed }}
+#Ansible managed
 [global]
- workgroup = {{ workgroup }}
+ workgroup = WORKGROUP
  server string = Samba Asserts Server %v
  netbios name = assertsserver
  security = user
@@ -15,17 +15,17 @@
 #============================ Share Definitions ==============================
 
 #### Public Share ####
-[{{ public_share_name }}]
- path = {{ public_share_path }}
+[public]
+ path = /samba/public
  browsable = yes
  writable = yes
  guest ok = yes
  read only = no
 
 #### Private Share ####
-[{{ private_share_name }}]
- path = {{ private_share_path }}
- valid users = @{{ samba_group_name }}
+[private]
+ path = /samba/private
+ valid users = @smbgrp
  guest ok = no
  writable = yes
  browsable = yes
