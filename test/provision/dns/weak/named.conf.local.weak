@@ -7,9 +7,10 @@
 //include "/etc/bind/zones.rfc1918";
 
 
-zone "{{ zone_domain }}" {
-	allow-transfer {none;};
+zone "fluid.la" {
+	allow-transfer {127.0.0.1; 172.30.0.0/16;};
+	allow-update { any; };
 	type master;
-	file "{{ test_zone_hard }}";
+	file "/var/cache/bind/db.test";
 };
 
