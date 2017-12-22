@@ -1,5 +1,9 @@
 FROM registry.gitlab.com/fluidsignal/asserts/mocks/dns:weak 
 
+ENV FLAVOR hard
+
+EXPOSE 53/tcp 53/udp
+
 RUN apt-get update -qq && \
     apt-get install -y bind9 
 

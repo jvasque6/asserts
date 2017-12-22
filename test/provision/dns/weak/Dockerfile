@@ -1,5 +1,9 @@
 FROM debian:stable-slim
 
+ENV FLAVOR weak 
+
+EXPOSE 53/tcp 53/udp
+
 RUN apt-get update -qq && \
     apt-get install -y bind9 
 
