@@ -10,29 +10,59 @@ https://pytest.org/dev/fixture.html
 
 # standard imports
 from __future__ import print_function
+import os
+import time
 import subprocess
 
 # 3rd party imports
+import docker
 import pytest
 
 # local imports
 # none
 
+# Constants
+NETWORK_NAME = 'asserts_fluidasserts'
+NETWORK_SUBNET = '172.30.216.0/24'
+NETWORK_GW = '172.30.216.254'
+CONTAINER_IP = '172.30.216.101'
 
-@pytest.fixture(scope='session')
-def container(request):
-    """Inicia y detiene el contenedor docker que se usa para pruebas."""
-    print('Prendiendo el contenedor')
-    subprocess.call('test/container/start.sh', shell=True)
-    print('Configurando dinamicamente el ambiente base del contenedor')
-    subprocess.call('ansible-playbook \
-                         test/provision/os_base.yml', shell=True)
-    subprocess.call('ansible-playbook \
-                         test/provision/ftp.yml --tags basic', shell=True)
+
+@pytest.fixture(scope='module')
+def run_mock(request):
+    """Configura perfil de SMTP vulnerable."""
+    print('Running SMTP vulnerable playbook')
+
+    mock = request.param[0]
+    port_mapping = request.param[1]
+
+    client = docker.from_env()
+
+    client.login(registry='registry.gitlab.com',
+                 username=os.environ['DOCKER_USER'],
+                 password=os.environ['DOCKER_PASS']
+                 )
+
+    try:
+        ipam_pool = docker.types.IPAMPool(subnet=NETWORK_SUBNET,
+                                          gateway=NETWORK_GW)
+        ipam_config = docker.types.IPAMConfig(pool_configs=[ipam_pool])
+        mynet = client.networks.create(NETWORK_NAME,
+                                       driver="bridge",
+                                       ipam=ipam_config)
+    except docker.errors.APIError:
+        mynet = client.networks.list(names=NETWORK_NAME)[0]
+
+    image = 'registry.gitlab.com/fluidsignal/asserts/mocks/' + mock
+    cont = client.containers.run(image,
+                                 ports=port_mapping,
+                                 detach=True)
+
+    mynet.connect(cont, ipv4_address=CONTAINER_IP)
+
+    time.sleep(10)
 
     def teardown():
-        """Detiene el contenedor donde se ejecutan las pruebas."""
-        print('Apagando el contenedor')
-        subprocess.call('test/container/stop.sh', shell=True)
-
+        """Detiene el contenedor."""
+        cont.stop(timeout=1)
     request.addfinalizer(teardown)

@@ -502,7 +502,7 @@ def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
     from difflib import SequenceMatcher
     res = 0
     for x, y in merged:
-        res += SequenceMatcher(lambda x: x in string.digits, x, y).ratio()
+        res += SequenceMatcher(None, x, y).ratio()
 
     rat = round(res / num_comp, 2)
 

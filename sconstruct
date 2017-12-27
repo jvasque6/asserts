@@ -15,6 +15,8 @@ env['ENV']['HOME'] = os.environ['HOME']
 try:
     env['ENV']['FLUIDASSERTS_LICENSE_KEY'] = os.environ['FLUIDASSERTS_LICENSE_KEY']
     env['ENV']['FLUIDASSERTS_USER_EMAIL'] = os.environ['FLUIDASSERTS_USER_EMAIL']
+    env['ENV']['DOCKER_USER'] = os.environ['DOCKER_USER']
+    env['ENV']['DOCKER_PASS'] = os.environ['DOCKER_PASS']
 except:
     print('FLUIDASSERTS_LICENSE_KEY and FLUIDASSERTS_USER_EMAIL envs variable must be set')
     sys.exit(1)

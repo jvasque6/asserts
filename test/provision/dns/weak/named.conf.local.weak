@@ -8,7 +8,7 @@
 
 
 zone "fluid.la" {
-	allow-transfer {127.0.0.1; 172.30.0.0/16;};
+	allow-transfer {0.0.0.0/0;};
 	allow-update { any; };
 	type master;
 	file "/var/cache/bind/db.test";

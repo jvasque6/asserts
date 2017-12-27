@@ -15,8 +15,7 @@ COPY Kfluid.la.+007+14480.private /var/cache/bind
 COPY Kfluid.la.+007+26391.ky /var/cache/bind
 COPY Kfluid.la.+007+26391.private /var/cache/bind
 
-RUN chown bind: /var/cache/bind/Kfluid* && \
-    chown bind: /var/cache/bind/db.test.signed && \
+RUN chown bind: /var/cache/bind/ -R && \
     chmod 600 /var/cache/bind/Kfluid*
     
 ENTRYPOINT ["/usr/sbin/named", "-g"]

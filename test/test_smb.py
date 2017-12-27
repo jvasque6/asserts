@@ -18,7 +18,7 @@ import pytest
 from fluidasserts.service import smb
 
 # Constants
-CONTAINER_IP = '172.30.216.100'
+CONTAINER_IP = '172.30.216.101'
 
 #
 # Fixtures

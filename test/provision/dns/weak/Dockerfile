@@ -11,6 +11,6 @@ COPY db.test.weak /var/cache/bind/db.test
 COPY named.conf.options.weak /etc/bind/named.conf.options
 COPY named.conf.local.weak /etc/bind/named.conf.local 
 
-RUN chown bind: /var/cache/bind/db.test.signed
+RUN chown bind: /var/cache/bind/ -R
 
 ENTRYPOINT ["/usr/sbin/named", "-g"]

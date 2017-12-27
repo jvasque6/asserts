@@ -13,7 +13,7 @@ from fluidasserts.format import captcha
 
 # Constants
 SECURE_CAPTCHA_IMG = ['test/provision/captcha/secure.jpg', '504375']
-WEAK_CAPTCHA_IMG = ['test/provision/captcha/weak.jpg', '9T795']
+WEAK_CAPTCHA_IMG = ['test/provision/captcha/weak.jpg', 'WORDS']
 
 
 #

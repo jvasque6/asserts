@@ -27,7 +27,7 @@ from fluidasserts.service import ftp
 #
 
 # TODO(ralvarez): Pueden ser cargadas del hosts ini style
-CONTAINER_IP = '172.30.216.100'
+CONTAINER_IP = '172.30.216.101'
 ADMIN_PASS = 'ahViQu9E'
 NONPASS_USER = 'nonpass'
 SECURED_USER = 'secured'

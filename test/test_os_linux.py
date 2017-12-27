@@ -18,7 +18,7 @@ from fluidasserts.system import linux_generic
 
 
 # Constants
-CONTAINER_IP = '172.30.216.100'
+CONTAINER_IP = '172.30.216.101'
 CONTAINER_USER = 'root'
 CONTAINER_PASS = 'doesnotexist'
 CONTAINER_CONFIG = '/usr/src/asserts/build/config.facont'

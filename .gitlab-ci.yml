@@ -22,19 +22,20 @@ stages:
 build:
     stage: build
     script:
-        - docker build --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS -t registry.gitlab.com/fluidsignal/asserts:dev .
-        - docker-compose run deps
-        - docker-compose push
+        - docker build -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
+        - docker push registry.gitlab.com/fluidsignal/asserts:builder
+        - docker build --no-cache --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS --build-arg branch=$CI_COMMIT_REF_NAME -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
+        - docker push registry.gitlab.com/fluidsignal/asserts:dev
 
 lint:
     stage: lint
     script:
         - docker-compose run lint
 
-          #test:
-          #stage: test
-          #script:
-          #- docker-compose run test
+test:
+    stage: test
+    script:
+        - docker-compose run test
 
 codequality:
   stage: lint

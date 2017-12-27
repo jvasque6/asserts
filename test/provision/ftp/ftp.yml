@@ -39,7 +39,7 @@
 
       - name: subir configuracion del servicio
         copy:
-            src={{playbook_dir}}/ftp/
+            src={{playbook_dir}}
             dest=/etc/vsftpd
             owner=root
             group=root

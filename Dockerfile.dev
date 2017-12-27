@@ -1,0 +1,9 @@
+FROM registry.gitlab.com/fluidsignal/asserts:builder
+
+WORKDIR /usr/src/asserts
+
+ARG gituser
+ARG gitpass
+ARG branch
+
+RUN git clone -b $branch https://$gituser:$gitpass@gitlab.com/fluidsignal/asserts.git /usr/src/asserts
