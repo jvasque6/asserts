@@ -289,10 +289,19 @@ def has_insecure_header(url, header, *args, **kwargs):
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
     except requests.ConnectionError:
-        logger.info('%s: %s HTTP header %s, Details=Not present',
+        logger.info('%s: %s HTTP error checking %s, Details=Could not connect',
                     show_unknown(), header, url)
         return True
     result = True
+    if header == 'X-AspNet-Version' or header == 'Server':
+        if header in headers_info:
+            logger.info('%s: %s HTTP insecure header present in %s',
+                        show_open(), header, url)
+            return True
+        else:
+            logger.info('%s: %s HTTP insecure header not present in %s',
+                        show_close(), header, url)
+            return False
     if header in headers_info:
         value = headers_info[header]
         state = (lambda val: show_close() if re.match(

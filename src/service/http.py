@@ -177,7 +177,7 @@ def has_not_text(url, expected_text, *args, **kwargs):
 
 
 @track
-def is_header_x_asp_net_version_missing(url, *args, **kwargs):
+def is_header_x_asp_net_version_present(url, *args, **kwargs):
     """Check if x-aspnet-version header is missing."""
     return http_helper.has_insecure_header(url, 'X-AspNet-Version',
                                            *args, **kwargs)
@@ -228,7 +228,7 @@ def is_header_pragma_missing(url, *args, **kwargs):
 
 
 @track
-def is_header_server_insecure(url, *args, **kwargs):
+def is_header_server_present(url, *args, **kwargs):
     """Check if server header is insecure."""
     return http_helper.has_insecure_header(url, 'Server',
                                            *args, **kwargs)

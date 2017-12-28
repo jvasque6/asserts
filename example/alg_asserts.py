@@ -3,14 +3,14 @@ from fluidasserts.service import ssl
 from fluidasserts.service import dns
 
 url = 'https://fluid.la'
-http.is_header_x_asp_net_version_missing(url)
+http.is_header_x_asp_net_version_present(url)
 http.is_header_access_control_allow_origin_missing(url)
 http.is_header_cache_control_missing(url)
 http.is_header_content_security_policy_missing(url)
 http.is_header_content_type_missing(url)
 http.is_header_expires_missing(url)
 http.is_header_pragma_missing(url)
-http.is_header_server_insecure(url)
+http.is_header_server_present(url)
 http.is_header_x_content_type_options_missing(url)
 http.is_header_x_frame_options_missing(url)
 http.is_header_perm_cross_dom_pol_missing(url)
