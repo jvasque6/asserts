@@ -63,7 +63,7 @@ def run_mock(request):
 
     for value in port_mapping.values():
         wait.tcp.open(int(value), host=CONTAINER_IP, timeout=10)
-        time.sleep(2)
+        time.sleep(1)
 
     def teardown():
         """Detiene el contenedor."""
