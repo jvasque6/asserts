@@ -17,6 +17,7 @@ import subprocess
 # 3rd party imports
 import docker
 import pytest
+import wait
 
 # local imports
 # none
@@ -60,7 +61,9 @@ def run_mock(request):
 
     mynet.connect(cont, ipv4_address=CONTAINER_IP)
 
-    time.sleep(10)
+    for value in port_mapping.values():
+        wait.tcp.open(int(value), host=CONTAINER_IP, timeout=10)
+        time.sleep(2)
 
     def teardown():
         """Detiene el contenedor."""
