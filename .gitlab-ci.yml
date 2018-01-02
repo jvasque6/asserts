@@ -1,4 +1,4 @@
-image: docker:latest
+image: registry.gitlab.com/fluidsignal/asserts:base
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -8,10 +8,8 @@ services:
 
 before_script:
     - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
-    - apk update
-    - apk upgrade
-    - apk add python python-dev py-pip build-base
-    - pip install docker-compose
+    - docker build -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
+    - docker push registry.gitlab.com/fluidsignal/asserts:builder
 
 stages:
     - build
