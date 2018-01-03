@@ -17,7 +17,7 @@ chroot_list_file=/etc/vsftpd/chroot_list
 pasv_enable=YES
 pasv_min_port=21000
 pasv_max_port=21009
-#pasv_addr_resolve=YES
+pasv_addr_resolve=NO
 #pasv_address=vulnerable
 
 # Specific
@@ -43,6 +43,6 @@ ascii_upload_enable=YES
 ascii_download_enable=YES
 chroot_local_user=NO
 ls_recurse_enable=YES
-hide_ids=NO
+hide_ids=YES
 pasv_promiscuous=YES
 port_promiscuous=YES

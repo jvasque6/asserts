@@ -56,13 +56,12 @@ def run_mock(request):
 
     image = 'registry.gitlab.com/fluidsignal/asserts/mocks/' + mock
     cont = client.containers.run(image,
-                                 #ports=port_mapping,
                                  detach=True)
 
     mynet.connect(cont, ipv4_address=CONTAINER_IP)
 
     for value in port_mapping.values():
-        wait.tcp.open(int(value), host=CONTAINER_IP, timeout=10)
+        wait.tcp.open(int(value), host=CONTAINER_IP, timeout=120)
         time.sleep(1)
 
     def teardown():
