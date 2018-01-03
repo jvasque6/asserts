@@ -1,12 +1,11 @@
-FROM debian:stable-slim
+FROM alpine:latest 
 
 ENV FLAVOR weak
 
 EXPOSE 25/tcp 
 
-RUN apt-get update -qq && \
-    apt-get install -y postfix
+RUN apk update && apk upgrade && apk add postfix 
 
 COPY etc_postfix_main.cf-weak /etc/postfix/main.cf
 
-ENTRYPOINT ["/usr/lib/postfix/sbin/master", "-c", "/etc/postfix", "-d"]
+ENTRYPOINT ["/usr/lib/postfix/master", "-c", "/etc/postfix", "-d"]
