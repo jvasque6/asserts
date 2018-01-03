@@ -85,9 +85,6 @@ def test_a1_sqli_open(run_mock):
     assert http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a1_os_injection_open(run_mock):
     """App vulnerable a command injection?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -104,9 +101,6 @@ def test_a1_os_injection_open(run_mock):
                                           data=data, cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a1_php_injection_open(run_mock):
     """App vulnerable a PHP injection?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -124,9 +118,6 @@ def test_a1_php_injection_open(run_mock):
                                               cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a1_hpp_open(run_mock):
     """App vulnerable a HTTP Parameter Polluiton?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -141,9 +132,6 @@ def test_a1_hpp_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a1_insecure_upload_open(run_mock):
     """App vulnerable a insecure upload?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -163,9 +151,6 @@ def test_a1_insecure_upload_open(run_mock):
                                         cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a2_sessionid_exposed_open(run_mock):
     """Session ID expuesto?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -186,9 +171,6 @@ def test_a2_session_fixation_open():
         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a3_xss_open(run_mock):
     """App vulnerable a XSS?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -205,9 +187,6 @@ def test_a3_xss_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a4_insecure_dor_open(run_mock):
     """App vulnerable a direct object reference?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -225,9 +204,6 @@ def test_a4_insecure_dor_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a7_dirtraversal_open(run_mock):
     """App vulnerable a directory traversal?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -244,9 +220,6 @@ def test_a7_dirtraversal_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a7_lfi_open(run_mock):
     """App vulnerable a LFI?"""
     bwapp_cookie = get_bwapp_cookies()
@@ -263,9 +236,6 @@ def test_a7_lfi_open(run_mock):
                         cookies=bwapp_cookie)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
 def test_a8_csrf_open(run_mock):
     """App vulnerable a Cross-Site Request Forgery?"""
     bwapp_cookie = get_bwapp_cookies()

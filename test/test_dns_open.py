@@ -29,41 +29,24 @@ HARD_PORT = 53
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('dns:weak', {'53/tcp': WEAK_PORT, '53/udp': WEAK_PORT})],
+                         [('dns:weak', {'53/tcp': WEAK_PORT,
+                                        '53/udp': WEAK_PORT})],
                          indirect=True)
 def test_is_xfr_enabled_open(run_mock):
     """Transferencia de zonas habilitado en server?"""
     assert dns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
 
 
-# @pytest.mark.parametrize('run_mock',
-                         # [('dns:weak', {'53/tcp': WEAK_PORT, '53/udp': WEAK_PORT})],
-                         # indirect=True)
-# def test_is_dynupdates_enabled_open(run_mock):
-    # """Actualizacion de zonas habilitado en server?"""
-    # assert dns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
-
-
-@pytest.mark.parametrize('run_mock',
-                         [('dns:weak', {'53/tcp': WEAK_PORT, '53/udp': WEAK_PORT})],
-                         indirect=True)
 def test_has_cache_poison_open(run_mock):
     """Server vulnerable a cache poison?"""
     assert dns.has_cache_poison(TEST_ZONE, CONTAINER_IP)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('dns:weak', {'53/tcp': WEAK_PORT, '53/udp': WEAK_PORT})],
-                         indirect=True)
 def test_has_cache_snooping_open(run_mock):
     """Server vulnerable a cache snooping?"""
     assert dns.has_cache_snooping(CONTAINER_IP)
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('dns:weak', {'53/tcp': WEAK_PORT, '53/udp': WEAK_PORT})],
-                         indirect=True)
 def test_has_recursion_open(run_mock):
     """Server has recursion enabled?"""
     assert dns.has_recursion(CONTAINER_IP)
-
