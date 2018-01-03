@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
+      args:
+        gituser: $DOCKER_USER
+        gitpass: $DOCKER_PASS
+        branch: $CI_COMMIT_REF_NAME
     command: scons deps
     container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:dev
