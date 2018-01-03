@@ -27,5 +27,4 @@ SMB_PORT = 445
                          indirect=True)
 def test_is_anonymous_enabled_close(run_mock):
     """Conexion anonima habilitada?"""
-    time.sleep(5)
     assert not smb.is_anonymous_enabled(CONTAINER_IP)
