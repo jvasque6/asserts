@@ -9,7 +9,7 @@ services:
 before_script:
     - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
     - docker build -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
-    - docker push registry.gitlab.com/fluidsignal/asserts:builder
+    - docker push registry.gitlab.com/fluidsignal/asserts:base
 
 stages:
     - build
