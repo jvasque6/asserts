@@ -56,7 +56,7 @@ def run_mock(request):
 
     image = 'registry.gitlab.com/fluidsignal/asserts/mocks/' + mock
     cont = client.containers.run(image,
-                                 ports=port_mapping,
+                                 #ports=port_mapping,
                                  detach=True)
 
     mynet.connect(cont, ipv4_address=CONTAINER_IP)
