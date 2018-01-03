@@ -1,7 +1,9 @@
 version: '3'
 services:
   deps:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     command: scons deps
     container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:dev
