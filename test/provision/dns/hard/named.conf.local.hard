@@ -10,6 +10,6 @@
 zone "fluid.la" {
 	allow-transfer {none;};
 	type master;
-	file "/var/cache/bind/db.test.signed";
+	file "/var/bind/db.test.signed";
 };
 

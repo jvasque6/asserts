@@ -4,18 +4,17 @@ ENV FLAVOR hard
 
 EXPOSE 53/tcp 53/udp
 
-RUN apt-get update -qq && \
-    apt-get install -y bind9 
-
-COPY db.test.signed /var/cache/bind/db.test.signed
+COPY named.conf /etc/bind/named.conf
 COPY named.conf.options.hard /etc/bind/named.conf.options
 COPY named.conf.local.hard /etc/bind/named.conf.local 
-COPY Kfluid.la.+007+14480.ky /var/cache/bind
-COPY Kfluid.la.+007+14480.private /var/cache/bind
-COPY Kfluid.la.+007+26391.ky /var/cache/bind
-COPY Kfluid.la.+007+26391.private /var/cache/bind
+COPY Kfluid.la.+007+14480.ky /var/bind
+COPY Kfluid.la.+007+14480.private /var/bind
+COPY Kfluid.la.+007+26391.ky /var/bind
+COPY Kfluid.la.+007+26391.private /var/bind
 
-RUN chown bind: /var/cache/bind/ -R && \
-    chmod 600 /var/cache/bind/Kfluid*
+RUN mkdir -p /var/bind
+COPY db.test.signed /var/bind/db.test.signed
+RUN chown root:named /var/bind/ /etc/bind -R && \
+    chmod 600 /var/bind/Kfluid*
     
 ENTRYPOINT ["/usr/sbin/named", "-g"]

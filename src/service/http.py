@@ -459,8 +459,13 @@ def is_response_delayed(url, *args, **kwargs):
 @track
 def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
                          *args, **kwargs):
-    assert 'data' in kwargs
-    assert user_field in kwargs['data']
+    assert 'params' in kwargs or 'data' in kwargs
+    if 'params' in kwargs:
+        query_string = kwargs['params']
+    elif 'data' in kwargs:
+        query_string = kwargs['data']
+    assert user_field in query_string
+
     if not user_list:
         user_list = ['admin', 'administrator', 'guest', 'test']
 
@@ -469,25 +474,39 @@ def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
                       'aksjdads@asd.com', 'osvtxodahidhiis@gmail.com',
                       'something@example.com', '12312314511231']
 
-    orig_data = kwargs['data']
+
     # Evaluate the response with non-existant users
     datasets = http_helper.create_dataset(user_field, fake_users,
-                                          kwargs['data'])
+                                          query_string)
 
     fake_res = list()
     for dataset in datasets:
-        kwargs['data'] = dataset
+        if 'data' in kwargs:
+            orig_data = kwargs['data']
+            kwargs['data'] = dataset
+        elif 'params' in kwargs:
+            orig_data = kwargs['params']
+            kwargs['params'] = dataset
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         fake_res.append((len(sess.response.text),
                          sess.response.status_code))
 
-    kwargs['data'] = orig_data
+    if 'data' in kwargs:
+        kwargs['data'] = orig_data
+    elif 'params' in kwargs:
+        kwargs['params'] = orig_data
+
     datasets = http_helper.create_dataset(user_field, user_list,
-                                          kwargs['data'])
+                                          query_string)
 
     user_res = list()
     for dataset in datasets:
-        kwargs['data'] = dataset
+        if 'data' in kwargs:
+            orig_data = kwargs['data']
+            kwargs['data'] = dataset
+        elif 'params' in kwargs:
+            orig_data = kwargs['params']
+            kwargs['params'] = dataset
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         user_res.append((len(sess.response.text),
                          sess.response.status_code))

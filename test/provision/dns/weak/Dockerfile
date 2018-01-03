@@ -1,16 +1,16 @@
-FROM debian:stable-slim
+FROM alpine:latest 
 
 ENV FLAVOR weak 
 
 EXPOSE 53/tcp 53/udp
 
-RUN apt-get update -qq && \
-    apt-get install -y bind9 
+RUN apk update && apk upgrade && apk add bind 
 
-COPY db.test.weak /var/cache/bind/db.test
+COPY named.conf /etc/bind/named.conf
 COPY named.conf.options.weak /etc/bind/named.conf.options
-COPY named.conf.local.weak /etc/bind/named.conf.local 
+COPY named.conf.local.weak /etc/bind/named.conf.local
+RUN mkdir -p /var/bind
+COPY db.test.weak /var/bind/db.test
+RUN chown root:named /var/bind/ /etc/bind -R
 
-RUN chown bind: /var/cache/bind/ -R
-
-ENTRYPOINT ["/usr/sbin/named", "-g"]
+CMD /usr/sbin/named -g
