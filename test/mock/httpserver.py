@@ -48,8 +48,8 @@ def home():
     return 'Mock HTTP Server'
 
 
-@APP.route('/userenum/fail', methods=['POST'])
-def user_enumeration_fail():
+@APP.route('/userenum_post/fail', methods=['POST'])
+def user_enumeration_post_fail():
     """Form vuln a user enumeration."""
     if request.values['username'] == 'admin':
         return 'Login incorrect'
@@ -57,8 +57,23 @@ def user_enumeration_fail():
         return 'User not found'
 
 
-@APP.route('/userenum/ok', methods=['POST'])
-def user_enumeration_ok():
+@APP.route('/userenum_post/ok', methods=['POST'])
+def user_enumeration_post_ok():
+    """Form segura a user enumeration."""
+    return 'Login incorrect'
+
+
+@APP.route('/userenum_get/fail', methods=['GET'])
+def user_enumeration_get_fail():
+    """Form vuln a user enumeration."""
+    if request.values['username'] == 'admin':
+        return 'Login incorrect'
+    else:
+        return 'User not found'
+
+
+@APP.route('/userenum_get/ok', methods=['GET'])
+def user_enumeration_get_ok():
     """Form segura a user enumeration."""
     return 'Login incorrect'
 

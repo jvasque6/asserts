@@ -323,12 +323,21 @@ def test_version_open():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_userenum_open():
+def test_userenum_post_open():
     """Enumeracion de usuarios posible?"""
     data = 'username=pepe&password=grillo'
     assert http.has_user_enumeration(
-        '%s/userenum/fail' % (MOCK_SERVICE),
+        '%s/userenum_post/fail' % (MOCK_SERVICE),
         'username', data=data)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_userenum_get_open():
+    """Enumeracion de usuarios posible?"""
+    data = 'username=pepe&password=grillo'
+    assert http.has_user_enumeration(
+        '%s/userenum_get/fail' % (MOCK_SERVICE),
+        'username', params=data)
 
 
 @pytest.mark.usefixtures('mock_http')
