@@ -359,3 +359,10 @@ def test_responsetime_open():
     """Tiempo de respuesta aceptable?"""
     assert http.is_response_delayed(
         '%s/responsetime/fail' % (MOCK_SERVICE))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_dirlisting_open():
+    """Dirlisting habilitado?"""
+    assert http.has_dirlisting(
+        '%s/dirlisting/fail' % (MOCK_SERVICE))

@@ -61,6 +61,18 @@ def responsetime_fail():
     return 'FAIL'
 
 
+@APP.route('/dirlisting/ok')
+def dirlisting_ok():
+    """Dirlisting deshabilitado"""
+    return 'OK'
+
+
+@APP.route('/dirlisting/fail')
+def dirlisting_fail():
+    """Dirlisting habilitado"""
+    return 'Index of'
+
+
 @APP.route('/userenum_post/fail', methods=['POST'])
 def user_enumeration_post_fail():
     """Form vuln a user enumeration."""
