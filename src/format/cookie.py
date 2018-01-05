@@ -31,8 +31,8 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
                     cookie_name, 'HttpOnly')
         return result != show_close()
     if url is not None:
-        s = http_helper.HTTPSession(url)
-        cookielist = s.cookies
+        sess = http_helper.HTTPSession(url)
+        cookielist = sess.cookies
     else:
         cookielist = cookie_jar
     if cookielist is None:
@@ -58,8 +58,8 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
                     cookie_name, 'Secure')
         return result != show_close()
     if url is not None:
-        s = http_helper.HTTPSession(url)
-        cookielist = s.cookies
+        sess = http_helper.HTTPSession(url)
+        cookielist = sess.cookies
     else:
         cookielist = cookie_jar
     if cookielist is None:
@@ -78,19 +78,23 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
 
 @track
 def has_not_httponly_set(cookie_name, url):
+    """Verifica si la cookie tiene el atributo httponly."""
     return __has_not_http_only(cookie_name, url=url)
 
 
 @track
 def has_not_httponly_in_cookiejar(cookie_name, cookie_jar):
+    """Verifica si la cookie tiene el atributo httponly."""
     return __has_not_http_only(cookie_name, cookie_jar=cookie_jar)
 
 
 @track
 def has_not_secure_set(cookie_name, url):
+    """Verifica si la cookie tiene el atributo secure."""
     return __has_not_secure(cookie_name, url=url)
 
 
 @track
 def has_not_secure_in_cookiejar(cookie_name, cookie_jar):
+    """Verifica si la cookie tiene el atributo secure."""
     return __has_not_secure(cookie_name, cookie_jar=cookie_jar)
