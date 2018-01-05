@@ -21,17 +21,17 @@ from fluidasserts import show_unknown
 from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def is_insecure_in_image(image, expected_text):
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
-        logger.info('%s: Captcha is insecure, \
+        LOGGER.info('%s: Captcha is insecure, \
 Details: Expected=%s, Reversed=%s', show_open(), expected_text, result)
         return True
     else:
-        logger.info('%s: Captcha is secure, \
+        LOGGER.info('%s: Captcha is secure, \
 Details: Expected=%s, Reversed=%s', show_close(), expected_text, result)
         return False
 
@@ -41,10 +41,10 @@ def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
     image = session.response.raw
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
-        logger.info('%s: Captcha is insecure, \
+        LOGGER.info('%s: Captcha is insecure, \
 Details: Expected=%s, Reversed=%s', show_open(), expected_text, result)
         return True
     else:
-        logger.info('%s: Captcha is secure, \
+        LOGGER.info('%s: Captcha is secure, \
 Details: Expected=%s, Reversed=%s', show_close(), expected_text, result)
         return False

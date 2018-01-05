@@ -20,14 +20,14 @@ from fluidasserts import show_unknown
 from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo httponly."""
     result = show_unknown()
     if url is None and cookie_jar is None:
-        logger.info('%s: Cookie check for "%s", Details=%s', result,
+        LOGGER.info('%s: Cookie check for "%s", Details=%s', result,
                     cookie_name, 'HttpOnly')
         return result != show_close()
     if url is not None:
@@ -36,7 +36,7 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
     else:
         cookielist = cookie_jar
     if cookielist is None:
-        logger.info('%s: %s Cookie not present', result, cookie_name)
+        LOGGER.info('%s: %s Cookie not present', result, cookie_name)
         return result != show_close()
     for cookie in cookielist:
         if cookie.name == cookie_name:
@@ -45,7 +45,7 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
                     result = show_close()
             else:
                 result = show_open()
-    logger.info('%s: Cookie check for "%s", Details=%s', result,
+    LOGGER.info('%s: Cookie check for "%s", Details=%s', result,
                 cookie_name, 'HttpOnly')
     return result != show_close()
 
@@ -54,7 +54,7 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
     """Verifica si la cookie tiene el atributo secure."""
     result = show_unknown()
     if url is None and cookie_jar is None:
-        logger.info('%s: Cookie check for "%s", Details=%s', result,
+        LOGGER.info('%s: Cookie check for "%s", Details=%s', result,
                     cookie_name, 'Secure')
         return result != show_close()
     if url is not None:
@@ -63,7 +63,7 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
     else:
         cookielist = cookie_jar
     if cookielist is None:
-        logger.info('%s: %s Cookie not present', result, cookie_name)
+        LOGGER.info('%s: %s Cookie not present', result, cookie_name)
         return result != show_close()
     for cookie in cookielist:
         if cookie.name == cookie_name:
@@ -71,7 +71,7 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
                 result = show_close()
             else:
                 result = show_open()
-    logger.info('%s: Cookie check for "%s", Details=%s', result,
+    LOGGER.info('%s: Cookie check for "%s", Details=%s', result,
                 cookie_name, 'Secure')
     return result != show_close()
 

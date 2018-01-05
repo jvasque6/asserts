@@ -14,7 +14,7 @@ from fluidasserts import show_open
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 # pylint: disable=W1401
@@ -40,11 +40,11 @@ def is_os_compilers_installed(server, username, password):
 
     result = True
     if installed_compilers > 0:
-        logger.info('%s: %s server has compilers installed,\
+        LOGGER.info('%s: %s server has compilers installed,\
 Details=%s', show_open(), server, installed_software)
         result = True
     else:
-        logger.info('%s: %s server has not compilers installed,\
+        LOGGER.info('%s: %s server has not compilers installed,\
 Details=%s', show_close(), server, installed_software)
         result = False
     return result
@@ -71,11 +71,11 @@ def is_os_antimalware_not_installed(server, username, password):
 
     result = True
     if installed_av > 0:
-        logger.info('%s: %s server has an antivirus installed, \
+        LOGGER.info('%s: %s server has an antivirus installed, \
 Details=%s', show_close(), server, installed_software)
         result = False
     else:
-        logger.info('%s: %s server has not an antivirus installed, \
+        LOGGER.info('%s: %s server has not an antivirus installed, \
 Details=%s', show_open(), server, installed_software)
         result = True
     return result
@@ -86,7 +86,7 @@ def is_os_syncookies_disabled(server):
     """Check if SynCookies or similar is enabled in Windows Server."""
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
-    logger.info('%s: %s server has SYN Cookies enabled.', show_close(),
+    LOGGER.info('%s: %s server has SYN Cookies enabled.', show_close(),
                 server)
     return False
 
@@ -118,7 +118,7 @@ def is_protected_users_disabled(server, username, password):
 
     result = True
     if installed_patches == len(security_patches):
-        logger.info('%s: %s server has all required patches installed, \
+        LOGGER.info('%s: %s server has all required patches installed, \
 Details=%s', show_close(), server, ",".join(security_patches))
         result = False
     else:
@@ -134,10 +134,10 @@ Details=%s', show_close(), server, ",".join(security_patches))
                      has_logon_credentials,
                      re.IGNORECASE) is not None:
             result = False
-            logger.info('%s: %s server has UseLogonCredentials\
+            LOGGER.info('%s: %s server has UseLogonCredentials\
 set to 0x0 Details=%s', show_close(), server, 'UseLogonCredential')
         else:
             result = True
-            logger.info('%s: %s server has not all required patches \
+            LOGGER.info('%s: %s server has not all required patches \
 installed, Details=%s', show_open(), server, ",".join(security_patches))
     return result

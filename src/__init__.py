@@ -21,9 +21,9 @@ from colorama import Fore, Back, Style, init
 
 init(autoreset=True)
 
-# create logger
-logger = logging.getLogger('FLUIDAsserts')
-logger.setLevel(logging.DEBUG)
+# create LOGGER
+LOGGER = logging.getLogger('FLUIDAsserts')
+LOGGER.setLevel(logging.DEBUG)
 
 # create console handler and set level to debug
 console_handler = logging.StreamHandler()
@@ -42,9 +42,9 @@ formatter = logging.Formatter(
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
-# add handlers to logger
-logger.addHandler(console_handler)
-logger.addHandler(file_handler)
+# add handlers to LOGGER
+LOGGER.addHandler(console_handler)
+LOGGER.addHandler(file_handler)
 
 
 # Set __version__

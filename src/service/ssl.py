@@ -3,13 +3,13 @@
 
 # standard imports
 from __future__ import absolute_import
+import datetime
 import logging
 import socket
+import ssl
 
 # 3rd party imports
 import certifi
-import datetime
-import ssl
 import tlslite
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
@@ -19,12 +19,11 @@ from cryptography.x509.oid import NameOID
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper import banner_helper
 from fluidasserts.utils.decorators import track
 
 PORT = 443
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -47,7 +46,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
             cert = ssl.DER_cert_to_PEM_cert(__cert)
             has_sni = True
         except socket.error:
-            logger.info('%s: Port closed, Details=%s:%s',
+            LOGGER.info('%s: Port closed, Details=%s:%s',
                         show_unknown(), site, port)
             return False
 
@@ -65,15 +64,15 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
 
     if site != cert_cn and wildcard_site != cert_cn and not site.endswith(main_domain):
         if has_sni:
-            logger.info('%s: %s CN not equals to site. However server \
+            LOGGER.info('%s: %s CN not equals to site. However server \
 supports SNI, Details=%s:%s', show_close(), cert_cn, site, port)
             result = False
         else:
-            logger.info('%s: %s CN not equals to site, Details=%s:%s',
+            LOGGER.info('%s: %s CN not equals to site, Details=%s:%s',
                         show_open(), cert_cn, site, port)
             result = True
     else:
-        logger.info('%s: %s CN equals to site, Details=%s:%s',
+        LOGGER.info('%s: %s CN equals to site, Details=%s:%s',
                     show_close(), cert_cn, site, port)
         result = False
     return result
@@ -97,7 +96,7 @@ def is_cert_inactive(site, port=PORT):
             __cert = wrapped_socket.getpeercert(True)
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            logger.info('%s: Port closed, Details=%s:%s',
+            LOGGER.info('%s: Port closed, Details=%s:%s',
                         show_unknown(), site, port)
             return False
 
@@ -105,13 +104,13 @@ def is_cert_inactive(site, port=PORT):
                                          default_backend())
 
     if cert_obj.not_valid_after > datetime.datetime.now():
-        logger.info('%s: Certificate is still valid, Details=Not valid \
+        LOGGER.info('%s: Certificate is still valid, Details=Not valid \
 after: %s, Current time: %s',
                     show_close(), cert_obj.not_valid_after.isoformat(),
                     datetime.datetime.now().isoformat())
         result = False
     else:
-        logger.info('%s: Certificate is not valid, Details=Not valid \
+        LOGGER.info('%s: Certificate is not valid, Details=Not valid \
 after: %s, Current time: %s',
                     show_open(), cert_obj.not_valid_after.isoformat(),
                     datetime.datetime.now().isoformat())
@@ -139,7 +138,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
             __cert = wrapped_socket.getpeercert(True)
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            logger.info('%s: Port closed, Details=%s:%s',
+            LOGGER.info('%s: Port closed, Details=%s:%s',
                         show_unknown(), site, port)
             return False
 
@@ -150,13 +149,13 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         cert_obj.not_valid_after - cert_obj.not_valid_before
 
     if cert_validity.days <= max_validity_days:
-        logger.info('%s: Certificate has a secure lifespan, Details=Not \
+        LOGGER.info('%s: Certificate has a secure lifespan, Details=Not \
 valid before: %s, Not valid after: %s',
                     show_close(), cert_obj.not_valid_before.isoformat(),
                     cert_obj.not_valid_after.isoformat())
         result = False
     else:
-        logger.info('%s: Certificate has an insecure lifespan, Details=Not \
+        LOGGER.info('%s: Certificate has an insecure lifespan, Details=Not \
 valid before: %s, Not valid after: %s',
                     show_open(), cert_obj.not_valid_before.isoformat(),
                     cert_obj.not_valid_after.isoformat())
@@ -193,7 +192,7 @@ def is_pfs_disabled(site, port=PORT):
         wrapped_socket = ssl.SSLSocket(sock, ciphers=ciphers)
         wrapped_socket.connect((site, port))
         wrapped_socket.send(packet.encode('utf-8'))
-        logger.info('%s: PFS enabled on site, Details=%s:%s',
+        LOGGER.info('%s: PFS enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except ssl.SSLError:
@@ -207,16 +206,16 @@ def is_pfs_disabled(site, port=PORT):
                                            ciphers=ciphers)
             wrapped_socket.connect((site, port))
             wrapped_socket.send(packet.encode('utf-8'))
-            logger.info('%s: PFS enabled on site, Details=%s:%s',
+            LOGGER.info('%s: PFS enabled on site, Details=%s:%s',
                         show_close(), site, port)
             result = False
         except ssl.SSLError:
-            logger.info('%s: PFS not enabled on site, Details=%s:%s',
+            LOGGER.info('%s: PFS not enabled on site, Details=%s:%s',
                         show_open(), site, port)
             return True
 
     except socket.error:
-        logger.info('%s: Port is closed for PFS check, Details=%s:%s',
+        LOGGER.info('%s: Port is closed for PFS check, Details=%s:%s',
                     show_unknown(), site, port)
         result = False
     finally:
@@ -242,23 +241,23 @@ def is_sslv3_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logger.info('%s: SSLv3 enabled on site, Details=%s:%s',
+        LOGGER.info('%s: SSLv3 enabled on site, Details=%s:%s',
                     show_open(), site, port)
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logger.info('%s: SSLv3 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: SSLv3 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        logger.info('%s: SSLv3 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: SSLv3 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except tlslite.errors.TLSLocalAlert:
-        logger.info('%s: SSLv3 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: SSLv3 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except socket.error:
-        logger.info('%s: Port is closed for SSLv3 check, Details=%s:%s',
+        LOGGER.info('%s: Port is closed for SSLv3 check, Details=%s:%s',
                     show_unknown(), site, port)
         result = False
     finally:
@@ -285,7 +284,7 @@ def is_sha1_used(site, port=PORT):
             __cert = wrapped_socket.getpeercert(True)
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            logger.info('%s: Port closed, Details=%s:%s',
+            LOGGER.info('%s: Port closed, Details=%s:%s',
                         show_unknown(), site, port)
             return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -294,12 +293,12 @@ def is_sha1_used(site, port=PORT):
     sign_algorith = cert_obj.signature_hash_algorithm.name
 
     if "sha1" not in sign_algorith:
-        logger.info('%s: Certificate has a secure signature algorithm, \
+        LOGGER.info('%s: Certificate has a secure signature algorithm, \
 Details= Signature Algorithm: %s',
                     show_close(), sign_algorith)
         result = False
     else:
-        logger.info('%s: Certificate has an insecure signature algorithm, \
+        LOGGER.info('%s: Certificate has an insecure signature algorithm, \
 Details= Signature Algorithm: %s',
                     show_open(), sign_algorith)
         result = True
@@ -325,23 +324,23 @@ def is_tlsv1_enabled(site, port=PORT):
 
         tls_conn.handshakeClientCert(settings=new_settings)
 
-        logger.info('%s: TLSv1 enabled on site, Details=%s:%s',
+        LOGGER.info('%s: TLSv1 enabled on site, Details=%s:%s',
                     show_open(), site, port)
         result = True
     except tlslite.errors.TLSRemoteAlert:
-        logger.info('%s: TLSv1 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: TLSv1 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        logger.info('%s: TLSv1 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: TLSv1 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except tlslite.errors.TLSLocalAlert:
-        logger.info('%s: TLSv1 not enabled on site, Details=%s:%s',
+        LOGGER.info('%s: TLSv1 not enabled on site, Details=%s:%s',
                     show_close(), site, port)
         result = False
     except socket.error:
-        logger.info('%s: Port is closed for TLSv1 check, Details=%s:%s',
+        LOGGER.info('%s: Port is closed for TLSv1 check, Details=%s:%s',
                     show_unknown(), site, port)
         result = False
     finally:

@@ -21,7 +21,7 @@ from fluidasserts.utils.decorators import track
 
 PORT = 25
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -32,11 +32,11 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        logger.info('%s: SMTP "VRFY" method, Details=%s',
+        LOGGER.info('%s: SMTP "VRFY" method, Details=%s',
                     show_open(), ip_address + ':' + str(port))
         result = True
     else:
-        logger.info('%s: SMTP "VRFY" method, Details=%s',
+        LOGGER.info('%s: SMTP "VRFY" method, Details=%s',
                     show_close(), ip_address + ':' + str(port))
         result = False
 

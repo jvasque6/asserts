@@ -8,14 +8,14 @@ import socket
 
 # 3rd party imports
 from smb import SMBConnection
-from smb import *
+from smb import smb_structs
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __smb_connect(server=None, user=None, password=None,
@@ -24,8 +24,9 @@ def __smb_connect(server=None, user=None, password=None,
     try:
         client_machine_name = 'assertspc'
         conn = SMBConnection.SMBConnection(user, password,
-            client_machine_name, server, domain=domain, use_ntlm_v2=True,
-            is_direct_tcp=True)
+                                           client_machine_name, server,
+                                           domain=domain, use_ntlm_v2=True,
+                                           is_direct_tcp=True)
 
         if conn.connect(server, port=445):
             return conn
@@ -40,20 +41,23 @@ def has_dirlisting(share=None, *args, **kwargs):
     conn = __smb_connect(*args, **kwargs)
 
     if not conn:
-        logger.info('%s: Error while connecting, \
-Details=%s\%s:%s', show_open('ERROR'), domain, user, server)
+        LOGGER.info('%s: Error while connecting, \
+Details=%s/%s:%s', show_open('ERROR'),
+                    kwargs['domain'], kwargs['user'], kwargs['server'])
 
         return False
 
     try:
-        sharedfiles = conn.listPath(share, '/')
-        logger.info('%s: Directory listing is possible, \
-Details=%s\%s:%s', show_open(), domain, user, server)
+        conn.listPath(share, '/')
+        LOGGER.info('%s: Directory listing is possible, \
+Details=%s/%s:%s', show_open(),
+                    kwargs['domain'], kwargs['user'], kwargs['server'])
 
         return True
     except smb_structs.OperationFailure:
-        logger.info('%s: Directory listing not possible, \
-Details=%s\%s:%s', show_close(), domain, user, server)
+        LOGGER.info('%s: Directory listing not possible, \
+Details=%s/%s:%s', show_close(),
+                    kwargs['domain'], kwargs['user'], kwargs['server'])
 
         return False
 
@@ -67,10 +71,10 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
                          domain=domain)
 
     if not conn:
-        logger.info('%s: Anonymous login not possible, \
-Details=%s\%s:%s', show_close(), domain, user, server)
+        LOGGER.info('%s: Anonymous login not possible, \
+Details=%s/%s:%s', show_close(), domain, user, server)
 
         return False
-    logger.info('%s: Anonymous login enabled, Details=%s\%s:%s',
+    LOGGER.info('%s: Anonymous login enabled, Details=%s/%s:%s',
                 show_open(), domain, user, server)
     return True

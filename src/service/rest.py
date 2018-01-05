@@ -16,7 +16,7 @@ from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 from fluidasserts.service import http
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -25,9 +25,9 @@ def has_access(url, *args, **kwargs):
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     ok_access_list = [200]
     if http_session.response.status_code in ok_access_list:
-        logger.info('%s: Access available to %s', show_open(), url)
+        LOGGER.info('%s: Access available to %s', show_open(), url)
         return True
-    logger.info('%s: Access not available to %s', show_close(), url)
+    LOGGER.info('%s: Access not available to %s', show_close(), url)
     return False
 
 
@@ -41,14 +41,14 @@ def accepts_empty_content_type(url, *args, **kwargs):
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
     if session.response.status_code in error_codes:
-        logger.info('%s: URL %s returned error',
+        LOGGER.info('%s: URL %s returned error',
                     show_unknown(), url)
         return True
     if session.response.status_code not in expected_codes:
-        logger.info('%s: URL %s accepts empty Content-Type requests',
+        LOGGER.info('%s: URL %s accepts empty Content-Type requests',
                     show_open(), url)
         return True
-    logger.info('%s: URL %s rejects empty Content-Type requests',
+    LOGGER.info('%s: URL %s rejects empty Content-Type requests',
                 show_close(), url)
     return False
 
@@ -65,14 +65,14 @@ def accepts_insecure_accept_header(url, *args, **kwargs):
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
     if session.response.status_code in error_codes:
-        logger.info('%s: URL %s returned error',
+        LOGGER.info('%s: URL %s returned error',
                     show_unknown(), url)
         return True
     if session.response.status_code not in expected_codes:
-        logger.info('%s: URL %s accepts insecure Accept request header value',
+        LOGGER.info('%s: URL %s accepts insecure Accept request header value',
                     show_open(), url)
         return True
-    logger.info('%s: URL %s rejects insecure Accept request header value',
+    LOGGER.info('%s: URL %s rejects insecure Accept request header value',
                 show_close(), url)
     return False
 

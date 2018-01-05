@@ -17,7 +17,7 @@ from fluidasserts.utils.decorators import track
 PORT = 389
 SSL_PORT = 636
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -33,18 +33,18 @@ def is_anonymous_bind_allowed(ldap_server, port=PORT):
         server = Server(ldap_server)
         conn = Connection(server)
     except LDAPExceptionError:
-        logger.info('%s: LDAP anonymous bind failed, Details=%s:%s',
+        LOGGER.info('%s: LDAP anonymous bind failed, Details=%s:%s',
                     show_close(), server, port)
         return False
     finally:
         conn.unbind()
 
     if conn.bind() is True:
-        logger.info('%s: LDAP anonymous bind success, Details=%s:%s',
+        LOGGER.info('%s: LDAP anonymous bind success, Details=%s:%s',
                     show_open(), server, port)
         result = True
     else:
-        logger.info('%s: LDAP anonymous bind failed, Details=%s:%s',
+        LOGGER.info('%s: LDAP anonymous bind failed, Details=%s:%s',
                     show_close(), server, port)
         result = False
 

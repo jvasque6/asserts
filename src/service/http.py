@@ -12,7 +12,6 @@ Este modulo permite verificar vulnerabilidades propias de HTTP como:
 # standard imports
 import logging
 import re
-import string
 
 # 3rd party imports
 # None
@@ -24,92 +23,92 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 # Regex taken from SQLmap project
 SQLI_ERROR_MSG = {
-    'SQL syntax.*MySQL',  # MySQL
-    'Warning.*mysql_.*',  # MySQL
-    'MySqlException \(0x',  # MySQL
-    'valid MySQL result',  # MySQL
-    'check the manual that corresponds to your (MySQL|MariaDB) server version',  # MySQL
-    'MySqlClient.',  # MySQL
-    'com.mysql.jdbc.exceptions',  # MySQL
-    'com.mysql.jdbc.exceptions',  # PostgreSQL
-    'PostgreSQL.*ERROR',  # PostgreSQL
-    'Warning.*Wpg_.*',  # PostgreSQL
-    'valid PostgreSQL result',  # PostgreSQL
-    'Npgsql.',  # PostgreSQL
-    'PG::SyntaxError:',  # PostgreSQL
-    'org.postgresql.util.PSQLException',  # PostgreSQL
-    'ERROR:sssyntax error at or near ',  # PostgreSQL
-    'ERROR:sssyntax error at or near ',  # Microsoft SQL Server
-    'Driver.* SQL[-_ ]*Server',  # Microsoft SQL Server
-    'OLE DB.* SQL Server',  # Microsoft SQL Server
-    '\bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
-    'Warning.*(mssql|sqlsrv)_',  # Microsoft SQL Server
-    '\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
-    'System.Data.SqlClient.SqlException',  # Microsoft SQL Server
-    '(?s)Exception.*WRoadhouse.Cms.',  # Microsoft SQL Server
-    'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # Microsoft SQL Server
-    'com.microsoft.sqlserver.jdbc.SQLServerException',  # Microsoft SQL Server
-    'ODBC SQL Server Driver',  # Microsoft SQL Server
-    'SQLServer JDBC Driver',  # Microsoft SQL Server
-    'macromedia.jdbc.sqlserver',  # Microsoft SQL Server
-    'com.jnetdirect.jsql',  # Microsoft SQL Server
-    'com.jnetdirect.jsql',  # Microsoft Access
-    'Microsoft Access (d+ )?Driver',  # Microsoft Access
-    'JET Database Engine',  # Microsoft Access
-    'Access Database Engine',  # Microsoft Access
-    'ODBC Microsoft Access',  # Microsoft Access
-    'Syntax error (missing operator) in query expression',  # Microsoft Access
-    'Syntax error (missing operator) in query expression',  # Oracle
-    '\bORA-d{5}',  # Oracle
-    'Oracle error',  # Oracle
-    'Oracle.*Driver',  # Oracle
-    'Warning.*Woci_.*',  # Oracle
-    'Warning.*Wora_.*',  # Oracle
-    'oracle.jdbc.driver',  # Oracle
-    'quoted string not properly terminated',  # Oracle
-    'quoted string not properly terminated',  # IBM DB2
-    'CLI Driver.*DB2',  # IBM DB2
-    'DB2 SQL error',  # IBM DB2
-    '\bdb2_w+\(',  # IBM DB2
-    'SQLSTATE.+SQLCODE',  # IBM DB2
-    'SQLSTATE.+SQLCODE',  # Informix
-    'Exception.*Informix',  # Informix
-    'Informix ODBC Driver',  # Informix
-    'com.informix.jdbc',  # Informix
-    'weblogic.jdbc.informix',  # Informix
-    'weblogic.jdbc.informix',  # Firebird
-    'Dynamic SQL Error',  # Firebird
-    'Warning.*ibase_.*',  # Firebird
-    'Warning.*ibase_.*',  # SQLite
-    'SQLite/JDBCDriver',  # SQLite
-    'SQLite.Exception',  # SQLite
-    'System.Data.SQLite.SQLiteException',  # SQLite
-    'Warning.*sqlite_.*',  # SQLite
-    'Warning.*SQLite3::',  # SQLite
-    '\[SQLITE_ERROR\]',  # SQLite
-    '\[SQLITE_ERROR\]',  # SAP MaxDB
-    'SQL error.*POS([0-9]+).*',  # SAP MaxDB
-    'Warning.*maxdb.*',  # SAP MaxDB
-    'Warning.*maxdb.*',  # Sybase
-    'Warning.*sybase.*',  # Sybase
-    'Sybase message',  # Sybase
-    'Sybase.*Server message.*',  # Sybase
-    'SybSQLException',  # Sybase
-    'com.sybase.jdbc',  # Sybase
-    'com.sybase.jdbc',  # Ingres
-    'Warning.*ingres_',  # Ingres
-    'Ingres SQLSTATE',  # Ingres
-    'IngresW.*Driver',  # Ingres
-    'IngresW.*Driver',  # Frontbase
-    'Exception (condition )?d+. Transaction rollback.',  # Frontbase
-    'Exception (condition )?d+. Transaction rollback.',  # HSQLDB
-    'org.hsqldb.jdbc',  # HSQLDB
-    'Unexpected end of command in statement \[',  # HSQLDB
-    'Unexpected token.*in statement \[',  # HSQLDB
+    r'SQL syntax.*MySQL',  # MySQL
+    r'Warning.*mysql_.*',  # MySQL
+    r'MySqlException \(0x',  # MySQL
+    r'valid MySQL result',  # MySQL
+    r'check the manual that corresponds to your (MySQL|MariaDB) server version',  # MySQL
+    r'MySqlClient.',  # MySQL
+    r'com.mysql.jdbc.exceptions',  # MySQL
+    r'com.mysql.jdbc.exceptions',  # PostgreSQL
+    r'PostgreSQL.*ERROR',  # PostgreSQL
+    r'Warning.*Wpg_.*',  # PostgreSQL
+    r'valid PostgreSQL result',  # PostgreSQL
+    r'Npgsql.',  # PostgreSQL
+    r'PG::SyntaxError:',  # PostgreSQL
+    r'org.postgresql.util.PSQLException',  # PostgreSQL
+    r'ERROR:sssyntax error at or near ',  # PostgreSQL
+    r'ERROR:sssyntax error at or near ',  # Microsoft SQL Server
+    r'Driver.* SQL[-_ ]*Server',  # Microsoft SQL Server
+    r'OLE DB.* SQL Server',  # Microsoft SQL Server
+    r'\bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
+    r'Warning.*(mssql|sqlsrv)_',  # Microsoft SQL Server
+    r'\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
+    r'System.Data.SqlClient.SqlException',  # Microsoft SQL Server
+    r'(?s)Exception.*WRoadhouse.Cms.',  # Microsoft SQL Server
+    r'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # Microsoft SQL Server
+    r'com.microsoft.sqlserver.jdbc.SQLServerException',  # Microsoft SQL Server
+    r'ODBC SQL Server Driver',  # Microsoft SQL Server
+    r'SQLServer JDBC Driver',  # Microsoft SQL Server
+    r'macromedia.jdbc.sqlserver',  # Microsoft SQL Server
+    r'com.jnetdirect.jsql',  # Microsoft SQL Server
+    r'com.jnetdirect.jsql',  # Microsoft Access
+    r'Microsoft Access (d+ )?Driver',  # Microsoft Access
+    r'JET Database Engine',  # Microsoft Access
+    r'Access Database Engine',  # Microsoft Access
+    r'ODBC Microsoft Access',  # Microsoft Access
+    r'Syntax error (missing operator) in query expression',  # Microsoft Access
+    r'Syntax error (missing operator) in query expression',  # Oracle
+    r'\bORA-d{5}',  # Oracle
+    r'Oracle error',  # Oracle
+    r'Oracle.*Driver',  # Oracle
+    r'Warning.*Woci_.*',  # Oracle
+    r'Warning.*Wora_.*',  # Oracle
+    r'oracle.jdbc.driver',  # Oracle
+    r'quoted string not properly terminated',  # Oracle
+    r'quoted string not properly terminated',  # IBM DB2
+    r'CLI Driver.*DB2',  # IBM DB2
+    r'DB2 SQL error',  # IBM DB2
+    r'\bdb2_w+\(',  # IBM DB2
+    r'SQLSTATE.+SQLCODE',  # IBM DB2
+    r'SQLSTATE.+SQLCODE',  # Informix
+    r'Exception.*Informix',  # Informix
+    r'Informix ODBC Driver',  # Informix
+    r'com.informix.jdbc',  # Informix
+    r'weblogic.jdbc.informix',  # Informix
+    r'weblogic.jdbc.informix',  # Firebird
+    r'Dynamic SQL Error',  # Firebird
+    r'Warning.*ibase_.*',  # Firebird
+    r'Warning.*ibase_.*',  # SQLite
+    r'SQLite/JDBCDriver',  # SQLite
+    r'SQLite.Exception',  # SQLite
+    r'System.Data.SQLite.SQLiteException',  # SQLite
+    r'Warning.*sqlite_.*',  # SQLite
+    r'Warning.*SQLite3::',  # SQLite
+    r'\[SQLITE_ERROR\]',  # SQLite
+    r'\[SQLITE_ERROR\]',  # SAP MaxDB
+    r'SQL error.*POS([0-9]+).*',  # SAP MaxDB
+    r'Warning.*maxdb.*',  # SAP MaxDB
+    r'Warning.*maxdb.*',  # Sybase
+    r'Warning.*sybase.*',  # Sybase
+    r'Sybase message',  # Sybase
+    r'Sybase.*Server message.*',  # Sybase
+    r'SybSQLException',  # Sybase
+    r'com.sybase.jdbc',  # Sybase
+    r'com.sybase.jdbc',  # Ingres
+    r'Warning.*ingres_',  # Ingres
+    r'Ingres SQLSTATE',  # Ingres
+    r'IngresW.*Driver',  # Ingres
+    r'IngresW.*Driver',  # Frontbase
+    r'Exception (condition )?d+. Transaction rollback.',  # Frontbase
+    r'Exception (condition )?d+. Transaction rollback.',  # HSQLDB
+    r'org.hsqldb.jdbc',  # HSQLDB
+    r'Unexpected end of command in statement \[',  # HSQLDB
+    r'Unexpected token.*in statement \[',  # HSQLDB
 }
 
 
@@ -143,10 +142,10 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
     ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
     if ret:
-        logger.info('%s: %s Bad text present, Details=%s',
+        LOGGER.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, ret)
         return True
-    logger.info('%s: %s Bad text not present', show_close(), url)
+    LOGGER.info('%s: %s Bad text not present', show_close(), url)
     return False
 
 
@@ -155,10 +154,10 @@ def has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
     ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if ret:
-        logger.info('%s: %s Bad text present, Details=%s',
+        LOGGER.info('%s: %s Bad text present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    logger.info('%s: %s Bad text not present, Details=%s',
+    LOGGER.info('%s: %s Bad text not present, Details=%s',
                 show_close(), url, expected_text)
     return False
 
@@ -168,10 +167,10 @@ def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
     ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if not ret:
-        logger.info('%s: %s Expected text not present, Details=%s',
+        LOGGER.info('%s: %s Expected text not present, Details=%s',
                     show_open(), url, expected_text)
         return True
-    logger.info('%s: %s Expected text present, Details=%s',
+    LOGGER.info('%s: %s Expected text present, Details=%s',
                 show_close(), url, expected_text)
     return False
 
@@ -309,7 +308,7 @@ def has_sqli(url, *args, **kwargs):
 @track
 def has_xss(url, expect, *args, **kwargs):
     """Check XSS vuln by checking expected string."""
-    return has_text(url, expect,  *args, **kwargs)
+    return has_text(url, expect, *args, **kwargs)
 
 
 @track
@@ -380,11 +379,11 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     result = True
     if re.search(regex, response_url):
         result = True
-        logger.info('%s: Session ID is exposed in %s, Details=%s',
+        LOGGER.info('%s: Session ID is exposed in %s, Details=%s',
                     show_open(), response_url, argument)
     else:
         result = False
-        logger.info('%s: Session ID is hidden in %s, Details=%s',
+        LOGGER.info('%s: Session ID is hidden in %s, Details=%s',
                     show_close(), response_url, argument)
     return result
 
@@ -402,11 +401,11 @@ def is_version_visible(ip_address, ssl=False, port=80):
     result = True
     if version:
         result = True
-        logger.info('%s: HTTP version visible on %s:%s, Details=%s',
+        LOGGER.info('%s: HTTP version visible on %s:%s, Details=%s',
                     show_open(), ip_address, port, version)
     else:
         result = False
-        logger.info('%s: HTTP version not visible on %s:%s, Details=None',
+        LOGGER.info('%s: HTTP version not visible on %s:%s, Details=None',
                     show_close(), ip_address, port)
     return result
 
@@ -417,10 +416,10 @@ def is_not_https_required(url):
     assert url.startswith('http://')
     http_session = http_helper.HTTPSession(url)
     if http_session.url.startswith('https'):
-        logger.info('%s: HTTPS is forced on URL, Details=%s',
+        LOGGER.info('%s: HTTPS is forced on URL, Details=%s',
                     show_close(), http_session.url)
         return False
-    logger.info('%s: HTTPS is not forced on URL, Details=%s',
+    LOGGER.info('%s: HTTPS is not forced on URL, Details=%s',
                 show_open(), http_session.url)
     return True
 
@@ -448,17 +447,19 @@ def is_response_delayed(url, *args, **kwargs):
     delta = max_response_time - response_time
 
     if delta >= 0:
-        logger.info('%s: Response time is acceptable for %s, Details=%s',
+        LOGGER.info('%s: Response time is acceptable for %s, Details=%s',
                     show_close(), http_session.url, str(response_time))
         return False
-    logger.info('%s: Response time is not acceptable for %s, Details=%s',
+    LOGGER.info('%s: Response time is not acceptable for %s, Details=%s',
                 show_open(), http_session.url, str(response_time))
     return True
 
 
 @track
-def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
+def has_user_enumeration(url, user_field, user_list=None, fake_users=None,
                          *args, **kwargs):
+    """Check if URL has user enumeration."""
+
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
@@ -519,25 +520,26 @@ def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
 
     from difflib import SequenceMatcher
     res = 0
-    for x, y in merged:
-        res += SequenceMatcher(None, x, y).ratio()
+    for resp_text, resp_time in merged:
+        res += SequenceMatcher(None, resp_text, resp_time).ratio()
 
     rat = round(res / num_comp, 2)
 
     if rat > 0.95:
-        logger.info('%s: User enumeration not possible for %s, \
+        LOGGER.info('%s: User enumeration not possible for %s, \
 Details=%s%% of similar answers',
                     show_close(), url, str(rat*100))
         return False
-    logger.info('%s: User enumeration is possible for %s, \
+    LOGGER.info('%s: User enumeration is possible for %s, \
 Details=%s%% of similar answers',
                 show_open(), url, str(rat*100))
     return True
 
 
 @track
-def can_brute_force(url, ok_regex, user_field, pass_field, user_list=[],
-                    pass_list=[], *args, **kwargs):
+def can_brute_force(url, ok_regex, user_field, pass_field, user_list=None,
+                    pass_list=None, *args, **kwargs):
+    """Check if URL allows brute forcing."""
 
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
@@ -545,8 +547,8 @@ def can_brute_force(url, ok_regex, user_field, pass_field, user_list=[],
     elif 'data' in kwargs:
         query_string = kwargs['data']
 
-    assert type(user_list) is list
-    assert type(pass_list) is list
+    assert isinstance(user_list, list)
+    assert isinstance(pass_list, list)
 
     users_dataset = http_helper.create_dataset(user_field, user_list,
                                                query_string)
@@ -554,19 +556,19 @@ def can_brute_force(url, ok_regex, user_field, pass_field, user_list=[],
     dataset = []
     for password in pass_list:
         for user_ds in users_dataset:
-            ds = http_helper.create_dataset(pass_field, [password], user_ds)
-            dataset.append(ds[0])
+            _datas = http_helper.create_dataset(pass_field, [password], user_ds)
+            dataset.append(_datas[0])
 
-    for ds in dataset:
+    for _datas in dataset:
         if 'params' in kwargs:
-            kwargs['params'] = ds
+            kwargs['params'] = _datas
         elif 'data' in kwargs:
-            kwargs['data'] = ds
+            kwargs['data'] = _datas
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         if ok_regex in sess.response.text:
-            logger.info('%s: Brute forcing possible for %s, \
-Details=%s params were used', show_open(), url, str(ds))
+            LOGGER.info('%s: Brute forcing possible for %s, \
+Details=%s params were used', show_open(), url, str(_datas))
             return True
-    logger.info('%s: Brute forcing was not successful for %s',
+    LOGGER.info('%s: Brute forcing was not successful for %s',
                 show_close(), url)
     return False

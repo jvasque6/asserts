@@ -19,10 +19,9 @@ import ssl
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -35,30 +34,31 @@ def is_port_open(ipaddress, port):
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        logger.info('%s: Port is close, Details=%s',
+        LOGGER.info('%s: Port is close, Details=%s',
                     show_close(), ipaddress + ':' + str(port))
     if result == 0:
-        logger.info('%s: Port is open, Details=%s',
+        LOGGER.info('%s: Port is open, Details=%s',
                     show_open(), ipaddress + ':' + str(port))
         result = True
     else:
         result = False
-        logger.info('%s: Port is close, Details=%s',
+        LOGGER.info('%s: Port is close, Details=%s',
                     show_close(), ipaddress + ':' + str(port))
     return result
 
 
 @track
 def is_port_insecure(ipaddress, port):
+    """Check if a given port on an IP address is insecure."""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(3)
         ssl_sock = ssl.wrap_socket(sock)
         ssl_sock.connect_ex((ipaddress, port))
-        logger.info('%s: Port is secure, Details=%s',
+        LOGGER.info('%s: Port is secure, Details=%s',
                     show_close(), ipaddress + ':' + str(port))
         return False
     except ssl.SSLError:
-        logger.info('%s: Port is not secure, Details=%s',
+        LOGGER.info('%s: Port is not secure, Details=%s',
                     show_open(), ipaddress + ':' + str(port))
         return True

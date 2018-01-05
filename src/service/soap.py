@@ -9,17 +9,14 @@ Este modulo permite verificar vulnerabilidades sobre webservices:
 """
 # standard imports
 import logging
-import socket
 
 # third party imports
-from suds.client import Client
+# None
 
 # local imports
-from fluidasserts import show_close
-from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 """
@@ -32,14 +29,8 @@ Version preeliminar
 
 
 @track
-def soap_is_enable(wsdl):
+def soap_is_enable():
     """
-    wsdl: Ruta al contenedor htttp:....?wsdl
+    Verifica si el WS SOAP esta habilitado
     """
-    try:
-        client = Client(wsdl)
-        temp = str(client)
-        logger.info('Checking Webservices, Details=%s, %s',
-                    wsdl, temp)
-    except Exception as e:
-        print(e)
+    pass

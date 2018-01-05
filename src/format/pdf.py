@@ -20,7 +20,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_attribute(filename, metaname):
@@ -29,11 +29,11 @@ def __has_attribute(filename, metaname):
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
-        logger.info('%s: %s metadata in %s, Details=%s',
+        LOGGER.info('%s: %s metadata in %s, Details=%s',
                     show_open(), metaname, filename, metavalue)
         result = True
     else:
-        logger.info('%s: %s metadata in %s, Details=%s',
+        LOGGER.info('%s: %s metadata in %s, Details=%s',
                     show_close(), metaname, filename, '')
         result = False
     return result

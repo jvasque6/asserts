@@ -47,7 +47,7 @@ HDR_RGX = {
     'www-authenticate': '^((?!Basic).)*$'
 }
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 class HTTPSession(object):
@@ -143,11 +143,11 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
         if http_req.status_code == code:
             self.is_auth = True
-            logger.info('POST Authentication %s, Details=%s',
+            LOGGER.info('POST Authentication %s, Details=%s',
                         self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
-            logger.info('POST Authentication %s, Details=%s',
+            LOGGER.info('POST Authentication %s, Details=%s',
                         self.url,
                         'Error code (' + str(http_req.status_code) +
                         ') ' + str(self.data))
@@ -172,11 +172,11 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return None
         if http_req.text.find(text) >= 0:
             self.is_auth = True
-            logger.debug('POST Authentication %s, Details=%s',
+            LOGGER.debug('POST Authentication %s, Details=%s',
                          self.url, 'Success with ' + str(self.data))
         else:
             self.is_auth = False
-            logger.debug(
+            LOGGER.debug(
                 'POST Authentication %s, Details=%s',
                 self.url,
                 'Error text (' + http_req.text + ') ' + str(self.data))
@@ -218,16 +218,16 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.cookies = resp.cookies
                 self.response = resp
                 self.is_auth = True
-                logger.info(
+                LOGGER.info(
                     '%s Auth: %s, Details=%s', method,  self.url,
                     'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                logger.info(' %s Auth: %s, Details=%s', method, self.url,
+                LOGGER.info(' %s Auth: %s, Details=%s', method, self.url,
                             'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
-            logger.info('%s Auth: %s, Details=%s', method, self.url,
+            LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
                         'Not present')
 
     def get_html_value(self, field_type, field_name, field='value', enc=False):
@@ -265,14 +265,14 @@ def has_method(url, method):
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            logger.info('%s: %s HTTP Method %s, Details=%s',
+            LOGGER.info('%s: %s HTTP Method %s, Details=%s',
                         show_open(), url, method, 'Is Present')
         else:
-            logger.info('%s: %s HTTP Method %s, Details=%s',
+            LOGGER.info('%s: %s HTTP Method %s, Details=%s',
                         show_close(), url, method, 'Not Present')
             result = False
     else:
-        logger.info('%s: Method %s not allowed in %s', show_close(),
+        LOGGER.info('%s: Method %s not allowed in %s', show_close(),
                     method, url)
         result = False
     return result
@@ -289,17 +289,17 @@ def has_insecure_header(url, header, *args, **kwargs):
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
     except requests.ConnectionError:
-        logger.info('%s: %s HTTP error checking %s, Details=Could not connect',
+        LOGGER.info('%s: %s HTTP error checking %s, Details=Could not connect',
                     show_unknown(), header, url)
         return True
     result = True
     if header == 'X-AspNet-Version' or header == 'Server':
         if header in headers_info:
-            logger.info('%s: %s HTTP insecure header present in %s',
+            LOGGER.info('%s: %s HTTP insecure header present in %s',
                         show_open(), header, url)
             return True
         else:
-            logger.info('%s: %s HTTP insecure header not present in %s',
+            LOGGER.info('%s: %s HTTP insecure header not present in %s',
                         show_close(), header, url)
             return False
     if header in headers_info:
@@ -307,11 +307,11 @@ def has_insecure_header(url, header, *args, **kwargs):
         state = (lambda val: show_close() if re.match(
             HDR_RGX[header.lower()],
             value, re.IGNORECASE) is not None else show_open())(value)
-        logger.info('%s: %s HTTP header %s, Details=%s',
+        LOGGER.info('%s: %s HTTP header %s, Details=%s',
                     state, header, url, value)
         result = state != show_close()
     else:
-        logger.info('%s: %s HTTP header %s, Details=%s',
+        LOGGER.info('%s: %s HTTP header %s, Details=%s',
                     show_open(), header, url, 'Not Present')
         result = True
 

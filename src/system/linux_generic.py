@@ -13,7 +13,7 @@ from fluidasserts import show_open
 from fluidasserts.helper.ssh_helper import ssh_exec_command
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -25,11 +25,11 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
                               ssh_config)
 
     if out is '0027':
-        logger.info('%s: %s server has secure default privileges,\
+        LOGGER.info('%s: %s server has secure default privileges,\
 Details=umask %s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has too open default privileges,\
+        LOGGER.info('%s: %s server has too open default privileges,\
 Details=umask %s', show_open(), server, out)
         result = True
     return result
@@ -43,11 +43,11 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
                               ssh_config)
 
     if len(out) > 0:
-        logger.info('%s: %s server has sudo (or like) installed,\
+        LOGGER.info('%s: %s server has sudo (or like) installed,\
 Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has not sudo (or like) installed,\
+        LOGGER.info('%s: %s server has not sudo (or like) installed,\
 Details=%s', show_open(), server, out)
         result = True
     return result
@@ -63,11 +63,11 @@ def is_os_compilers_installed(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s: %s server has not compilers installed,\
+        LOGGER.info('%s: %s server has not compilers installed,\
 Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has compilers installed,\
+        LOGGER.info('%s: %s server has compilers installed,\
 Details=%s', show_open(), server, out)
         result = True
     return result
@@ -82,11 +82,11 @@ def is_os_antimalware_not_installed(server, username, password,
                               ssh_config)
 
     if len(out) > 0:
-        logger.info('%s: %s server has an antivirus installed,\
+        LOGGER.info('%s: %s server has an antivirus installed,\
 Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has not an antivirus installed,\
+        LOGGER.info('%s: %s server has not an antivirus installed,\
 Details=%s', show_open(), server, out)
         result = True
     return result
@@ -102,11 +102,11 @@ def is_os_remote_admin_enabled(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s: %s server has not remote admin login enabled,\
+        LOGGER.info('%s: %s server has not remote admin login enabled,\
 Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has remote admin login enabled,\
+        LOGGER.info('%s: %s server has remote admin login enabled,\
 Details=%s', show_open(), server, out)
         result = True
     return result
@@ -122,16 +122,16 @@ def is_os_syncookies_disabled(server, username, password,
                               ssh_config)
 
     if len(out) == 0:
-        logger.info('%s: %s server has syncookies enabled,\
+        LOGGER.info('%s: %s server has syncookies enabled,\
 Details=%s', show_close(), server, out)
         return False
 
     if int(out) == 1:
-        logger.info('%s: %s server has syncookies enabled,\
+        LOGGER.info('%s: %s server has syncookies enabled,\
 Details=%s', show_close(), server, out)
         result = False
     else:
-        logger.info('%s: %s server has syncookies disabled,\
+        LOGGER.info('%s: %s server has syncookies disabled,\
 Details=%s', show_open(), server, out)
         result = True
     return result

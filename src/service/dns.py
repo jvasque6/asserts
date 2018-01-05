@@ -6,6 +6,7 @@ from __future__ import absolute_import
 import logging
 
 # 3rd party imports
+import socket
 import dns.dnssec
 from dns.exception import DNSException
 import dns.query
@@ -16,7 +17,7 @@ import dns.zone
 from dns.zone import BadZone
 from dns.zone import NoNS
 from dns.zone import NoSOA
-import socket
+
 
 # local imports
 from fluidasserts import show_close
@@ -24,7 +25,7 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
-logger = logging.getLogger('FLUIDAsserts')
+LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
@@ -37,35 +38,35 @@ def is_xfr_enabled(domain, nameserver):
     try:
         zone = dns.zone.from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
-            logger.info('%s: Zone transfer not enabled on server, \
+            LOGGER.info('%s: Zone transfer not enabled on server, \
 Details=%s:%s',
                         show_close(), domain, nameserver)
             result = False
         result = True
-        logger.info('%s: Zone transfer enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone transfer enabled on server, Details=%s:%s',
                     show_open(), domain, nameserver)
     except NoSOA:
-        logger.info('%s: Zone transfer not enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone transfer not enabled on server, Details=%s:%s',
                     show_close(), domain, nameserver)
         result = False
     except NoNS:
-        logger.info('%s: Zone transfer not enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone transfer not enabled on server, Details=%s:%s',
                     show_close(), domain, nameserver)
         result = False
     except BadZone:
-        logger.info('%s: Zone transfer not enabled on server, Details=%s:%s',
-                    show_close(), domain, nameserver)
-        result = False
-    except DNSException:
-        logger.info('%s: Zone transfer not enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone transfer not enabled on server, Details=%s:%s',
                     show_close(), domain, nameserver)
         result = False
     except dns.query.BadResponse:
-        logger.info('%s: Zone transfer not enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone transfer not enabled on server, Details=%s:%s',
+                    show_close(), domain, nameserver)
+        result = False
+    except DNSException:
+        LOGGER.info('%s: Zone transfer not enabled on server, Details=%s:%s',
                     show_close(), domain, nameserver)
         result = False
     except socket.error:
-        logger.info('%s: Port closed for zone transfer, Details=%s:%s',
+        LOGGER.info('%s: Port closed for zone transfer, Details=%s:%s',
                     show_unknown(), domain, nameserver)
         result = False
 
@@ -85,19 +86,19 @@ def is_dynupdate_enabled(domain, nameserver):
         result = True
 
         if response.rcode() > 0:
-            logger.info('%s: Zone update not enabled on server, \
+            LOGGER.info('%s: Zone update not enabled on server, \
     Details=%s:%s', show_close(), domain, nameserver)
             result = False
         else:
-            logger.info('%s: Zone update enabled on server, Details=%s:%s',
+            LOGGER.info('%s: Zone update enabled on server, Details=%s:%s',
                         show_open(), domain, nameserver)
             result = True
     except dns.query.BadResponse:
-        logger.info('%s: Zone update not enabled on server, Details=%s:%s',
+        LOGGER.info('%s: Zone update not enabled on server, Details=%s:%s',
                     show_close(), domain, nameserver)
         result = False
     except socket.error:
-        logger.info('%s: Port closed for DNS update, Details=%s:%s',
+        LOGGER.info('%s: Port closed for DNS update, Details=%s:%s',
                     show_unknown(), domain, nameserver)
         result = False
     return result
@@ -119,22 +120,22 @@ def has_cache_poison(domain, nameserver):
     try:
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
-        logger.info('%s: Cache poisoning is possible on server, \
+        LOGGER.info('%s: Cache poisoning is possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
         return True
 
     if response.response.rcode() != 0:
-        logger.info('%s: Cache poisoning is possible on server, \
+        LOGGER.info('%s: Cache poisoning is possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
-            logger.info('%s: Cache poisoning possible on server, \
+            LOGGER.info('%s: Cache poisoning possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
             return True
         else:
-            logger.info('%s: Cache poisoning not possible on server, \
+            LOGGER.info('%s: Cache poisoning not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
             result = False
 
@@ -167,15 +168,15 @@ def has_cache_snooping(nameserver):
 
         result = True
         if response.rcode() == 0:
-            logger.info('%s: Cache snooping possible on server, \
+            LOGGER.info('%s: Cache snooping possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
             result = True
         else:
-            logger.info('%s: Cache snooping not possible on server, \
+            LOGGER.info('%s: Cache snooping not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
             result = False
     except dns.exception.SyntaxError:
-        logger.info('%s: Cache snooping not possible on server, \
+        LOGGER.info('%s: Cache snooping not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
         result = False
 
@@ -200,15 +201,15 @@ def has_recursion(nameserver):
 
         result = True
         if response.rcode() == 0:
-            logger.info('%s: Recursion possible on server, \
+            LOGGER.info('%s: Recursion possible on server, \
 Details=%s:%s', show_open(), domain, nameserver)
             result = True
         else:
-            logger.info('%s: Recursion not possible on server, \
+            LOGGER.info('%s: Recursion not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
             result = False
     except dns.exception.SyntaxError:
-        logger.info('%s: Recursion not possible on server, \
+        LOGGER.info('%s: Recursion not possible on server, \
 Details=%s:%s', show_close(), domain, nameserver)
         result = False
 
