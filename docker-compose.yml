@@ -66,7 +66,6 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
      - deps
-     - dist
     command: scons test
     networks:
      - fluidasserts
