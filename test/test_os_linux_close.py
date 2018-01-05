@@ -8,7 +8,6 @@ OS se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-import subprocess
 
 # 3rd party imports
 import pytest
@@ -31,6 +30,7 @@ OS_PORT = 22
 #
 
 
+# pylint: disable=unused-argument
 # def test_min_priv_enabled_close(run_mock):
     # """Secure umask?"""
     # assert not linux_generic.is_os_min_priv_disabled(CONTAINER_IP,
@@ -40,6 +40,7 @@ OS_PORT = 22
 @pytest.mark.parametrize('run_mock',
                          [('os:hard', {'22/tcp': OS_PORT})],
                          indirect=True)
+# pylint: disable=unused-argument
 def test_os_sudo_enabled_close(run_mock):
     """sudo enabled?"""
     assert not linux_generic.is_os_sudo_disabled(CONTAINER_IP,
@@ -47,6 +48,7 @@ def test_os_sudo_enabled_close(run_mock):
                                                  NONPRIV_PASS)
 
 
+# pylint: disable=unused-argument
 def test_compilers_installed_close(run_mock):
     """Compilers installed?"""
     assert not linux_generic.is_os_compilers_installed(CONTAINER_IP,
@@ -54,6 +56,7 @@ def test_compilers_installed_close(run_mock):
                                                        NONPRIV_PASS)
 
 
+# pylint: disable=unused-argument
 def test_antimalware_installed_close(run_mock):
     """Antimalware installed?"""
     assert not linux_generic.is_os_antimalware_not_installed(CONTAINER_IP,
@@ -61,6 +64,7 @@ def test_antimalware_installed_close(run_mock):
                                                              NONPRIV_PASS)
 
 
+# pylint: disable=unused-argument
 def test_remote_admin_enabled_close(run_mock):
     """Remote admin enabled?"""
     assert not linux_generic.is_os_remote_admin_enabled(CONTAINER_IP,

@@ -12,7 +12,6 @@ https://pytest.org/dev/fixture.html
 from __future__ import print_function
 import os
 import time
-import subprocess
 
 # 3rd party imports
 import docker
@@ -42,7 +41,7 @@ def run_mock(request):
     client.login(registry='registry.gitlab.com',
                  username=os.environ['DOCKER_USER'],
                  password=os.environ['DOCKER_PASS']
-                 )
+                )
 
     try:
         ipam_pool = docker.types.IPAMPool(subnet=NETWORK_SUBNET,

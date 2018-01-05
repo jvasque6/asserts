@@ -78,8 +78,7 @@ def user_enumeration_post_fail():
     """Form vuln a user enumeration."""
     if request.values['username'] == 'admin':
         return 'Login incorrect'
-    else:
-        return 'User not found'
+    return 'User not found'
 
 
 @APP.route('/userenum_post/ok', methods=['POST'])
@@ -93,8 +92,7 @@ def user_enumeration_get_fail():
     """Form vuln a user enumeration."""
     if request.values['username'] == 'admin':
         return 'Login incorrect'
-    else:
-        return 'User not found'
+    return 'User not found'
 
 
 @APP.route('/userenum_get/ok', methods=['GET'])
@@ -108,9 +106,8 @@ def brute_force_fail():
     """Form con brute forcing."""
     if request.values['username'] == 'admin' and \
        request.values['password'] == 'password':
-            return 'You are admin now'
-    else:
-        return 'Login incorrect'
+        return 'You are admin now'
+    return 'Login incorrect'
 
 
 @APP.route('/bruteforce/ok', methods=['POST'])
@@ -118,9 +115,8 @@ def brute_force_ok():
     """Form sin brute forcing."""
     if request.values['username'] == 'admin' and \
        request.values['password'] == 'password':
-            return 'You need a second factor'
-    else:
-        return 'Login incorrect'
+        return 'You need a second factor'
+    return 'Login incorrect'
 
 
 @APP.route('/http/headers/access_control_allow_origin/ok')

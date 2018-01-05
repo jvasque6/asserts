@@ -13,7 +13,6 @@ VSFTP
 
 # standard imports
 from __future__ import print_function
-import subprocess
 
 # 3rd party imports
 import pytest
@@ -42,26 +41,31 @@ FTP_PORT = 21
 @pytest.mark.parametrize('run_mock',
                          [('ftp:weak', {'21/tcp': FTP_PORT})],
                          indirect=True)
+# pylint: disable=unused-argument
 def test_is_anonymous_enabled_open(run_mock):
     """Servidor FTP vulnerable SI soporta conexion anonima?"""
     assert ftp.is_anonymous_enabled(CONTAINER_IP)
 
 
+# pylint: disable=unused-argument
 def test_is_admin_enabled_open(run_mock):
     """Servidor FTP vulnerable SI soporta conexion del ADMIN"""
     assert ftp.is_admin_enabled(CONTAINER_IP, ADMIN_PASS)
 
 
+# pylint: disable=unused-argument
 def test_user_without_password_open(run_mock):
     """Servidor FTP vulnerable SI autentica usuario sin clave?"""
     assert ftp.user_without_password(CONTAINER_IP, NONPASS_USER)
 
 
+# pylint: disable=unused-argument
 def test_is_a_valid_user_open(run_mock):
     """Servidor FTP vulnerable SI autentica a usuario adivinado?"""
     assert ftp.is_a_valid_user(CONTAINER_IP, GUESSED_USER, GUESSED_PASS)
 
 
+# pylint: disable=unused-argument
 def test_is_version_visible_open(run_mock):
     """Servidor FTP vulnerable SI muestra version?"""
     assert ftp.is_version_visible(CONTAINER_IP)

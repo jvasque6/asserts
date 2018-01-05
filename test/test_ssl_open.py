@@ -8,7 +8,6 @@ SSL se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-import subprocess
 
 # 3rd party imports
 import pytest
@@ -28,11 +27,13 @@ SSL_PORT = 443
 @pytest.mark.parametrize('run_mock',
                          [('ssl:weak', {'443/tcp': SSL_PORT})],
                          indirect=True)
+# pylint: disable=unused-argument
 def test_cn_equal_to_site_open(run_mock):
     """CN del cert concuerda con el nombre del sitio?"""
     assert ssl.is_cert_cn_not_equal_to_site(CONTAINER_IP)
 
 
+# pylint: disable=unused-argument
 def test_pfs_enabled_open(run_mock):
     """PFS habilitado en sitio?"""
     assert ssl.is_pfs_disabled(CONTAINER_IP)
@@ -47,11 +48,13 @@ def test_pfs_enabled_open(run_mock):
 #     assert ssl.is_sslv3_enabled(CONTAINER_IP)
 
 
+# pylint: disable=unused-argument
 def test_tlsv1_enabled_open(run_mock):
     """TLSv1 habilitado en sitio?"""
     assert ssl.is_tlsv1_enabled(CONTAINER_IP)
 
 
+# pylint: disable=unused-argument
 def test_cert_lifespan_safe_open(run_mock):
     """Vigencia del certificado es segura?"""
     assert ssl.is_cert_validity_lifespan_unsafe(CONTAINER_IP)

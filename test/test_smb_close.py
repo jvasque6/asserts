@@ -8,8 +8,6 @@ SMB se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-import subprocess
-import time
 
 # 3rd party imports
 import pytest
@@ -25,6 +23,7 @@ SMB_PORT = 445
 @pytest.mark.parametrize('run_mock',
                          [('smb:hard', {'445/tcp': SMB_PORT})],
                          indirect=True)
+# pylint: disable=unused-argument
 def test_is_anonymous_enabled_close(run_mock):
     """Conexion anonima habilitada?"""
     assert not smb.is_anonymous_enabled(CONTAINER_IP)

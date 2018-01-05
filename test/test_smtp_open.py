@@ -28,6 +28,7 @@ HARD_PORT = 25
 @pytest.mark.parametrize('run_mock',
                          [('smtp:weak', {'25/tcp': WEAK_PORT})],
                          indirect=True)
+# pylint: disable=unused-argument
 def test_has_vrfy_open(run_mock):
     """Funcion VRFY habilitada?"""
     assert smtp.has_vrfy(CONTAINER_IP, WEAK_PORT)
