@@ -25,7 +25,7 @@ nuevos headers y funcione para más casos de prueba.
 """
 
 # standard imports
-# none
+import time
 
 # 3rd party imports
 from flask import Flask
@@ -46,6 +46,19 @@ APP = Flask(__name__)
 def home():
     """Respuesta a directorio raiz."""
     return 'Mock HTTP Server'
+
+
+@APP.route('/responsetime/ok')
+def responsetime_ok():
+    """Tiempo de respuesta OK"""
+    return 'OK'
+
+
+@APP.route('/responsetime/fail')
+def responsetime_fail():
+    """Tiempo de respuesta fail"""
+    time.sleep(2)
+    return 'FAIL'
 
 
 @APP.route('/userenum_post/fail', methods=['POST'])

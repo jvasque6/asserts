@@ -349,3 +349,10 @@ def test_bruteforce_close():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_responsetime_close():
+    """Tiempo de respuesta aceptable?"""
+    assert not http.is_response_delayed(
+        '%s/responsetime/ok' % (MOCK_SERVICE))
