@@ -441,7 +441,7 @@ def is_response_delayed(url, *args, **kwargs):
     https://www.nngroup.com/articles/response-times-3-important-limits/
     """
 
-    max_response_time = 60
+    max_response_time = 1
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
 
     response_time = http_session.response.elapsed.total_seconds()
@@ -473,7 +473,6 @@ def has_user_enumeration(url, user_field, user_list=[], fake_users=[],
         fake_users = ['iuaksiuiadbuqywdaskj1234', 'ajahdsjahdjhbaj',
                       'aksjdads@asd.com', 'osvtxodahidhiis@gmail.com',
                       'something@example.com', '12312314511231']
-
 
     # Evaluate the response with non-existant users
     datasets = http_helper.create_dataset(user_field, fake_users,
