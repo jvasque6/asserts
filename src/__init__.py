@@ -7,14 +7,14 @@ Config
 
 # standard imports
 import logging.config
-import mixpanel
 import os
-from pkg_resources import get_distribution, DistributionNotFound
 import tempfile
 import sys
+from pkg_resources import get_distribution, DistributionNotFound
 
 # 3rd party imports
 from colorama import Fore, Back, Style, init
+import mixpanel
 
 # local imports
 # none
@@ -64,13 +64,13 @@ else:
 
 PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
 
-KEYS = ['FLUIDASSERTS_LICENSE_KEY','FLUIDASSERTS_USER_EMAIL']
+KEYS = ['FLUIDASSERTS_LICENSE_KEY', 'FLUIDASSERTS_USER_EMAIL']
 
 for key in KEYS:
     try:
         os.environ[key]
     except KeyError:
-        print(key +' env variable must be set')
+        print(key + ' env variable must be set')
         sys.exit(-1)
 
 CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
@@ -82,6 +82,7 @@ try:
     mp.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
     pass
+
 
 def show_close(message=None):
     if message is None:

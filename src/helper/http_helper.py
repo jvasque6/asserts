@@ -14,10 +14,10 @@ except ImportError:
     from urllib.parse import parse_qsl as parse_qsl
     from urllib.parse import quote as quote
 
-from bs4 import *
+from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
-import requests
 from requests_ntlm import HttpNtlmAuth
+import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
@@ -193,12 +193,15 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         return http_req
 
     def basic_auth(self, user, passw):
+        """Autentica usando BASIC."""
         self.__do_auth('BASIC', user, passw)
 
     def ntlm_auth(self, user, passw):
+        """Autentica usando NTLM."""
         self.__do_auth('NTLM', user, passw)
 
     def oauth_auth(self, user, passw):
+        """Autentica usando OAUTH."""
         self.__do_auth('OAUTH', user, passw)
 
     def __do_auth(self, method, user, passw):
@@ -219,7 +222,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.response = resp
                 self.is_auth = True
                 LOGGER.info(
-                    '%s Auth: %s, Details=%s', method,  self.url,
+                    '%s Auth: %s, Details=%s', method, self.url,
                     'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
@@ -231,6 +234,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                         'Not present')
 
     def get_html_value(self, field_type, field_name, field='value', enc=False):
+        """Obtiene un valor de un campo HTML."""
         soup = BeautifulSoup(self.response.text, 'html.parser')
         text_to_get = soup.find(field_type,
                                 {'name': field_name})[field]
@@ -240,8 +244,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
 
 def create_dataset(field, value_list, query_string):
+    """Crea set de datos de acuerdo a valores en lista."""
     dataset = []
-    if type(query_string) == str:
+    if isinstance(query_string, str):
         data_dict = dict(parse_qsl(query_string))
     else:
         data_dict = query_string.copy()
@@ -283,7 +288,8 @@ def has_insecure_header(url, header, *args, **kwargs):
     try:
         if header == 'Access-Control-Allow-Origin':
             if 'headers' in kwargs:
-                kwargs['headers'].update({'Origin': 'https://www.malicious.com'})
+                kwargs['headers'].update({'Origin':
+                                          'https://www.malicious.com'})
             else:
                 kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
         http_session = HTTPSession(url, *args, **kwargs)
@@ -298,10 +304,9 @@ def has_insecure_header(url, header, *args, **kwargs):
             LOGGER.info('%s: %s HTTP insecure header present in %s',
                         show_open(), header, url)
             return True
-        else:
-            LOGGER.info('%s: %s HTTP insecure header not present in %s',
-                        show_close(), header, url)
-            return False
+        LOGGER.info('%s: %s HTTP insecure header not present in %s',
+                    show_close(), header, url)
+        return False
     if header in headers_info:
         value = headers_info[header]
         state = (lambda val: show_close() if re.match(

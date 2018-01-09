@@ -40,8 +40,7 @@ def run_mock(request):
 
     client.login(registry='registry.gitlab.com',
                  username=os.environ['DOCKER_USER'],
-                 password=os.environ['DOCKER_PASS']
-                )
+                 password=os.environ['DOCKER_PASS'])
 
     try:
         ipam_pool = docker.types.IPAMPool(subnet=NETWORK_SUBNET,

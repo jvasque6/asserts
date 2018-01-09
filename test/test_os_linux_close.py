@@ -30,13 +30,6 @@ OS_PORT = 22
 #
 
 
-# pylint: disable=unused-argument
-# def test_min_priv_enabled_close(run_mock):
-    # """Secure umask?"""
-    # assert not linux_generic.is_os_min_priv_disabled(CONTAINER_IP,
-                                                     # NONPRIV_USER,
-                                                     # NONPRIV_PASS)
-
 @pytest.mark.parametrize('run_mock',
                          [('os:hard', {'22/tcp': OS_PORT})],
                          indirect=True)

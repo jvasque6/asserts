@@ -10,7 +10,7 @@ import logging
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.utils.decorators import *
+from fluidasserts.utils.decorators import track
 
 LOGGER = logging.getLogger('FLUIDAsserts')
 
@@ -55,7 +55,6 @@ def __check_password_strength(password, length):
     return result
 
 
-@test_level(Low)
 @track
 def is_user_password_insecure(password):
     """Function to check if a user password is secure."""
@@ -64,7 +63,6 @@ def is_user_password_insecure(password):
     return __check_password_strength(password, min_password_len)
 
 
-@test_level(Low)
 @track
 def is_system_password_insecure(password):
     """Function to check if a system password is secure."""
@@ -73,7 +71,6 @@ def is_system_password_insecure(password):
     return __check_password_strength(password, min_password_len)
 
 
-@test_level(Low)
 @track
 def is_otp_token_insecure(password):
     """Function to check if a system password is secure."""
@@ -92,7 +89,6 @@ def is_otp_token_insecure(password):
     return result
 
 
-@test_level(Low)
 @track
 def is_ssid_insecure(ssid):
     """Function to check if a given SSID is secure."""

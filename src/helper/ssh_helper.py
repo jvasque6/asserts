@@ -11,6 +11,7 @@ import paramiko
 # local imports
 # none
 
+
 # pylint: disable=R0914
 def ssh_user_pass(server, username, password, command):
     """Connect using SSH user and pass and exec specific command."""

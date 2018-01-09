@@ -12,12 +12,12 @@ from multiprocessing import Process
 import time
 
 # 3rd party imports
+from test.mock import httpserver
 import pytest
 
 # local imports
 from fluidasserts.helper import http_helper
 from fluidasserts.service import http
-from test.mock import httpserver
 
 #
 # Constants

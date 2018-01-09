@@ -5,9 +5,8 @@
 Este modulo define los parametros minimos requeridos para generar
 un instalador estandar de FLUIDAsserts.
 """
-
-from setuptools import setup, find_packages
 import time
+from setuptools import setup
 
 setup(
     name='FLUIDAsserts',

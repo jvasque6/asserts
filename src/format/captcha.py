@@ -11,7 +11,6 @@ except ImportError:
     from PIL import Image
 
 # 3rd party imports
-import requests
 import pytesseract
 
 # local imports
@@ -31,10 +30,9 @@ def is_insecure_in_image(image, expected_text):
         LOGGER.info('%s: Captcha is insecure, \
 Details: Expected=%s, Reversed=%s', show_open(), expected_text, result)
         return True
-    else:
-        LOGGER.info('%s: Captcha is secure, \
+    LOGGER.info('%s: Captcha is secure, \
 Details: Expected=%s, Reversed=%s', show_close(), expected_text, result)
-        return False
+    return False
 
 
 @track
@@ -47,7 +45,6 @@ def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
         LOGGER.info('%s: Captcha is insecure, \
 Details: Expected=%s, Reversed=%s', show_open(), expected_text, result)
         return True
-    else:
-        LOGGER.info('%s: Captcha is secure, \
+    LOGGER.info('%s: Captcha is secure, \
 Details: Expected=%s, Reversed=%s', show_close(), expected_text, result)
-        return False
+    return False

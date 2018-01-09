@@ -42,7 +42,7 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if len(out) > 0:
+    if out:
         LOGGER.info('%s: %s server has sudo (or like) installed,\
 Details=%s', show_close(), server, out)
         result = False
@@ -62,7 +62,7 @@ def is_os_compilers_installed(server, username, password,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if len(out) == 0:
+    if not out:
         LOGGER.info('%s: %s server has not compilers installed,\
 Details=%s', show_close(), server, out)
         result = False
@@ -81,7 +81,7 @@ def is_os_antimalware_not_installed(server, username, password,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if len(out) > 0:
+    if out:
         LOGGER.info('%s: %s server has an antivirus installed,\
 Details=%s', show_close(), server, out)
         result = False
@@ -101,7 +101,7 @@ def is_os_remote_admin_enabled(server, username, password,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if len(out) == 0:
+    if not out:
         LOGGER.info('%s: %s server has not remote admin login enabled,\
 Details=%s', show_close(), server, out)
         result = False
@@ -121,7 +121,7 @@ def is_os_syncookies_disabled(server, username, password,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if len(out) == 0:
+    if not out:
         LOGGER.info('%s: %s server has syncookies enabled,\
 Details=%s', show_close(), server, out)
         return False

@@ -5,9 +5,6 @@
 Modulo para verificacion de vulnerabilides en codigo HTML.
 Este modulo permite verificar vulnerabilidades propias de HTML como:
     * Formularios que no tengan el atributo autocomplete en off.
-
-Autor: Juan Escobar
-Email: jescobar@fluid.la
 """
 
 # standard imports
@@ -128,7 +125,7 @@ def is_cacheable(filename):
         return result
 
     attr = 'content'
-    value = 'no\-cache'  # pylint: disable=W1401
+    value = r'no\-cache'
     has_content = __has_attribute(
         filename, selector, tag, attr, value)
 

@@ -70,10 +70,3 @@ def test_remote_admin_enabled_open(run_mock):
     assert linux_generic.is_os_remote_admin_enabled(CONTAINER_IP,
                                                     NONPRIV_USER,
                                                     NONPRIV_PASS)
-
-
-# def test_syncookies_enabled_open():
-    # """SYN Cookies enabled?"""
-    # assert linux_generic.is_os_syncookies_disabled(CONTAINER_IP,
-                                                   # NONPRIV_USER,
-                                                   # NONPRIV_PASS)

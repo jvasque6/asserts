@@ -528,11 +528,11 @@ def has_user_enumeration(url, user_field, user_list=None, fake_users=None,
     if rat > 0.95:
         LOGGER.info('%s: User enumeration not possible for %s, \
 Details=%s%% of similar answers',
-                    show_close(), url, str(rat*100))
+                    show_close(), url, str(rat * 100))
         return False
     LOGGER.info('%s: User enumeration is possible for %s, \
 Details=%s%% of similar answers',
-                show_open(), url, str(rat*100))
+                show_open(), url, str(rat * 100))
     return True
 
 

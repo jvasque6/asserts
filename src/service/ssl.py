@@ -56,16 +56,16 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
         cert_obj.subject.get_attributes_for_oid(NameOID.COMMON_NAME)[
             0].value
 
-    wildcard_site = '*.' + site
+    wc_cert = '*.' + site
 
-    main_domain = 'NONE'
+    domain = 'NONE'
     if cert_cn.startswith('*.'):
-        main_domain = '.' + cert_cn.split('*.')[1]
+        domain = '.' + cert_cn.split('*.')[1]
 
-    if site != cert_cn and wildcard_site != cert_cn and not site.endswith(main_domain):
+    if site != cert_cn and wc_cert != cert_cn and not site.endswith(domain):
         if has_sni:
             LOGGER.info('%s: %s CN not equals to site. However server \
-supports SNI, Details=%s:%s', show_close(), cert_cn, site, port)
+    supports SNI, Details=%s:%s', show_close(), cert_cn, site, port)
             result = False
         else:
             LOGGER.info('%s: %s CN not equals to site, Details=%s:%s',

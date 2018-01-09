@@ -131,8 +131,7 @@ SConscript('#doc/sconscript', exports=['env', 'source_files', 'deps_results'])
 env.Alias('dist', [sdist_results,
                    bdist_results])
 env.Alias('lint', [docst_results,
-                   pylint_results,
-                   flake8_results])
+                   pylint_results])
 
 
 # Solo construccion explicita
