@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk update && apk upgrade && apk add openssh clamav sudo 
+RUN apk update && apk upgrade && apk add openssh clamav sudo
 RUN ssh-keygen -A && \
     adduser -D -s /bin/sh nonpriv && \
     echo "root:Puef8poh2tei9AeB" | chpasswd && \

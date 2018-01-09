@@ -14,7 +14,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -28,7 +29,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -42,7 +44,23 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
+     - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
+     - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
+     - DOCKER_USER=$DOCKER_USER
+     - DOCKER_PASS=$DOCKER_PASS
+
+  overcommit:
+    image: registry.gitlab.com/fluidsignal/asserts:dev
+    depends_on:
+     - deps
+    command: bash -c "overcommit --sign && overcommit --run"
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -56,7 +74,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -72,7 +91,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -87,7 +107,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - VAULT=$VAULT
+     - PYPI_USER=$PYPI_USER
+     - PYPI_PASS=$PYPI_PASS
      - FLUIDASSERTS_LICENSE_KEY=$FLUIDASSERTS_LICENSE_KEY
      - FLUIDASSERTS_USER_EMAIL=$FLUIDASSERTS_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER

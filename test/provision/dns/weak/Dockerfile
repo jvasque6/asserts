@@ -1,10 +1,10 @@
-FROM alpine:latest 
+FROM alpine:latest
 
-ENV FLAVOR weak 
+ENV FLAVOR weak
 
 EXPOSE 53/tcp 53/udp
 
-RUN apk update && apk upgrade && apk add bind 
+RUN apk update && apk upgrade && apk add bind
 
 COPY named.conf /etc/bind/named.conf
 COPY named.conf.options.weak /etc/bind/named.conf.options

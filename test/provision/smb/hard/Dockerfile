@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/fluidsignal/asserts/mocks/smb:weak 
+FROM registry.gitlab.com/fluidsignal/asserts/mocks/smb:weak
 
 ENV FLAVOR hard
 

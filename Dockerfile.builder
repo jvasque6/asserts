@@ -34,6 +34,13 @@ RUN apt-get update -qq && \
         python-setuptools \
         python3-setuptools \
         tesseract-ocr \
+        ruby \
+        ruby2.3-dev \
+        libffi-dev \
+        pkg-config \
+        gcc \
+        libc6-dev \
+        make \
         docker-ce \
         git && \
     pip install -U pip \
@@ -43,11 +50,12 @@ RUN apt-get update -qq && \
         tox \
         tox-pyenv \
         pylint \
+        flake8 \
         yamllint \
         twine \
         certifi \
-        ansible \
         colorama \
         mandrill && \
+    gem install overcommit && \
     dpkg --clear-avail && \
     apt-get clean

@@ -1,6 +1,6 @@
-FROM registry.gitlab.com/fluidsignal/asserts/mocks/smtp:weak 
+FROM registry.gitlab.com/fluidsignal/asserts/mocks/smtp:weak
 
-ENV FLAVOR hard 
+ENV FLAVOR hard
 
 EXPOSE 25/tcp
 

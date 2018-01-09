@@ -1,13 +1,13 @@
-FROM alpine:latest 
+FROM alpine:latest
 
 ENV FLAVOR weak
 
-EXPOSE 20/tcp 21/tcp 
+EXPOSE 20/tcp 21/tcp
 
-RUN apk update && apk upgrade && apk add vsftpd 
+RUN apk update && apk upgrade && apk add vsftpd
 
 COPY etc_vsftpd_conf.weak /etc/vsftpd/vsftpd.conf
-COPY chroot_list /etc/vsftpd/chroot_list 
+COPY chroot_list /etc/vsftpd/chroot_list
 RUN mkdir -p /var/run/vsftpd/empty
 RUN sed -i -e 's/pam_unix.so.*nullok_secure/pam_unix.so nullok/g' /etc/pam.d/base-auth
 RUN sed -i -e 's/pam_unix.so.*obscure/pam_unix.so nullok obscure/g' /etc/pam.d/base-password

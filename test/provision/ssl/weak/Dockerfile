@@ -1,6 +1,6 @@
-FROM nginx:alpine 
+FROM nginx:alpine
 
-ENV FLAVOR weak 
+ENV FLAVOR weak
 
 EXPOSE 443/tcp
 

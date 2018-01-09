@@ -18,5 +18,7 @@ stdenv.mkDerivation rec {
  FLUIDASSERTS_LICENSE_KEY  = "set";
  DOCKER_PASS = "set";
  DOCKER_USER = "set";
- VAULT = "set";
+ PYPI_USER="set";
+ PYPI_PASS="set";
+
 }

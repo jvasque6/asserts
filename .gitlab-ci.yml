@@ -1,20 +1,22 @@
+---
+
 image: registry.gitlab.com/fluidsignal/asserts:base
 
 variables:
   DOCKER_DRIVER: overlay2
 
 services:
-- docker:dind
+  - docker:dind
 
 before_script:
-    - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
-    - docker build -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
-    - docker push registry.gitlab.com/fluidsignal/asserts:base
+  - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
+  - docker build -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
+  - docker push registry.gitlab.com/fluidsignal/asserts:base
 
 stages:
-    - build
-    - test
-    - deploy
+  - build
+  - test
+  - deploy
 
 build:
     stage: build
@@ -28,6 +30,7 @@ lint:
     stage: test
     script:
         - docker-compose run lint
+        - docker-compose run overcommit
 
 test:
     stage: test

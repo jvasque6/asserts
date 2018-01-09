@@ -1,8 +1,8 @@
-FROM nginx:alpine 
+FROM nginx:alpine
 
 ENV FLAVOR hard
 
-EXPOSE 443/tcp 
+EXPOSE 443/tcp
 
 COPY nginx-tls-hard.conf /etc/nginx/conf.d/
 COPY nginx-hard.crt /etc/nginx/ssl/nginx.crt

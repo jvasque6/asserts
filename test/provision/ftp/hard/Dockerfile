@@ -1,8 +1,8 @@
-FROM registry.gitlab.com/fluidsignal/asserts/mocks/ftp:weak 
+FROM registry.gitlab.com/fluidsignal/asserts/mocks/ftp:weak
 
-ENV FLAVOR hard 
+ENV FLAVOR hard
 
-EXPOSE 20/tcp 21/tcp 
+EXPOSE 20/tcp 21/tcp
 
 COPY etc_vsftpd_conf.hard /etc/vsftpd/vsftpd.conf
 RUN sed -i -e 's/pam_unix.so nullok/pam_unix.so nullok_secure/g' /etc/pam.d/base-auth
