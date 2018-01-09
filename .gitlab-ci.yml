@@ -13,7 +13,6 @@ before_script:
 
 stages:
     - build
-    - lint
     - test
     - deploy
 
@@ -26,7 +25,7 @@ build:
         - docker push registry.gitlab.com/fluidsignal/asserts:dev
 
 lint:
-    stage: lint
+    stage: test
     script:
         - docker-compose run lint
 
@@ -36,7 +35,7 @@ test:
         - docker-compose run test
 
 codequality:
-  stage: lint
+  stage: test
   script:
     - docker pull codeclimate/codeclimate
     - docker run --env CODECLIMATE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock --volume /tmp/cc:/tmp/cc codeclimate/codeclimate analyze -e sonar-python -e pep8 -p grep -f json > codeclimate.json
