@@ -47,21 +47,21 @@ setup(
         'PyPDF2==1.26.0',            # src.format.pdf
         'requests==2.18.4',          # src.service.http
         'requests-oauthlib==0.8.0',  # src.service.http
-        'cryptography==2.1.2',       # src.service.ssl
-        'certifi==2017.7.27.1',      # src.service.ssl
-        'ldap3==2.2.2',              # src.service.ldap
-        'paramiko==2.1.2',           # src.helper.ssh_helper
-        'pywinrm==0.2.2',            # src.helper.winrm_helper
-        'beautifulsoup4==4.5.3',     # src.format.html
+        'cryptography==2.1.4',       # src.service.ssl
+        'certifi==2017.11.5',        # src.service.ssl
+        'ldap3==2.4',                # src.service.ldap
+        'paramiko==2.4.0',           # src.helper.ssh_helper
+        'pywinrm==0.3.0',            # src.helper.winrm_helper
+        'beautifulsoup4==4.6.0',     # src.format.html
         'dnspython==1.15.0',         # src.service.dns
-        'tlslite-ng==0.7.0-alpha3',  # src.service.ssl
-        'pyOpenSSL==16.2.0',         # src.service.ssl
+        'tlslite-ng==0.8.0-alpha1',  # src.service.ssl
+        'pyOpenSSL==17.5.0',         # src.service.ssl
         'colorama==0.3.9',           # logging
-        'pysmb==1.1.19',             # src.service.smb
+        'pysmb==1.1.22',             # src.service.smb
         'mixpanel==4.3.2',           # src.utils.decorators
-        'requests_ntlm==1.0.0',      # src.helper.http_helper
+        'requests_ntlm==1.1.0',      # src.helper.http_helper
         'pytesseract==0.1.7',        # src.format.captcha
-        'pillow==4.3.0',             # src.format.captcha
+        'pillow==5.0.0',             # src.format.captcha
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

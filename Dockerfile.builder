@@ -7,7 +7,9 @@ RUN apt-get update -qq && \
         curl \
         apt-transport-https \
         ca-certificates \
-        gpg
+        gpg && \
+    dpkg --clear-avail && \
+    apt-get clean
 
 RUN echo "deb [arch=amd64] https://download.docker.com/linux/debian stretch stable" > /etc/apt/sources.list.d/docker.list
 
