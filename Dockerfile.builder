@@ -46,6 +46,6 @@ RUN apt-get update -qq && \
         certifi \
         ansible \
         colorama \
-        mandrill
-
-RUN dpkg --clear-avail && apt-get clean
+        mandrill && \
+    dpkg --clear-avail && \
+    apt-get clean

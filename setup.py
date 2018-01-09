@@ -45,7 +45,7 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # src
         'PyPDF2==1.26.0',            # src.format.pdf
-        'requests==2.13.0',          # src.service.http
+        'requests==2.18.4',          # src.service.http
         'requests-oauthlib==0.8.0',  # src.service.http
         'cryptography==2.1.2',       # src.service.ssl
         'certifi==2017.7.27.1',      # src.service.ssl
