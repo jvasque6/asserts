@@ -3,16 +3,16 @@
 
 import functools
 import mixpanel
-from fluidasserts import mp, CLIENT_ID
+from fluidasserts import MP, CLIENT_ID
 
 
 def track(func):
     """Decorator."""
     @functools.wraps(func)
     def decorated(*args, **kwargs):
-        """Decorated function."""
+        """Decorate function."""
         try:
-            mp.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
+            MP.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
         except mixpanel.MixpanelException:
             pass
         return func(*args, **kwargs)

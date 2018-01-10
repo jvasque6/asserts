@@ -20,7 +20,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 def __smb_connect(server=None, user=None, password=None,
                   domain='WORKGROUP'):
-    """Returns a SMB connection handler."""
+    """Return a SMB connection handler."""
     try:
         client_machine_name = 'assertspc'
         conn = SMBConnection.SMBConnection(user, password,
@@ -36,7 +36,7 @@ def __smb_connect(server=None, user=None, password=None,
 
 
 @track
-def has_dirlisting(share=None, *args, **kwargs):
+def has_dirlisting(share, *args, **kwargs):
     """Check if a SMB share has dirlisting."""
     conn = __smb_connect(*args, **kwargs)
 

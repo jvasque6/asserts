@@ -31,7 +31,6 @@ import certifi
 # local imports
 # none
 
-# pylint: disable=R0204
 # pylint: disable=R0903
 
 
@@ -49,10 +48,9 @@ class Service(object):
 
     @abstractmethod
     def get_version(self, banner):
-        """Function get_version.
+        """Parse the banner.
 
-        Parse the banner and return the product and version of
-        the service.
+        Return the product and version of the service.
         """
         pass
 
@@ -64,11 +62,11 @@ class FTPService(Service):
                  payload=None):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(FTPService, self).__init__(port=port,
+                                             is_active=is_active,
+                                             is_ssl=is_ssl,
+                                             payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
@@ -88,11 +86,11 @@ class SSHService(Service):
                  payload=None):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(SSHService, self).__init__(port=port,
+                                             is_active=is_active,
+                                             is_ssl=is_ssl,
+                                             payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
@@ -108,11 +106,11 @@ class TELNETService(Service):
                  payload=None):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(TELNETService, self).__init__(port=port,
+                                                is_active=is_active,
+                                                is_ssl=is_ssl,
+                                                payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
@@ -128,11 +126,11 @@ class SMTPService(Service):
                  payload=None):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(SMTPService, self).__init__(port=port,
+                                              is_active=is_active,
+                                              is_ssl=is_ssl,
+                                              payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
@@ -152,11 +150,11 @@ class HTTPService(Service):
                  payload=b'GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(HTTPService, self).__init__(port=port,
+                                              is_active=is_active,
+                                              is_ssl=is_ssl,
+                                              payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
@@ -176,11 +174,11 @@ class HTTPSService(Service):
                  payload=b'GET / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         try:
-            super(self.__class__, self).__init__(port=port,
-                                                 is_active=is_active,
-                                                 is_ssl=is_ssl,
-                                                 payload=payload)
-        except:
+            super(HTTPSService, self).__init__(port=port,
+                                               is_active=is_active,
+                                               is_ssl=is_ssl,
+                                               payload=payload)
+        except TypeError:
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 

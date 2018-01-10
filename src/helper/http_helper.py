@@ -18,6 +18,7 @@ from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
 from requests_ntlm import HttpNtlmAuth
 import requests
+# pylint: disable=import-error
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
@@ -29,6 +30,7 @@ from fluidasserts import show_unknown
 # pylint: disable=R0902
 # pylint: disable=R0913
 
+# pylint: disable=no-member
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 HDR_RGX = {

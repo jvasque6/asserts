@@ -1,4 +1,2 @@
 # -*- coding: utf-8 -*-
-
-"""Paquete de utilidades de FLUIDAsserts.
-"""
+"""Paquete de utilidades de FLUIDAsserts."""

@@ -93,9 +93,8 @@ def is_os_syncookies_disabled(server):
 
 @track
 def is_protected_users_disabled(server, username, password):
-    """Function is_protected_users_disabled.
+    """Check if protected users is enabled on system.
 
-    Check if protected users is enabled on system.
     If the result is True, executing mimikatz would give
     dangerous results.
     """

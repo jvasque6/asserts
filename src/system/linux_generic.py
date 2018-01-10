@@ -24,7 +24,7 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if out is '0027':
+    if out == '0027':
         LOGGER.info('%s: %s server has secure default privileges,\
 Details=umask %s', show_close(), server, out)
         result = False

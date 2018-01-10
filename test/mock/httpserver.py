@@ -50,26 +50,26 @@ def home():
 
 @APP.route('/responsetime/ok')
 def responsetime_ok():
-    """Tiempo de respuesta OK"""
+    """Tiempo de respuesta OK."""
     return 'OK'
 
 
 @APP.route('/responsetime/fail')
 def responsetime_fail():
-    """Tiempo de respuesta fail"""
+    """Tiempo de respuesta fail."""
     time.sleep(2)
     return 'FAIL'
 
 
 @APP.route('/dirlisting/ok')
 def dirlisting_ok():
-    """Dirlisting deshabilitado"""
+    """Dirlisting deshabilitado."""
     return 'OK'
 
 
 @APP.route('/dirlisting/fail')
 def dirlisting_fail():
-    """Dirlisting habilitado"""
+    """Dirlisting habilitado."""
     return 'Index of'
 
 

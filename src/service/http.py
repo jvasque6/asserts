@@ -31,7 +31,7 @@ SQLI_ERROR_MSG = {
     r'Warning.*mysql_.*',  # MySQL
     r'MySqlException \(0x',  # MySQL
     r'valid MySQL result',  # MySQL
-    r'check the manual that corresponds to your (MySQL|MariaDB) server version',  # MySQL
+    r'check the manual that corresponds to your (MySQL|MariaDB)',  # MySQL
     r'MySqlClient.',  # MySQL
     r'com.mysql.jdbc.exceptions',  # MySQL
     r'com.mysql.jdbc.exceptions',  # PostgreSQL
@@ -42,26 +42,26 @@ SQLI_ERROR_MSG = {
     r'PG::SyntaxError:',  # PostgreSQL
     r'org.postgresql.util.PSQLException',  # PostgreSQL
     r'ERROR:sssyntax error at or near ',  # PostgreSQL
-    r'ERROR:sssyntax error at or near ',  # Microsoft SQL Server
-    r'Driver.* SQL[-_ ]*Server',  # Microsoft SQL Server
-    r'OLE DB.* SQL Server',  # Microsoft SQL Server
-    r'\bSQL Server[^&lt;&quot;]+Driver',  # Microsoft SQL Server
-    r'Warning.*(mssql|sqlsrv)_',  # Microsoft SQL Server
-    r'\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # Microsoft SQL Server
-    r'System.Data.SqlClient.SqlException',  # Microsoft SQL Server
-    r'(?s)Exception.*WRoadhouse.Cms.',  # Microsoft SQL Server
-    r'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # Microsoft SQL Server
-    r'com.microsoft.sqlserver.jdbc.SQLServerException',  # Microsoft SQL Server
-    r'ODBC SQL Server Driver',  # Microsoft SQL Server
-    r'SQLServer JDBC Driver',  # Microsoft SQL Server
-    r'macromedia.jdbc.sqlserver',  # Microsoft SQL Server
-    r'com.jnetdirect.jsql',  # Microsoft SQL Server
+    r'ERROR:sssyntax error at or near ',  # MS SQL Server
+    r'Driver.* SQL[-_ ]*Server',  # MS SQL Server
+    r'OLE DB.* SQL Server',  # MS SQL Server
+    r'\bSQL Server[^&lt;&quot;]+Driver',  # MS SQL Server
+    r'Warning.*(mssql|sqlsrv)_',  # MS SQL Server
+    r'\bSQL Server[^&lt;&quot;]+[0-9a-fA-F]{8}',  # MS SQL Server
+    r'System.Data.SqlClient.SqlException',  # MS SQL Server
+    r'(?s)Exception.*WRoadhouse.Cms.',  # MS SQL Server
+    r'Microsoft SQL Native Client error \'[0-9a-fA-F]{8}',  # MS SQL Server
+    r'com.microsoft.sqlserver.jdbc.SQLServerException',  # MS SQL Server
+    r'ODBC SQL Server Driver',  # MS SQL Server
+    r'SQLServer JDBC Driver',  # MS SQL Server
+    r'macromedia.jdbc.sqlserver',  # MS SQL Server
+    r'com.jnetdirect.jsql',  # MS SQL Server
     r'com.jnetdirect.jsql',  # Microsoft Access
     r'Microsoft Access (d+ )?Driver',  # Microsoft Access
     r'JET Database Engine',  # Microsoft Access
     r'Access Database Engine',  # Microsoft Access
     r'ODBC Microsoft Access',  # Microsoft Access
-    r'Syntax error (missing operator) in query expression',  # Microsoft Access
+    r'Syntax error (missing operator) in query expression',  # MS Access
     r'Syntax error (missing operator) in query expression',  # Oracle
     r'\bORA-d{5}',  # Oracle
     r'Oracle error',  # Oracle
@@ -114,7 +114,7 @@ SQLI_ERROR_MSG = {
 
 # pylint: disable=R0913
 def __generic_http_assert(url, expected_regex, *args, **kwargs):
-    """Generic HTTP assert method."""
+    """Check if a text is present in HTTP response."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
     the_page = response.text
@@ -126,7 +126,7 @@ def __generic_http_assert(url, expected_regex, *args, **kwargs):
 
 # pylint: disable=R0913
 def __multi_generic_http_assert(url, regex_list, *args, **kwargs):
-    """Generic HTTP assert method."""
+    """Check if a multiple text is present in HTTP response."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
     the_page = response.text
@@ -368,6 +368,7 @@ def has_insecure_upload(url, expect, file_param, file_path, params=None,
                     files=exploit_file, cookies=cookies)
 
 
+# pylint: disable=keyword-arg-before-vararg
 @track
 def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     """Check if resulting URL has a session ID exposed."""
@@ -439,7 +440,6 @@ def is_response_delayed(url, *args, **kwargs):
     Values taken from:
     https://www.nngroup.com/articles/response-times-3-important-limits/
     """
-
     max_response_time = 1
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
 
@@ -455,11 +455,13 @@ def is_response_delayed(url, *args, **kwargs):
     return True
 
 
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-branches
+# pylint: disable=keyword-arg-before-vararg
 @track
-def has_user_enumeration(url, user_field, user_list=None, fake_users=None,
-                         *args, **kwargs):
+def has_user_enumeration(url, user_field, user_list=None,
+                         fake_users=None, *args, **kwargs):
     """Check if URL has user enumeration."""
-
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
@@ -536,11 +538,11 @@ Details=%s%% of similar answers',
     return True
 
 
+# pylint: disable=keyword-arg-before-vararg
 @track
-def can_brute_force(url, ok_regex, user_field, pass_field, user_list=None,
-                    pass_list=None, *args, **kwargs):
+def can_brute_force(url, ok_regex, user_field, pass_field,
+                    user_list=None, pass_list=None, *args, **kwargs):
     """Check if URL allows brute forcing."""
-
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
@@ -556,7 +558,8 @@ def can_brute_force(url, ok_regex, user_field, pass_field, user_list=None,
     dataset = []
     for password in pass_list:
         for user_ds in users_dataset:
-            _datas = http_helper.create_dataset(pass_field, [password], user_ds)
+            _datas = http_helper.create_dataset(pass_field, [password],
+                                                user_ds)
             dataset.append(_datas[0])
 
     for _datas in dataset:

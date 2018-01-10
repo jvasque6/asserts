@@ -30,7 +30,5 @@ Version preeliminar
 
 @track
 def soap_is_enable():
-    """
-    Verifica si el WS SOAP esta habilitado
-    """
+    """Verifica si el WS SOAP esta habilitado."""
     pass

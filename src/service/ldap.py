@@ -22,11 +22,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 @track
 def is_anonymous_bind_allowed(ldap_server, port=PORT):
-    """Function is_anonymous_bind_allowed.
-
-    Function to check whether anonymous binding is allowed on
-    LDAP server
-    """
+    """Check whether anonymous binding is allowed on LDAP server."""
     result = True
 
     try:

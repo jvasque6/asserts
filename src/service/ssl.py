@@ -28,12 +28,12 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 @track
 def is_cert_cn_not_equal_to_site(site, port=PORT):
-    """Function to check whether cert cn is equal to site."""
+    """Check whether cert cn is equal to site."""
     result = True
     has_sni = False
     try:
         cert = ssl.get_server_certificate((site, port))
-    except:
+    except ssl.SSLError:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -80,11 +80,11 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
 
 @track
 def is_cert_inactive(site, port=PORT):
-    """Function to check whether cert is still valid."""
+    """Check whether cert is still valid."""
     result = True
     try:
         cert = ssl.get_server_certificate((site, port))
-    except:
+    except ssl.SSLError:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -120,13 +120,13 @@ after: %s, Current time: %s',
 
 @track
 def is_cert_validity_lifespan_unsafe(site, port=PORT):
-    """Function to check whether cert lifespan is safe."""
+    """Check whether cert lifespan is safe."""
     max_validity_days = 365
 
     result = True
     try:
         cert = ssl.get_server_certificate((site, port))
-    except:
+    except ssl.SSLError:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -165,7 +165,7 @@ valid before: %s, Not valid after: %s',
 
 @track
 def is_pfs_disabled(site, port=PORT):
-    """Function to check whether PFS is enabled."""
+    """Check whether PFS is enabled."""
     packet = '<packet>SOME_DATA</packet>'
 
     ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:\
@@ -225,7 +225,7 @@ def is_pfs_disabled(site, port=PORT):
 
 @track
 def is_sslv3_enabled(site, port=PORT):
-    """Function to check whether SSLv3 suites are enabled."""
+    """Check whether SSLv3 suites are enabled."""
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -267,12 +267,11 @@ def is_sslv3_enabled(site, port=PORT):
 
 @track
 def is_sha1_used(site, port=PORT):
-    """Function to check whether cert use sha1 in their signature algorithm"""
-
+    """Check whether cert use sha1 in their signature algorithm."""
     result = True
     try:
         cert = ssl.get_server_certificate((site, port))
-    except:
+    except ssl.SSLError:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -308,7 +307,7 @@ Details= Signature Algorithm: %s',
 
 @track
 def is_tlsv1_enabled(site, port=PORT):
-    """Function to check whether TLSv1 suites are enabled."""
+    """Check whether TLSv1 suites are enabled."""
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

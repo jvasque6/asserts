@@ -106,9 +106,8 @@ def is_dynupdate_enabled(domain, nameserver):
 
 @track
 def has_cache_poison(domain, nameserver):
-    """Function has_cache_poison.
+    """Check if cache poisoning is possible.
 
-    Checks if cache poisoning is possible.
     The check is made by looking DNSSEC records
     """
     myresolver = dns.resolver.Resolver()
@@ -144,9 +143,8 @@ Details=%s:%s', show_close(), domain, nameserver)
 
 @track
 def has_cache_snooping(nameserver):
-    """Function has_cache_snooping.
+    """Check if nameserver has cache snooping.
 
-    Checks if nameserver has cache snooping.
     (supports non recursive queries)
     """
     domain = 'google.com'
@@ -185,10 +183,7 @@ Details=%s:%s', show_close(), domain, nameserver)
 
 @track
 def has_recursion(nameserver):
-    """Function has_recursion.
-
-    Checks if nameserver has recursion enabled.
-    """
+    """Check if nameserver has recursion enabled."""
     domain = 'google.com'
     name = dns.name.from_text(domain)
 

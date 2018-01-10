@@ -26,40 +26,40 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 LOGGER.setLevel(logging.DEBUG)
 
 # create console handler and set level to debug
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-tmp_dir = tempfile.gettempdir()
-file_handler = logging.FileHandler(
-    os.path.join(tmp_dir, 'fluidasserts.log')
+CONSOLE_HANDLER = logging.StreamHandler()
+CONSOLE_HANDLER.setLevel(logging.DEBUG)
+TMP_DIR = tempfile.gettempdir()
+FILE_HANDLER = logging.FileHandler(
+    os.path.join(TMP_DIR, 'fluidasserts.log')
     )
-file_handler.setLevel(logging.DEBUG)
+FILE_HANDLER.setLevel(logging.DEBUG)
 
-# create formatter
-formatter = logging.Formatter(
+# create FORMATTER
+FORMATTER = logging.Formatter(
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
-# add formatter to console_handler
-console_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
+# add FORMATTER to CONSOLE_HANDLER
+CONSOLE_HANDLER.setFormatter(FORMATTER)
+FILE_HANDLER.setFormatter(FORMATTER)
 
 # add handlers to LOGGER
-LOGGER.addHandler(console_handler)
-LOGGER.addHandler(file_handler)
+LOGGER.addHandler(CONSOLE_HANDLER)
+LOGGER.addHandler(FILE_HANDLER)
 
 
 # Set __version__
 try:
-    _dist = get_distribution('fluidasserts')
+    _DIST = get_distribution('fluidasserts')
     # Normalize case for Windows systems
-    dist_loc = os.path.normcase(_dist.location)
-    here = os.path.normcase(__file__)
-    if not here.startswith(os.path.join(dist_loc, 'fluidasserts')):
+    DIST_LOC = os.path.normcase(_DIST.location)
+    HERE = os.path.normcase(__file__)
+    if not HERE.startswith(os.path.join(DIST_LOC, 'fluidasserts')):
         # not installed, but there is another version that *is*
         raise DistributionNotFound
 except DistributionNotFound:
     __version__ = 'Please install this project with setup.py'
 else:
-    __version__ = _dist.version
+    __version__ = _DIST.version
 
 
 PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
@@ -78,13 +78,14 @@ USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
 
 try:
     print('Loading modules...')
-    mp = mixpanel.Mixpanel(PROJECT_TOKEN)
-    mp.people_set(CLIENT_ID, {'$email': USER_EMAIL})
+    MP = mixpanel.Mixpanel(PROJECT_TOKEN)
+    MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
     pass
 
 
 def show_close(message=None):
+    """Show close message."""
     if message is None:
         text_to_show = 'CLOSE'
     else:
@@ -93,6 +94,7 @@ def show_close(message=None):
 
 
 def show_open(message=None):
+    """Show open message."""
     if message is None:
         text_to_show = 'OPEN'
     else:
@@ -101,6 +103,7 @@ def show_open(message=None):
 
 
 def show_unknown(message=None):
+    """Show unknown message."""
     if message is None:
         text_to_show = 'UNKNOWN'
     else:
