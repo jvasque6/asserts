@@ -117,8 +117,9 @@ disable=coerce-builtin,\
         hex-method,\
         old-ne-operator,\
         unichr-builtin,\
-        next-method-called
-
+        next-method-called,\
+	superfluous-parens,\
+	missing-super-argument
 
 [REPORTS]
 

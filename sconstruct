@@ -83,9 +83,7 @@ env.Alias('bdist', bdist_results)
 pylint_results = ['#build/lint/pylint.txt']
 env.Command(
     source=[source_files, test_files, '#conf/pylintrc'],
-    action=['tox -c conf/tox.ini -- \
-                 -pylint --rcfile=conf/pylintrc *.py test src 2>&1 | \
-                     tee -a build/lint/pylint.txt'],
+    action=['tox -c conf/tox.ini -e lint'],
     target=pylint_results,
 )
 env.Alias('pylint', pylint_results)
@@ -130,8 +128,7 @@ SConscript('#doc/sconscript', exports=['env', 'source_files', 'deps_results'])
 #
 env.Alias('dist', [sdist_results,
                    bdist_results])
-env.Alias('lint', [docst_results,
-                   pylint_results])
+env.Alias('lint', [pylint_results])
 
 
 # Solo construccion explicita
