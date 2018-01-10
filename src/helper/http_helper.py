@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo de ayuda HTTP."""
+"""HTTP helper."""
 
 # standard imports
 import logging
@@ -57,7 +57,7 @@ class HTTPSession(object):
 
     def __init__(self, url, params=None, headers=None, method=None,
                  cookies=None, data='', files=None, auth=None, stream=False):
-        """Metodo constructor de la clase."""
+        """Construct method."""
         self.url = url
         self.params = params
         self.headers = headers
@@ -84,7 +84,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         self.do_request()
 
     def do_request(self):
-        """Realiza una peticion HTTP."""
+        """Do HTTP request."""
         try:
             if self.method == 'PUT':
                 ret = requests.put(self.url, verify=False,
@@ -136,7 +136,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             raise
 
     def formauth_by_statuscode(self, code):
-        """Autentica y verifica autenticacion usando codigo HTTP."""
+        """Authenticate using status code as verification."""
         self.headers['Content-Type'] = \
             'application/x-www-form-urlencoded'
         self.headers['Accept'] = '*/*'
@@ -165,7 +165,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         return http_req
 
     def formauth_by_response(self, text):
-        """Autentica y verifica autenticacion usando regex."""
+        """Authenticate using regex as verification."""
         self.headers['Content-Type'] = \
             'application/x-www-form-urlencoded'
 
@@ -195,19 +195,19 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         return http_req
 
     def basic_auth(self, user, passw):
-        """Autentica usando BASIC."""
+        """Authenticate using BASIC."""
         self.__do_auth('BASIC', user, passw)
 
     def ntlm_auth(self, user, passw):
-        """Autentica usando NTLM."""
+        """Authenticate using NTLM."""
         self.__do_auth('NTLM', user, passw)
 
     def oauth_auth(self, user, passw):
-        """Autentica usando OAUTH."""
+        """Authenticate using OAUTH."""
         self.__do_auth('OAUTH', user, passw)
 
     def __do_auth(self, method, user, passw):
-        """Autentica usando HTTP."""
+        """Authenticate using HTTP."""
         if method == 'BASIC':
             self.auth = (user, passw)
         elif method == 'NTLM':
@@ -236,7 +236,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                         'Not present')
 
     def get_html_value(self, field_type, field_name, field='value', enc=False):
-        """Obtiene un valor de un campo HTML."""
+        """Get a value from a HTML field."""
         soup = BeautifulSoup(self.response.text, 'html.parser')
         text_to_get = soup.find(field_type,
                                 {'name': field_name})[field]
@@ -246,7 +246,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
 
 def create_dataset(field, value_list, query_string):
-    """Crea set de datos de acuerdo a valores en lista."""
+    """Create dataset from values on list."""
     dataset = []
     if isinstance(query_string, str):
         data_dict = dict(parse_qsl(query_string))

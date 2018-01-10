@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Decoradores de FLUIDAsserts."""
+"""FLUIDAsserts decorators."""
 
 import functools
 import mixpanel

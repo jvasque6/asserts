@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificaciones de Captcha."""
+"""CAPTCHA module."""
 
 
 # standard imports
@@ -24,7 +24,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 @track
 def is_insecure_in_image(image, expected_text):
-    """Verifica si la imagen es un captcha inseguro."""
+    """Check if the image is an insecure CAPTCHA."""
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
         LOGGER.info('%s: Captcha is insecure, \
@@ -37,7 +37,7 @@ Details: Expected=%s, Reversed=%s', show_close(), expected_text, result)
 
 @track
 def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
-    """Verifica si la URL es un captcha inseguro."""
+    """Check if the URL is an insecure CAPTCHA."""
     session = http_helper.HTTPSession(image_url, stream=True, *args, **kwargs)
     image = session.response.raw
     result = pytesseract.image_to_string(Image.open(image))

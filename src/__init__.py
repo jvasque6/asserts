@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Paquete format de FLUIDAsserts.
-
-Config
-"""
+"""FLUIDAsserts main package."""
 
 # standard imports
 import logging.config

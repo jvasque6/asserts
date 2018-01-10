@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo WinRM.
+"""WinRM helper.
 
-Se debe ejecutar en el servidor:
+This must be run on the target server:
 winrm qc
 winrm get winrm/config/service
 winrm set winrm/config/service @{AllowUnencrypted="true"}

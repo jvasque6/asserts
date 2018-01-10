@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo SSH."""
+"""SSH helper."""
 
 # standard imports
 import os

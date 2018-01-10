@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Modulo OS Windows Server."""
+"""Windows Server OS module."""
 
 # standard imports
 import logging

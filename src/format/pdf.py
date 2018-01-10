@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del formato PDF.
-
-Este modulo permite verificar vulnerabilidades que se encuentran en un archivo
-con formato PDF.  Algunas de ellas son:
-
-    * Metadatos docinfo,
-    * Metadatos XDF.
-"""
+"""PDF module."""
 
 # standard imports
 import logging
@@ -24,7 +17,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_attribute(filename, metaname):
-    """Verifica si un atributo docinfo se encuentra en el PDF."""
+    """Check if docinfo attribute is present."""
     input_pdf = PdfFileReader(open(filename, 'rb'))
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
@@ -41,19 +34,19 @@ def __has_attribute(filename, metaname):
 
 @track
 def has_creator(filename):
-    """Verifica si el PDF tiene el atributo creator en la seccion docinfo."""
+    """Check if creator attribute is present in docinfo section."""
     return __has_attribute(filename, 'creator')
 
 
 @track
 def has_producer(filename):
-    """Verifica si el PDF tiene el atributo producer en la seccion docinfo."""
+    """Check if producer attribute is present in docinfo section."""
     return __has_attribute(filename, 'producer')
 
 
 @track
 def has_author(filename):
-    """Verifica si el PDF tiene el atributo author en la seccion docinfo."""
+    """Check if author attribute is present in docinfo section."""
     return __has_attribute(filename, 'author')
 
 

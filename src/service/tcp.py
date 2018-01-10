@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo TCP.
+"""TCP module.
 
-Este modulo permite verificar vulnerabilidades propias de TCP como:
-
-    * El puerto se encuentra abierto
+This module allows to check TCP especific vulnerabilities
 """
 
 # standard imports

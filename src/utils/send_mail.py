@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Envia email de notificacion."""
+"""Send notification email."""
 
 import mandrill
 

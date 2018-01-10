@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificaciones de Cookies HTTP.
-
-Este modulo deberia considerarse su anexion al verificador de http.py pues como
-tal las cookies son parte de dicho protocolo.
-"""
+"""HTTP Cookie module."""
 
 
 # standard imports

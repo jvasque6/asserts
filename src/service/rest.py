@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del webservices expuestos o vulnerables."""
+"""REST module."""
 
 # standard imports
 import logging

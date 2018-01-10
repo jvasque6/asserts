@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Modulo LDAP."""
+"""LDAP module."""
 
 # standard imports
 import logging

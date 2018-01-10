@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Modulo SSL."""
+"""SSL module."""
 
 # standard imports
 from __future__ import absolute_import

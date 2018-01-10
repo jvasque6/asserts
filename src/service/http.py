@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo HTTP.
+"""HTTP module.
 
-Este modulo permite verificar vulnerabilidades propias de HTTP como:
-
-    * Transporte plano de informacion,
-    * Headers de seguridad no establecidos,
-    * Cookies no generadas de forma segura,
+This module allows to check HTTP especific vulnerabilities
 """
 
 # standard imports

@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo SMTP.
+"""SMTP module.
 
-Este modulo permite verificar vulnerabilidades propias de SMTP como:
-
-    * Comando VRFY activo,
+This module allows to check SMTP especific vulnerabilities
 """
 
 # standard imports
@@ -26,7 +24,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 @track
 def has_vrfy(ip_address, port=PORT):
-    """Tiene habilitado comando VRFY."""
+    """Has VRFY command enabled."""
     server = smtplib.SMTP(ip_address, port)
     vrfy = server.verify('root')
 

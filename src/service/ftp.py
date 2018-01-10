@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para verificacion del protocolo FTP.
+"""FTP module.
 
-Este modulo permite verificar vulnerabilidades propias de FTP como:
-
-    * is_a_valid_user: Usuario puede autenticarse,
-    * is_admin_enabled: Administrador puede autenticarse,
-    * is_anonymous_enabled: Conexion al servicio de forma anonima,
-    * user_without_password: Usuario sin clave puede autenticarse,
-
-Futuras funciones incluyen:
-
-    * is_encrypted: Transporte de informacion de forma plana,
-    * has_advisory: Tiene advisory de conexion ante login,
+This module allows to check FTP especific vulnerabilities
 """
 
 # standard imports
@@ -40,7 +30,7 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 
 @track
 def is_a_valid_user(ip_address, username, password, port=PORT):
-    """Determina via FTP si un usuario es valido o no."""
+    """Check if given credencials are valid in FTP service."""
     result = False
     try:
         ftp = FTP()
@@ -61,19 +51,19 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
 
 @track
 def user_without_password(ip_address, username):
-    """Determina si el usuario no tiene clave."""
+    """Check if a user can login without password."""
     return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
 @track
 def is_anonymous_enabled(ip_address):
-    """Determina si un servidor FTP tiene habilitado conexion anonima."""
+    """Check if FTP service allows anonymous login."""
     return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
 
 
 @track
 def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
-    """Determina si un servidor FTP permite autenticar al administrador."""
+    """Check if FTP service allows admin login."""
     return is_a_valid_user(ip_address, username, password)
 
 
