@@ -30,5 +30,5 @@ HARD_PORT = 25
                          indirect=True)
 # pylint: disable=unused-argument
 def test_has_vrfy_open(run_mock):
-    """Funcion VRFY habilitada?"""
+    """Funcion VRFY habilitada?."""
     assert smtp.has_vrfy(CONTAINER_IP, WEAK_PORT)

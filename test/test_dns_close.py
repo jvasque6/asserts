@@ -32,29 +32,29 @@ HARD_PORT = 53
                          indirect=True)
 # pylint: disable=unused-argument
 def test_is_xfr_enabled_close(run_mock):
-    """Transferencia de zonas habilitado en server?"""
+    """Transferencia de zonas habilitado en server?."""
     assert not dns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
 def test_is_dynupdates_enabled_close(run_mock):
-    """Actualizacion de zonas habilitado en server?"""
+    """Actualizacion de zonas habilitado en server?."""
     assert not dns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
 def test_has_cache_poison_close(run_mock):
-    """Server vulnerable a cache poison?"""
+    """Server vulnerable a cache poison?."""
     assert not dns.has_cache_poison(TEST_ZONE, CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
 def test_has_cache_snooping_close(run_mock):
-    """Server vulnerable a cache snooping?"""
+    """Server vulnerable a cache snooping?."""
     assert not dns.has_cache_snooping(CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
 def test_has_recursion_close(run_mock):
-    """Server vulnerable a cache snooping?"""
+    """Server vulnerable a cache snooping?."""
     assert not dns.has_recursion(CONTAINER_IP)

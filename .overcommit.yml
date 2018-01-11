@@ -157,16 +157,17 @@ PreCommit:
     quiet: true
 
   FixMe:
-    enabled: false
+    enabled: true
     description: 'Check for "token" strings'
     required_executable: 'grep'
     flags: ['-IEHnw']
-    keywords: ['BROKEN', 'BUG', 'ERROR',
+    keywords: ['BROKEN', 'BUG',
                'FIXME', 'HACK', 'NOTE', 'OPTIMIZE',
                'REVIEW', 'TODO', 'WTF', 'XXX']
+    include: '**/*.py'
 
   ForbiddenBranches:
-    enabled: false
+    enabled: true
     description: 'Check for commit to forbidden branch'
     quiet: true
     branch_patterns: ['master']
@@ -184,25 +185,28 @@ PreCommit:
     flags: ['-IHn', "^<<<<<<<[ \t]"]
 
   Pep257:
-    enabled: false
+    enabled: true
     description: 'Analyze docstrings with pep257'
     required_executable: 'pep257'
     install_command: 'pip install pep257'
-    include: '**/*.py'
+    include: 'src/**/*.py'
+    include: 'test/**/*.py'
 
   Pep8:
-    enabled: false
-    description: 'Analyze with pep8'
-    required_executable: 'pep8'
-    install_command: 'pip install pep8'
-    include: '**/*.py'
+    enabled: true
+    description: 'Analyze with pydocstyle'
+    required_executable: 'pydocstyle'
+    install_command: 'pip install pydocstyle'
+    include: 'src/**/*.py'
+    include: 'test/**/*.py'
 
   Pyflakes:
-    enabled: false
+    enabled: true
     description: 'Analyze with pyflakes'
     required_executable: 'pyflakes'
     install_command: 'pip install pyflakes'
-    include: '**/*.py'
+    include: 'src/**/*.py'
+    include: 'test/**/*.py'
 
   Pylint:
     enabled: true

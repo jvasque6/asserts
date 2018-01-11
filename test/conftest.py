@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo de configuración raiz de las pruebas de unidad.
-
-Este modulo contiene los diferentes componentes reutilizables que requieren
-las diferentes suites de pruebas.
+"""Unit test config module.
 
 https://pytest.org/dev/fixture.html
 """

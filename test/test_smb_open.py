@@ -30,6 +30,6 @@ SMB_PORT = 445
                          indirect=True)
 # pylint: disable=unused-argument
 def test_is_anonymous_enabled_open(run_mock):
-    """Conexion anonima habilitada?"""
+    """Conexion anonima habilitada?."""
     time.sleep(5)
     assert smb.is_anonymous_enabled(CONTAINER_IP)

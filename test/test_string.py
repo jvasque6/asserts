@@ -31,22 +31,22 @@ STRONG_SSID = 'S3cur3SSID'
 
 
 def test_user_password_open():
-    """Weak user password?"""
+    """Weak user password?."""
     assert string.is_user_password_insecure(WEAK_USER_PASS)
 
 
 def test_system_password_open():
-    """Weak system password?"""
+    """Weak system password?."""
     assert string.is_system_password_insecure(WEAK_SYSTEM_PASS)
 
 
 def test_otp_token_open():
-    """Weak OTP token?"""
+    """Weak OTP token?."""
     assert string.is_otp_token_insecure(WEAK_OTP)
 
 
 def test_ssid_insecure_open():
-    """Weak SSID string?"""
+    """Weak SSID string?."""
     assert string.is_ssid_insecure(WEAK_SSID)
 
 
@@ -56,20 +56,20 @@ def test_ssid_insecure_open():
 
 
 def test_user_password_close():
-    """Strong user password?"""
+    """Strong user password?."""
     assert not string.is_user_password_insecure(STRONG_USER_PASS)
 
 
 def test_system_password_close():
-    """Strong system password?"""
+    """Strong system password?."""
     assert not string.is_system_password_insecure(STRONG_SYSTEM_PASS)
 
 
 def test_otp_token_close():
-    """Strong OTP token?"""
+    """Strong OTP token?."""
     assert not string.is_otp_token_insecure(STRONG_OTP)
 
 
 def test_ssid_insecure_close():
-    """Strong SSID string?"""
+    """Strong SSID string?."""
     assert not string.is_ssid_insecure(STRONG_SSID)

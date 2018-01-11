@@ -77,7 +77,7 @@ def get_bwapp_cookies():
                          indirect=True)
 # pylint: disable=unused-argument
 def test_a1_sqli_close(run_mock):
-    """App vulnerable a SQLi?"""
+    """App vulnerable a SQLi?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -90,7 +90,7 @@ def test_a1_sqli_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a1_os_injection_close(run_mock):
-    """App vulnerable a command injection?"""
+    """App vulnerable a command injection?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -108,7 +108,7 @@ def test_a1_os_injection_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a1_php_injection_close(run_mock):
-    """App vulnerable a PHP injection?"""
+    """App vulnerable a PHP injection?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -126,7 +126,7 @@ def test_a1_php_injection_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a1_hpp_close(run_mock):
-    """App vulnerable a HTTP Parameter Polluiton?"""
+    """App vulnerable a HTTP Parameter Polluiton?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -140,7 +140,7 @@ def test_a1_hpp_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a1_insecure_upload_close(run_mock):
-    """App vulnerable a insecure upload?"""
+    """App vulnerable a insecure upload?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -160,7 +160,7 @@ def test_a1_insecure_upload_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a2_sessionid_exposed_close(run_mock):
-    """Session ID expuesto?"""
+    """Session ID expuesto?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -174,14 +174,14 @@ def test_a2_sessionid_exposed_close(run_mock):
 
 @pytest.mark.usefixtures('mock_http')
 def test_a2_session_fixation_close():
-    """Session fixation posible?"""
+    """Session fixation posible?."""
     assert http.has_session_fixation(
         '%s/session_fixation_close' % (BASE_URL), 'Login required')
 
 
 # pylint: disable=unused-argument
 def test_a3_xss_close(run_mock):
-    """App vulnerable a XSS?"""
+    """App vulnerable a XSS?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -198,7 +198,7 @@ def test_a3_xss_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a4_insecure_dor_close(run_mock):
-    """App vulnerable a direct object reference?"""
+    """App vulnerable a direct object reference?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -216,7 +216,7 @@ def test_a4_insecure_dor_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a7_dirtraversal_close(run_mock):
-    """App vulnerable a directory traversal?"""
+    """App vulnerable a directory traversal?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -234,7 +234,7 @@ def test_a7_dirtraversal_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a7_lfi_close(run_mock):
-    """App vulnerable a LFI?"""
+    """App vulnerable a LFI?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -251,7 +251,7 @@ def test_a7_lfi_close(run_mock):
 
 # pylint: disable=unused-argument
 def test_a8_csrf_close(run_mock):
-    """App vulnerable a Cross-Site Request Forgery?"""
+    """App vulnerable a Cross-Site Request Forgery?."""
     bwapp_cookie = get_bwapp_cookies()
     bwapp_cookie['security_level'] = '2'
 
@@ -269,53 +269,53 @@ def test_a8_csrf_close(run_mock):
 
 @pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():
-    """Header Access-Control-Allow-Origin establecido?"""
+    """Header Access-Control-Allow-Origin establecido?."""
     assert not http.is_header_access_control_allow_origin_missing(
         '%s/access_control_allow_origin/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_cache_control_close():
-    """Header Cache-Control establecido?"""
+    """Header Cache-Control establecido?."""
     assert not http.is_header_cache_control_missing(
         '%s/cache_control/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_hsts_close():
-    """Header Strict-Transport-Security establecido?"""
+    """Header Strict-Transport-Security establecido?."""
     assert not http.is_header_hsts_missing(
         '%s/hsts/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_basic_close():
-    """Auth BASIC no habilitado?"""
+    """Auth BASIC no habilitado?."""
     assert not http.is_basic_auth_enabled(
         '%s/basic/ok' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_put_close():
-    """HTTP PUT Not Allowed"""
+    """HTTP PUT Not Allowed."""
     assert not http.has_put_method('%s/put_close' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_trace_close():
-    """HTTP TRACE Not Allowed"""
+    """HTTP TRACE Not Allowed."""
     assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_delete_close():
-    """HTTP DELETE Not Allowed"""
+    """HTTP DELETE Not Allowed."""
     assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_notfound_string_close():
-    """Expected string not found?"""
+    """Expected string not found?."""
     url = '%s/notfound' % (BASE_URL)
     expected = 'Expected string'
     assert not http.has_text(url, expected)
@@ -323,7 +323,7 @@ def test_notfound_string_close():
 
 @pytest.mark.usefixtures('mock_http')
 def test_found_string_close():
-    """Expected string not found?"""
+    """Expected string not found?."""
     url = '%s/expected' % (BASE_URL)
     expected = 'Expected string'
     assert not http.has_not_text(url, expected)
@@ -331,7 +331,7 @@ def test_found_string_close():
 
 @pytest.mark.usefixtures('mock_http')
 def test_userenum_post_close():
-    """Enumeracion de usuarios posible?"""
+    """Enumeracion de usuarios posible?."""
     data = 'username=pepe&password=grillo'
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (MOCK_SERVICE),
@@ -340,7 +340,7 @@ def test_userenum_post_close():
 
 @pytest.mark.usefixtures('mock_http')
 def test_userenum_get_close():
-    """Enumeracion de usuarios posible?"""
+    """Enumeracion de usuarios posible?."""
     data = 'username=pepe&password=grillo'
     assert not http.has_user_enumeration(
         '%s/userenum_get/ok' % (MOCK_SERVICE),
@@ -349,7 +349,7 @@ def test_userenum_get_close():
 
 @pytest.mark.usefixtures('mock_http')
 def test_bruteforce_close():
-    """Bruteforce posible?"""
+    """Bruteforce posible?."""
     data = 'username=pepe&password=grillo'
     assert not http.can_brute_force(
         '%s/bruteforce/ok' % (MOCK_SERVICE),
@@ -363,13 +363,13 @@ def test_bruteforce_close():
 
 @pytest.mark.usefixtures('mock_http')
 def test_responsetime_close():
-    """Tiempo de respuesta aceptable?"""
+    """Tiempo de respuesta aceptable?."""
     assert not http.is_response_delayed(
         '%s/responsetime/ok' % (MOCK_SERVICE))
 
 
 @pytest.mark.usefixtures('mock_http')
 def test_dirlisting_close():
-    """Dirlisting habilitado?"""
+    """Dirlisting habilitado?."""
     assert not http.has_dirlisting(
         '%s/dirlisting/ok' % (MOCK_SERVICE))

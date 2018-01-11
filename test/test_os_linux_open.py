@@ -34,7 +34,7 @@ OS_PORT = 22
                          indirect=True)
 # pylint: disable=unused-argument
 def test_min_priv_enabled_open(run_mock):
-    """Secure umask?"""
+    """Secure umask?."""
     assert linux_generic.is_os_min_priv_disabled(CONTAINER_IP,
                                                  NONPRIV_USER,
                                                  NONPRIV_PASS)
@@ -42,7 +42,7 @@ def test_min_priv_enabled_open(run_mock):
 
 # pylint: disable=unused-argument
 def test_os_sudo_enabled_open(run_mock):
-    """sudo enabled?"""
+    """Sudo enabled?."""
     assert linux_generic.is_os_sudo_disabled(CONTAINER_IP,
                                              NONPRIV_USER,
                                              NONPRIV_PASS)
@@ -50,7 +50,7 @@ def test_os_sudo_enabled_open(run_mock):
 
 # pylint: disable=unused-argument
 def test_compilers_installed_open(run_mock):
-    """Compilers installed?"""
+    """Compiler installed?."""
     assert linux_generic.is_os_compilers_installed(CONTAINER_IP,
                                                    NONPRIV_USER,
                                                    NONPRIV_PASS)
@@ -58,7 +58,7 @@ def test_compilers_installed_open(run_mock):
 
 # pylint: disable=unused-argument
 def test_antimalware_installed_open(run_mock):
-    """Antimalware installed?"""
+    """Antimalware installed?."""
     assert linux_generic.is_os_antimalware_not_installed(CONTAINER_IP,
                                                          NONPRIV_USER,
                                                          NONPRIV_PASS)
@@ -66,7 +66,7 @@ def test_antimalware_installed_open(run_mock):
 
 # pylint: disable=unused-argument
 def test_remote_admin_enabled_open(run_mock):
-    """Remote admin enabled?"""
+    """Remote admin enabled?."""
     assert linux_generic.is_os_remote_admin_enabled(CONTAINER_IP,
                                                     NONPRIV_USER,
                                                     NONPRIV_PASS)

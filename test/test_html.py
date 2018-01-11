@@ -4,9 +4,6 @@
 
 Este modulo contiene las funciones necesarias para probar si el modulo de
 HTML se encuentra adecuadamente implementado.
-
-Autor: Juan Escobar
-Email: jescobar@fluid.la
 """
 
 # standard imports
@@ -18,7 +15,7 @@ from fluidasserts.format import html
 
 
 def test_form_autocomplete_open():
-    """funcion test_form_autocomplete_open
+    """Funcion test_form_autocomplete_open.
 
     Verifica si el atributo autocomplete=off se encuentra en el
     codigo HTML de vulnerable.html
@@ -29,7 +26,7 @@ def test_form_autocomplete_open():
 
 
 def test_form_autocomplete_close():
-    """funcion test_form_autocomplete_close
+    """Funcion test_form_autocomplete_close.
 
     Verifica si el atributo autocomplete=off se encuentra en el
     codigo HTML de non-vulnerable.html?
@@ -40,7 +37,7 @@ def test_form_autocomplete_close():
 
 
 def test_is_cacheable_open():
-    """funcion test_is_cacheable_open
+    """Funcion test_is_cacheable_open.
 
     Validar si las etiquetas que evitan que se almacene la pagina en
     memoria cache estan definidas en el codigo HTML de
@@ -50,7 +47,7 @@ def test_is_cacheable_open():
 
 
 def test_is_cacheable_close():
-    """funcion test_is_cacheable_close
+    """Funcion test_is_cacheable_close.
 
     Validar si las etiquetas que evitan que se almacene la pagina en
     memoria cache estan definidas en el codigo HTML de

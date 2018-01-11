@@ -22,7 +22,7 @@ WEAK_CAPTCHA_IMG = ['test/provision/captcha/weak.jpg', 'WORDS']
 
 
 def test_is_insecure_in_image_open():
-    """Insecure captcha open"""
+    """Insecure captcha open."""
     assert captcha.is_insecure_in_image(WEAK_CAPTCHA_IMG[0],
                                         WEAK_CAPTCHA_IMG[1])
 
@@ -33,6 +33,6 @@ def test_is_insecure_in_image_open():
 
 
 def test_is_insecure_in_image_close():
-    """Insecure captcha close"""
+    """Insecure captcha close."""
     assert not captcha.is_insecure_in_image(SECURE_CAPTCHA_IMG[0],
                                             SECURE_CAPTCHA_IMG[1])

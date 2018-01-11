@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Servidor HTTP basado en Flask para exponer los mock HTTP.
+u"""Servidor HTTP basado en Flask para exponer los mock HTTP.
 
 Este modulo necesita un serio refactoring para reutilizar una logica
 mas simple y menos repetitiva donde puede operar sobre una estructura
@@ -188,7 +188,7 @@ def content_type_fail():
 
 @APP.route('/http/headers/expires/ok')
 def expires_ok():
-    """Header que define bien la expiración de la página en cache."""
+    u"""Header que define bien la expiración de la página en cache."""
     resp = Response('Expires OK')
     resp.headers['Expires'] = '0'
     return resp
@@ -196,7 +196,7 @@ def expires_ok():
 
 @APP.route('/http/headers/expires/fail')
 def expires_fail():
-    """Header que define mal la expiración de la página en cache."""
+    u"""Header que define mal la expiración de la página en cache."""
     resp = Response('Expires FAIL')
     resp.headers['Expires'] = 'Fail'
     return resp
