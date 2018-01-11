@@ -68,58 +68,7 @@ confidence=
 # --enable=similarities". If you want to run only the classes checker, but have
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
-disable=coerce-builtin,\
-        buffer-builtin,\
-        useless-suppression,\
-        xrange-builtin,\
-        standarderror-builtin,\
-        getslice-method,\
-        import-star-module-level,\
-        dict-view-method,\
-        map-builtin-not-iterating,\
-        reload-builtin,\
-        cmp-builtin,\
-        long-builtin,\
-        raising-string,\
-        zip-builtin-not-iterating,\
-        unicode-builtin,\
-        old-division,\
-        apply-builtin,\
-        reduce-builtin,\
-        execfile-builtin,\
-        print-statement,\
-        intern-builtin,\
-        parameter-unpacking,\
-        backtick,\
-        filter-builtin-not-iterating,\
-        indexing-exception,\
-        old-octal-literal,\
-        old-raise-syntax,\
-        raw_input-builtin,\
-        dict-iter-method,\
-        metaclass-assignment,\
-        input-builtin,\
-        coerce-method,\
-        cmp-method,\
-        using-cmp-argument,\
-        long-suffix,\
-        basestring-builtin,\
-        delslice-method,\
-        suppressed-message,\
-        oct-method,\
-        no-absolute-import,\
-        nonzero-method,\
-        file-builtin,\
-        setslice-method,\
-        round-builtin,\
-        unpacking-in-except,\
-        range-builtin-not-iterating,\
-        hex-method,\
-        old-ne-operator,\
-        unichr-builtin,\
-        next-method-called,\
-	superfluous-parens,\
-	missing-super-argument
+disable=superfluous-parens,missing-super-argument
 
 [REPORTS]
 
