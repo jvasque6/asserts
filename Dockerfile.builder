@@ -57,6 +57,7 @@ RUN apt-get update -qq && \
         pydocstyle \
         pep257 \
         twine \
+	mandrill \
         certifi && \
     gem install overcommit && \
     dpkg --clear-avail && \
