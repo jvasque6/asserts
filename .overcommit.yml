@@ -167,7 +167,7 @@ PreCommit:
     include: '**/*.py'
 
   ForbiddenBranches:
-    enabled: true
+    enabled: false
     description: 'Check for commit to forbidden branch'
     quiet: true
     branch_patterns: ['master']
