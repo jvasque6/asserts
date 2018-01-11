@@ -53,6 +53,8 @@ RUN apt-get update -qq && \
         flake8 \
         yamllint \
         pyflakes \
+	pycodestyle \
+	prospector \
         pydocstyle \
         pep257 \
         twine \

@@ -23,7 +23,7 @@ PORT = 21
 NULL_PASSWORD = ''
 ADMIN_USERNAME = 'root'
 ANONYMOUS_USERNAME = 'anonymous'
-ANONYMOUS_PASSWORD = 'anonymous'
+ANONYMOUS_PASS = 'anonymous'
 
 LOGGER = logging.getLogger('FLUIDAsserts')
 
@@ -58,7 +58,7 @@ def user_without_password(ip_address, username):
 @track
 def is_anonymous_enabled(ip_address):
     """Check if FTP service allows anonymous login."""
-    return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASSWORD)
+    return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASS)
 
 
 @track

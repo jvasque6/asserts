@@ -257,6 +257,19 @@ def create_dataset(field, value_list, query_string):
         dataset.append(data_dict.copy())
     return dataset
 
+def request_dataset(url, dataset_list, *args, **kwargs):
+    """Request datasets and gives the results in a list."""
+    kw_new = kwargs.copy()
+    fake_res = list()
+    for dataset in dataset_list:
+        if 'data' in kw_new:
+            kw_new['data'] = dataset
+        elif 'params' in kw_new:
+            kw_new['params'] = dataset
+        sess = HTTPSession(url, *args, **kw_new)
+        fake_res.append((len(sess.response.text),
+                         sess.response.status_code))
+    return fake_res
 
 def options_request(url):
     """HTTP OPTIONS request."""
