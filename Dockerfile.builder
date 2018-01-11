@@ -52,6 +52,9 @@ RUN apt-get update -qq && \
         pylint \
         flake8 \
         yamllint \
+        pyflakes \
+        pydocstyle \
+        pep257 \
         twine \
         certifi \
         colorama \
