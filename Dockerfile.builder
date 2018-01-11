@@ -54,13 +54,10 @@ RUN apt-get update -qq && \
         yamllint \
         pyflakes \
 	pycodestyle \
-	prospector \
         pydocstyle \
         pep257 \
         twine \
-        certifi \
-        colorama \
-        mandrill && \
+        certifi && \
     gem install overcommit && \
     dpkg --clear-avail && \
     apt-get clean
