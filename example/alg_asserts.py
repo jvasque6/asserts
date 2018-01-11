@@ -48,4 +48,3 @@ ssl.is_cert_validity_lifespan_unsafe(server, port=993)
 ssl.is_pfs_disabled(server, port=993)
 ssl.is_sslv3_enabled(server, port=993)
 ssl.is_tlsv1_enabled(server, port=993)
-

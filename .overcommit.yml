@@ -192,11 +192,11 @@ PreCommit:
     include: 'src/**/*.py'
     include: 'test/**/*.py'
 
-  Pep8:
+  Pycodestyle:
     enabled: true
-    description: 'Analyze with pydocstyle'
-    required_executable: 'pydocstyle'
-    install_command: 'pip install pydocstyle'
+    description: 'Analyze with pycodestyle'
+    required_executable: 'pycodestyle'
+    install_command: 'pip install pycodestyle'
     include: 'src/**/*.py'
     include: 'test/**/*.py'
 
