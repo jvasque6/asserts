@@ -355,12 +355,10 @@ def has_hpp(url, expect, *args, **kwargs):
 
 
 @track
-def has_insecure_upload(url, expect, file_param, file_path, params=None,
-                        data='', cookies=None):
+def has_insecure_upload(url, expect, file_param, file_path, *args, **kw):
     """Check insecure upload vuln."""
     exploit_file = {file_param: open(file_path)}
-    return has_text(url, expect, params=params, data=data,
-                    files=exploit_file, cookies=cookies)
+    return has_text(url, expect, files=exploit_file, *args, **kw)
 
 
 # pylint: disable=keyword-arg-before-vararg
