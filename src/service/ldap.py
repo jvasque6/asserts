@@ -2,7 +2,7 @@
 """LDAP module."""
 
 # standard imports
-import logging
+# None
 
 # 3rd party imports
 from ldap3 import Connection
@@ -12,13 +12,11 @@ from ldap3 import Server
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 PORT = 389
 SSL_PORT = 636
-
-LOGGER = logging.getLogger('FLUIDAsserts')
-
 
 @track
 def is_anonymous_bind_allowed(ldap_server, port=PORT):

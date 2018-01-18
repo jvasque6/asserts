@@ -6,7 +6,6 @@ This module allows to check HTTP especific vulnerabilities
 """
 
 # standard imports
-import logging
 import re
 
 # 3rd party imports
@@ -17,9 +16,8 @@ from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 # Regex taken from SQLmap project
 SQLI_ERROR_MSG = {

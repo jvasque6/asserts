@@ -3,7 +3,7 @@
 """REST module."""
 
 # standard imports
-import logging
+# None
 
 # third party imports
 # None
@@ -12,11 +12,10 @@ import logging
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 from fluidasserts.service import http
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

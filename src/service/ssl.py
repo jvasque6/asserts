@@ -4,7 +4,6 @@
 # standard imports
 from __future__ import absolute_import
 import datetime
-import logging
 import socket
 import ssl
 
@@ -19,11 +18,10 @@ from cryptography.x509.oid import NameOID
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 PORT = 443
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

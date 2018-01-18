@@ -4,7 +4,6 @@
 
 
 # standard imports
-import logging
 try:
     import Image
 except ImportError:
@@ -16,10 +15,9 @@ import pytesseract
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

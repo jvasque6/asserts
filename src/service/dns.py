@@ -3,7 +3,6 @@
 
 # standard imports
 from __future__ import absolute_import
-import logging
 
 # 3rd party imports
 import socket
@@ -23,9 +22,8 @@ from dns.zone import NoSOA
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

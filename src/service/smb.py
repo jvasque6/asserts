@@ -3,7 +3,6 @@
 
 # standard imports
 from __future__ import absolute_import
-import logging
 import socket
 
 # 3rd party imports
@@ -13,9 +12,8 @@ from smb import smb_structs
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __smb_connect(server=None, user=None, password=None,

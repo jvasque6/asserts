@@ -7,16 +7,15 @@
 # None
 
 # 3rd party imports
-import logging
+# None
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import LOGGER
 from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_not_http_only(cookie_name, url=None, cookie_jar=None):

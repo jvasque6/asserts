@@ -7,7 +7,6 @@ This module allows to check TCP especific vulnerabilities
 
 # standard imports
 from __future__ import absolute_import
-import logging
 import socket
 import ssl
 
@@ -17,9 +16,8 @@ import ssl
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

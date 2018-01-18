@@ -23,8 +23,8 @@ LOGGER = logging.getLogger('FLUIDAsserts')
 LOGGER.setLevel(logging.DEBUG)
 
 # create console handler and set level to debug
-CONSOLE_HANDLER = logging.StreamHandler()
-CONSOLE_HANDLER.setLevel(logging.DEBUG)
+CONSOLE_HANDLER = logging.StreamHandler(sys.stdout)
+CONSOLE_HANDLER.setLevel(logging.INFO)
 TMP_DIR = tempfile.gettempdir()
 FILE_HANDLER = logging.FileHandler(
     os.path.join(TMP_DIR, 'fluidasserts.log')

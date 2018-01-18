@@ -3,7 +3,6 @@
 """HTTP helper."""
 
 # standard imports
-import logging
 import re
 
 # 3rd party imports
@@ -25,6 +24,7 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import LOGGER
 
 # pylint: disable=W0212
 # pylint: disable=R0902
@@ -48,8 +48,6 @@ HDR_RGX = {
     'x-xss-protection': '^1(\\s*;\\s*mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$'
 }
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 class HTTPSession(object):
@@ -132,7 +130,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.cookies = ret.cookies
             return ret
         except requests.ConnectionError:
-            logging.error('Sin acceso a %s , %s', self.url, 'ERROR')
+            LOGGER.error('Sin acceso a %s , %s', self.url, 'ERROR')
             raise
 
     def formauth_by_statuscode(self, code):
@@ -277,7 +275,7 @@ def options_request(url):
     try:
         return requests.options(url, verify=False)
     except requests.ConnectionError:
-        logging.error('Sin acceso a %s , %s', url, 'ERROR')
+        LOGGER.error('Sin acceso a %s , %s', url, 'ERROR')
 
 
 def has_method(url, method):

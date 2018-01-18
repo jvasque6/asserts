@@ -3,7 +3,7 @@
 """PDF module."""
 
 # standard imports
-import logging
+# None
 
 # 3rd party imports
 from PyPDF2 import PdfFileReader
@@ -11,9 +11,8 @@ from PyPDF2 import PdfFileReader
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_attribute(filename, metaname):

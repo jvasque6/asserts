@@ -5,15 +5,13 @@
 This module allows to check LDAP especific vulnerabilities
 """
 # standard imports
-import logging
+# None
 
 # third party imports
 # None
 
 # local imports
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

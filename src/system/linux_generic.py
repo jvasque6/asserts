@@ -2,7 +2,7 @@
 """Linux OS module."""
 
 # standard imports
-import logging
+# None
 
 # 3rd party imports
 # None
@@ -10,10 +10,9 @@ import logging
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.helper.ssh_helper import ssh_exec_command
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

@@ -3,7 +3,6 @@
 """HTML check module."""
 
 # standard imports
-import logging
 import re
 
 # 3rd party imports
@@ -12,9 +11,8 @@ from bs4 import BeautifulSoup
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 def __has_attribute(filename, selector, tag, attr, value):

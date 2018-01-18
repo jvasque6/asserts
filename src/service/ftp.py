@@ -8,7 +8,6 @@ This module allows to check FTP especific vulnerabilities
 # standard imports
 from ftplib import error_perm
 from ftplib import FTP
-import logging
 
 # 3rd party imports
 # None
@@ -16,6 +15,7 @@ import logging
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.helper import banner_helper
 from fluidasserts.utils.decorators import track
 
@@ -24,8 +24,6 @@ NULL_PASSWORD = ''
 ADMIN_USERNAME = 'root'
 ANONYMOUS_USERNAME = 'anonymous'
 ANONYMOUS_PASS = 'anonymous'
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track

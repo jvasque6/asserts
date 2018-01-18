@@ -2,7 +2,6 @@
 """Windows Server OS module."""
 
 # standard imports
-import logging
 import re
 
 # 3rd party imports
@@ -11,10 +10,9 @@ import re
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import LOGGER
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 from fluidasserts.utils.decorators import track
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 # pylint: disable=W1401

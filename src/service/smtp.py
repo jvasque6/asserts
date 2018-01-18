@@ -6,7 +6,6 @@ This module allows to check SMTP especific vulnerabilities
 """
 
 # standard imports
-import logging
 import smtplib
 
 # 3rd party imports
@@ -16,10 +15,8 @@ import smtplib
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-
+from fluidasserts import LOGGER
 PORT = 25
-
-LOGGER = logging.getLogger('FLUIDAsserts')
 
 
 @track
