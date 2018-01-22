@@ -8,7 +8,6 @@ SMB se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-import time
 
 # 3rd party imports
 import pytest

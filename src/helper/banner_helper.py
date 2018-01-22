@@ -78,46 +78,6 @@ class FTPService(Service):
         return version
 
 
-class SSHService(Service):
-    """SSH Service definition."""
-
-    def __init__(self, port=22, is_active=False, is_ssl=False,
-                 payload=None):
-        """Return a new Service object."""
-        try:
-            super(SSHService, self).__init__(port=port,
-                                             is_active=is_active,
-                                             is_ssl=is_ssl,
-                                             payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
-
-    def get_version(self, banner):
-        """Get version."""
-        return banner
-
-
-class TELNETService(Service):
-    """TELNET Service definition."""
-
-    def __init__(self, port=23, is_active=False, is_ssl=False,
-                 payload=None):
-        """Return a new Service object."""
-        try:
-            super(TELNETService, self).__init__(port=port,
-                                                is_active=is_active,
-                                                is_ssl=is_ssl,
-                                                payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
-
-    def get_version(self, banner):
-        """Get version."""
-        return banner
-
-
 class SMTPService(Service):
     """SMTP Service definition."""
 
