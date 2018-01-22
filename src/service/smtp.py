@@ -45,14 +45,13 @@ def has_vrfy(ip_address, port=PORT):
 def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
     service = banner_helper.SMTPService(port)
-    banner = banner_helper.get_banner(service, ip_address)
-    version = banner_helper.get_version(service, banner)
+    version = service.get_version(ip_address)
 
     result = True
     if version:
         result = True
-        LOGGER.info('%s: SMTP version visible on %s:%s, Details=%s, %s',
-                    show_open(), ip_address, port, banner, version)
+        LOGGER.info('%s: SMTP version visible on %s:%s, Details=%s',
+                    show_open(), ip_address, port, version)
     else:
         result = False
         LOGGER.info('%s: SMTP version not visible on %s, Details=None',

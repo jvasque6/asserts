@@ -30,8 +30,6 @@ import certifi
 # local imports
 # none
 
-# pylint: disable=R0903
-
 
 class Service(object):
     """Abstract class of service."""
@@ -45,13 +43,42 @@ class Service(object):
         self.is_ssl = is_ssl
         self.payload = payload
 
+    def get_banner(self, server):
+        """Get the banner of the service on a given port of an IP address."""
+        banner = ''
+        try:
+            raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            if self.is_ssl:
+                sock = ssl.SSLSocket(sock=raw_socket,
+                                     ca_certs=certifi.where(),
+                                     cert_reqs=ssl.CERT_REQUIRED,
+                                     server_hostname=server)
+            else:
+                sock = raw_socket
+            sock.connect((server, self.port))
+            if self.payload is not None:
+                sent_bytes = sock.send(self.payload)
+                if sent_bytes < len(self.payload):
+                    raise socket.error
+            banner = sock.recv(5096)
+        except socket.error:
+            raw_socket = False
+            banner = ''
+        finally:
+            if raw_socket:
+                raw_socket.close()
+
+        return banner.rstrip()
+
     @abstractmethod
-    def get_version(self, banner):
+    def get_version(self, server):
         """Parse the banner.
 
         Return the product and version of the service.
         """
         pass
+
+
 
 
 class FTPService(Service):
@@ -69,8 +96,9 @@ class FTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, banner):
+    def get_version(self, server):
         """Get version."""
+        banner = self.get_banner(server)
         regex_match = re.search(b'220.(.*)', banner)
         version = regex_match.group(1)
         if len(version) < 3:
@@ -93,8 +121,9 @@ class SMTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, banner):
+    def get_version(self, server):
         """Get version."""
+        banner = self.get_banner(server)
         # pylint: disable=W1401
         regex_match = re.search(b'220.*ESMTP\s+(.*)', banner)
         if regex_match:
@@ -117,8 +146,9 @@ class HTTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, banner):
+    def get_version(self, server):
         """Get version."""
+        banner = self.get_banner(server)
         regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
         if regex_match:
@@ -141,54 +171,11 @@ class HTTPSService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, banner):
+    def get_version(self, server):
         """Get version."""
+        banner = self.get_banner(server)
         regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
         if regex_match:
             return regex_match.group(1)
         return None
-
-
-def service_connect(server, port, is_ssl, payload=None):
-    """Get the banner of the service on a given port of an IP address."""
-    banner = ''
-    try:
-        raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        if is_ssl:
-            sock = ssl.SSLSocket(sock=raw_socket,
-                                 ca_certs=certifi.where(),
-                                 cert_reqs=ssl.CERT_REQUIRED,
-                                 server_hostname=server)
-        else:
-            sock = raw_socket
-        sock.connect((server, port))
-        if payload is not None:
-            sent_bytes = sock.send(payload)
-            if sent_bytes < len(payload):
-                raise socket.error
-        banner = sock.recv(5096)
-    except socket.error:
-        raw_socket = False
-        banner = ''
-    finally:
-        if raw_socket:
-            raw_socket.close()
-
-    return banner
-
-
-def get_banner(service, server, port=None):
-    """High level method to get banner."""
-    if port is None:
-        port = service.port
-
-    banner = service_connect(server, port,
-                             service.is_ssl,
-                             service.payload)
-    return banner.rstrip()
-
-
-def get_version(service, banner):
-    """High level method to get version."""
-    return service.get_version(banner)

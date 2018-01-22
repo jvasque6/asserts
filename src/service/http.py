@@ -387,8 +387,7 @@ def is_version_visible(ip_address, ssl=False, port=80):
         service = banner_helper.HTTPSService(port)
     else:
         service = banner_helper.HTTPService(port)
-    banner = banner_helper.get_banner(service, ip_address)
-    version = banner_helper.get_version(service, banner)
+    version = service.get_version(ip_address)
 
     result = True
     if version:
