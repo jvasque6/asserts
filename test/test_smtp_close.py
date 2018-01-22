@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Modulo para pruebas de SSL.
+"""Modulo para pruebas de SMTP.
 
 Este modulo contiene las funciones necesarias para probar si el modulo de
-SSL se encuentra adecuadamente implementado.
+SMTP se encuentra adecuadamente implementado.
 """
 
 # standard imports
