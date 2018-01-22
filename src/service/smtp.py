@@ -44,7 +44,7 @@ def has_vrfy(ip_address, port=PORT):
 @track
 def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
-    service = banner_helper.SMTPService()
+    service = banner_helper.SMTPService(port)
     banner = banner_helper.get_banner(service, ip_address)
     version = banner_helper.get_version(service, banner)
 

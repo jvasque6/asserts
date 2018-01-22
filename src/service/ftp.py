@@ -68,7 +68,7 @@ def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
 @track
 def is_version_visible(ip_address, port=PORT):
     """Check if banner is visible."""
-    service = banner_helper.FTPService()
+    service = banner_helper.FTPService(port)
     banner = banner_helper.get_banner(service, ip_address)
     version = banner_helper.get_version(service, banner)
 

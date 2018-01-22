@@ -384,9 +384,9 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
 def is_version_visible(ip_address, ssl=False, port=80):
     """Check if banner is visible."""
     if ssl:
-        service = banner_helper.HTTPSService()
+        service = banner_helper.HTTPSService(port)
     else:
-        service = banner_helper.HTTPService()
+        service = banner_helper.HTTPService(port)
     banner = banner_helper.get_banner(service, ip_address)
     version = banner_helper.get_version(service, banner)
 
