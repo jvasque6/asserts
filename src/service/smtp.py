@@ -16,6 +16,8 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 from fluidasserts import LOGGER
+from fluidasserts.helper import banner_helper
+
 PORT = 25
 
 
@@ -36,4 +38,23 @@ def has_vrfy(ip_address, port=PORT):
         result = False
 
     server.quit()
+    return result
+
+
+@track
+def is_version_visible(ip_address, port=PORT):
+    """Check if banner is visible."""
+    service = banner_helper.SMTPService()
+    banner = banner_helper.get_banner(service, ip_address)
+    version = banner_helper.get_version(service, banner)
+
+    result = True
+    if version:
+        result = True
+        LOGGER.info('%s: SMTP version visible on %s:%s, Details=%s, %s',
+                    show_open(), ip_address, port, banner, version)
+    else:
+        result = False
+        LOGGER.info('%s: SMTP version not visible on %s, Details=None',
+                    show_close(), ip_address)
     return result

@@ -34,4 +34,6 @@ def test_has_vrfy_close(run_mock):
     assert not smtp.has_vrfy(CONTAINER_IP, HARD_PORT)
 
 
-# Pendente implementar resto de metodos
+def test_is_version_visible_close(run_mock):
+    """Has version visible?."""
+    assert not smtp.is_version_visible(CONTAINER_IP, HARD_PORT)

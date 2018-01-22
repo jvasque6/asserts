@@ -32,3 +32,8 @@ HARD_PORT = 25
 def test_has_vrfy_open(run_mock):
     """Funcion VRFY habilitada?."""
     assert smtp.has_vrfy(CONTAINER_IP, WEAK_PORT)
+
+
+def test_is_version_visible_open(run_mock):
+    """Has version visible?."""
+    assert smtp.is_version_visible(CONTAINER_IP, WEAK_PORT)
