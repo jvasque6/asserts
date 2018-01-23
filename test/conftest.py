@@ -50,7 +50,13 @@ def run_mock(request):
         mynet = client.networks.list(names=NETWORK_NAME)[0]
 
     image = 'registry.gitlab.com/fluidsignal/asserts/mocks/' + mock
-    client.images.pull(image)
+    if ':' in mock:
+        mock_dir = 'test/provision/' + mock.replace(':', '/')
+    else:
+        mock_dir = 'test/provision/' + mock
+
+    client.images.build(path=mock_dir, tag=image)
+
     cont = client.containers.run(image,
                                  tty=True,
                                  detach=True)
