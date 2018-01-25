@@ -22,6 +22,7 @@ setup(
         'fluidasserts.helper',
         'fluidasserts.system',
         'fluidasserts.service',
+        'fluidasserts.code',
         'fluidasserts.utils',
     ],
     data_files=[
