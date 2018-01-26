@@ -42,7 +42,7 @@ def mock_http(request):
     prcs.start()
 
     # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.1)
+    time.sleep(0.5)
 
     def teardown():
         """Detiene servidor HTTP al finalizar las pruebas."""
