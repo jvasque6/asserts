@@ -44,9 +44,9 @@ def has_not_text(code_file, expected_text):
     """Check if a required text is not present."""
     ret = __generic_code_assert(code_file, expected_text)
     if not ret:
-        LOGGER.info('%s: %s Expected text present in code, Details=%s',
+        LOGGER.info('%s: %s Expected text not present in code, Details=%s',
                     show_open(), code_file, expected_text)
         return True
-    LOGGER.info('%s: %s Expected text not present in code, Details=%s',
+    LOGGER.info('%s: %s Expected text present in code, Details=%s',
                 show_close(), code_file, expected_text)
     return False
