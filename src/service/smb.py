@@ -12,7 +12,7 @@ from smb import smb_structs
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
@@ -39,23 +39,26 @@ def has_dirlisting(share, *args, **kwargs):
     conn = __smb_connect(*args, **kwargs)
 
     if not conn:
-        LOGGER.info('%s: Error while connecting, \
-Details=%s/%s:%s', show_open('ERROR'),
-                    kwargs['domain'], kwargs['user'], kwargs['server'])
+        show_unknown('Error while connecting, \
+Details={}/{}:{}'.format(kwargs['domain'],
+                         kwargs['user'],
+                         kwargs['server']))
 
         return False
 
     try:
         conn.listPath(share, '/')
-        LOGGER.info('%s: Directory listing is possible, \
-Details=%s/%s:%s', show_open(),
-                    kwargs['domain'], kwargs['user'], kwargs['server'])
+        show_open('Directory listing is possible, \
+Details={}/{}:{}'.format(kwargs['domain'],
+                         kwargs['user'],
+                         kwargs['server']))
 
         return True
     except smb_structs.OperationFailure:
-        LOGGER.info('%s: Directory listing not possible, \
-Details=%s/%s:%s', show_close(),
-                    kwargs['domain'], kwargs['user'], kwargs['server'])
+        show_close('Directory listing not possible, \
+Details={}/{}:{}'.format(kwargs['domain'],
+                         kwargs['user'],
+                         kwargs['server']))
 
         return False
 
@@ -69,10 +72,10 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
                          domain=domain)
 
     if not conn:
-        LOGGER.info('%s: Anonymous login not possible, \
-Details=%s/%s:%s', show_close(), domain, user, server)
+        show_close('Anonymous login not possible, \
+Details={}/{}:{}'.format(domain, user, server))
 
         return False
-    LOGGER.info('%s: Anonymous login enabled, Details=%s/%s:%s',
-                show_open(), domain, user, server)
+    show_open('Anonymous login enabled, Details={}/{}:{}'.
+              format(domain, user, server))
     return True

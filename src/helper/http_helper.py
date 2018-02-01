@@ -221,12 +221,11 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.cookies = resp.cookies
                 self.response = resp
                 self.is_auth = True
-                LOGGER.info(
-                    '%s Auth: %s, Details=%s', method, self.url,
-                    'Success with [ ' + user + ' : ' + passw + ' ]')
+                LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
+                            'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                LOGGER.info(' %s Auth: %s, Details=%s', method, self.url,
+                LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
                             'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
@@ -284,15 +283,14 @@ def has_method(url, method):
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            LOGGER.info('%s: %s HTTP Method %s, Details=%s',
-                        show_open(), url, method, 'Is Present')
+            show_open('{} HTTP Method {}, Details={}'.
+                      format(url, method, 'Is Present'))
         else:
-            LOGGER.info('%s: %s HTTP Method %s, Details=%s',
-                        show_close(), url, method, 'Not Present')
+            show_close('{} HTTP Method {}, Details={}'.
+                       format(url, method, 'Not Present'))
             result = False
     else:
-        LOGGER.info('%s: Method %s not allowed in %s', show_close(),
-                    method, url)
+        show_close('Method {} not allowed in {}'.format(method, url))
         result = False
     return result
 
@@ -309,29 +307,31 @@ def has_insecure_header(url, header, *args, **kwargs):
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
     except requests.ConnectionError:
-        LOGGER.info('%s: %s HTTP error checking %s, Details=Could not connect',
-                    show_unknown(), header, url)
+        show_unknown('{} HTTP error checking {}, Details=Could not connect'.
+                     format(header, url))
         return True
     result = True
     if header == 'X-AspNet-Version' or header == 'Server':
         if header in headers_info:
-            LOGGER.info('%s: %s HTTP insecure header present in %s',
-                        show_open(), header, url)
+            show_open('{} HTTP insecure header present in {}'.
+                      format(header, url))
             return True
-        LOGGER.info('%s: %s HTTP insecure header not present in %s',
-                    show_close(), header, url)
+        show_close('{} HTTP insecure header not present in {}'.
+                   format(header, url))
         return False
     if header in headers_info:
         value = headers_info[header]
-        state = (lambda val: show_close() if re.match(
-            HDR_RGX[header.lower()],
-            value, re.IGNORECASE) is not None else show_open())(value)
-        LOGGER.info('%s: %s HTTP header %s, Details=%s',
-                    state, header, url, value)
-        result = state != show_close()
+        if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+            show_close('{} HTTP header {}, Details={}'.
+                       format(header, url, value))
+            result = False
+        else:
+            show_open('{} HTTP header {}, Details={}'.
+                      format(header, url, value))
+            result = True
     else:
-        LOGGER.info('%s: %s HTTP header %s, Details=%s',
-                    show_open(), header, url, 'Not Present')
+        show_open('{} HTTP header {}, Details={}'.
+                  format(header, url, 'Not Present'))
         result = True
 
     return result

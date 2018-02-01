@@ -70,6 +70,12 @@ for key in KEYS:
         print(key + ' env variable must be set')
         sys.exit(-1)
 
+if 'FLUIDASSERTS_STRICT' in os.environ:
+    if os.environ['FLUIDASSERTS_STRICT'] != 'true':
+        print('FLUIDASSERTS_STRICT env variable is \
+set but with an unknown value. It must be "true".')
+        sys.exit(-1)
+
 CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
 USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
 
@@ -81,28 +87,30 @@ except mixpanel.MixpanelException:
     pass
 
 
-def show_close(message=None):
+def show_close(message):
     """Show close message."""
-    if message is None:
-        text_to_show = 'CLOSE'
-    else:
-        text_to_show = message
-    return Fore.WHITE + Back.GREEN + text_to_show + Style.RESET_ALL
+    state = 'CLOSE'
+    state_col = Fore.WHITE + Back.GREEN + state + Style.RESET_ALL
+    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
+                                                   message=message)
+    LOGGER.info(text_to_show)
+
+def show_open(message):
+    """Show close message."""
+    state = 'OPEN'
+    state_col = Fore.WHITE + Back.RED + state + Style.RESET_ALL
+    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
+                                                   message=message)
+    LOGGER.info(text_to_show)
+    if 'FLUIDASSERTS_STRICT' in os.environ:
+        if os.environ['FLUIDASSERTS_STRICT'] == 'true':
+            sys.exit(1)
 
 
-def show_open(message=None):
-    """Show open message."""
-    if message is None:
-        text_to_show = 'OPEN'
-    else:
-        text_to_show = message
-    return Fore.WHITE + Back.RED + text_to_show + Style.RESET_ALL
-
-
-def show_unknown(message=None):
-    """Show unknown message."""
-    if message is None:
-        text_to_show = 'UNKNOWN'
-    else:
-        text_to_show = message
-    return Fore.BLACK + Back.WHITE + text_to_show + Style.RESET_ALL
+def show_unknown(message):
+    """Show close message."""
+    state = 'UNKNOWN'
+    state_col = Fore.BLACK + Back.WHITE + state + Style.RESET_ALL
+    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
+                                                   message=message)
+    LOGGER.info(text_to_show)

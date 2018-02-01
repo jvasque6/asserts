@@ -15,7 +15,6 @@ import smtplib
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from fluidasserts import LOGGER
 from fluidasserts.helper import banner_helper
 
 PORT = 25
@@ -29,12 +28,12 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        LOGGER.info('%s: SMTP "VRFY" method, Details=%s',
-                    show_open(), ip_address + ':' + str(port))
+        show_open('SMTP "VRFY" method, Details={}'.
+                  format(ip_address + ':' + str(port)))
         result = True
     else:
-        LOGGER.info('%s: SMTP "VRFY" method, Details=%s',
-                    show_close(), ip_address + ':' + str(port))
+        show_close('SMTP "VRFY" method, Details={}'.
+                   format(ip_address + ':' + str(port)))
         result = False
 
     server.quit()
@@ -50,10 +49,10 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        LOGGER.info('%s: SMTP version visible on %s:%s, Details=%s',
-                    show_open(), ip_address, port, version)
+        show_open('SMTP version visible on {}:{}, Details={}'.
+                  format(ip_address, port, version))
     else:
         result = False
-        LOGGER.info('%s: SMTP version not visible on %s, Details=None',
-                    show_close(), ip_address)
+        show_close('SMTP version not visible on {}, Details=None'.
+                   format(ip_address))
     return result

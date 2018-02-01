@@ -10,7 +10,6 @@
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 
@@ -29,26 +28,25 @@ def __check_password_strength(password, length):
     result = True
 
     if len(password) < length:
-        LOGGER.info('%s: %s is too short. Details=%s',
-                    show_open(), password, len(password))
+        show_open('{} is too short. Details={}'.
+                  format(password, len(password)))
         result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
-        LOGGER.info('%s: %s is too weak. Details=%s',
-                    show_open(), password, "Caps: " + str(caps) +
-                    " Lower: " + str(lower) +
-                    " Numbers: " + str(nums) +
-                    " Special: " + str(special))
+        show_open('{} is too weak. Details={}'.
+                  format(password, "Caps: " + str(caps) +
+                         " Lower: " + str(lower) +
+                         " Numbers: " + str(nums) +
+                         " Special: " + str(special)))
         result = True
     elif password in words:
-        LOGGER.info('%s: %s is a dictionary password',
-                    show_open(), password)
+        show_open('{} is a dictionary password'.format(password))
         result = True
     else:
-        LOGGER.info('%s: %s password is secure. Details=%s',
-                    show_close(), password, "Caps: " + str(caps) +
-                    " Lower: " + str(lower) +
-                    " Numbers: " + str(nums) +
-                    " Special: " + str(special))
+        show_open('{} password is secure. Details={}'.
+                  format(password, "Caps: " + str(caps) +
+                         " Lower: " + str(lower) +
+                         " Numbers: " + str(nums) +
+                         " Special: " + str(special)))
         result = False
 
     return result
@@ -77,12 +75,12 @@ def is_otp_token_insecure(password):
 
     result = True
     if len(password) < min_password_len:
-        LOGGER.info('%s: %s OTP token is too short. Details=%s',
-                    show_open(), password, len(password))
+        show_open('{} OTP token is too short. Details={}'.
+                  format(password, len(password)))
         result = True
     else:
-        LOGGER.info('%s: %s OTP token is secure. Details=%s',
-                    show_close(), password, len(password))
+        show_close('{} OTP token is secure. Details={}'.
+                   format(password, len(password)))
         result = False
 
     return result
@@ -98,12 +96,10 @@ def is_ssid_insecure(ssid):
 
     result = True
     if ssid in words:
-        LOGGER.info('%s: %s is a dictionary password.',
-                    show_open(), ssid)
+        show_open('{} is a dictionary password.'.format(ssid))
         result = True
     else:
-        LOGGER.info('%s: %s is a secure SSID.',
-                    show_close(), ssid)
+        show_close('{} is a secure SSID.'.format(ssid))
         result = False
 
     return result

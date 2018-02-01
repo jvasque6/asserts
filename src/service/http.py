@@ -16,7 +16,6 @@ from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 # Regex taken from SQLmap project
@@ -135,10 +134,9 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
     ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
     if ret:
-        LOGGER.info('%s: %s Bad text present, Details=%s',
-                    show_open(), url, ret)
+        show_open('{} Bad text present, Details={}'.format(url, ret))
         return True
-    LOGGER.info('%s: %s Bad text not present', show_close(), url)
+    show_close('{} Bad text not present'.format(url))
     return False
 
 
@@ -147,11 +145,11 @@ def has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
     ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if ret:
-        LOGGER.info('%s: %s Bad text present, Details=%s',
-                    show_open(), url, expected_text)
+        show_open('{} Bad text present, Details={}'.
+                  format(url, expected_text))
         return True
-    LOGGER.info('%s: %s Bad text not present, Details=%s',
-                show_close(), url, expected_text)
+    show_close('{} Bad text not present, Details={}'.
+               format(url, expected_text))
     return False
 
 
@@ -160,11 +158,11 @@ def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
     ret = __generic_http_assert(url, expected_text, *args, **kwargs)
     if not ret:
-        LOGGER.info('%s: %s Expected text not present, Details=%s',
-                    show_open(), url, expected_text)
+        show_open('{} Expected text not present, Details={}'.
+                  format(url, expected_text))
         return True
-    LOGGER.info('%s: %s Expected text present, Details=%s',
-                show_close(), url, expected_text)
+    show_close('{} Expected text present, Details={}'.
+               format(url, expected_text))
     return False
 
 
@@ -371,12 +369,12 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     result = True
     if re.search(regex, response_url):
         result = True
-        LOGGER.info('%s: Session ID is exposed in %s, Details=%s',
-                    show_open(), response_url, argument)
+        show_open('Session ID is exposed in {}, Details={}'.
+                  format(response_url, argument))
     else:
         result = False
-        LOGGER.info('%s: Session ID is hidden in %s, Details=%s',
-                    show_close(), response_url, argument)
+        show_close('Session ID is hidden in {}, Details={}'.
+                   format(response_url, argument))
     return result
 
 
@@ -392,12 +390,12 @@ def is_version_visible(ip_address, ssl=False, port=80):
     result = True
     if version:
         result = True
-        LOGGER.info('%s: HTTP version visible on %s:%s, Details=%s',
-                    show_open(), ip_address, port, version)
+        show_open('HTTP version visible on {}:{}, Details={}'.
+                  format(ip_address, port, version))
     else:
         result = False
-        LOGGER.info('%s: HTTP version not visible on %s:%s, Details=None',
-                    show_close(), ip_address, port)
+        show_close('HTTP version not visible on {}:{}, Details=None'.
+                   format(ip_address, port))
     return result
 
 
@@ -407,11 +405,11 @@ def is_not_https_required(url):
     assert url.startswith('http://')
     http_session = http_helper.HTTPSession(url)
     if http_session.url.startswith('https'):
-        LOGGER.info('%s: HTTPS is forced on URL, Details=%s',
-                    show_close(), http_session.url)
+        show_close('HTTPS is forced on URL, Details={}'.
+                   format(http_session.url))
         return False
-    LOGGER.info('%s: HTTPS is not forced on URL, Details=%s',
-                show_open(), http_session.url)
+    show_open('HTTPS is not forced on URL, Details={}'.
+              format(http_session.url))
     return True
 
 
@@ -437,11 +435,11 @@ def is_response_delayed(url, *args, **kwargs):
     delta = max_response_time - response_time
 
     if delta >= 0:
-        LOGGER.info('%s: Response time is acceptable for %s, Details=%s',
-                    show_close(), http_session.url, str(response_time))
+        show_close('Response time is acceptable for {}, Details={}'.
+                   format(http_session.url, str(response_time)))
         return False
-    LOGGER.info('%s: Response time is not acceptable for %s, Details=%s',
-                show_open(), http_session.url, str(response_time))
+    show_open('Response time is not acceptable for {}, Details={}'.
+              format(http_session.url, str(response_time)))
     return True
 
 
@@ -494,13 +492,12 @@ def has_user_enumeration(url, user_field, user_list=None,
     rat = round(res / num_comp, 2)
 
     if rat > 0.95:
-        LOGGER.info('%s: User enumeration not possible for %s, \
-Details=%s%% of similar answers',
-                    show_close(), url, str(rat * 100))
+        show_close('User enumeration not possible for {}, \
+Details={}% of similar answers'.format(url, str(rat * 100)))
         return False
-    LOGGER.info('%s: User enumeration is possible for %s, \
-Details=%s%% of similar answers',
-                show_open(), url, str(rat * 100))
+    show_open('User enumeration is possible for {}, \
+Details={}% of similar answers'.
+              format(url, str(rat * 100)))
     return True
 
 
@@ -535,9 +532,8 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
             kwargs['data'] = _datas
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         if ok_regex in sess.response.text:
-            LOGGER.info('%s: Brute forcing possible for %s, \
-Details=%s params were used', show_open(), url, str(_datas))
+            show_open('Brute forcing possible for {}, \
+Details={} params were used'.format(url, str(_datas)))
             return True
-    LOGGER.info('%s: Brute forcing was not successful for %s',
-                show_close(), url)
+    show_close('Brute forcing was not successful for {}'.format(url))
     return False

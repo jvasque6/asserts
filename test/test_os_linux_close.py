@@ -14,9 +14,11 @@ import pytest
 
 # local imports
 from fluidasserts.system import linux_generic
+import fluidasserts.utils.decorators
 
 
 # Constants
+fluidasserts.utils.decorators.UNITTEST = True
 CONTAINER_IP = '172.30.216.101'
 ADMIN_USER = 'root'
 ADMIN_PASS = 'Puef8poh2tei9AeB'

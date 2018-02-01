@@ -19,12 +19,13 @@ import pytest
 
 # local imports
 from fluidasserts.service import ftp
+import fluidasserts.utils.decorators
 
 
 #
 # Constants
 #
-
+fluidasserts.utils.decorators.UNITTEST = True
 CONTAINER_IP = '172.30.216.101'
 ADMIN_PASS = 'ahViQu9E'
 NONPASS_USER = 'nonpass'

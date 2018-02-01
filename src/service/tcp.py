@@ -16,7 +16,6 @@ import ssl
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 
@@ -30,16 +29,16 @@ def is_port_open(ipaddress, port):
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        LOGGER.info('%s: Port is close, Details=%s',
-                    show_close(), ipaddress + ':' + str(port))
+        show_close('Port is close, Details={}'.
+                   format(ipaddress + ':' + str(port)))
     if result == 0:
-        LOGGER.info('%s: Port is open, Details=%s',
-                    show_open(), ipaddress + ':' + str(port))
+        show_open('Port is open, Details={}'.
+                  format(ipaddress + ':' + str(port)))
         result = True
     else:
         result = False
-        LOGGER.info('%s: Port is close, Details=%s',
-                    show_close(), ipaddress + ':' + str(port))
+        show_close('Port is close, Details={}'.
+                   format(ipaddress + ':' + str(port)))
     return result
 
 
@@ -51,10 +50,10 @@ def is_port_insecure(ipaddress, port):
         sock.settimeout(3)
         ssl_sock = ssl.wrap_socket(sock)
         ssl_sock.connect_ex((ipaddress, port))
-        LOGGER.info('%s: Port is secure, Details=%s',
-                    show_close(), ipaddress + ':' + str(port))
+        show_close('Port is secure, Details={}'.
+                   format(ipaddress + ':' + str(port)))
         return False
     except ssl.SSLError:
-        LOGGER.info('%s: Port is not secure, Details=%s',
-                    show_open(), ipaddress + ':' + str(port))
+        show_open('Port is not secure, Details={}'.
+                  format(ipaddress + ':' + str(port)))
         return True

@@ -14,8 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.service import smtp
+import fluidasserts.utils.decorators
 
 # Constants
+fluidasserts.utils.decorators.UNITTEST = True
 CONTAINER_IP = '172.30.216.101'
 WEAK_PORT = 25
 HARD_PORT = 25

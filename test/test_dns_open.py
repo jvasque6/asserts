@@ -14,8 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.service import dns
+import fluidasserts.utils.decorators
 
 # Constants
+fluidasserts.utils.decorators.UNITTEST = True
 CONTAINER_IP = '172.30.216.101'
 TEST_ZONE = 'fluid.la'
 WEAK_PORT = 53

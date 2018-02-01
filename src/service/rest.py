@@ -12,7 +12,6 @@
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 from fluidasserts.service import http
@@ -24,9 +23,9 @@ def has_access(url, *args, **kwargs):
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     ok_access_list = [200]
     if http_session.response.status_code in ok_access_list:
-        LOGGER.info('%s: Access available to %s', show_open(), url)
+        show_open('Access available to {}'.format(url))
         return True
-    LOGGER.info('%s: Access not available to %s', show_close(), url)
+    show_close('Access not available to {}'.format(url))
     return False
 
 
@@ -40,15 +39,14 @@ def accepts_empty_content_type(url, *args, **kwargs):
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
     if session.response.status_code in error_codes:
-        LOGGER.info('%s: URL %s returned error',
-                    show_unknown(), url)
+        show_unknown('URL {} returned error'.format(url))
         return True
     if session.response.status_code not in expected_codes:
-        LOGGER.info('%s: URL %s accepts empty Content-Type requests',
-                    show_open(), url)
+        show_open('URL {} accepts empty Content-Type requests'.
+                  format(url))
         return True
-    LOGGER.info('%s: URL %s rejects empty Content-Type requests',
-                show_close(), url)
+    show_close('URL {} rejects empty Content-Type requests'.
+               format(url))
     return False
 
 
@@ -64,15 +62,14 @@ def accepts_insecure_accept_header(url, *args, **kwargs):
     session = http_helper.HTTPSession(url, *args, **kwargs)
 
     if session.response.status_code in error_codes:
-        LOGGER.info('%s: URL %s returned error',
-                    show_unknown(), url)
+        show_unknown('URL {} returned error'.format(url))
         return True
     if session.response.status_code not in expected_codes:
-        LOGGER.info('%s: URL %s accepts insecure Accept request header value',
-                    show_open(), url)
+        show_open('URL {} accepts insecure Accept request header value'.
+                  format(url))
         return True
-    LOGGER.info('%s: URL %s rejects insecure Accept request header value',
-                show_close(), url)
+    show_close('URL {} rejects insecure Accept request header value'.
+               format(url))
     return False
 
 

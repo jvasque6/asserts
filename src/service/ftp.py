@@ -15,7 +15,6 @@ from ftplib import FTP
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
 from fluidasserts.helper import banner_helper
 from fluidasserts.utils.decorators import track
 
@@ -36,13 +35,11 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.login(username, password)
         ftp.quit()
         result = True
-        LOGGER.info('%s: FTP Authentication %s:%s, Details=%s',
-                    show_open(), ip_address, port,
-                    username + ':' + password)
+        show_open('FTP Authentication {}:{}, Details={}'.
+                  format(ip_address, port, username + ':' + password))
     except error_perm:
-        LOGGER.info('%s: FTP Authentication %s:%s, Details=%s',
-                    show_close(), ip_address, port,
-                    username + ':' + password)
+        show_close('FTP Authentication {}:{}, Details={}'.
+                   format(ip_address, port, username + ':' + password))
         result = False
     return result
 
@@ -74,10 +71,10 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        LOGGER.info('%s: FTP version visible on %s:%s, Details=%s',
-                    show_open(), ip_address, port, version)
+        show_open('FTP version visible on {}:{}, Details={}'.
+                  format(ip_address, port, version))
     else:
         result = False
-        LOGGER.info('%s: FTP version not visible on %s, Details=None',
-                    show_close(), ip_address)
+        show_close('FTP version not visible on {}, Details=None'.
+                   format(ip_address))
     return result

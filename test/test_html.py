@@ -12,6 +12,10 @@ HTML se encuentra adecuadamente implementado.
 
 # local imports
 from fluidasserts.format import html
+import fluidasserts.utils.decorators
+
+# Constants
+fluidasserts.utils.decorators.UNITTEST = True
 
 
 def test_form_autocomplete_open():

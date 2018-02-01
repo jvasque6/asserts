@@ -14,8 +14,10 @@ strings se encuentra adecuadamente implementado.
 
 # local imports
 from fluidasserts.format import string
+import fluidasserts.utils.decorators
 
 # Constants
+fluidasserts.utils.decorators.UNITTEST = True
 WEAK_USER_PASS = 'password'
 STRONG_USER_PASS = 'P@ssw0rd1.'
 WEAK_SYSTEM_PASS = 'system_password'

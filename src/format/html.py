@@ -11,7 +11,6 @@ from bs4 import BeautifulSoup
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts import LOGGER
 from fluidasserts.utils.decorators import track
 
 
@@ -46,15 +45,13 @@ def has_not_autocomplete(filename, selector):
         filename, selector, '[form|input]', attr, value)
 
     if has_attr is False:
-        status = show_open()
         result = True
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, '')
+        show_open('{} attribute in {}, Details={}'.
+                  format(attr, filename, ''))
     else:
-        status = show_close()
         result = False
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, value)
+        show_close('{} attribute in {}, Details={}'.
+                   format(attr, filename, value))
 
     return result
 
@@ -76,10 +73,9 @@ def is_cacheable(filename):
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
-        status = show_open()
         result = True
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, value)
+        show_open('{} attribute in {}, Details={}'.
+                  format(attr, filename, value))
 
         return result
 
@@ -89,10 +85,9 @@ def is_cacheable(filename):
         filename, selector, tag, attr, value)
 
     if has_content is False:
-        status = show_open()
         result = True
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, value)
+        show_open('{} attribute in {}, Details={}'.
+                  format(attr, filename, value))
 
         return result
 
@@ -102,10 +97,9 @@ def is_cacheable(filename):
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
-        status = show_open()
         result = True
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, value)
+        show_open('{} attribute in {}, Details={}'.
+                  format(attr, filename, value))
 
         return result
 
@@ -115,16 +109,14 @@ def is_cacheable(filename):
         filename, selector, tag, attr, value)
 
     if has_content is False:
-        status = show_open()
         result = True
-        LOGGER.info('%s: %s attribute in %s, Details=%s',
-                    status, attr, filename, value)
+        show_open('{} attribute in {}, Details={}'.
+                  format(attr, filename, value))
 
         return result
 
-    status = show_close()
     result = False
-    LOGGER.info('%s: %s attribute in %s, Details=%s',
-                status, attr, filename, value)
+    show_close('{} attribute in {}, Details={}'.
+               format(attr, filename, value))
 
     return result
