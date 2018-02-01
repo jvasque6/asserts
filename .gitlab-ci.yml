@@ -48,7 +48,7 @@ deploy:
     stage: deploy
     script:
         - docker-compose run deploy
-        - docker build -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts/runner:latest .
+        - docker build -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
     only:
     - master
 
@@ -61,6 +61,6 @@ push_container:
         - docker push registry.gitlab.com/fluidsignal/asserts:master
         - docker push registry.gitlab.com/fluidsignal/asserts:base
         - docker push registry.gitlab.com/fluidsignal/asserts:builder
-        - docker push registry.gitlab.com/fluidsignal/asserts/runner:latest
+        - docker push registry.gitlab.com/fluidsignal/asserts:runner
     only:
     - master

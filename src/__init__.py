@@ -71,9 +71,10 @@ for key in KEYS:
         sys.exit(-1)
 
 if 'FLUIDASSERTS_STRICT' in os.environ:
-    if os.environ['FLUIDASSERTS_STRICT'] != 'true':
+    if os.environ['FLUIDASSERTS_STRICT'] != 'true' and \
+       os.environ['FLUIDASSERTS_STRICT'] != 'false':
         print('FLUIDASSERTS_STRICT env variable is \
-set but with an unknown value. It must be "true".')
+set but with an unknown value. It must be "true" or "false".')
         sys.exit(-1)
 
 CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
@@ -94,6 +95,7 @@ def show_close(message):
     text_to_show = '{state_col}: {message}'.format(state_col=state_col,
                                                    message=message)
     LOGGER.info(text_to_show)
+
 
 def show_open(message):
     """Show close message."""
