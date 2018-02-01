@@ -1,0 +1,15 @@
+FROM alpine:latest
+
+RUN apk update \
+    && apk upgrade \
+    && apk add python \
+    py2-pip \
+    python2-dev \
+    gcc \
+    libc-dev \
+    libffi-dev \
+    openssl-dev \
+    make \
+    jpeg-dev
+
+RUN pip install fluidasserts
