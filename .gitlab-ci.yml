@@ -48,7 +48,7 @@ deploy:
     stage: deploy
     script:
         - docker-compose run deploy
-        - docker build -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
+        - docker build --no-cache -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
     only:
     - master
 
