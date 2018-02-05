@@ -115,7 +115,7 @@ after: {}, Current time: {}'.format(cert_obj.not_valid_after.isoformat(),
 @track
 def is_cert_validity_lifespan_unsafe(site, port=PORT):
     """Check whether cert lifespan is safe."""
-    max_validity_days = 365
+    max_validity_days = 730
 
     result = True
     try:
