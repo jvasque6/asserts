@@ -29,7 +29,7 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
     else:
         cookielist = cookie_jar
     if cookielist is None:
-        show_unknown('{} Cookie not present'.format(cookie_name))
+        show_unknown('{} Cookies not present'.format(cookie_name))
         return True
     for cookie in cookielist:
         if cookie.name == cookie_name:
@@ -42,7 +42,10 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
                 show_open('Cookie check for "{}", Details={}'.
                           format(cookie_name, 'HttpOnly'))
                 result = True
-    return result
+            return result
+    show_unknown('Cookie "{}" not found, Details={}'.
+                 format(cookie_name, 'HttpOnly'))
+    return True
 
 
 def __has_not_secure(cookie_name, url=None, cookie_jar=None):
@@ -57,7 +60,7 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
     else:
         cookielist = cookie_jar
     if cookielist is None:
-        show_unknown('{} Cookie not present'.format(cookie_name))
+        show_unknown('{} Cookies not present'.format(cookie_name))
         return True
     for cookie in cookielist:
         if cookie.name == cookie_name:
@@ -69,8 +72,10 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
                 show_open('Cookie check for "{}", Details={}'.
                           format(cookie_name, 'Secure'))
                 result = True
-    return result
-
+            return result
+    show_unknown('Cookie "{}" not found, Details={}'.
+                 format(cookie_name, 'Secure'))
+    return True
 
 @track
 def has_not_httponly_set(cookie_name, url):
