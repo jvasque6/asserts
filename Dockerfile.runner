@@ -10,6 +10,7 @@ RUN apk update \
     libffi-dev \
     openssl-dev \
     make \
-    jpeg-dev
+    jpeg-dev \
+    curl
 
 RUN pip install fluidasserts
