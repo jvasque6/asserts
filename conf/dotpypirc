@@ -1,7 +1,7 @@
 [distutils]
-index-servers=pypi
+index-servers=local
 
 [pypi]
-repository = https://upload.pypi.org/legacy/
-username = __pypi_user__
-password = __pypi_pass__
+repository = https://fluid.jfrog.io/fluid/api/pypi/python
+username = __jfrog_user__
+password = __jfrog_pass__

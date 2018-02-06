@@ -14,8 +14,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -29,8 +29,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -44,8 +44,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -59,8 +59,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -74,8 +74,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -91,8 +91,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
@@ -107,8 +107,8 @@ services:
     volumes:
      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
+     - JFROG_USER=$JFROG_USER
+     - JFROG_PASS=$JFROG_PASS
      - FA_LICENSE_KEY=$FA_LICENSE_KEY
      - FA_USER_EMAIL=$FA_USER_EMAIL
      - DOCKER_USER=$DOCKER_USER
