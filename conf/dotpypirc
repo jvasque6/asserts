@@ -1,7 +1,7 @@
 [distutils]
 index-servers=local
 
-[pypi]
+[local]
 repository = https://fluid.jfrog.io/fluid/api/pypi/python
 username = __jfrog_user__
 password = __jfrog_pass__
