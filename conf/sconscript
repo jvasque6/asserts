@@ -113,7 +113,7 @@ PhonyTargets(lenv, deploy=[
     'cp conf/dotpypirc ~/.pypirc',
     'sed -i -e "s/__jfrog_user__/' +  lenv['ENV']['JFROG_USER'] + '/g" ~/.pypirc',
     'sed -i -e "s/__jfrog_pass__/' +  lenv['ENV']['JFROG_PASS'] + '/g" ~/.pypirc',
-    'twine upload build/dist/*.whl || python setup.py sdist bdist_wheel upload',
+    'python setup.py sdist bdist_wheel upload -r local',
     'python deploy/send_mail.py'
 ])
 

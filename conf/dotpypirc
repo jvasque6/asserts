@@ -2,6 +2,6 @@
 index-servers=local
 
 [local]
-repository = https://fluid.jfrog.io/fluid/api/pypi/python
-username = __jfrog_user__
-password = __jfrog_pass__
+repository: https://fluid.jfrog.io/fluid/api/pypi/python
+username: __jfrog_user__
+password: __jfrog_pass__
