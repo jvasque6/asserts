@@ -61,7 +61,7 @@ else:
 
 PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
 
-KEYS = ['FLUIDASSERTS_LICENSE_KEY', 'FLUIDASSERTS_USER_EMAIL']
+KEYS = ['FA_LICENSE_KEY', 'FA_USER_EMAIL']
 
 for key in KEYS:
     try:
@@ -70,15 +70,15 @@ for key in KEYS:
         print(key + ' env variable must be set')
         sys.exit(-1)
 
-if 'FLUIDASSERTS_STRICT' in os.environ:
-    if os.environ['FLUIDASSERTS_STRICT'] != 'true' and \
-       os.environ['FLUIDASSERTS_STRICT'] != 'false':
-        print('FLUIDASSERTS_STRICT env variable is \
+if 'FA_STRICT' in os.environ:
+    if os.environ['FA_STRICT'] != 'true' and \
+       os.environ['FA_STRICT'] != 'false':
+        print('FA_STRICT env variable is \
 set but with an unknown value. It must be "true" or "false".')
         sys.exit(-1)
 
-CLIENT_ID = os.environ['FLUIDASSERTS_LICENSE_KEY']
-USER_EMAIL = os.environ['FLUIDASSERTS_USER_EMAIL']
+CLIENT_ID = os.environ['FA_LICENSE_KEY']
+USER_EMAIL = os.environ['FA_USER_EMAIL']
 
 try:
     print('Loading modules...')
@@ -104,8 +104,8 @@ def show_open(message):
     text_to_show = '{state_col}: {message}'.format(state_col=state_col,
                                                    message=message)
     LOGGER.info(text_to_show)
-    if 'FLUIDASSERTS_STRICT' in os.environ:
-        if os.environ['FLUIDASSERTS_STRICT'] == 'true':
+    if 'FA_STRICT' in os.environ:
+        if os.environ['FA_STRICT'] == 'true':
             sys.exit(1)
 
 

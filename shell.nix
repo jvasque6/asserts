@@ -14,8 +14,8 @@ stdenv.mkDerivation rec {
    gitlab-runner
  ];
 
- FLUIDASSERTS_USER_EMAIL = "set";
- FLUIDASSERTS_LICENSE_KEY  = "set";
+ FA_USER_EMAIL = "set";
+ FA_LICENSE_KEY  = "set";
  DOCKER_PASS = "set";
  DOCKER_USER = "set";
  PYPI_USER="set";
