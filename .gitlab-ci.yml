@@ -17,13 +17,13 @@ stages:
   - build
   - test
   - deploy
+  - postdeploy
 
 build:
     stage: build
     script:
         - docker build -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
         - docker build --no-cache --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS --build-arg branch=$CI_COMMIT_REF_NAME -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
-        - docker build --no-cache -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
 
 lint:
     stage: test
@@ -48,14 +48,14 @@ deploy:
     stage: deploy
     script:
         - docker-compose run deploy
+        - docker build --no-cache -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
     only:
     - master
 
 push_container:
-    stage: deploy
+    stage: postdeploy
     script:
         - docker push registry.gitlab.com/fluidsignal/asserts:dev
-        - docker pull registry.gitlab.com/fluidsignal/asserts:dev
         - docker tag registry.gitlab.com/fluidsignal/asserts:dev registry.gitlab.com/fluidsignal/asserts:master
         - docker push registry.gitlab.com/fluidsignal/asserts:master
         - docker push registry.gitlab.com/fluidsignal/asserts:base
