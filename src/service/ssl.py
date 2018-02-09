@@ -277,9 +277,11 @@ def is_sha1_used(site, port=PORT):
             __cert = wrapped_socket.getpeercert(True)
             cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            show_unknown('Port closed, Details={}:{}'.
-                         format(site, port))
-            return False
+            raise
+    except socket.error:
+        show_unknown('Port closed, Details={}:{}'.
+                     format(site, port))
+        return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
 

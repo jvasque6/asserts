@@ -16,6 +16,7 @@ from fluidasserts.helper import banner_helper
 from fluidasserts.helper import http_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 # Regex taken from SQLmap project
@@ -132,39 +133,50 @@ def __multi_generic_http_assert(url, regex_list, *args, **kwargs):
 @track
 def has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
-    ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
-    if ret:
-        show_open('{} Bad text present, Details={}'.format(url, ret))
+    try:
+        ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
+        if ret:
+            show_open('{} Bad text present, Details={}'.format(url, ret))
+            return True
+        show_close('{} Bad text not present'.format(url))
+        return False
+    except http_helper.ConnError:
+        show_unknown('Could not connect, Details={}'.format(url))
         return True
-    show_close('{} Bad text not present'.format(url))
-    return False
 
 
 @track
 def has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
-    ret = __generic_http_assert(url, expected_text, *args, **kwargs)
-    if ret:
-        show_open('{} Bad text present, Details={}'.
-                  format(url, expected_text))
+    try:
+        ret = __generic_http_assert(url, expected_text, *args, **kwargs)
+        if ret:
+            show_open('{} Bad text present, Details={}'.
+                      format(url, expected_text))
+            return True
+        show_close('{} Bad text not present, Details={}'.
+                   format(url, expected_text))
+        return False
+    except http_helper.ConnError:
+        show_unknown('Could not connect, Details={}'.format(url))
         return True
-    show_close('{} Bad text not present, Details={}'.
-               format(url, expected_text))
-    return False
 
 
 @track
 def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
-    ret = __generic_http_assert(url, expected_text, *args, **kwargs)
-    if not ret:
-        show_open('{} Expected text not present, Details={}'.
-                  format(url, expected_text))
+    try:
+        ret = __generic_http_assert(url, expected_text, *args, **kwargs)
+        if not ret:
+            show_open('{} Expected text not present, Details={}'.
+                      format(url, expected_text))
+            return True
+        show_close('{} Expected text present, Details={}'.
+                   format(url, expected_text))
+        return False
+    except http_helper.ConnError:
+        show_unknown('Could not connect, Details={}'.format(url))
         return True
-    show_close('{} Expected text present, Details={}'.
-               format(url, expected_text))
-    return False
-
 
 @track
 def is_header_x_asp_net_version_present(url, *args, **kwargs):

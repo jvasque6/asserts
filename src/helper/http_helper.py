@@ -50,6 +50,11 @@ HDR_RGX = {
 }
 
 
+class ConnError(Exception):
+    """requests.ConnectionError wrapper exception."""
+    pass
+
+
 class HTTPSession(object):
     """Class of HTTP request objects."""
 
@@ -131,7 +136,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return ret
         except requests.ConnectionError:
             LOGGER.error('Sin acceso a %s , %s', self.url, 'ERROR')
-            raise
+            raise ConnError
 
     def formauth_by_statuscode(self, code):
         """Authenticate using status code as verification."""
