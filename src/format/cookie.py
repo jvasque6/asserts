@@ -17,14 +17,14 @@ from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
 
 
-def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
+def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
     if url is None and cookie_jar is None:
         show_unknown('Cookie check for "{}", Details={}'.
                      format(cookie_name, 'HttpOnly'))
         return True
     if url is not None:
-        sess = http_helper.HTTPSession(url)
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
         cookielist = sess.cookies
     else:
         cookielist = cookie_jar
@@ -48,14 +48,14 @@ def __has_not_http_only(cookie_name, url=None, cookie_jar=None):
     return True
 
 
-def __has_not_secure(cookie_name, url=None, cookie_jar=None):
+def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
     if url is None and cookie_jar is None:
         show_unknown('Cookie check for "{}", Details={}'.
                      format(cookie_name, 'Secure'))
         return True
     if url is not None:
-        sess = http_helper.HTTPSession(url)
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
         cookielist = sess.cookies
     else:
         cookielist = cookie_jar
@@ -77,25 +77,28 @@ def __has_not_secure(cookie_name, url=None, cookie_jar=None):
                  format(cookie_name, 'Secure'))
     return True
 
+
 @track
-def has_not_httponly_set(cookie_name, url):
+def has_not_httponly_set(cookie_name, url, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
-    return __has_not_http_only(cookie_name, url=url)
+    return __has_not_http_only(cookie_name, url=url, *args, **kwargs)
 
 
 @track
-def has_not_httponly_in_cookiejar(cookie_name, cookie_jar):
+def has_not_httponly_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
-    return __has_not_http_only(cookie_name, cookie_jar=cookie_jar)
+    return __has_not_http_only(cookie_name, cookie_jar=cookie_jar,
+                               *args, **kwargs)
 
 
 @track
-def has_not_secure_set(cookie_name, url):
+def has_not_secure_set(cookie_name, url, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
-    return __has_not_secure(cookie_name, url=url)
+    return __has_not_secure(cookie_name, url=url, *args, **kwargs)
 
 
 @track
-def has_not_secure_in_cookiejar(cookie_name, cookie_jar):
+def has_not_secure_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
-    return __has_not_secure(cookie_name, cookie_jar=cookie_jar)
+    return __has_not_secure(cookie_name, cookie_jar=cookie_jar,
+                            *args, **kwargs)

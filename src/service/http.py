@@ -283,21 +283,21 @@ def is_basic_auth_enabled(url, *args, **kwargs):
 
 
 @track
-def has_trace_method(url):
+def has_trace_method(url, *args, **kwargs):
     """Check HTTP TRACE."""
-    return http_helper.has_method(url, 'TRACE')
+    return http_helper.has_method(url, 'TRACE', *args, **kwargs)
 
 
 @track
-def has_delete_method(url):
+def has_delete_method(url, *args, **kwargs):
     """Check HTTP DELETE."""
-    return http_helper.has_method(url, 'DELETE')
+    return http_helper.has_method(url, 'DELETE', *args, **kwargs)
 
 
 @track
-def has_put_method(url):
+def has_put_method(url, *args, **kwargs):
     """Check HTTP PUT."""
-    return http_helper.has_method(url, 'PUT')
+    return http_helper.has_method(url, 'PUT', *args, **kwargs)
 
 
 @track
