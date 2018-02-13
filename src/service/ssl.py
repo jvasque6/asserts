@@ -362,10 +362,11 @@ def __my_add_padding(self, data):
 
 
 def __connect(hostname, check_poodle_tls, port=PORT):
+    orig_method = tlslite.recordlayer.RecordLayer.addPadding
     if check_poodle_tls:
         tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
     else:
-        reload(tlslite)  # noqa
+        tlslite.recordlayer.RecordLayer.addPadding = orig_method
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((hostname, port))
     connection = tlslite.TLSConnection(sock)
@@ -373,7 +374,6 @@ def __connect(hostname, check_poodle_tls, port=PORT):
     settings.cipherNames = ["aes256", "aes128", "3des"]
     settings.minVersion = (3, 1)
     connection.handshakeClientCert(settings=settings)
-    connection.write("GET / HTTP/1.1\nHost: " + hostname + "\n\n")
     connection.close()
 
 
