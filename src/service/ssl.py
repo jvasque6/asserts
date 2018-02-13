@@ -259,25 +259,21 @@ def is_sslv3_enabled(site, port=PORT):
     return result
 
 
-@track
-def is_sha1_used(site, port=PORT):
-    """Check whether cert use sha1 in their signature algorithm."""
+def __uses_sign_alg(site, alg, port):
+    """Check whether cert use a hash method in their signature."""
     result = True
+
     try:
-        cert = ssl.get_server_certificate((site, port))
-    except ssl.SSLError:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10)
-            wrapped_socket = ssl.SSLSocket(sock=sock,
-                                           ca_certs=certifi.where(),
-                                           cert_reqs=ssl.CERT_REQUIRED,
-                                           server_hostname=site)
-            wrapped_socket.connect((site, port))
-            __cert = wrapped_socket.getpeercert(True)
-            cert = ssl.DER_cert_to_PEM_cert(__cert)
-        except socket.error:
-            raise
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((site, port))
+        connection = tlslite.TLSConnection(sock)
+        settings = tlslite.HandshakeSettings()
+        settings.cipherNames = ["aes256", "aes128", "3des"]
+        settings.minVersion = (3, 0)
+        connection.handshakeClientCert(settings=settings)
+        __cert = connection.session.serverCertChain.x509List[0].bytes
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
+        connection.close()
     except socket.error:
         show_unknown('Port closed, Details={}:{}'.
                      format(site, port))
@@ -287,16 +283,28 @@ def is_sha1_used(site, port=PORT):
 
     sign_algorith = cert_obj.signature_hash_algorithm.name
 
-    if "sha1" not in sign_algorith:
-        show_close('Certificate has a secure signature algorithm, \
-Details= Signature Algorithm: {}'.format(sign_algorith))
-        result = False
-    else:
-        show_open('Certificate has an insecure signature algorithm, \
-Details= Signature Algorithm: {}'.format(sign_algorith))
+    if alg in sign_algorith:
+        show_open('Certificate has {} as signature algorithm, \
+Details={}:{}'.format(sign_algorith, site, port))
         result = True
-
+    else:
+        show_close('Certificate does not use {} as signature algorithm. \
+It uses {}. Details={}:{}'.
+                   format(alg, sign_algorith, site, port))
+        result = False
     return result
+
+
+@track
+def is_sha1_used(site, port=PORT):
+    """Check whether cert use SHA1 in their signature algorithm."""
+    return __uses_sign_alg(site, 'sha1', port)
+
+
+@track
+def is_md5_used(site, port=PORT):
+    """Check whether cert use MD5 in their signature algorithm."""
+    return __uses_sign_alg(site, 'md5', port)
 
 
 @track
@@ -342,7 +350,7 @@ def is_tlsv1_enabled(site, port=PORT):
 
 
 def __my_add_padding(self, data):
-    """Add padding to data so that it is multiple of block size"""
+    """Add padding to data so that it is multiple of block size."""
     current_length = len(data)
     block_length = self.blockSize
     padding_length = block_length - 1 - (current_length % block_length)
@@ -357,7 +365,7 @@ def __connect(hostname, check_poodle_tls, port=PORT):
     if check_poodle_tls:
         tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
     else:
-        reload(tlslite) # noqa
+        reload(tlslite)  # noqa
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((hostname, port))
     connection = tlslite.TLSConnection(sock)
