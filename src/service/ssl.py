@@ -339,3 +339,53 @@ def is_tlsv1_enabled(site, port=PORT):
     finally:
         sock.close()
     return result
+
+
+def __my_add_padding(self, data):
+    """Add padding to data so that it is multiple of block size"""
+    current_length = len(data)
+    block_length = self.blockSize
+    padding_length = block_length - 1 - (current_length % block_length)
+    padding_bytes = bytearray([padding_length] * (padding_length+1))
+    padding_bytes = bytearray(x ^ 42 for x in padding_bytes[0:-1])
+    padding_bytes.append(padding_length)
+    data += padding_bytes
+    return data
+
+
+def __connect(hostname, check_poodle_tls, port=PORT):
+    if check_poodle_tls:
+        tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
+    else:
+        reload(tlslite) # noqa
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((hostname, port))
+    connection = tlslite.TLSConnection(sock)
+    settings = tlslite.HandshakeSettings()
+    settings.cipherNames = ["aes256", "aes128", "3des"]
+    settings.minVersion = (3, 1)
+    connection.handshakeClientCert(settings=settings)
+    connection.write("GET / HTTP/1.1\nHost: " + hostname + "\n\n")
+    connection.close()
+
+
+@track
+def has_poodle(site, port=PORT):
+    """Check whether POODLE is present."""
+    if is_sslv3_enabled(site, port):
+        show_open('POODLE is enabled. Details={}:{}'.format(site, port))
+        return True
+    try:
+        __connect(site, False, port)
+    except tlslite.errors.TLSRemoteAlert:
+        show_unknown('Normal TLS connection failed, Details={}:{}'.
+                     format(site, port))
+        return True
+    try:
+        __connect(site, True, port)
+        show_open('POODLE is enabled. Details={}:{}'.format(site, port))
+        return True
+    except tlslite.errors.TLSRemoteAlert:
+        show_close('POODLE is not enabled. Details={}:{}'.
+                   format(site, port))
+        return False
