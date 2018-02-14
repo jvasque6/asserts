@@ -22,9 +22,12 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 PORT = 443
-CIPHER_NAMES = ['aes256', 'aes128', '3des']
-KEY_EXCHANGE = ['rsa', 'dhe_rsa', 'ecdhe_rsa', 'srp_sha',
-                'srp_sha_rsa', 'ecdh_anon', 'dh_anon']
+CIPHER_NAMES = ["chacha20-poly1305",
+                "aes256gcm", "aes128gcm",
+                "aes256", "aes128",
+                "3des", "rc4", "null", "chacha20-poly1305_draft00"]
+KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
+                "ecdh_anon", "dh_anon"]
 
 
 def __my_add_padding(self, data):
@@ -61,7 +64,9 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.connect((hostname, port))
-
+    except socket.error:
+        raise
+    try:
         connection = tlslite.TLSConnection(sock)
 
         settings = tlslite.HandshakeSettings()
@@ -401,11 +406,17 @@ def has_poodle(site, port=PORT):
                    format(site, port))
         return False
     try:
-        with __connect(site, port=port, check_poodle_tls=True):
+        with __connect(site, port=port, check_poodle_tls=True,
+                       cipher_names=["aes256", "aes128", "3des"],
+                       min_version=(3, 1)):
             show_open('POODLE TLS is enabled. Details={}:{}'.
                       format(site, port))
             return True
     except tlslite.errors.TLSRemoteAlert:
+        show_close('POODLE is not enabled. Details={}:{}'.
+                   format(site, port))
+        return False
+    except tlslite.errors.TLSAbruptCloseError:
         show_close('POODLE is not enabled. Details={}:{}'.
                    format(site, port))
         return False
