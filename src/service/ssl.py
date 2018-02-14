@@ -42,6 +42,24 @@ def __my_add_padding(self, data):
     return data
 
 
+@contextmanager
+def __connect_legacy(hostname, port=PORT, ciphers=None):
+    """Establish a legacy SSL/TLS connection."""
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(5)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=hostname,
+                                       ciphers=ciphers)
+        wrapped_socket.connect((hostname, port))
+        yield wrapped_socket
+    except socket.error:
+        raise
+    finally:
+        wrapped_socket.close()
+
 # pylint: disable=too-many-arguments
 @contextmanager
 def __connect(hostname, port=PORT, check_poodle_tls=False,
@@ -95,15 +113,9 @@ def __uses_sign_alg(site, alg, port):
         return False
     except tlslite.errors.TLSRemoteAlert:
         try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10)
-            wrapped_socket = ssl.SSLSocket(sock=sock,
-                                           ca_certs=certifi.where(),
-                                           cert_reqs=ssl.CERT_REQUIRED,
-                                           server_hostname=site)
-            wrapped_socket.connect((site, port))
-            __cert = wrapped_socket.getpeercert(True)
-            cert = ssl.DER_cert_to_PEM_cert(__cert)
+            with __connect_legacy(site, port) as conn:
+                __cert = conn.getpeercert(True)
+                cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
             show_unknown('Port closed, Details={}:{}'.
                          format(site, port))
@@ -138,16 +150,15 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
         show_unknown('Port closed, Details={}:{}'.format(site, port))
         return False
     except tlslite.errors.TLSRemoteAlert:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
-                                       server_hostname=site)
-        wrapped_socket.connect((site, port))
-        __cert = wrapped_socket.getpeercert(True)
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
-        has_sni = True
+        try:
+            with __connect_legacy(site, port) as conn:
+                __cert = conn.getpeercert(True)
+                cert = ssl.DER_cert_to_PEM_cert(__cert)
+                has_sni = True
+        except socket.error:
+            show_unknown('Port closed, Details={}:{}'.
+                         format(site, port))
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -189,15 +200,14 @@ def is_cert_inactive(site, port=PORT):
         show_unknown('Port closed, Details={}:{}'.format(site, port))
         return False
     except tlslite.errors.TLSRemoteAlert:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
-                                       server_hostname=site)
-        wrapped_socket.connect((site, port))
-        __cert = wrapped_socket.getpeercert(True)
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
+        try:
+            with __connect_legacy(site, port) as conn:
+                __cert = conn.getpeercert(True)
+                cert = ssl.DER_cert_to_PEM_cert(__cert)
+        except socket.error:
+            show_unknown('Port closed, Details={}:{}'.
+                         format(site, port))
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -229,15 +239,14 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         show_unknown('Port closed, Details={}:{}'.format(site, port))
         return False
     except tlslite.errors.TLSRemoteAlert:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
-                                       server_hostname=site)
-        wrapped_socket.connect((site, port))
-        __cert = wrapped_socket.getpeercert(True)
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
+        try:
+            with __connect_legacy(site, port) as conn:
+                __cert = conn.getpeercert(True)
+                cert = ssl.DER_cert_to_PEM_cert(__cert)
+        except socket.error:
+            show_unknown('Port closed, Details={}:{}'.
+                         format(site, port))
+            return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -292,18 +301,11 @@ def is_pfs_disabled(site, port=PORT):
             result = False
     except tlslite.errors.TLSRemoteAlert:
         try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10)
-            wrapped_socket = ssl.SSLSocket(sock=sock,
-                                           ca_certs=certifi.where(),
-                                           cert_reqs=ssl.CERT_REQUIRED,
-                                           server_hostname=site,
-                                           ciphers=ciphers)
-            wrapped_socket.connect((site, port))
-            wrapped_socket.send(packet.encode('utf-8'))
-            show_close('PFS enabled on site, Details={}:{}'.
-                       format(site, port))
-            result = False
+            with __connect_legacy(site, port, ciphers) as conn:
+                conn.send(packet.encode('utf-8'))
+                show_close('PFS enabled on site, Details={}:{}'.
+                           format(site, port))
+                result = False
         except ssl.SSLError:
             show_open('PFS not enabled on site, Details={}:{}'.
                       format(site, port))
