@@ -3,6 +3,7 @@
 
 # standard imports
 from __future__ import absolute_import
+from contextlib import contextmanager
 import datetime
 import socket
 import ssl
@@ -21,16 +22,73 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 PORT = 443
+CIPHER_NAMES = ['aes256', 'aes128', '3des']
+KEY_EXCHANGE = ['rsa', 'dhe_rsa', 'ecdhe_rsa', 'srp_sha',
+                'srp_sha_rsa', 'ecdh_anon', 'dh_anon']
 
 
-@track
-def is_cert_cn_not_equal_to_site(site, port=PORT):
-    """Check whether cert cn is equal to site."""
-    result = True
-    has_sni = False
+def __my_add_padding(self, data):
+    """Add padding to data so that it is multiple of block size."""
+    current_length = len(data)
+    block_length = self.blockSize
+    padding_length = block_length - 1 - (current_length % block_length)
+    padding_bytes = bytearray([padding_length] * (padding_length+1))
+    padding_bytes = bytearray(x ^ 42 for x in padding_bytes[0:-1])
+    padding_bytes.append(padding_length)
+    data += padding_bytes
+    return data
+
+
+# pylint: disable=too-many-arguments
+@contextmanager
+def __connect(hostname, port=PORT, check_poodle_tls=False,
+              min_version=(3, 1),
+              max_version=(3, 3),
+              cipher_names=None,
+              key_exchange_names=None):
+    """Establish a SSL/TLS connection."""
+
+    if cipher_names is None:
+        cipher_names = CIPHER_NAMES
+    if key_exchange_names is None:
+        key_exchange_names = KEY_EXCHANGE
+    orig_method = tlslite.recordlayer.RecordLayer.addPadding
+    if check_poodle_tls:
+        tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
+    else:
+        tlslite.recordlayer.RecordLayer.addPadding = orig_method
+
     try:
-        cert = ssl.get_server_certificate((site, port))
-    except ssl.SSLError:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((hostname, port))
+
+        connection = tlslite.TLSConnection(sock)
+
+        settings = tlslite.HandshakeSettings()
+        settings.minVersion = min_version
+        settings.maxVersion = max_version
+        settings.cipherNames = cipher_names
+        settings.keyExchangeNames = key_exchange_names
+
+        connection.handshakeClientCert(settings=settings)
+        yield connection
+    finally:
+        connection.close()
+
+
+def __uses_sign_alg(site, alg, port):
+    """Check whether cert use a hash method in their signature."""
+    result = True
+
+    try:
+        with __connect(site, port=port) as connection:
+            __cert = connection.session.serverCertChain.x509List[0].bytes
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+    except socket.error:
+        show_unknown('Port closed, Details={}:{}'.
+                     format(site, port))
+        return False
+    except tlslite.errors.TLSRemoteAlert:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -41,10 +99,50 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
             wrapped_socket.connect((site, port))
             __cert = wrapped_socket.getpeercert(True)
             cert = ssl.DER_cert_to_PEM_cert(__cert)
-            has_sni = True
         except socket.error:
-            show_unknown('Port closed, Details={}:{}'.format(site, port))
+            show_unknown('Port closed, Details={}:{}'.
+                         format(site, port))
             return False
+    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
+                                         default_backend())
+
+    sign_algorith = cert_obj.signature_hash_algorithm.name
+
+    if alg in sign_algorith:
+        show_open('Certificate has {} as signature algorithm, \
+Details={}:{}'.format(sign_algorith, site, port))
+        result = True
+    else:
+        show_close('Certificate does not use {} as signature algorithm. \
+It uses {}. Details={}:{}'.
+                   format(alg, sign_algorith, site, port))
+        result = False
+    return result
+
+
+@track
+def is_cert_cn_not_equal_to_site(site, port=PORT):
+    """Check whether cert cn is equal to site."""
+    result = True
+    has_sni = False
+    try:
+        with __connect(site, port=port) as conn:
+            __cert = conn.session.serverCertChain.x509List[0].bytes
+            cert = ssl.DER_cert_to_PEM_cert(__cert)
+    except socket.error:
+        show_unknown('Port closed, Details={}:{}'.format(site, port))
+        return False
+    except tlslite.errors.TLSRemoteAlert:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=site)
+        wrapped_socket.connect((site, port))
+        __cert = wrapped_socket.getpeercert(True)
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
+        has_sni = True
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -79,22 +177,22 @@ def is_cert_inactive(site, port=PORT):
     """Check whether cert is still valid."""
     result = True
     try:
-        cert = ssl.get_server_certificate((site, port))
-    except ssl.SSLError:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10)
-            wrapped_socket = ssl.SSLSocket(sock=sock,
-                                           ca_certs=certifi.where(),
-                                           cert_reqs=ssl.CERT_REQUIRED,
-                                           server_hostname=site)
-            wrapped_socket.connect((site, port))
-            __cert = wrapped_socket.getpeercert(True)
+        with __connect(site, port=port) as conn:
+            __cert = conn.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
-        except socket.error:
-            show_unknown('Port closed, Details={}:{}'.
-                         format(site, port))
-            return False
+    except socket.error:
+        show_unknown('Port closed, Details={}:{}'.format(site, port))
+        return False
+    except tlslite.errors.TLSRemoteAlert:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=site)
+        wrapped_socket.connect((site, port))
+        __cert = wrapped_socket.getpeercert(True)
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -119,22 +217,22 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
     result = True
     try:
-        cert = ssl.get_server_certificate((site, port))
-    except ssl.SSLError:
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(10)
-            wrapped_socket = ssl.SSLSocket(sock=sock,
-                                           ca_certs=certifi.where(),
-                                           cert_reqs=ssl.CERT_REQUIRED,
-                                           server_hostname=site)
-            wrapped_socket.connect((site, port))
-            __cert = wrapped_socket.getpeercert(True)
+        with __connect(site, port=port) as conn:
+            __cert = conn.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
-        except socket.error:
-            show_unknown('Port closed, Details={}:{}'.
-                         format(site, port))
-            return False
+    except socket.error:
+        show_unknown('Port closed, Details={}:{}'.format(site, port))
+        return False
+    except tlslite.errors.TLSRemoteAlert:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        wrapped_socket = ssl.SSLSocket(sock=sock,
+                                       ca_certs=certifi.where(),
+                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       server_hostname=site)
+        wrapped_socket.connect((site, port))
+        __cert = wrapped_socket.getpeercert(True)
+        cert = ssl.DER_cert_to_PEM_cert(__cert)
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -181,15 +279,13 @@ def is_pfs_disabled(site, port=PORT):
                ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA'
 
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        wrapped_socket = ssl.SSLSocket(sock, ciphers=ciphers)
-        wrapped_socket.connect((site, port))
-        wrapped_socket.send(packet.encode('utf-8'))
-        show_close('PFS enabled on site, Details={}:{}'.
-                   format(site, port))
-        result = False
-    except ssl.SSLError:
+        with __connect(site, port=port,
+                       key_exchange_names=['dhe_rsa', 'ecdhe_rsa',
+                                           'ecdh_anon', 'dh_anon']):
+            show_close('PFS enabled on site, Details={}:{}'.
+                       format(site, port))
+            result = False
+    except tlslite.errors.TLSRemoteAlert:
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(10)
@@ -207,13 +303,10 @@ def is_pfs_disabled(site, port=PORT):
             show_open('PFS not enabled on site, Details={}:{}'.
                       format(site, port))
             return True
-
     except socket.error:
         show_unknown('Port is closed for PFS check, Details={}:{}'.
                      format(site, port))
         result = False
-    finally:
-        wrapped_socket.close()
     return result
 
 
@@ -222,22 +315,11 @@ def is_sslv3_enabled(site, port=PORT):
     """Check whether SSLv3 suites are enabled."""
     result = True
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        sock.connect((site, port))
-
-        tls_conn = tlslite.TLSConnection(sock)
-        settings = tlslite.HandshakeSettings()
-
-        settings.minVersion = (3, 0)
-        settings.maxVersion = (3, 0)
-        new_settings = settings.validate()
-
-        tls_conn.handshakeClientCert(settings=new_settings)
-
-        show_open('SSLv3 enabled on site, Details={}:{}'.
-                  format(site, port))
-        result = True
+        with __connect(site, port=port, min_version=(3, 0),
+                       max_version=(3, 0)):
+            show_open('SSLv3 enabled on site, Details={}:{}'.
+                      format(site, port))
+            result = True
     except tlslite.errors.TLSRemoteAlert:
         show_close('SSLv3 not enabled on site, Details={}:{}'.
                    format(site, port))
@@ -253,44 +335,6 @@ def is_sslv3_enabled(site, port=PORT):
     except socket.error:
         show_unknown('Port is closed for SSLv3 check, Details={}:{}'.
                      format(site, port))
-        result = False
-    finally:
-        sock.close()
-    return result
-
-
-def __uses_sign_alg(site, alg, port):
-    """Check whether cert use a hash method in their signature."""
-    result = True
-
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((site, port))
-        connection = tlslite.TLSConnection(sock)
-        settings = tlslite.HandshakeSettings()
-        settings.cipherNames = ["aes256", "aes128", "3des"]
-        settings.minVersion = (3, 0)
-        connection.handshakeClientCert(settings=settings)
-        __cert = connection.session.serverCertChain.x509List[0].bytes
-        cert = ssl.DER_cert_to_PEM_cert(__cert)
-        connection.close()
-    except socket.error:
-        show_unknown('Port closed, Details={}:{}'.
-                     format(site, port))
-        return False
-    cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
-                                         default_backend())
-
-    sign_algorith = cert_obj.signature_hash_algorithm.name
-
-    if alg in sign_algorith:
-        show_open('Certificate has {} as signature algorithm, \
-Details={}:{}'.format(sign_algorith, site, port))
-        result = True
-    else:
-        show_close('Certificate does not use {} as signature algorithm. \
-It uses {}. Details={}:{}'.
-                   format(alg, sign_algorith, site, port))
         result = False
     return result
 
@@ -312,22 +356,11 @@ def is_tlsv1_enabled(site, port=PORT):
     """Check whether TLSv1 suites are enabled."""
     result = True
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(10)
-        sock.connect((site, port))
-
-        tls_conn = tlslite.TLSConnection(sock)
-        settings = tlslite.HandshakeSettings()
-
-        settings.minVersion = (3, 1)
-        settings.maxVersion = (3, 1)
-        new_settings = settings.validate()
-
-        tls_conn.handshakeClientCert(settings=new_settings)
-
-        show_open('TLSv1 enabled on site, Details={}:{}'.
-                  format(site, port))
-        result = True
+        with __connect(site, port=port, min_version=(3, 1),
+                       max_version=(3, 1)):
+            show_open('TLSv1 enabled on site, Details={}:{}'.
+                      format(site, port))
+            result = True
     except tlslite.errors.TLSRemoteAlert:
         show_close('TLSv1 not enabled on site, Details={}:{}'.
                    format(site, port))
@@ -344,55 +377,34 @@ def is_tlsv1_enabled(site, port=PORT):
         show_unknown('Port is closed for TLSv1 check, Details={}:{}'.
                      format(site, port))
         result = False
-    finally:
-        sock.close()
     return result
-
-
-def __my_add_padding(self, data):
-    """Add padding to data so that it is multiple of block size."""
-    current_length = len(data)
-    block_length = self.blockSize
-    padding_length = block_length - 1 - (current_length % block_length)
-    padding_bytes = bytearray([padding_length] * (padding_length+1))
-    padding_bytes = bytearray(x ^ 42 for x in padding_bytes[0:-1])
-    padding_bytes.append(padding_length)
-    data += padding_bytes
-    return data
-
-
-def __connect(hostname, check_poodle_tls, port=PORT):
-    orig_method = tlslite.recordlayer.RecordLayer.addPadding
-    if check_poodle_tls:
-        tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
-    else:
-        tlslite.recordlayer.RecordLayer.addPadding = orig_method
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((hostname, port))
-    connection = tlslite.TLSConnection(sock)
-    settings = tlslite.HandshakeSettings()
-    settings.cipherNames = ["aes256", "aes128", "3des"]
-    settings.minVersion = (3, 1)
-    connection.handshakeClientCert(settings=settings)
-    connection.close()
 
 
 @track
 def has_poodle(site, port=PORT):
     """Check whether POODLE is present."""
-    if is_sslv3_enabled(site, port):
-        show_open('POODLE is enabled. Details={}:{}'.format(site, port))
-        return True
     try:
-        __connect(site, False, port)
+        with __connect(site, port=port, min_version=(3, 0),
+                       max_version=(3, 0)):
+            show_open('POODLE SSLv3 is enabled. Details={}:{}'.
+                      format(site, port))
+            return True
     except tlslite.errors.TLSRemoteAlert:
-        show_unknown('Normal TLS connection failed, Details={}:{}'.
-                     format(site, port))
-        return True
+        pass
+    except tlslite.errors.TLSAbruptCloseError:
+        pass
     try:
-        __connect(site, True, port)
-        show_open('POODLE is enabled. Details={}:{}'.format(site, port))
-        return True
+        with __connect(site, port=port, check_poodle_tls=False):
+            pass
+    except tlslite.errors.TLSRemoteAlert:
+        show_close('POODLE is not enabled. Details={}:{}'.
+                   format(site, port))
+        return False
+    try:
+        with __connect(site, port=port, check_poodle_tls=True):
+            show_open('POODLE TLS is enabled. Details={}:{}'.
+                      format(site, port))
+            return True
     except tlslite.errors.TLSRemoteAlert:
         show_close('POODLE is not enabled. Details={}:{}'.
                    format(site, port))
