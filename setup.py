@@ -55,7 +55,7 @@ setup(
         'pywinrm==0.3.0',            # src.helper.winrm_helper
         'beautifulsoup4==4.6.0',     # src.format.html
         'dnspython==1.15.0',         # src.service.dns
-        'tlslite-ng==0.8.0-alpha1',  # src.service.ssl
+        'tlslite-ng==0.7.1',         # src.service.ssl
         'pyOpenSSL==17.5.0',         # src.service.ssl
         'colorama==0.3.9',           # logging
         'pysmb==1.1.22',             # src.service.smb

@@ -272,8 +272,6 @@ valid before: {}, Not valid after: {}'.
 @track
 def is_pfs_disabled(site, port=PORT):
     """Check whether PFS is enabled."""
-    packet = '<packet>SOME_DATA</packet>'
-
     ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:\
                ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:\
                ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:\
@@ -296,22 +294,21 @@ def is_pfs_disabled(site, port=PORT):
         with __connect(site, port=port,
                        key_exchange_names=['dhe_rsa', 'ecdhe_rsa',
                                            'ecdh_anon', 'dh_anon']):
-            show_close('PFS enabled on site, Details={}:{}'.
+            show_close('Forward Secrecy enabled on site, Details={}:{}'.
                        format(site, port))
             result = False
     except tlslite.errors.TLSRemoteAlert:
         try:
-            with __connect_legacy(site, port, ciphers) as conn:
-                conn.send(packet.encode('utf-8'))
-                show_close('PFS enabled on site, Details={}:{}'.
+            with __connect_legacy(site, port, ciphers):
+                show_close('Forward Secrecy enabled on site, Details={}:{}'.
                            format(site, port))
                 result = False
         except ssl.SSLError:
-            show_open('PFS not enabled on site, Details={}:{}'.
+            show_open('Forward Secrecy not enabled on site, Details={}:{}'.
                       format(site, port))
             return True
     except socket.error:
-        show_unknown('Port is closed for PFS check, Details={}:{}'.
+        show_unknown('Port is closed. Details={}:{}'.
                      format(site, port))
         result = False
     return result
