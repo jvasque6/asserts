@@ -129,12 +129,12 @@ def __uses_sign_alg(site, alg, port):
 
     if alg in sign_algorith:
         show_open('Certificate has {} as signature algorithm, \
-Details={}:{}'.format(sign_algorith, site, port))
+Details={}:{}'.format(sign_algorith.upper(), site, port))
         result = True
     else:
         show_close('Certificate does not use {} as signature algorithm. \
 It uses {}. Details={}:{}'.
-                   format(alg, sign_algorith, site, port))
+                   format(alg.upper(), sign_algorith.upper(), site, port))
         result = False
     return result
 
