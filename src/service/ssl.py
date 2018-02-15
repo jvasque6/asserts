@@ -20,6 +20,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
+from fluidasserts.helper import http_helper
 
 PORT = 443
 CIPHER_NAMES = ["chacha20-poly1305",
@@ -59,6 +60,7 @@ def __connect_legacy(hostname, port=PORT, ciphers=None):
         raise
     finally:
         wrapped_socket.close()
+
 
 # pylint: disable=too-many-arguments
 @contextmanager
@@ -419,3 +421,26 @@ def has_poodle(site, port=PORT):
         show_close('POODLE is not enabled. Details={}:{}'.
                    format(site, port))
         return False
+
+
+@track
+def has_breach(site, port=PORT):
+    """Check whether BREACH is present."""
+
+    url = 'https://{}:{}'.format(site, port)
+    common_compressors = ['compress', 'exi', 'gzip',
+                          'identity', 'pack200-gzip', 'br', 'bzip2',
+                          'lzma', 'peerdist', 'sdch', 'xpress', 'xz']
+
+    for compression in common_compressors:
+        header = {'Accept-Encoding': '{},deflate'.format(compression)}
+        sess = http_helper.HTTPSession(url, headers=header)
+        if 'Content-Encoding' in sess.response.headers:
+            if compression in sess.response.headers['Content-Encoding']:
+                show_open('BREACH is enabled. \
+Details={}:{} uses \'{}\' compression'.
+                          format(site, port, compression))
+                return True
+    show_open('BREACH not enabled. Details={}:{}'.
+              format(site, port))
+    return False
