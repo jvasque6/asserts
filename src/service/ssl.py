@@ -11,6 +11,10 @@ import ssl
 # 3rd party imports
 import certifi
 import tlslite
+from tlslite.constants import CipherSuite, GroupName
+from tlslite.constants import ContentType, CertificateType
+from tlslite.extensions import SupportedGroupsExtension
+from tlslite.messages import RecordHeader3
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.x509.oid import NameOID
@@ -23,6 +27,7 @@ from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 
 PORT = 443
+CIPHER_SUITES = CipherSuite.tls12Suites
 CIPHER_NAMES = ["chacha20-poly1305",
                 "aes256gcm", "aes128gcm",
                 "aes256", "aes128",
@@ -99,6 +104,61 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
         yield connection
     finally:
         connection.close()
+
+
+@contextmanager
+def __tls_hello(hostname, port=PORT, version=(3, 3), cipher_suites=None):
+    """Send a ClientHello message."""
+
+    check_poodle_tls = False
+
+    if cipher_suites is None:
+        cipher_suites = CIPHER_SUITES
+    orig_method = tlslite.recordlayer.RecordLayer.addPadding
+    if check_poodle_tls:
+        tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
+    else:
+        tlslite.recordlayer.RecordLayer.addPadding = orig_method
+
+    try:
+        ext = [SupportedGroupsExtension().create([GroupName.x25519,
+                                                  GroupName.secp256r1,
+                                                  GroupName.secp384r1,
+                                                  GroupName.secp521r1,
+                                                  GroupName.ffdhe2048,
+                                                  GroupName.ffdhe3072,
+                                                  GroupName.ffdhe4096,
+                                                  GroupName.ffdhe6144,
+                                                  GroupName.ffdhe8192])]
+        hello = tlslite.messages.ClientHello()
+        hello.create(version, tlslite.utils.cryptomath.getRandomBytes(32),
+                     bytearray(0), cipher_suites,
+                     certificate_types=[CertificateType.x509],
+                     srpUsername=None, tack=False, supports_npn=False,
+                     serverName=hostname, extensions=ext)
+        hello_data = hello.write()
+        header_data = RecordHeader3().create(version,
+                                             ContentType.handshake,
+                                             len(hello_data)).write()
+        packet = header_data + hello_data
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect((hostname, port))
+        sock.send(packet)
+        response = sock.recv(4096)
+        if not response:
+            raise tlslite.errors.TLSRemoteAlert
+
+        packet_parser = tlslite.messages.Parser(bytearray(response))
+        response_header = RecordHeader3()
+        response_header.parse(packet_parser)
+        if response_header.type == ContentType.alert:
+            raise tlslite.errors.TLSRemoteAlert
+        print('YAI')
+        yield sock
+    except socket.error:
+        raise
+    finally:
+        sock.close()
 
 
 def __uses_sign_alg(site, alg, port):
