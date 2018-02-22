@@ -81,24 +81,24 @@ def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
 @track
 def has_not_httponly_set(cookie_name, url, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
-    return __has_not_http_only(cookie_name, url=url, *args, **kwargs)
+    return __has_not_http_only(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_httponly_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
-    return __has_not_http_only(cookie_name, cookie_jar=cookie_jar,
+    return __has_not_http_only(cookie_name, None, cookie_jar,
                                *args, **kwargs)
 
 
 @track
 def has_not_secure_set(cookie_name, url, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
-    return __has_not_secure(cookie_name, url=url, *args, **kwargs)
+    return __has_not_secure(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_secure_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
-    return __has_not_secure(cookie_name, cookie_jar=cookie_jar,
+    return __has_not_secure(cookie_name, None, cookie_jar
                             *args, **kwargs)
