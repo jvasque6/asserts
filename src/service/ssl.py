@@ -30,8 +30,7 @@ PORT = 443
 CIPHER_SUITES = CipherSuite.tls12Suites
 CIPHER_NAMES = ["chacha20-poly1305",
                 "aes256gcm", "aes128gcm",
-                "aes256", "aes128",
-                "3des", "rc4", "null", "chacha20-poly1305_draft00"]
+                "aes256", "aes128"]
 KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
                 "ecdh_anon", "dh_anon"]
 
@@ -73,7 +72,8 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
               min_version=(3, 1),
               max_version=(3, 3),
               cipher_names=None,
-              key_exchange_names=None):
+              key_exchange_names=None,
+              anon=False):
     """Establish a SSL/TLS connection."""
 
     if cipher_names is None:
@@ -100,7 +100,10 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
         settings.cipherNames = cipher_names
         settings.keyExchangeNames = key_exchange_names
 
-        connection.handshakeClientCert(settings=settings)
+        if anon:
+            connection.handshakeClientAnonymous(settings=settings)
+        else:
+            connection.handshakeClientCert(settings=settings)
         yield connection
     finally:
         connection.close()
@@ -503,3 +506,31 @@ Details={}:{} uses \'{}\' compression'.
                 return True
     show_close('BREACH not enabled. Details={}:{}'.format(site, port))
     return False
+
+
+def allows_anon_ciphers(site, port=PORT):
+    """Check whether site accepts anonymous cipher suites."""
+    result = True
+    try:
+        with __connect(site, port=port,
+                       anon=True):
+            show_open('Site allows anonymous cipher suites, Details={}:{}'.
+                      format(site, port))
+            result = True
+    except tlslite.errors.TLSRemoteAlert:
+        show_close('Site not allows anonymous cipher suites, Details={}:{}'.
+                   format(site, port))
+        result = False
+    except tlslite.errors.TLSAbruptCloseError:
+        show_close('Site not allows anonymous cipher suites, Details={}:{}'.
+                   format(site, port))
+        result = False
+    except tlslite.errors.TLSLocalAlert:
+        show_close('Site not allows anonymous cipher suites, Details={}:{}'.
+                   format(site, port))
+        result = False
+    except socket.error:
+        show_unknown('Port is closed, Details={}:{}'.
+                     format(site, port))
+        result = False
+    return result
