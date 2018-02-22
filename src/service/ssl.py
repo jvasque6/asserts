@@ -501,6 +501,5 @@ def has_breach(site, port=PORT):
 Details={}:{} uses \'{}\' compression'.
                           format(site, port, compression))
                 return True
-    show_open('BREACH not enabled. Details={}:{}'.
-              format(site, port))
+    show_close('BREACH not enabled. Details={}:{}'.format(site, port))
     return False
