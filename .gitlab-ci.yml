@@ -10,7 +10,7 @@ services:
 
 before_script:
   - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
-  - docker build -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
+  - docker build --cache-from registry.gitlab.com/fluidsignal/asserts:base -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
 
 
 stages:
@@ -22,7 +22,7 @@ stages:
 build:
     stage: build
     script:
-        - docker build -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
+        - docker build --cache-from registry.gitlab.com/fluidsignal/asserts:builder -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
         - docker build --no-cache --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS --build-arg branch=$CI_COMMIT_REF_NAME -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
 
 lint:
