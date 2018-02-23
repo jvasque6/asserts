@@ -549,21 +549,21 @@ def allows_weak_ciphers(site, port=PORT):
     result = True
     try:
         with __connect(site, port=port,
-                       cipher_names=['rc4', '3des']):
-            show_open('Site allows weak (RC4 and 3DES) cipher suites, \
-Details={}:{}'.format(site, port))
+                       cipher_names=['rc4', '3des', 'null']):
+            show_open('Site allows weak (RC4, 3DES and NULL) cipher \
+suites, Details={}:{}'.format(site, port))
             result = True
     except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not allows weak (RC4 and 3DES) cipher suites, \
-Details={}:{}'.format(site, port))
+        show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
+suites, Details={}:{}'.format(site, port))
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not allows weak (RC4 and 3DES) cipher suites, \
-Details={}:{}'.format(site, port))
+        show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
+suites, Details={}:{}'.format(site, port))
         result = False
     except tlslite.errors.TLSLocalAlert:
-        show_close('Site not allows weak (RC4 and 3DES) cipher suites, \
-Details={}:{}'.format(site, port))
+        show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
+suites, Details={}:{}'.format(site, port))
         result = False
     except socket.error:
         show_unknown('Port is closed, Details={}:{}'.
