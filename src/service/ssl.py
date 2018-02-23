@@ -564,3 +564,37 @@ Details={}:{}'.format(site, port))
                      format(site, port))
         result = False
     return result
+
+
+@track
+def has_beast(site, port=PORT):
+    """Check whether site allows BEAST attack."""
+    result = True
+    try:
+        with __connect(site, port=port, min_version=(3, 1),
+                       max_version=(3, 1)) as conn:
+            if conn._recordLayer.isCBCMode(): # noqa
+                show_open('Site vulnerable to BEAST attack, \
+Details={}:{}'.format(site, port))
+                result = True
+            else:
+                show_close('Site allows TLSv1.0. However, it seems not \
+to be vulnerable to BEAST attack, Details={}:{}'.format(site, port))
+                result = False
+    except tlslite.errors.TLSRemoteAlert:
+        show_close('Site not vulnerable to BEAST attack, \
+Details={}:{}'.format(site, port))
+        result = False
+    except tlslite.errors.TLSAbruptCloseError:
+        show_close('Site not vulnerable to BEAST attack, \
+Details={}:{}'.format(site, port))
+        result = False
+    except tlslite.errors.TLSLocalAlert:
+        show_close('Site not vulnerable to BEAST attack, \
+Details={}:{}'.format(site, port))
+        result = False
+    except socket.error:
+        show_unknown('Port is closed, Details={}:{}'.
+                     format(site, port))
+        result = False
+    return result
