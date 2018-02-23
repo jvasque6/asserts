@@ -455,8 +455,8 @@ def has_poodle(site, port=PORT):
     try:
         with __connect(site, port=port, min_version=(3, 0),
                        max_version=(3, 0)):
-            show_open('POODLE SSLv3 is enabled. Details={}:{}'.
-                      format(site, port))
+            show_open('Site vulnerable to POODLE SSLv3 attack. \
+Details={}:{}'.format(site, port))
             return True
     except tlslite.errors.TLSRemoteAlert:
         pass
@@ -466,22 +466,22 @@ def has_poodle(site, port=PORT):
         with __connect(site, port=port, check_poodle_tls=False):
             pass
     except tlslite.errors.TLSRemoteAlert:
-        show_close('POODLE is not enabled. Details={}:{}'.
+        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
                    format(site, port))
         return False
     try:
         with __connect(site, port=port, check_poodle_tls=True,
                        cipher_names=["aes256", "aes128", "3des"],
                        min_version=(3, 1)):
-            show_open('POODLE TLS is enabled. Details={}:{}'.
-                      format(site, port))
+            show_open('Site vulnerable to POODLE TLS attack. \
+Details={}:{}'.format(site, port))
             return True
     except tlslite.errors.TLSRemoteAlert:
-        show_close('POODLE is not enabled. Details={}:{}'.
+        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
                    format(site, port))
         return False
     except tlslite.errors.TLSAbruptCloseError:
-        show_close('POODLE is not enabled. Details={}:{}'.
+        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
                    format(site, port))
         return False
 
@@ -500,11 +500,12 @@ def has_breach(site, port=PORT):
         sess = http_helper.HTTPSession(url, headers=header)
         if 'Content-Encoding' in sess.response.headers:
             if compression in sess.response.headers['Content-Encoding']:
-                show_open('BREACH is enabled. \
+                show_open('Site vulnerable to BREACH attack. \
 Details={}:{} uses \'{}\' compression'.
                           format(site, port, compression))
                 return True
-    show_close('BREACH not enabled. Details={}:{}'.format(site, port))
+    show_close('Site not vulnerable to BREACH attack. Details={}:{}'.
+               format(site, port))
     return False
 
 
@@ -573,7 +574,7 @@ def has_beast(site, port=PORT):
     try:
         with __connect(site, port=port, min_version=(3, 1),
                        max_version=(3, 1)) as conn:
-            if conn._recordLayer.isCBCMode(): # noqa
+            if conn._recordLayer.isCBCMode():  # noqa
                 show_open('Site vulnerable to BEAST attack, \
 Details={}:{}'.format(site, port))
                 result = True
