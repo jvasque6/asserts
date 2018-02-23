@@ -454,10 +454,15 @@ def has_poodle(site, port=PORT):
     """Check whether POODLE is present."""
     try:
         with __connect(site, port=port, min_version=(3, 0),
-                       max_version=(3, 0)):
-            show_open('Site vulnerable to POODLE SSLv3 attack. \
+                       max_version=(3, 0)) as conn:
+            if conn._recordLayer.isCBCMode():  # noqa
+                show_open('Site vulnerable to POODLE SSLv3 attack. \
 Details={}:{}'.format(site, port))
-            return True
+                return True
+            else:
+                show_close('Site allows SSLv3. However, it seems not to \
+be vulnerable to POODLE SSLv3 attack, Details={}:{}'.format(site, port))
+                return False
     except tlslite.errors.TLSRemoteAlert:
         pass
     except tlslite.errors.TLSAbruptCloseError:
