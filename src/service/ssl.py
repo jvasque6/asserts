@@ -12,10 +12,6 @@ import struct
 # 3rd party imports
 import certifi
 import tlslite
-from tlslite.constants import CipherSuite, GroupName
-from tlslite.constants import ContentType, CertificateType
-from tlslite.extensions import SupportedGroupsExtension
-from tlslite.messages import RecordHeader3
 from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import load_pem_x509_certificate
 from cryptography.x509.oid import NameOID
@@ -28,7 +24,6 @@ from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
 
 PORT = 443
-CIPHER_SUITES = CipherSuite.tls12Suites
 CIPHER_NAMES = ["chacha20-poly1305",
                 "aes256gcm", "aes128gcm",
                 "aes256", "aes128"]
@@ -204,61 +199,6 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
         yield connection
     finally:
         connection.close()
-
-
-@contextmanager
-def __tls_hello(hostname, port=PORT, version=(3, 3), cipher_suites=None):
-    """Send a ClientHello message."""
-
-    check_poodle_tls = False
-
-    if cipher_suites is None:
-        cipher_suites = CIPHER_SUITES
-    orig_method = tlslite.recordlayer.RecordLayer.addPadding
-    if check_poodle_tls:
-        tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
-    else:
-        tlslite.recordlayer.RecordLayer.addPadding = orig_method
-
-    try:
-        ext = [SupportedGroupsExtension().create([GroupName.x25519,
-                                                  GroupName.secp256r1,
-                                                  GroupName.secp384r1,
-                                                  GroupName.secp521r1,
-                                                  GroupName.ffdhe2048,
-                                                  GroupName.ffdhe3072,
-                                                  GroupName.ffdhe4096,
-                                                  GroupName.ffdhe6144,
-                                                  GroupName.ffdhe8192])]
-        hello = tlslite.messages.ClientHello()
-        hello.create(version, tlslite.utils.cryptomath.getRandomBytes(32),
-                     bytearray(0), cipher_suites,
-                     certificate_types=[CertificateType.x509],
-                     srpUsername=None, tack=False, supports_npn=False,
-                     serverName=hostname, extensions=ext)
-        hello_data = hello.write()
-        header_data = RecordHeader3().create(version,
-                                             ContentType.handshake,
-                                             len(hello_data)).write()
-        packet = header_data + hello_data
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((hostname, port))
-        sock.send(packet)
-        response = sock.recv(4096)
-        if not response:
-            raise tlslite.errors.TLSRemoteAlert
-
-        packet_parser = tlslite.messages.Parser(bytearray(response))
-        response_header = RecordHeader3()
-        response_header.parse(packet_parser)
-        if response_header.type == ContentType.alert:
-            raise tlslite.errors.TLSRemoteAlert
-        print('YAI')
-        yield sock
-    except socket.error:
-        raise
-    finally:
-        sock.close()
 
 
 def __uses_sign_alg(site, alg, port):
@@ -706,6 +646,7 @@ Details={}:{}'.format(site, port))
 @track
 def has_heartbleed(site, port=PORT):
     """Check whether site allows HEARTBLEED attack."""
+    # pylint: disable=too-many-nested-blocks
     try:
         versions = ['TLSv1.2', 'TLSv1.1', 'TLSv1.0', 'SSLv3']
         for vers in versions:
@@ -713,24 +654,27 @@ def has_heartbleed(site, port=PORT):
             sock.settimeout(5)
             sock.connect((site, port))
             sock.send(__hex2bin(__build_client_hello(vers)))
-            typ, _, message = __rcv_tls_record(sock)
+            typ, _, _ = __rcv_tls_record(sock)
             if not typ:
                 continue
-            if typ == 22 and ord(message[0]) == 0x0E:
+            if typ == 22:
                 # Received Server Hello
                 sock.send(__hex2bin(__build_heartbeat(vers)))
-                typ, _, pay = __rcv_tls_record(sock)
-                if typ == 24:
-                    # Received hearbeat response
-                    if len(pay) > 3:
-                        # Length is higher than sent
-                        show_open('Site vulnerable to Heartbleed \
-attack, Details={}:{}'.format(site, port))
-                        return True
-                    show_close('Site support SSL/TLS heartbeats, \
+                while True:
+                    typ, _, pay = __rcv_tls_record(sock)
+                    if typ == 21 or typ is None:
+                        break
+                    if typ == 24:
+                        # Received hearbeat response
+                        if len(pay) > 3:
+                            # Length is higher than sent
+                            show_open('Site vulnerable to Heartbleed \
+attack ({}), Details={}:{}'.format(vers, site, port))
+                            return True
+                        show_close('Site support SSL/TLS heartbeats, \
 but it\'s not vulnerable to Heartbleed. \
 Details={}:{}'.format(site, port))
-                    return False
+                        return False
             sock.close()
         show_close('Site doesn\'t support SSL/TLS \
 heartbeats, Details={}:{}'.format(site, port))
