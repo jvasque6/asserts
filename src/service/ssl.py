@@ -52,6 +52,8 @@ def __rcv_tls_record(sock):
         tls_header = sock.recv(5)
         if not tls_header:
             return None, None, None
+        if len(tls_header) < 5:
+            return None, None, None
         typ, ver, length = struct.unpack('>BHH', tls_header)
         message = ''
         while len(message) != length:
