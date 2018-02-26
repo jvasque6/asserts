@@ -707,11 +707,11 @@ Details={}:{}'.format(site, port))
 def has_heartbleed(site, port=PORT):
     """Check whether site allows HEARTBLEED attack."""
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(5)
-        sock.connect((site, port))
         versions = ['TLSv1.2', 'TLSv1.1', 'TLSv1.0', 'SSLv3']
         for vers in versions:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(5)
+            sock.connect((site, port))
             sock.send(__hex2bin(__build_client_hello(vers)))
             typ, _, message = __rcv_tls_record(sock)
             if not typ:
@@ -731,6 +731,7 @@ attack, Details={}:{}'.format(site, port))
 but it\'s not vulnerable to Heartbleed. \
 Details={}:{}'.format(site, port))
                     return False
+            sock.close()
         show_close('Site doesn\'t support SSL/TLS \
 heartbeats, Details={}:{}'.format(site, port))
         return False
