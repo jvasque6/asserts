@@ -673,7 +673,7 @@ def has_heartbleed(site, port=PORT):
                             show_open('Site vulnerable to Heartbleed \
 attack ({}), Details={}:{}'.format(vers, site, port))
                             return True
-                        show_close('Site support SSL/TLS heartbeats, \
+                        show_close('Site supports SSL/TLS heartbeats, \
 but it\'s not vulnerable to Heartbleed. \
 Details={}:{}'.format(site, port))
                         return False
