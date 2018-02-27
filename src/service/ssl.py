@@ -4,6 +4,7 @@
 # standard imports
 from __future__ import absolute_import
 from contextlib import contextmanager
+import copy
 import datetime
 import socket
 import ssl
@@ -29,6 +30,8 @@ CIPHER_NAMES = ["chacha20-poly1305",
                 "aes256", "aes128"]
 KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
                 "ecdh_anon", "dh_anon"]
+
+ORIG_METHOD = copy.deepcopy(tlslite.recordlayer.RecordLayer.addPadding)
 
 
 def __my_add_padding(self, data):
@@ -174,11 +177,11 @@ def __connect(hostname, port=PORT, check_poodle_tls=False,
         cipher_names = CIPHER_NAMES
     if key_exchange_names is None:
         key_exchange_names = KEY_EXCHANGE
-    orig_method = tlslite.recordlayer.RecordLayer.addPadding
+
     if check_poodle_tls:
         tlslite.recordlayer.RecordLayer.addPadding = __my_add_padding
     else:
-        tlslite.recordlayer.RecordLayer.addPadding = orig_method
+        tlslite.recordlayer.RecordLayer.addPadding = ORIG_METHOD
 
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
