@@ -23,5 +23,5 @@ def send_mail(template_name, email_to, context):
     mandrill_client.messages.send_template(template_name, [], message)
 
 
-send_mail('assertsnewversionr', ["engineering@fluid.la"],
+send_mail('assertsnewversionr', ["engineering@fluidattacks.com"],
           context={'Name': "Bob Marley"})
