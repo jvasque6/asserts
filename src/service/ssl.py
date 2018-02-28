@@ -494,27 +494,24 @@ def is_tlsv1_enabled(site, port=PORT):
 @track
 def has_poodle(site, port=PORT):
     """Check whether POODLE is present."""
+    result = False
     try:
         with __connect(site, port=port, min_version=(3, 0),
                        max_version=(3, 0)) as conn:
             if conn._recordLayer.isCBCMode():  # noqa
                 show_open('Site vulnerable to POODLE SSLv3 attack. \
 Details={}:{}'.format(site, port))
-                return True
+                result = True
             else:
                 show_close('Site allows SSLv3. However, it seems not to \
 be vulnerable to POODLE SSLv3 attack, Details={}:{}'.format(site, port))
-                return False
+                result = False
     except tlslite.errors.TLSRemoteAlert:
         pass
     except tlslite.errors.TLSAbruptCloseError:
         pass
-    try:
-        with __connect(site, port=port, check_poodle_tls=False):
-            pass
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
-                   format(site, port))
+    except socket.error:
+        show_unknown('Port is closed, Details={}:{}'.format(site, port))
         return False
     try:
         with __connect(site, port=port, check_poodle_tls=True,
@@ -522,15 +519,21 @@ be vulnerable to POODLE SSLv3 attack, Details={}:{}'.format(site, port))
                        min_version=(3, 1)):
             show_open('Site vulnerable to POODLE TLS attack. \
 Details={}:{}'.format(site, port))
-            return True
+            result = True
     except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
-                   format(site, port))
-        return False
+        show_close('Site not vulnerable to POODLE TLS attack. \
+Details={}:{}'.format(site, port))
+        if not result:
+            result = False
     except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not vulnerable to POODLE attack. Details={}:{}'.
-                   format(site, port))
+        show_close('Site not vulnerable to POODLE TLS attack. \
+Details={}:{}'.format(site, port))
+        if not result:
+            result = False
+    except socket.error:
+        show_unknown('Port is closed, Details={}:{}'.format(site, port))
         return False
+    return result
 
 
 @track
