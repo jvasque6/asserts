@@ -136,7 +136,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.cookies = ret.cookies
             return ret
         except requests.ConnectionError:
-            LOGGER.error('Sin acceso a %s , %s', self.url, 'ERROR')
             raise ConnError
 
     def formauth_by_statuscode(self, code):
@@ -312,7 +311,7 @@ def has_insecure_header(url, header, *args, **kwargs):
                 kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
-    except requests.ConnectionError:
+    except ConnError:
         show_unknown('{} HTTP error checking {}, Details=Could not connect'.
                      format(header, url))
         return True
