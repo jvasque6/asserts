@@ -552,11 +552,11 @@ def has_breach(site, port=PORT):
             if 'Content-Encoding' in sess.response.headers:
                 if compression in sess.response.headers['Content-Encoding']:
                     show_open('Site vulnerable to BREACH attack. \
-    Details={}:{} uses \'{}\' compression'.
+Details={}:{} uses \'{}\' compression'.
                               format(site, port, compression))
                     return True
         except http_helper.ConnError:
-            show_unknown('Could not connect, Detauls={}:{}'.
+            show_unknown('Could not connect, Details={}:{}'.
                          format(site, port))
             return False
     show_close('Site not vulnerable to BREACH attack. Details={}:{}'.
