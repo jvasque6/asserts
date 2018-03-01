@@ -81,7 +81,14 @@ CLIENT_ID = os.environ['FA_LICENSE_KEY']
 USER_EMAIL = os.environ['FA_USER_EMAIL']
 
 try:
-    print('Loading modules...')
+    HEADER = """
+FLUIDAsserts by FLUIDAttacks (https://fluidattacks.com)
+All rights reserved.
+Loading modules...
+    """
+    HEADER_COL = Style.BRIGHT + Fore.WHITE + HEADER + Style.RESET_ALL
+    print(HEADER_COL)
+
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
