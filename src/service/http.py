@@ -415,14 +415,19 @@ def is_version_visible(ip_address, ssl=False, port=80):
 def is_not_https_required(url):
     """Check if HTTPS is always forced on a given url."""
     assert url.startswith('http://')
-    http_session = http_helper.HTTPSession(url)
-    if http_session.url.startswith('https'):
-        show_close('HTTPS is forced on URL, Details={}'.
-                   format(http_session.url))
+    try:
+        http_session = http_helper.HTTPSession(url)
+        if http_session.url.startswith('https'):
+            show_close('HTTPS is forced on URL, Details={}'.
+                       format(http_session.url))
+            return False
+        show_open('HTTPS is not forced on URL, Details={}'.
+                  format(http_session.url))
+        return True
+    except http_helper.ConnError:
+        show_unknown('Could not connect, Details={}'.format(url))
         return False
-    show_open('HTTPS is not forced on URL, Details={}'.
-              format(http_session.url))
-    return True
+
 
 
 @track
