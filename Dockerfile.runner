@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk update \
+RUN mkdir -p /root/.pip && apk update \
     && apk upgrade \
     && apk add python \
     py2-pip \
@@ -12,5 +12,7 @@ RUN apk update \
     make \
     jpeg-dev \
     curl
+
+ADD conf/pipconf /root/.pip/pip.conf
 
 RUN pip install fluidasserts
