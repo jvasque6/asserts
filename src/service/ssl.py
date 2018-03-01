@@ -547,13 +547,18 @@ def has_breach(site, port=PORT):
 
     for compression in common_compressors:
         header = {'Accept-Encoding': '{},deflate'.format(compression)}
-        sess = http_helper.HTTPSession(url, headers=header)
-        if 'Content-Encoding' in sess.response.headers:
-            if compression in sess.response.headers['Content-Encoding']:
-                show_open('Site vulnerable to BREACH attack. \
-Details={}:{} uses \'{}\' compression'.
-                          format(site, port, compression))
-                return True
+        try:
+            sess = http_helper.HTTPSession(url, headers=header)
+            if 'Content-Encoding' in sess.response.headers:
+                if compression in sess.response.headers['Content-Encoding']:
+                    show_open('Site vulnerable to BREACH attack. \
+    Details={}:{} uses \'{}\' compression'.
+                              format(site, port, compression))
+                    return True
+        except http_helper.ConnError:
+            show_unknown('Could not connect, Detauls={}:{}'.
+                         format(site, port))
+            return False
     show_close('Site not vulnerable to BREACH attack. Details={}:{}'.
                format(site, port))
     return False
@@ -625,23 +630,23 @@ def has_beast(site, port=PORT):
         with __connect(site, port=port, min_version=(3, 1),
                        max_version=(3, 1)) as conn:
             if conn._recordLayer.isCBCMode():  # noqa
-                show_open('Site vulnerable to BEAST attack, \
+                show_open('Site enables BEAST attack to clients, \
 Details={}:{}'.format(site, port))
                 result = True
             else:
-                show_close('Site allows TLSv1.0. However, it seems not \
-to be vulnerable to BEAST attack, Details={}:{}'.format(site, port))
+                show_close('Site allows TLSv1.0. However, it seems \
+to be not an enabler to BEAST attack, Details={}:{}'.format(site, port))
                 result = False
     except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not vulnerable to BEAST attack, \
+        show_close('Site not enables to BEAST attack to clients, \
 Details={}:{}'.format(site, port))
         result = False
     except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not vulnerable to BEAST attack, \
+        show_close('Site not enables to BEAST attack to clients, \
 Details={}:{}'.format(site, port))
         result = False
     except tlslite.errors.TLSLocalAlert:
-        show_close('Site not vulnerable to BEAST attack, \
+        show_close('Site not enables to BEAST attack to clients, \
 Details={}:{}'.format(site, port))
         result = False
     except socket.error:
