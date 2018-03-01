@@ -48,7 +48,7 @@ deploy:
     stage: deploy
     script:
         - docker-compose run deploy
-        - docker build --no-cache -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
+        - docker build --no-cache --build-arg jfrog_user=$JFROG_USER --build-arg jfrog_pass=$JFROG_PASS -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
     only:
     - master
 

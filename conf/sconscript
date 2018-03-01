@@ -111,8 +111,8 @@ PhonyTargets(lenv, smoke=[
 
 PhonyTargets(lenv, deploy=[
     'cp conf/dotpypirc ~/.pypirc',
-    'sed -i -e "s/__jfrog_user__/' +  lenv['ENV']['JFROG_USER'] + '/g" ~/.pypirc conf/pipconf',
-    'sed -i -e "s/__jfrog_pass__/' +  lenv['ENV']['JFROG_PASS'] + '/g" ~/.pypirc conf/pipconf',
+    'sed -i -e "s/__jfrog_user__/' +  lenv['ENV']['JFROG_USER'] + '/g" ~/.pypirc',
+    'sed -i -e "s/__jfrog_pass__/' +  lenv['ENV']['JFROG_PASS'] + '/g" ~/.pypirc',
     'python setup.py sdist bdist_wheel upload -r local',
     'python deploy/send_mail.py'
 ])
