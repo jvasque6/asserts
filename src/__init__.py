@@ -19,6 +19,7 @@ import mixpanel
 
 # pylint: disable=too-many-instance-attributes
 
+
 class Message(object):
     """Output message class."""
 
@@ -47,17 +48,20 @@ class Message(object):
         if self.details is None:
             self.details = 'None'
 
-        return {'Status': self.status,
-                'Message': self.message,
-                'Details': self.details,
-                'References': self.references,
-                'Caller': self.caller}
+        ret = {'Status': self.status,
+               'Message': self.message,
+               'Details': self.details,
+               'Caller': self.caller}
 
-    def get_json(self):
+        if self.references:
+            ret['References'] = self.references
+        return ret
+
+    def as_json(self):
         """Get JSON representation of message."""
         return json.dumps(self.__build_message())
 
-    def get_logger(self):
+    def as_logger(self):
         """Get logger representation of message."""
         message = self.__build_message()
         if self.status == 'OPEN':
@@ -157,13 +161,13 @@ except mixpanel.MixpanelException:
 def show_close(message, details=None, refs=None):
     """Show close message."""
     message = Message('CLOSE', message, details, refs)
-    LOGGER.info(message.get_logger())
+    LOGGER.info(message.as_logger())
 
 
 def show_open(message, details=None, refs=None):
     """Show close message."""
     message = Message('OPEN', message, details, refs)
-    LOGGER.info(message.get_logger())
+    LOGGER.info(message.as_logger())
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
             sys.exit(1)
@@ -172,4 +176,4 @@ def show_open(message, details=None, refs=None):
 def show_unknown(message, details=None, refs=None):
     """Show close message."""
     message = Message('UNKNOWN', message, details, refs)
-    LOGGER.info(message.get_logger())
+    LOGGER.info(message.as_logger())
