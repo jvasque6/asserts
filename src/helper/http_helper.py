@@ -137,6 +137,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return ret
         except requests.ConnectionError:
             raise ConnError
+        except requests.exceptions.TooManyRedirects:
+            raise ConnError
 
     def formauth_by_statuscode(self, code):
         """Authenticate using status code as verification."""
