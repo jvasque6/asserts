@@ -3,6 +3,7 @@
 """FLUIDAsserts main package."""
 
 # standard imports
+import json
 import logging.config
 import os
 import tempfile
@@ -15,6 +16,61 @@ import mixpanel
 
 # local imports
 # none
+
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-arguments
+
+class Message(object):
+    """Output message class."""
+
+    def __init__(self, status, message, details, references, caller):
+        """Constructor method."""
+        self.__status_codes = ['OPEN', 'CLOSE', 'UNKNOWN', 'ERROR']
+        self.status = status
+        self.message = message
+        self.details = details
+        self.references = references
+        self.caller = caller
+        self.__open = Fore.WHITE + Back.RED + 'OPEN' + Style.RESET_ALL
+        self.__close = Fore.WHITE + Back.GREEN + 'CLOSE' + \
+            Style.RESET_ALL
+        self.__unknown = Fore.BLACK + Back.WHITE + 'UNKNOWN' + \
+            Style.RESET_ALL
+
+    def __build_message(self):
+        """Build message dict."""
+        assert self.status in self.__status_codes
+        assert self.message is not None
+        if self.details is None:
+            self.details = 'None'
+
+        return {'Status': self.status,
+                'Message': self.message,
+                'Details': self.details,
+                'References': self.references,
+                'Caller': self.caller}
+
+    def get_json(self):
+        """Get JSON representation of message."""
+        return json.dumps(self.__build_message())
+
+    def get_logger(self):
+        """Get logger representation of message."""
+        message = self.__build_message()
+        if self.status == 'OPEN':
+            ret_message = '{}: {}. Details={}'.format(
+                self.__open, message['Message'],
+                message['Details'])
+        elif self.status == 'CLOSE':
+            ret_message = '{}: {}. Details={}'.format(
+                self.__close, message['Message'],
+                message['Details'])
+        elif self.status == 'UNKNOWN':
+            ret_message = '{}: {}. Details={}'.format(
+                self.__unknown, message['Message'],
+                message['Details'])
+        return ret_message
+
 
 init(autoreset=True)
 
@@ -95,31 +151,22 @@ except mixpanel.MixpanelException:
     pass
 
 
-def show_close(message):
+def show_close(message, details=None, refs=None, caller=None):
     """Show close message."""
-    state = 'CLOSE'
-    state_col = Fore.WHITE + Back.GREEN + state + Style.RESET_ALL
-    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
-                                                   message=message)
-    LOGGER.info(text_to_show)
+    message = Message('CLOSE', message, details, refs, caller)
+    LOGGER.info(message.get_logger())
 
 
-def show_open(message):
+def show_open(message, details=None, refs=None, caller=None):
     """Show close message."""
-    state = 'OPEN'
-    state_col = Fore.WHITE + Back.RED + state + Style.RESET_ALL
-    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
-                                                   message=message)
-    LOGGER.info(text_to_show)
+    message = Message('OPEN', message, details, refs, caller)
+    LOGGER.info(message.get_logger())
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
             sys.exit(1)
 
 
-def show_unknown(message):
+def show_unknown(message, details=None, refs=None, caller=None):
     """Show close message."""
-    state = 'UNKNOWN'
-    state_col = Fore.BLACK + Back.WHITE + state + Style.RESET_ALL
-    text_to_show = '{state_col}: {message}'.format(state_col=state_col,
-                                                   message=message)
-    LOGGER.info(text_to_show)
+    message = Message('UNKNOWN', message, details, refs, caller)
+    LOGGER.info(message.get_logger())
