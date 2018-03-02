@@ -314,14 +314,15 @@ def has_insecure_header(url, header, *args, **kwargs):
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
     except ConnError:
-        show_unknown('{} HTTP error checking {}, Details=Could not connect'.
-                     format(header, url))
+        show_unknown('HTTP error checking {}'.format(header),
+                     details='Could not connect to {}'.format(url))
         return True
     result = True
     if header == 'X-AspNet-Version' or header == 'Server':
         if header in headers_info:
             show_open('{} HTTP insecure header present in {}'.
-                      format(header, url))
+                      format(header, url),
+                      refs='apache/habilitar-headers-seguridad')
             return True
         show_close('{} HTTP insecure header not present in {}'.
                    format(header, url))
@@ -333,12 +334,16 @@ def has_insecure_header(url, header, *args, **kwargs):
                        format(header, url, value))
             result = False
         else:
-            show_open('{} HTTP header {}, Details={}'.
-                      format(header, url, value))
+            show_open('{} HTTP header in insecure'.
+                      format(header),
+                      details='URL: {}, Header: {}={}'.
+                      format(url, header, value),
+                      refs='apache/habilitar-headers-seguridad')
             result = True
     else:
-        show_open('{} HTTP header {}, Details={}'.
-                  format(header, url, 'Not Present'))
+        show_open('{} HTTP header not present'.
+                  format(header),
+                  details='URL: {}'.format(url))
         result = True
 
     return result

@@ -18,19 +18,22 @@ import mixpanel
 # none
 
 # pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-arguments
 
 class Message(object):
     """Output message class."""
 
-    def __init__(self, status, message, details, references, caller):
+    def __init__(self, status, message, details, references):
         """Constructor method."""
+        self.__ref_base = 'https://fluidattacks.com/web/es/defends/'
         self.__status_codes = ['OPEN', 'CLOSE', 'UNKNOWN', 'ERROR']
         self.status = status
         self.message = message
         self.details = details
-        self.references = references
-        self.caller = caller
+        if references:
+            self.references = self.__ref_base + references
+        else:
+            self.references = None
+        self.caller = sys._getframe(2).f_code.co_name  # noqa
         self.__open = Fore.WHITE + Back.RED + 'OPEN' + Style.RESET_ALL
         self.__close = Fore.WHITE + Back.GREEN + 'CLOSE' + \
             Style.RESET_ALL
@@ -151,22 +154,22 @@ except mixpanel.MixpanelException:
     pass
 
 
-def show_close(message, details=None, refs=None, caller=None):
+def show_close(message, details=None, refs=None):
     """Show close message."""
-    message = Message('CLOSE', message, details, refs, caller)
+    message = Message('CLOSE', message, details, refs)
     LOGGER.info(message.get_logger())
 
 
-def show_open(message, details=None, refs=None, caller=None):
+def show_open(message, details=None, refs=None):
     """Show close message."""
-    message = Message('OPEN', message, details, refs, caller)
+    message = Message('OPEN', message, details, refs)
     LOGGER.info(message.get_logger())
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
             sys.exit(1)
 
 
-def show_unknown(message, details=None, refs=None, caller=None):
+def show_unknown(message, details=None, refs=None):
     """Show close message."""
-    message = Message('UNKNOWN', message, details, refs, caller)
+    message = Message('UNKNOWN', message, details, refs)
     LOGGER.info(message.get_logger())
