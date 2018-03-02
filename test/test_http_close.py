@@ -374,3 +374,10 @@ def test_dirlisting_close():
     """Dirlisting habilitado?."""
     assert not http.has_dirlisting(
         '%s/dirlisting/ok' % (MOCK_SERVICE))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_http_response_close():
+    """Respuesta 403 FORBIDDEN?."""
+    assert not http.is_resource_accessible(
+        '%s/reponse/ok' % (MOCK_SERVICE))

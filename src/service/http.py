@@ -429,12 +429,25 @@ def is_not_https_required(url):
         return False
 
 
-
 @track
 def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
     return has_text(url, bad_text, *args, **kwargs)
+
+
+@track
+def is_resource_accessible(url, *args, **kwargs):
+    """Check if url is available by checking response code"""
+    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
+        show_close('Resource not available, Details={}'.
+                   format(http_session.url))
+        return False
+    else:
+        show_open('Resource accessible, Details={}'.
+                  format(http_session.url))
+    return True
 
 
 @track

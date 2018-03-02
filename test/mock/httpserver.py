@@ -73,6 +73,22 @@ def dirlisting_fail():
     return 'Index of'
 
 
+@APP.route('/reponse/fail')
+def response_fail():
+    """Respuesta 201 CREATED."""
+    resp = Response()
+    resp.status_code = 201
+    return resp
+
+
+@APP.route('/reponse/ok')
+def response_ok():
+    """Respuesta 403 FORBIDDEN."""
+    resp = Response()
+    resp.status_code = 403
+    return resp
+
+
 @APP.route('/userenum_post/fail', methods=['POST'])
 def user_enumeration_post_fail():
     """Form vuln a user enumeration."""

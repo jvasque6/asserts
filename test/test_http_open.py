@@ -377,3 +377,10 @@ def test_dirlisting_open():
     """Dirlisting habilitado?."""
     assert http.has_dirlisting(
         '%s/dirlisting/fail' % (MOCK_SERVICE))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_http_response_open():
+    """Respuesta 201 CREATED?."""
+    assert http.is_resource_accessible(
+        '%s/reponse/fail' % (MOCK_SERVICE))
