@@ -47,8 +47,6 @@ class Message(object):
         assert self.message is not None
         if self.details is None:
             self.details = 'None'
-        if self.references is None:
-            self.references = 'None'
 
         if self.status == 'OPEN':
             status = self.__open
@@ -72,15 +70,24 @@ class Message(object):
     def as_logger(self):
         """Get logger representation of message."""
         message = self.__build_message()
-        template = """\033[1mStatus:\033[0m {}
+        if message['References']:
+            template = """\033[1mStatus:\033[0m {}
                                                 \033[1mResult:\033[0m {}
                                                 \033[1mDetails:\033[0m {}
                                                 \033[1mReferences:\033[0m {}
                                                 \033[1mCaller:\033[0m {}
                                                 """
-        msg = template.format(message['Status'], message['Message'],
-                              message['Details'], message['References'],
-                              message['Caller'])
+            msg = template.format(message['Status'], message['Message'],
+                                  message['Details'], message['References'],
+                                  message['Caller'])
+        else:
+            template = """\033[1mStatus:\033[0m {}
+                                                \033[1mResult:\033[0m {}
+                                                \033[1mDetails:\033[0m {}
+                                                \033[1mCaller:\033[0m {}
+                                                """
+            msg = template.format(message['Status'], message['Message'],
+                                  message['Details'], message['Caller'])
         return msg
 
 
