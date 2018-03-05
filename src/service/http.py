@@ -136,7 +136,7 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
     try:
         ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
         if ret:
-            show_open('A bad text was present "{}"'.format(ret),
+            show_open('A bad text was present: "{}"'.format(ret),
                       details='URL="{}"'.format(url))
             return True
         show_close('No bad text was present',
@@ -154,10 +154,10 @@ def has_text(url, expected_text, *args, **kwargs):
     try:
         ret = __generic_http_assert(url, expected_text, *args, **kwargs)
         if ret:
-            show_open('Bad text present "{}"'.format(expected_text),
+            show_open('Bad text present: "{}"'.format(expected_text),
                       details='URL="{}"'.format(url))
             return True
-        show_close('Bad text not present "{}"'.format(expected_text),
+        show_close('Bad text not present: "{}"'.format(expected_text),
                    details='URL="{}"'.format(url))
         return False
     except http_helper.ConnError:
