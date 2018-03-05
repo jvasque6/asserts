@@ -47,14 +47,22 @@ class Message(object):
         assert self.message is not None
         if self.details is None:
             self.details = 'None'
+        if self.references is None:
+            self.references = 'None'
 
-        ret = {'Status': self.status,
+        if self.status == 'OPEN':
+            status = self.__open
+        elif self.status == 'CLOSE':
+            status = self.__close
+        elif self.status == 'UNKNOWN':
+            status = self.__unknown
+
+        ret = {'Status': status,
                'Message': self.message,
                'Details': self.details,
-               'Caller': self.caller}
+               'Caller': self.caller,
+               'References': self.references}
 
-        if self.references:
-            ret['References'] = self.references
         return ret
 
     def as_json(self):
@@ -64,19 +72,16 @@ class Message(object):
     def as_logger(self):
         """Get logger representation of message."""
         message = self.__build_message()
-        if self.status == 'OPEN':
-            ret_message = '{}: {}. Details={}'.format(
-                self.__open, message['Message'],
-                message['Details'])
-        elif self.status == 'CLOSE':
-            ret_message = '{}: {}. Details={}'.format(
-                self.__close, message['Message'],
-                message['Details'])
-        elif self.status == 'UNKNOWN':
-            ret_message = '{}: {}. Details={}'.format(
-                self.__unknown, message['Message'],
-                message['Details'])
-        return ret_message
+        template = """\033[1mStatus:\033[0m {}
+                                                \033[1mResult:\033[0m {}
+                                                \033[1mDetails:\033[0m {}
+                                                \033[1mReferences:\033[0m {}
+                                                \033[1mCaller:\033[0m {}
+                                                """
+        msg = template.format(message['Status'], message['Message'],
+                              message['Details'], message['References'],
+                              message['Caller'])
+        return msg
 
 
 init(autoreset=True)

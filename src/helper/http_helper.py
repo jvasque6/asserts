@@ -318,10 +318,14 @@ def has_insecure_header(url, header, *args, **kwargs):
                      details='Could not connect to {}'.format(url))
         return True
     result = True
+
     if header == 'X-AspNet-Version' or header == 'Server':
         if header in headers_info:
-            show_open('{} HTTP insecure header present in {}'.
-                      format(header, url),
+            value = headers_info[header]
+            show_open('{} HTTP insecure header present'.
+                      format(header),
+                      details='URL="{}", Header="{}: {}"'.
+                      format(url, header, value),
                       refs='apache/habilitar-headers-seguridad')
             return True
         show_close('{} HTTP insecure header not present in {}'.
@@ -336,14 +340,15 @@ def has_insecure_header(url, header, *args, **kwargs):
         else:
             show_open('{} HTTP header in insecure'.
                       format(header),
-                      details='URL: {}, Header: {}={}'.
+                      details='URL="{}", Header="{}: {}"'.
                       format(url, header, value),
                       refs='apache/habilitar-headers-seguridad')
             result = True
     else:
         show_open('{} HTTP header not present'.
                   format(header),
-                  details='URL: {}'.format(url))
+                  details='URL="{}"'.format(url),
+                  refs='apache/habilitar-headers-seguridad')
         result = True
 
     return result
