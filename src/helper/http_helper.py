@@ -290,14 +290,18 @@ def has_method(url, method, *args, **kwargs):
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            show_open('{} HTTP Method {}, Details={}'.
-                      format(url, method, 'Is Present'))
+            show_open('HTTP Method {} enabled'.format(method),
+                      details='URL="{}"'.format(url),
+                      refs='apache/restringir-metodo-http')
         else:
-            show_close('{} HTTP Method {}, Details={}'.
-                       format(url, method, 'Not Present'))
+            show_close('HTTP Method {} disabled'.format(method),
+                       details='URL="{}"'.format(url),
+                       refs='apache/restringir-metodo-http')
             result = False
     else:
-        show_close('Method {} not allowed in {}'.format(method, url))
+        show_close('HTTP Method {} disabled'.format(method),
+                   details='URL="{}"'.format(url),
+                   refs='apache/restringir-metodo-http')
         result = False
     return result
 
@@ -328,17 +332,21 @@ def has_insecure_header(url, header, *args, **kwargs):
                       format(url, header, value),
                       refs='apache/habilitar-headers-seguridad')
             return True
-        show_close('{} HTTP insecure header not present in {}'.
-                   format(header, url))
+        show_close('{} HTTP insecure header not present'.
+                   format(header),
+                   details='URL="{}"'.format(url),
+                   refs='apache/habilitar-headers-seguridad')
         return False
     if header in headers_info:
         value = headers_info[header]
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
-            show_close('{} HTTP header {}, Details={}'.
-                       format(header, url, value))
+            show_close('HTTP header {} is secure'.format(header),
+                       details='URL="{}", Header="{}: {}"'.
+                       format(header, url, value),
+                       refs='apache/habilitar-headers-seguridad')
             result = False
         else:
-            show_open('{} HTTP header in insecure'.
+            show_open('{} HTTP header is insecure'.
                       format(header),
                       details='URL="{}", Header="{}: {}"'.
                       format(url, header, value),

@@ -136,12 +136,15 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
     try:
         ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
         if ret:
-            show_open('{} Bad text present, Details={}'.format(url, ret))
+            show_open('A bad text was present "{}"'.format(ret),
+                      details='URL="{}"'.format(url))
             return True
-        show_close('{} Bad text not present'.format(url))
+        show_close('No bad text was present',
+                   details='URL="{}"'.format(url))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect, Details={}'.format(url))
+        show_unknown('Could not connect',
+                     details='URL="{}"'.format(url))
         return True
 
 
@@ -151,14 +154,15 @@ def has_text(url, expected_text, *args, **kwargs):
     try:
         ret = __generic_http_assert(url, expected_text, *args, **kwargs)
         if ret:
-            show_open('{} Bad text present, Details={}'.
-                      format(url, expected_text))
+            show_open('Bad text present "{}"'.format(expected_text),
+                      details='URL="{}"'.format(url))
             return True
-        show_close('{} Bad text not present, Details={}'.
-                   format(url, expected_text))
+        show_close('Bad text not present "{}"'.format(expected_text),
+                   details='URL="{}"'.format(url))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect, Details={}'.format(url))
+        show_unknown('Could not connect',
+                     details='URL="{}"'.format(url))
         return True
 
 
@@ -168,15 +172,18 @@ def has_not_text(url, expected_text, *args, **kwargs):
     try:
         ret = __generic_http_assert(url, expected_text, *args, **kwargs)
         if not ret:
-            show_open('{} Expected text not present, Details={}'.
-                      format(url, expected_text))
+            show_open('Expected text not present "{}"'.
+                      format(expected_text),
+                      details='URL="{}"'.format(url))
             return True
-        show_close('{} Expected text present, Details={}'.
-                   format(url, expected_text))
+        show_close('Expected text present "{}"'.format(expected_text),
+                   details='URL="{}"'.format(url))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect, Details={}'.format(url))
+        show_unknown('Could not connect',
+                     details='URL="{}"'.format(url))
         return True
+
 
 @track
 def is_header_x_asp_net_version_present(url, *args, **kwargs):
@@ -376,16 +383,19 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response_url = http_session.response.url
 
-    regex = r'\b' + argument + r'\b'
+    regex = r'\b(' + argument + r')\b=([a-zA-Z0-9_-]+)'
 
     result = True
-    if re.search(regex, response_url):
+    match = re.search(regex, response_url)
+    if match:
         result = True
-        show_open('Session ID is exposed in {}, Details={}'.
-                  format(response_url, argument))
+        show_open('Session ID is exposed',
+                  details='URL="{}", SessionID="{}: {}"'.
+                  format(response_url, argument, match.group(2)))
     else:
         result = False
-        show_close('Session ID is hidden in {}, Details={}'.
+        show_close('Session ID is hidden',
+                   details='URL="{}", SessionID="{}"'.
                    format(response_url, argument))
     return result
 
@@ -402,12 +412,15 @@ def is_version_visible(ip_address, ssl=False, port=80):
     result = True
     if version:
         result = True
-        show_open('HTTP version visible on {}:{}, Details={}'.
-                  format(ip_address, port, version))
+        show_open('HTTP version visible',
+                  details='Site="{}:{}", Version="{}"'.
+                  format(ip_address, port, version),
+                  refs='apache/restringir-banner')
     else:
         result = False
-        show_close('HTTP version not visible on {}:{}, Details=None'.
-                   format(ip_address, port))
+        show_close('HTTP version not visible',
+                   details='Site="{}:{}"'.format(ip_address, port),
+                   refs='apache/restringir-banner')
     return result
 
 
@@ -418,14 +431,18 @@ def is_not_https_required(url):
     try:
         http_session = http_helper.HTTPSession(url)
         if http_session.url.startswith('https'):
-            show_close('HTTPS is forced on URL, Details={}'.
-                       format(http_session.url))
+            show_close('HTTPS is forced on URL',
+                       details='URL="{}"'.format(http_session.url),
+                       refs='apache/configurar-soporte-https')
             return False
-        show_open('HTTPS is not forced on URL, Details={}'.
-                  format(http_session.url))
+        show_open('HTTPS is not forced on URL',
+                  details='URL="{}"'.format(http_session.url),
+                  refs='apache/configurar-soporte-https')
         return True
     except http_helper.ConnError:
-        show_unknown('Could not connect, Details={}'.format(url))
+        show_unknown('Could not connect',
+                     details='URL="{}"'.format(http_session.url),
+                     refs='apache/configurar-soporte-https')
         return False
 
 
@@ -433,20 +450,34 @@ def is_not_https_required(url):
 def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
-    return has_text(url, bad_text, *args, **kwargs)
+    try:
+        ret = __generic_http_assert(url, bad_text, *args, **kwargs)
+        if ret:
+            show_open('Directory listing enabled',
+                      details='URL="{}"'.format(url))
+            return True
+        show_close('Directory listing not enabled',
+                   details='URL="{}"'.format(url))
+        return False
+    except http_helper.ConnError:
+        show_unknown('Could not connect',
+                     details='URL="{}"'.format(url))
+        return True
 
 
 @track
 def is_resource_accessible(url, *args, **kwargs):
-    """Check if url is available by checking response code"""
+    """Check if url is available by checking response code."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
-        show_close('Resource not available, Details={}'.
-                   format(http_session.url))
+        show_close('Resource not available',
+                   details='URL="{}", Status="{}"'.
+                   format(http_session.url,
+                          http_session.response.status_code))
         return False
-    else:
-        show_open('Resource accessible, Details={}'.
-                  format(http_session.url))
+    show_open('Resource available',
+              details='URL="{}", Status="{}"'.
+              format(http_session.url, http_session.response.status_code))
     return True
 
 
@@ -465,11 +496,13 @@ def is_response_delayed(url, *args, **kwargs):
     delta = max_response_time - response_time
 
     if delta >= 0:
-        show_close('Response time is acceptable for {}, Details={}'.
+        show_close('Response time is acceptable',
+                   details='URL="{}", Response time="{}"'.
                    format(http_session.url, str(response_time)))
         return False
-    show_open('Response time is not acceptable for {}, Details={}'.
-              format(http_session.url, str(response_time)))
+    show_close('Response time not acceptable',
+               details='URL="{}", Response time="{}"'.
+               format(http_session.url, str(response_time)))
     return True
 
 
@@ -522,11 +555,12 @@ def has_user_enumeration(url, user_field, user_list=None,
     rat = round(res / num_comp, 2)
 
     if rat > 0.95:
-        show_close('User enumeration not possible for {}, \
-Details={}% of similar answers'.format(url, str(rat * 100)))
+        show_close('User enumeration not possible',
+                   details='URL="{}", Similar answers="{}%"'.
+                   format(url, str(rat * 100)))
         return False
-    show_open('User enumeration is possible for {}, \
-Details={}% of similar answers'.
+    show_open('User enumeration possible',
+              details='URL="{}", Similar answers="{}%"'.
               format(url, str(rat * 100)))
     return True
 
@@ -562,8 +596,11 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
             kwargs['data'] = _datas
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         if ok_regex in sess.response.text:
-            show_open('Brute forcing possible for {}, \
-Details={} params were used'.format(url, str(_datas)))
+            show_open('Brute forcing possible',
+                      details='URL="{}", Data used="{}"'.
+                      format(url, str(_datas)))
             return True
-    show_close('Brute forcing was not successful for {}'.format(url))
+    show_open('Brute forcing possible',
+              details='URL="{}", Data used="{}"'.
+              format(url, str(_datas)))
     return False
