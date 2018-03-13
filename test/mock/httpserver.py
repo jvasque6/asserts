@@ -359,6 +359,38 @@ def session_fixated_not_vuln():
     return resp
 
 
+@APP.route('/http/cookies/secure/fail')
+def secure_fail():
+    """Cookie sin atributo de seguridad secure."""
+    resp = Response('Login successful')
+    resp.set_cookie('JSESSID', 'World', secure=False, httponly=True)
+    return resp
+
+
+@APP.route('/http/cookies/secure/ok')
+def secure_ok():
+    """Cookie con atributo de seguridad secure."""
+    resp = Response('Login successful')
+    resp.set_cookie('JSESSID', 'World', secure=True, httponly=True)
+    return resp
+
+
+@APP.route('/http/cookies/http_only/fail')
+def http_only_fail():
+    """Cookie sin atributo de seguridad http-only."""
+    resp = Response('Login successful')
+    resp.set_cookie('JSESSID', 'World', secure=True, httponly=False)
+    return resp
+
+
+@APP.route('/http/cookies/http_only/ok')
+def http_only_ok():
+    """Cookie con atributo de seguridad http-only."""
+    resp = Response('Login successful')
+    resp.set_cookie('JSESSID', 'World', secure=True, httponly=True)
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
