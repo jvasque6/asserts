@@ -20,8 +20,8 @@ from fluidasserts.utils.decorators import track
 def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
     if url is None and cookie_jar is None:
-        show_unknown('Cookie check for "{}", Details={}'.
-                     format(cookie_name, 'HttpOnly'))
+        show_unknown('Cookie check for "{}"'.format(cookie_name),
+                     details='{}'.format('HttpOnly'))
         return True
     if url is not None:
         sess = http_helper.HTTPSession(url, *args, **kwargs)
@@ -35,24 +35,24 @@ def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
         if cookie.name == cookie_name:
             if cookie.has_nonstandard_attr('HttpOnly') or \
                cookie.has_nonstandard_attr('httponly'):
-                show_close('Cookie check for "{}", Details={}'.
-                           format(cookie_name, 'HttpOnly'))
+                show_close('Cookie check for "{}"'.format(cookie_name),
+                           details='{}'.format('HttpOnly'))
                 result = False
             else:
-                show_open('Cookie check for "{}", Details={}'.
-                          format(cookie_name, 'HttpOnly'))
+                show_open('Cookie check for "{}"'.format(cookie_name),
+                          details='{}'.format('HttpOnly'))
                 result = True
             return result
-    show_unknown('Cookie "{}" not found, Details={}'.
-                 format(cookie_name, 'HttpOnly'))
+    show_unknown('Cookie "{}" not found'.format(cookie_name),
+                 details='{}'.format('HttpOnly'))
     return True
 
 
 def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
     if url is None and cookie_jar is None:
-        show_unknown('Cookie check for "{}", Details={}'.
-                     format(cookie_name, 'Secure'))
+        show_unknown('Cookie check for "{}"'.format(cookie_name),
+                     details='{}'.format('Secure'))
         return True
     if url is not None:
         sess = http_helper.HTTPSession(url, *args, **kwargs)
@@ -65,16 +65,16 @@ def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.secure:
-                show_close('Cookie check for "{}", Details={}'.
-                           format(cookie_name, 'Secure'))
+                show_close('Cookie check for "{}"'.format(cookie_name),
+                           details='{}'.format('Secure'))
                 result = False
             else:
-                show_open('Cookie check for "{}", Details={}'.
-                          format(cookie_name, 'Secure'))
+                show_open('Cookie check for "{}"'.format(cookie_name),
+                          details='{}'.format('Secure'))
                 result = True
             return result
-    show_unknown('Cookie "{}" not found, Details={}'.
-                 format(cookie_name, 'Secure'))
+    show_unknown('Cookie "{}" not found'.format(cookie_name),
+                 details='{}'.format('Secure'))
     return True
 
 
@@ -100,5 +100,5 @@ def has_not_secure_set(cookie_name, url, *args, **kwargs):
 @track
 def has_not_secure_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
-    return __has_not_secure(cookie_name, None, cookie_jar
+    return __has_not_secure(cookie_name, None, cookie_jar,
                             *args, **kwargs)

@@ -28,12 +28,13 @@ def __check_password_strength(password, length):
     result = True
 
     if len(password) < length:
-        show_open('{} is too short. Details={}'.
-                  format(password, len(password)))
+        show_open('{} is too short'.format(password),
+                  details='Site={}'.format(len(password)))
         result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
-        show_open('{} is too weak. Details={}'.
-                  format(password, "Caps: " + str(caps) +
+        show_open('{} is too weak'.format(password),
+                  details='{}'.
+                  format("Caps: " + str(caps) +
                          " Lower: " + str(lower) +
                          " Numbers: " + str(nums) +
                          " Special: " + str(special)))
@@ -42,8 +43,9 @@ def __check_password_strength(password, length):
         show_open('{} is a dictionary password'.format(password))
         result = True
     else:
-        show_open('{} password is secure. Details={}'.
-                  format(password, "Caps: " + str(caps) +
+        show_open('{} password is secure'.format(password),
+                  details='{}'.
+                  format("Caps: " + str(caps) +
                          " Lower: " + str(lower) +
                          " Numbers: " + str(nums) +
                          " Special: " + str(special)))
@@ -75,12 +77,12 @@ def is_otp_token_insecure(password):
 
     result = True
     if len(password) < min_password_len:
-        show_open('{} OTP token is too short. Details={}'.
-                  format(password, len(password)))
+        show_open('{} OTP token is too short'.format(password),
+                  details='Size={}'.format(len(password)))
         result = True
     else:
-        show_close('{} OTP token is secure. Details={}'.
-                   format(password, len(password)))
+        show_close('{} OTP token is secure'.format(password),
+                   details='Size={}'.format(len(password)))
         result = False
 
     return result

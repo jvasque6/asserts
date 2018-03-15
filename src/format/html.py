@@ -46,12 +46,11 @@ def has_not_autocomplete(filename, selector):
 
     if has_attr is False:
         result = True
-        show_open('{} attribute in {}, Details={}'.
-                  format(attr, filename, ''))
+        show_open('{} attribute in {}'.format(attr, filename))
     else:
         result = False
-        show_close('{} attribute in {}, Details={}'.
-                   format(attr, filename, value))
+        show_close('{} attribute in {}'.format(attr, filename),
+                   details='Value={}'.format(value))
 
     return result
 
@@ -74,8 +73,8 @@ def is_cacheable(filename):
 
     if has_http_equiv is False:
         result = True
-        show_open('{} attribute in {}, Details={}'.
-                  format(attr, filename, value))
+        show_open('{} attribute in {}'.format(attr, filename),
+                  details='Value={}'.format(value))
 
         return result
 
@@ -86,8 +85,8 @@ def is_cacheable(filename):
 
     if has_content is False:
         result = True
-        show_open('{} attribute in {}, Details={}'.
-                  format(attr, filename, value))
+        show_open('{} attribute in {}'.format(attr, filename),
+                  details='Value={}'.format(value))
 
         return result
 
@@ -98,8 +97,8 @@ def is_cacheable(filename):
 
     if has_http_equiv is False:
         result = True
-        show_open('{} attribute in {}, Details={}'.
-                  format(attr, filename, value))
+        show_open('{} attribute in {}'.format(attr, filename),
+                  details='Value={}'.format(value))
 
         return result
 
@@ -110,13 +109,13 @@ def is_cacheable(filename):
 
     if has_content is False:
         result = True
-        show_open('{} attribute in {}, Details={}'.
-                  format(attr, filename, value))
+        show_open('{} attribute in {}'.format(attr, filename),
+                  details='Value={}'.format(value))
 
         return result
 
     result = False
-    show_close('{} attribute in {}, Details={}'.
-               format(attr, filename, value))
+    show_close('{} attribute in {}'.format(attr, filename),
+               details='Value={}'.format(value))
 
     return result

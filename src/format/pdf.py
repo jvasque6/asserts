@@ -20,12 +20,11 @@ def __has_attribute(filename, metaname):
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
-        show_open('{} metadata in {}, Details={}'.
-                  format(metaname, filename, metavalue))
+        show_open('{} metadata in {}'.format(metaname, filename),
+                  details='Value={}'.format(metavalue))
         result = True
     else:
-        show_close('{} metadata in {}, Details={}'.
-                   format(metaname, filename, ''))
+        show_close('{} metadata in {}'.format(metaname, filename))
         result = False
     return result
 
