@@ -37,12 +37,13 @@ def is_os_compilers_installed(server, username, password):
 
     result = True
     if installed_compilers > 0:
-        show_open('{} server has compilers installed,\
-Details={}'.format(server, installed_software))
+        show_open('{} server has compilers installed'.format(server),
+                  details='{}'.format(installed_software))
         result = True
     else:
-        show_close('{} server has not compilers installed,\
-Details={}'.format(server, installed_software))
+        show_close('{} server has not compilers installed'.
+                   format(server),
+                   details='{}'.format(installed_software))
         result = False
     return result
 
@@ -68,12 +69,13 @@ def is_os_antimalware_not_installed(server, username, password):
 
     result = True
     if installed_av > 0:
-        show_close('{} server has an antivirus installed, \
-Details={}'.format(server, installed_software))
+        show_close('{} server has an antivirus installed'.format(server),
+                   details='{}'.format(installed_software))
         result = False
     else:
-        show_open('{} server has not an antivirus installed, \
-Details={}'.format(server, installed_software))
+        show_open('{} server has not an antivirus installed'.
+                  format(server),
+                  details='{}'.format(installed_software))
         result = True
     return result
 
@@ -96,8 +98,8 @@ def is_protected_users_disabled(server, username, password):
     """
     security_patches = ['KB2871997']
     cmd = b'reg query \
-           "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\\\
-           Component Based Servicing\Packages" /s'
+"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\\\
+Component Based Servicing\Packages" /s'
 
     installed_software = winrm_exec_command(server,
                                             username,
@@ -113,8 +115,9 @@ def is_protected_users_disabled(server, username, password):
 
     result = True
     if installed_patches == len(security_patches):
-        show_close('{} server has all required patches installed, \
-Details={}'.format(server, ",".join(security_patches)))
+        show_close('{} server has all required patches installed'.
+                   format(server),
+                   details='{}'.format(",".join(security_patches)))
         result = False
     else:
         cmd = b'reg query \
@@ -130,9 +133,10 @@ Details={}'.format(server, ",".join(security_patches)))
                      re.IGNORECASE) is not None:
             result = False
             show_close('{} server has UseLogonCredentials\
-set to 0x0 Details={}'.format(server, 'UseLogonCredential'))
+set to 0x0'.format(server), details='{}'.format('UseLogonCredential'))
         else:
             result = True
             show_open('{} server has not all required patches \
-installed, Details={}'.format(server, ",".join(security_patches)))
+installed'.format(server),
+                      details='{}'.format(",".join(security_patches)))
     return result
