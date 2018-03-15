@@ -54,6 +54,30 @@ def test_tlsv1_enabled_close(run_mock):
 
 
 # pylint: disable=unused-argument
+def test_has_poodle_close(run_mock):
+    """Sitio vulnerable a POODLE?."""
+    assert not ssl.has_poodle(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_has_beast_close(run_mock):
+    """Sitio vulnerable a BEAST?."""
+    assert not ssl.has_beast(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_allows_weak_alg_close(run_mock):
+    """Sitio permite algoritmos debiles?."""
+    assert not ssl.allows_weak_ciphers(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_allows_anon_alg_close(run_mock):
+    """Sitio permite algoritmos anonimos?."""
+    assert not ssl.allows_anon_ciphers(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
 def test_cert_active_close(run_mock):
     """Certificado aun esta vigente?."""
     assert not ssl.is_cert_inactive(CONTAINER_IP)

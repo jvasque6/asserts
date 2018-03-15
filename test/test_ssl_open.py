@@ -41,19 +41,40 @@ def test_pfs_enabled_open(run_mock):
     assert ssl.is_pfs_disabled(CONTAINER_IP)
 
 
-# There's no way to check this on Debian/Jessie because openssl dropped
-# SSLv3 completely from that version on.
-#
-# @pytest.mark.usefixtures('container', 'weak_ssl')
-# def test_sslv3_enabled_open():
-#     """SSLv3 habilitado en sitio?."""
-#     assert ssl.is_sslv3_enabled(CONTAINER_IP)
+# pylint: disable=unused-argument
+def test_sslv3_enabled_open():
+    """SSLv3 habilitado en sitio?."""
+    assert ssl.is_sslv3_enabled(CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
 def test_tlsv1_enabled_open(run_mock):
     """TLSv1 habilitado en sitio?."""
     assert ssl.is_tlsv1_enabled(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_has_poodle_open():
+    """Sitio vulnerable a POODLE?."""
+    assert ssl.has_poodle(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_has_beast_open():
+    """Sitio vulnerable a BEAST?."""
+    assert ssl.has_beast(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_allows_weak_alg_open():
+    """Sitio permite algoritmos debiles?."""
+    assert ssl.allows_weak_ciphers(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_allows_anon_alg_open():
+    """Sitio permite algoritmos anonimos?."""
+    assert ssl.allows_anon_ciphers(CONTAINER_IP)
 
 
 # pylint: disable=unused-argument
