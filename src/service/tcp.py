@@ -29,16 +29,16 @@ def is_port_open(ipaddress, port):
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
         result = False
-        show_close('Port is close, Details={}'.
-                   format(ipaddress + ':' + str(port)))
+        show_close('Port is close', details='IP={}, Port={}'.
+                   format(ipaddress, port))
     if result == 0:
-        show_open('Port is open, Details={}'.
-                  format(ipaddress + ':' + str(port)))
+        show_open('Port is open', details='IP={}, Port={}'.
+                  format(ipaddress, port))
         result = True
     else:
         result = False
-        show_close('Port is close, Details={}'.
-                   format(ipaddress + ':' + str(port)))
+        show_close('Port is close', details='IP={}, Port={}'.
+                   format(ipaddress, port))
     return result
 
 
@@ -50,10 +50,10 @@ def is_port_insecure(ipaddress, port):
         sock.settimeout(3)
         ssl_sock = ssl.wrap_socket(sock)
         ssl_sock.connect_ex((ipaddress, port))
-        show_close('Port is secure, Details={}'.
-                   format(ipaddress + ':' + str(port)))
+        show_close('Port is secure', details='IP={}, Port={}'.
+                   format(ipaddress, port))
         return False
     except ssl.SSLError:
-        show_open('Port is not secure, Details={}'.
-                  format(ipaddress + ':' + str(port)))
+        show_open('Port is not secure', details='IP={}, Port={}'.
+                  format(ipaddress, port))
         return True

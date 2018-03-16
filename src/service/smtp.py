@@ -28,12 +28,12 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        show_open('SMTP "VRFY" method, Details={}'.
-                  format(ip_address + ':' + str(port)))
+        show_open('SMTP "VRFY" method', details='IP={}, Port={}'.
+                  format(ip_address, port))
         result = True
     else:
-        show_close('SMTP "VRFY" method, Details={}'.
-                   format(ip_address + ':' + str(port)))
+        show_close('SMTP "VRFY" method', details='IP={}, Port={}'.
+                   format(ip_address, port))
         result = False
 
     server.quit()
@@ -49,10 +49,11 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        show_open('SMTP version visible on {}:{}, Details={}'.
-                  format(ip_address, port, version))
+        show_open('SMTP version visible on {}:{}'.
+                  format(ip_address, port),
+                  details='Version={}'.format(version))
     else:
         result = False
-        show_close('SMTP version not visible on {}, Details=None'.
-                   format(ip_address))
+        show_close('SMTP version not visible on {}:{}'.
+                   format(ip_address, port))
     return result

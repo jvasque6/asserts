@@ -35,11 +35,11 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
         ftp.login(username, password)
         ftp.quit()
         result = True
-        show_open('FTP Authentication {}:{}, Details={}'.
-                  format(ip_address, port, username + ':' + password))
+        show_open('FTP Authentication {}:{}'.format(ip_address, port),
+                  details='{}'.format(username + ':' + password))
     except error_perm:
-        show_close('FTP Authentication {}:{}, Details={}'.
-                   format(ip_address, port, username + ':' + password))
+        show_close('FTP Authentication {}:{}'.format(ip_address, port),
+                   details='{}'.format(username + ':' + password))
         result = False
     return result
 
@@ -71,10 +71,11 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        show_open('FTP version visible on {}:{}, Details={}'.
-                  format(ip_address, port, version))
+        show_open('FTP version visible on {}:{}'.
+                  format(ip_address, port),
+                  details='Version={}'.format(version))
     else:
         result = False
-        show_close('FTP version not visible on {}, Details=None'.
-                   format(ip_address))
+        show_close('FTP version not visible on {}:{}'.
+                   format(ip_address, port))
     return result
