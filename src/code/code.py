@@ -30,11 +30,11 @@ def has_text(code_file, expected_text):
     """Check if a bad text is present."""
     ret = __generic_code_assert(code_file, expected_text)
     if ret:
-        show_open('{} Bad text present in code, Details={}'.
-                  format(code_file, expected_text))
+        show_open('Bad text present in code {}'.format(code_file),
+                  details='{}'.format(expected_text))
         return True
-    show_close('{} Bad text not present in code, Details={}'.
-               format(code_file, expected_text))
+    show_close('Bad text not present in code {}'.format(code_file),
+               details='{}'.format(expected_text))
     return False
 
 
@@ -43,9 +43,9 @@ def has_not_text(code_file, expected_text):
     """Check if a required text is not present."""
     ret = __generic_code_assert(code_file, expected_text)
     if not ret:
-        show_open('{} Expected text not present in code, Details={}'.
-                  format(code_file, expected_text))
+        show_open('Expected text not present in code {}'.
+                  format(code_file), details='{}'.format(expected_text))
         return True
-    show_close('{} Expected text present in code, Details={}'.
-               format(code_file, expected_text))
+    show_close('Expected text present in code {}'.format(code_file),
+               details='{}'.format(expected_text))
     return False
