@@ -306,17 +306,24 @@ def has_method(url, method, *args, **kwargs):
     return result
 
 
+# pylint: disable=too-many-branches
 def has_insecure_header(url, header, *args, **kwargs):
     """Check if header is present."""
     try:
-        if header == 'Access-Control-Allow-Origin':
-            if 'headers' in kwargs:
-                kwargs['headers'].update({'Origin':
-                                          'https://www.malicious.com'})
-            else:
-                kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
+    except ConnError:
+        show_unknown('HTTP error checking {}'.format(header),
+                     details='Could not connect to {}'.format(url))
+        return True
+
+    if header == 'Access-Control-Allow-Origin':
+        if 'headers' in kwargs:
+            kwargs['headers'].update({'Origin':
+                                      'https://www.malicious.com'})
+        else:
+            kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
+
         if header in headers_info:
             value = headers_info[header]
             if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
@@ -326,16 +333,19 @@ def has_insecure_header(url, header, *args, **kwargs):
                           format(url, header, value),
                           refs='apache/habilitar-headers-seguridad')
                 return True
-            show_close('HTTP header {} not present which is secure \
-by default'.format(header),
+            show_close('HTTP header {} value is secure'.
+                       format(header),
                        details='URL="{}", Header="{}: {}"'.
-                       format(header, url, value),
+                       format(url, header, value),
                        refs='apache/habilitar-headers-seguridad')
             return False
-    except ConnError:
-        show_unknown('HTTP error checking {}'.format(header),
-                     details='Could not connect to {}'.format(url))
-        return True
+        show_close('HTTP header {} not present which is secure \
+by default'.format(header),
+                   details='URL="{}", Header="{}"'.
+                   format(url, header),
+                   refs='apache/habilitar-headers-seguridad')
+        return False
+
     result = True
 
     if header == 'X-AspNet-Version' or header == 'Server':
@@ -346,18 +356,20 @@ by default'.format(header),
                       details='URL="{}", Header="{}: {}"'.
                       format(url, header, value),
                       refs='apache/habilitar-headers-seguridad')
-            return True
-        show_close('{} HTTP insecure header not present'.
-                   format(header),
-                   details='URL="{}"'.format(url),
-                   refs='apache/habilitar-headers-seguridad')
-        return False
+            result = True
+        else:
+            show_close('{} HTTP insecure header not present'.
+                       format(header),
+                       details='URL="{}"'.format(url),
+                       refs='apache/habilitar-headers-seguridad')
+            result = False
+        return result
     if header in headers_info:
         value = headers_info[header]
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
             show_close('HTTP header {} is secure'.format(header),
                        details='URL="{}", Header="{}: {}"'.
-                       format(header, url, value),
+                       format(url, header, value),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         else:
