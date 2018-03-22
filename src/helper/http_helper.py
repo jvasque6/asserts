@@ -317,6 +317,21 @@ def has_insecure_header(url, header, *args, **kwargs):
                 kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
+        if header in headers_info:
+            value = headers_info[header]
+            if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+                show_open('{} HTTP header is insecure'.
+                          format(header),
+                          details='URL="{}", Header="{}: {}"'.
+                          format(url, header, value),
+                          refs='apache/habilitar-headers-seguridad')
+                return True
+            show_close('HTTP header {} not present which is secure \
+by default'.format(header),
+                       details='URL="{}", Header="{}: {}"'.
+                       format(header, url, value),
+                       refs='apache/habilitar-headers-seguridad')
+            return False
     except ConnError:
         show_unknown('HTTP error checking {}'.format(header),
                      details='Could not connect to {}'.format(url))
