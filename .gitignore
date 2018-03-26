@@ -23,3 +23,6 @@ tmp/
 
 # Failed ansible playbook runs
 *.retry
+
+# VScode
+.vscode/
