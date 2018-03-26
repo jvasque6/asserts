@@ -35,34 +35,34 @@ def is_xfr_enabled(domain, nameserver):
     try:
         zone = dns.zone.from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
-            show_close('Zone transfer not enabled on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_close('Zone transfer not enabled on server',
+                       details='{}:{}'.format(domain, nameserver))
             result = False
         result = True
-        show_open('Zone transfer enabled on server, Details={}:{}'.
+        show_open('Zone transfer enabled on server', details='{}:{}'.
                   format(domain, nameserver))
     except NoSOA:
-        show_close('Zone transfer not enabled on server, Details={}:{}'.
+        show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except NoNS:
-        show_close('Zone transfer not enabled on server, Details={}:{}'.
+        show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except BadZone:
-        show_close('Zone transfer not enabled on server, Details={}:{}'.
+        show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except dns.query.BadResponse:
-        show_close('Zone transfer not enabled on server, Details={}:{}'.
+        show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except DNSException:
-        show_close('Zone transfer not enabled on server, Details={}:{}'.
+        show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except socket.error:
-        show_unknown('Port closed for zone transfer, Details={}:{}'.
+        show_unknown('Port closed for zone transfer', details='{}:{}'.
                      format(domain, nameserver))
         result = False
 
@@ -86,15 +86,15 @@ def is_dynupdate_enabled(domain, nameserver):
 Details={}:{}'.format(domain, nameserver))
             result = False
         else:
-            show_open('Zone update enabled on server, Details={}:{}'.
+            show_open('Zone update enabled on server', details='{}:{}'.
                       format(domain, nameserver))
             result = True
     except dns.query.BadResponse:
-        show_close('Zone update not enabled on server, Details={}:{}'.
+        show_close('Zone update not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False
     except socket.error:
-        show_unknown('Port closed for DNS update, Details={}:{}'.
+        show_unknown('Port closed for DNS update', details='{}:{}'.
                      format(domain, nameserver))
         result = False
     return result
@@ -115,23 +115,23 @@ def has_cache_poison(domain, nameserver):
     try:
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
-        show_open('Cache poisoning is possible on server, \
-Details={}:{}'.format(domain, nameserver))
+        show_open('Cache poisoning is possible on server', details='{}:{}'.
+                  format(domain, nameserver))
         return True
 
     if response.response.rcode() != 0:
-        show_open('Cache poisoning is possible on server, \
-Details={}:{}'.format(domain, nameserver))
+        show_open('Cache poisoning is possible on server', details='{}:{}'.
+                  format(domain, nameserver))
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
-            show_open('Cache poisoning possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_open('Cache poisoning possible on server', details='{}:{}'.
+                      format(domain, nameserver))
             return True
         else:
-            show_close('Cache poisoning not possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_close('Cache poisoning not possible on server',
+                       details='{}:{}'.format(domain, nameserver))
             result = False
 
     return result
@@ -162,16 +162,16 @@ def has_cache_snooping(nameserver):
 
         result = True
         if response.rcode() == 0:
-            show_open('Cache snooping possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_open('Cache snooping possible on server', details='{}:{}'.
+                      format(domain, nameserver))
             result = True
         else:
-            show_close('Cache snooping not possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_close('Cache snooping not possible on server',
+                       details='{}:{}'.format(domain, nameserver))
             result = False
     except dns.exception.SyntaxError:
-        show_close('Cache snooping not possible on server, \
-Details={}:{}'.format(domain, nameserver))
+        show_close('Cache snooping not possible on server', details='{}:{}'.
+                   format(domain, nameserver))
         result = False
 
     return result
@@ -192,16 +192,16 @@ def has_recursion(nameserver):
 
         result = True
         if response.rcode() == 0:
-            show_open('Recursion possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_open('Recursion possible on server', details='{}:{}'.
+                      format(domain, nameserver))
             result = True
         else:
-            show_close('Recursion not possible on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_close('Recursion not possible on server', details='{}:{}'.
+                       format(domain, nameserver))
             result = False
     except dns.exception.SyntaxError:
-        show_close('Recursion not possible on server, \
-Details={}:{}'.format(domain, nameserver))
+        show_close('Recursion not possible on server', details='{}:{}'.
+                   format(domain, nameserver))
         result = False
 
     return result
