@@ -55,3 +55,9 @@ def test_has_cache_snooping_open(run_mock):
 def test_has_recursion_open(run_mock):
     """Server has recursion enabled?."""
     assert dns.has_recursion(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
+def test_can_amplify_open(run_mock):
+    """Server can perform DNS amplification attacks?."""
+    assert dns.can_amplify(CONTAINER_IP)

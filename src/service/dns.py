@@ -180,7 +180,7 @@ def has_cache_snooping(nameserver):
 @track
 def has_recursion(nameserver):
     """Check if nameserver has recursion enabled."""
-    domain = 'google.com'
+    domain = 'google.com.'
     name = dns.name.from_text(domain)
 
     try:
@@ -205,3 +205,35 @@ def has_recursion(nameserver):
         result = False
 
     return result
+
+
+@track
+def can_amplify(nameserver):
+    """Checks if nameserver allows amplification attacks."""
+    domain = 'google.com.'
+    name = dns.name.from_text(domain)
+
+    try:
+        # Make a recursive request
+        request = dns.message.make_query(name, dns.rdatatype.A,
+                                         dns.rdataclass.IN)
+        response = dns.query.udp(request, nameserver)
+        if response.rcode() == 0:
+            request = dns.message.make_query(name, dns.rdatatype.ANY)
+            request.flags |= dns.flags.AD
+            request.find_rrset(request.additional, dns.name.root, 65535,
+                               dns.rdatatype.OPT, create=True,
+                               force_unique=True)
+            response = dns.query.udp(request, nameserver)
+            resp_len = sum([len(x.to_text()) for x in response.answer])
+            req_len = len(request.to_text())
+            if req_len < resp_len:
+                show_open('Amplification attack is possible on server',
+                          details='Request length={}, Response length={}'.
+                          format(req_len, resp_len))
+                return True
+        show_close('Amplification attack is not possible on server')
+        return False
+    except dns.exception.SyntaxError:
+        show_close('Amplification attack is not possible on server')
+        return False
