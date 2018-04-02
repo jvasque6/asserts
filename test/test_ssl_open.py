@@ -54,9 +54,9 @@ def test_tlsv1_enabled_open(run_mock):
 
 
 # pylint: disable=unused-argument
-def test_has_poodle_open():
+def test_has_poodle_sslv3_open():
     """Sitio vulnerable a POODLE?."""
-    assert ssl.has_poodle(CONTAINER_IP)
+    assert ssl.has_poodle_sslv3(CONTAINER_IP)
 
 
 # pylint: disable=unused-argument

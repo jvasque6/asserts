@@ -504,29 +504,9 @@ def is_tlsv1_enabled(site, port=PORT):
 
 
 @track
-def has_poodle(site, port=PORT):
-    """Check whether POODLE is present."""
+def has_poodle_tls(site, port=PORT):
+    """Check whether POODLE TLS is present."""
     result = False
-    try:
-        with __connect(site, port=port, min_version=(3, 0),
-                       max_version=(3, 0)) as conn:
-            if conn._recordLayer.isCBCMode():  # noqa
-                show_open('Site vulnerable to POODLE SSLv3 attack',
-                          details='Site="{}:{}"'.format(site, port))
-                result = True
-            else:
-                show_close('Site allows SSLv3. However, it seems not to \
-be vulnerable to POODLE SSLv3 attack',
-                           details='Site="{}:{}"'.format(site, port))
-                result = False
-    except tlslite.errors.TLSRemoteAlert:
-        pass
-    except tlslite.errors.TLSAbruptCloseError:
-        pass
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        return False
     try:
         with __connect(site, port=port, check_poodle_tls=True,
                        cipher_names=["aes256", "aes128", "3des"],
@@ -537,18 +517,41 @@ be vulnerable to POODLE SSLv3 attack',
     except tlslite.errors.TLSRemoteAlert:
         show_close('Site not vulnerable to POODLE TLS attack',
                    details='Site="{}:{}"'.format(site, port))
-        if not result:
-            result = False
+        result = False
     except tlslite.errors.TLSAbruptCloseError:
         show_close('Site not vulnerable to POODLE TLS attack',
                    details='Site="{}:{}"'.format(site, port))
-        if not result:
-            result = False
+        result = False
     except socket.error:
         show_unknown('Port closed', details='Site="{}:{}"'.
                      format(site, port))
         return False
     return result
+
+
+@track
+def has_poodle_sslv3(site, port=PORT):
+    """Check whether POODLE SSLv3 is present."""
+    try:
+        with __connect(site, port=port, min_version=(3, 0),
+                       max_version=(3, 0)) as conn:
+            if conn._recordLayer.isCBCMode():  # noqa
+                show_open('Site vulnerable to POODLE SSLv3 attack',
+                          details='Site="{}:{}"'.format(site, port))
+                return True
+            show_close('Site allows SSLv3. However, it seems not to \
+be vulnerable to POODLE SSLv3 attack',
+                       details='Site="{}:{}"'.format(site, port))
+            return False
+    except tlslite.errors.TLSRemoteAlert:
+        pass
+    except tlslite.errors.TLSAbruptCloseError:
+        pass
+    except socket.error:
+        show_unknown('Port closed', details='Site="{}:{}"'.
+                     format(site, port))
+        return False
+    return False
 
 
 @track
