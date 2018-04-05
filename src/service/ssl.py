@@ -6,6 +6,7 @@ from __future__ import absolute_import
 from contextlib import contextmanager
 import copy
 import datetime
+import errno
 import socket
 import ssl
 import struct
@@ -456,10 +457,15 @@ def is_sslv3_enabled(site, port=PORT):
         show_close('SSLv3 not enabled on site',
                    details='Site="{}:{}"'.format(site, port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        result = False
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('SSLv3 not enabled on site',
+                       details='Site="{}:{}"'.format(site, port))
+            result = False
+        else:
+            show_unknown('Port closed', details='Site="{}:{}"'.
+                         format(site, port))
+            result = False
     return result
 
 
@@ -497,10 +503,15 @@ def is_tlsv1_enabled(site, port=PORT):
         show_close('TLSv1 not enabled on site',
                    details='Site="{}:{}"'.format(site, port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        result = False
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('TLSv1 not enabled on site',
+                       details='Site="{}:{}"'.format(site, port))
+            result = False
+        else:
+            show_unknown('Port closed', details='Site="{}:{}"'.
+                         format(site, port))
+            result = False
     return result
 
 
@@ -523,10 +534,15 @@ def has_poodle_tls(site, port=PORT):
         show_close('Site not vulnerable to POODLE TLS attack',
                    details='Site="{}:{}"'.format(site, port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        return False
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('Site not vulnerable to POODLE TLS attack',
+                       details='Site="{}:{}"'.format(site, port))
+            result = False
+        else:
+            show_unknown('Port closed', details='Site="{}:{}"'.
+                         format(site, port))
+            result = False
     return result
 
 
@@ -548,7 +564,11 @@ be vulnerable to POODLE SSLv3 attack',
         pass
     except tlslite.errors.TLSAbruptCloseError:
         pass
-    except socket.error:
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('Site not vulnerable to POODLE SSLv3 attack',
+                       details='Site="{}:{}"'.format(site, port))
+            return False
         show_unknown('Port closed', details='Site="{}:{}"'.
                      format(site, port))
         return False
