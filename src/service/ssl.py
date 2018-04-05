@@ -625,10 +625,15 @@ def allows_anon_ciphers(site, port=PORT):
         show_close('Site not allows anonymous cipher suites',
                    details='Site="{}:{}"'.format(site, port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        result = False
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('Site not allows anonymous cipher suites',
+                       details='Site="{}:{}"'.format(site, port))
+            result = False
+        else:
+            show_unknown('Port closed', details='Site="{}:{}"'.
+                         format(site, port))
+            result = False
     return result
 
 
@@ -654,10 +659,15 @@ suites', details='Site="{}:{}"'.format(site, port))
         show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
 suites', details='Site="{}:{}"'.format(site, port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details='Site="{}:{}"'.
-                     format(site, port))
-        result = False
+    except socket.error as exception:
+        if exception.errno == errno.ECONNRESET:
+            show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
+suites', details='Site="{}:{}"'.format(site, port))
+            result = False
+        else:
+            show_unknown('Port closed', details='Site="{}:{}"'.
+                         format(site, port))
+            result = False
     return result
 
 
