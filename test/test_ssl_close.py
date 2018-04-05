@@ -60,6 +60,12 @@ def test_has_poodle_sslv3_close(run_mock):
 
 
 # pylint: disable=unused-argument
+def test_has_poodle_tls_close(run_mock):
+    """Sitio vulnerable a POODLE?."""
+    assert not ssl.has_poodle_tls(CONTAINER_IP)
+
+
+# pylint: disable=unused-argument
 def test_has_beast_close(run_mock):
     """Sitio vulnerable a BEAST?."""
     assert not ssl.has_beast(CONTAINER_IP)
