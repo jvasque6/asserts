@@ -17,25 +17,26 @@ from fluidasserts.utils.decorators import track
 from pyparsing import (ParseException, CaselessKeyword, Word, Literal,
                        Optional, alphas)
 
-# Java grammar
-CATCH = CaselessKeyword('catch')
-GENERIC_EXC = CaselessKeyword('exception')
-TYPE = Word(alphas)
-OBJECT_NAME = Word(alphas)
-OBJECT = Word(alphas)
-GENERIC_EXCEPTION = CATCH + Literal('(') + GENERIC_EXC + \
-    Optional(Literal('(') + TYPE + Literal(')')) + OBJECT_NAME + \
-    Optional(Literal('(') + OBJECT + Literal(')'))
 
 @track
 def has_generic_exceptions(java_file):
     """Search if code uses generic exceptions."""
+# Java grammar
+    kw_catch = CaselessKeyword('catch')
+    kw_generic_exc = CaselessKeyword('exception')
+    kw_type = Word(alphas)
+    kw_object_name = Word(alphas)
+    kw_object = Word(alphas)
+    generic_exception = kw_catch + Literal('(') + kw_generic_exc + \
+        Optional(Literal('(') + kw_type + Literal(')')) + kw_object_name + \
+        Optional(Literal('(') + kw_object + Literal(')'))
+
     with open(java_file) as file_fd:
         affected_lines = []
         counter = 1
         for line in file_fd.readlines():
             try:
-                GENERIC_EXCEPTION.parseString(line)
+                generic_exception.parseString(line)
                 affected_lines.append(counter)
             except ParseException:
                 pass

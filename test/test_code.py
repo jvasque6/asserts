@@ -14,8 +14,8 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-SECURE_CODE = 'test/provision/code/secure.c'
-INSECURE_CODE = 'test/provision/code/insecure.c'
+SECURE_CODE = 'test/static/code/c/secure.c'
+INSECURE_CODE = 'test/static/code/c/insecure.c'
 
 
 #
