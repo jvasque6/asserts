@@ -63,6 +63,7 @@ setup(
         'requests_ntlm==1.1.0',      # src.helper.http_helper
         'pytesseract==0.1.7',        # src.format.captcha
         'pillow==5.0.0',             # src.format.captcha
+        'pyparsing==2.1.10',         # src.code
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
