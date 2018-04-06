@@ -84,61 +84,70 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             self.headers['Accept'] = '*/*'
         if 'Accept-Language' not in self.headers:
             self.headers['Accept-Language'] = 'en-US,en;q=0.5'
+        if not self.files:
+            if 'Content-Type' not in self.headers:
+                self.headers['Content-Type'] = \
+                    'application/x-www-form-urlencoded'
 
         self.do_request()
 
+    # pylint: disable=too-many-branches
     def do_request(self):
         """Do HTTP request."""
-        try:
-            if self.method == 'PUT':
-                ret = requests.put(self.url, verify=False,
-                                   auth=self.auth,
-                                   params=self.params,
-                                   cookies=self.cookies,
-                                   data=self.data,
-                                   headers=self.headers)
-            if self.method == 'DELETE':
-                ret = requests.delete(self.url, verify=False,
-                                      auth=self.auth,
-                                      params=self.params,
-                                      cookies=self.cookies,
-                                      data=self.data,
-                                      headers=self.headers)
-            if self.data == '':
-                ret = requests.get(self.url, verify=False,
-                                   auth=self.auth,
-                                   params=self.params,
-                                   cookies=self.cookies,
-                                   headers=self.headers,
-                                   stream=self.stream)
-            else:
-                if not self.files:
-                    if 'Content-Type' not in self.headers:
-                        self.headers['Content-Type'] = \
-                            'application/x-www-form-urlencoded'
-                ret = requests.post(self.url, verify=False,
-                                    data=self.data,
-                                    auth=self.auth,
-                                    params=self.params,
-                                    cookies=self.cookies,
-                                    headers=self.headers,
-                                    files=self.files,
-                                    stream=self.stream)
-            self.response = ret
-            if self.response.url != self.url:
-                self.url = self.response.url
+        if self.method in ['PUT', 'DELETE']:
+            try:
+                if self.method == 'PUT':
+                    ret = requests.put(self.url, verify=False,
+                                       auth=self.auth,
+                                       params=self.params,
+                                       cookies=self.cookies,
+                                       data=self.data,
+                                       headers=self.headers)
+                if self.method == 'DELETE':
+                    ret = requests.delete(self.url, verify=False,
+                                          auth=self.auth,
+                                          params=self.params,
+                                          cookies=self.cookies,
+                                          data=self.data,
+                                          headers=self.headers)
+                self.response = ret
+            except requests.ConnectionError:
+                raise ConnError
+            except requests.exceptions.TooManyRedirects:
+                raise ConnError
+        else:
+            try:
+                if self.data == '':
+                    ret = requests.get(self.url, verify=False,
+                                       auth=self.auth,
+                                       params=self.params,
+                                       cookies=self.cookies,
+                                       headers=self.headers,
+                                       stream=self.stream)
+                else:
+                    ret = requests.post(self.url, verify=False,
+                                        data=self.data,
+                                        auth=self.auth,
+                                        params=self.params,
+                                        cookies=self.cookies,
+                                        headers=self.headers,
+                                        files=self.files,
+                                        stream=self.stream)
+                self.response = ret
+                if self.response.url != self.url:
+                    self.url = self.response.url
 
-            if ret.cookies == {}:
-                if ret.request._cookies != {} and \
-                   self.cookies != ret.request._cookies:
-                    self.cookies = ret.request._cookies
-            else:
-                self.cookies = ret.cookies
-            return ret
-        except requests.ConnectionError:
-            raise ConnError
-        except requests.exceptions.TooManyRedirects:
-            raise ConnError
+                if ret.cookies == {}:
+                    if ret.request._cookies != {} and \
+                    self.cookies != ret.request._cookies:
+                        self.cookies = ret.request._cookies
+                else:
+                    self.cookies = ret.cookies
+            except requests.ConnectionError:
+                raise ConnError
+            except requests.exceptions.TooManyRedirects:
+                raise ConnError
+        return ret
 
     def formauth_by_statuscode(self, code):
         """Authenticate using status code as verification."""
