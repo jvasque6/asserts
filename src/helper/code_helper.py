@@ -31,7 +31,7 @@ def __get_match_lines(grammar, code_file):
     return affected_lines
 
 
-def check_grammar(grammar, code_dest):
+def check_grammar(grammar, code_dest, code_ext):
     """Check grammar in location."""
     assert os.path.exists(code_dest)
     vulns = {}
@@ -42,7 +42,7 @@ def check_grammar(grammar, code_dest):
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            if not full_path.lower().endswith('.java'):
+            if not full_path.lower().endswith(code_ext):
                 continue
             vulns[full_path] = __get_match_lines(grammar, full_path)
     return vulns

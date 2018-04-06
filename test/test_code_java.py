@@ -14,8 +14,9 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-SECURE_CODE = 'test/static/code/java/generic_exceptions_close.java'
-INSECURE_CODE = 'test/static/code/java/generic_exceptions_open.java'
+CODE_DIR = 'test/static/code/java/'
+SECURE_CODE = CODE_DIR + 'generic_exceptions_close.java'
+INSECURE_CODE = CODE_DIR + 'generic_exceptions_open.java'
 
 
 #
@@ -26,6 +27,11 @@ INSECURE_CODE = 'test/static/code/java/generic_exceptions_open.java'
 def test_has_generic_exceptions_open():
     """Code uses generic exceptions."""
     assert java.has_generic_exceptions(INSECURE_CODE)
+
+
+def test_has_generic_exceptions_in_dir_open():
+    """Code uses generic exceptions."""
+    assert java.has_generic_exceptions(CODE_DIR)
 
 #
 # Closing tests
