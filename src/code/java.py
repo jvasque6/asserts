@@ -6,7 +6,8 @@ This module allows to check Java code vulnerabilities
 """
 
 # standard imports
-# None
+import os
+
 # 3rd party imports
 # None
 
@@ -18,10 +19,9 @@ from pyparsing import (ParseException, CaselessKeyword, Word, Literal,
                        Optional, alphas)
 
 
-@track
-def has_generic_exceptions(java_file):
-    """Search if code uses generic exceptions."""
-# Java grammar
+def __generic_exceptions_grammar(java_file):
+    """Java grammar for generic exceptions."""
+    # Generic exception grammar
     kw_catch = CaselessKeyword('catch')
     kw_generic_exc = CaselessKeyword('exception')
     kw_type = Word(alphas)
@@ -42,10 +42,34 @@ def has_generic_exceptions(java_file):
                 pass
             finally:
                 counter += 1
-        if affected_lines:
+    return affected_lines
+
+
+@track
+def has_generic_exceptions(java_dest):
+    """Search generic exceptions in file or dir."""
+    assert os.path.exists(java_dest)
+    if os.path.isfile(java_dest):
+        result = __generic_exceptions_grammar(java_dest)
+        if result:
             show_open('Code uses generic exceptions', details='File: {}, \
-Lines: {}'.format(java_file, ",".join([str(x) for x in affected_lines])))
+Lines: {}'.format(java_dest, ",".join([str(x) for x in result])))
             return True
         show_close('Code does not use generic exceptions',
-                   details='File: {}'.format(java_file))
+                   details='File: {}'.format(java_dest))
         return False
+    result = False
+    for root, _, files in os.walk(java_dest):
+        for java_file in files:
+            full_path = os.path.join(root, java_file)
+            if not full_path.lower().endswith('.java'):
+                continue
+            vulns = __generic_exceptions_grammar(full_path)
+            if vulns:
+                show_open('Code uses generic exceptions', details='File: {}, \
+Lines: {}'.format(full_path, ",".join([str(x) for x in vulns])))
+                result = True
+            else:
+                show_close('Code does not use generic exceptions',
+                           details='File: {}'.format(full_path))
+    return result
