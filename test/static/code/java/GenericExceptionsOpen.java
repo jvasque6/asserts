@@ -1,4 +1,4 @@
-class Example2{
+class GenericExceptionsOpen{
    public static void main(String args[]){
      try{
          int a[]=new int[7];

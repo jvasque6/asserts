@@ -40,5 +40,5 @@ Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not use generic exceptions',
-                        details='File: {}'.format(code_file))
+                       details='File: {}'.format(code_file))
     return result

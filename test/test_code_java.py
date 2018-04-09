@@ -15,8 +15,8 @@ import fluidasserts.utils.decorators
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
 CODE_DIR = 'test/static/code/java/'
-SECURE_CODE = CODE_DIR + 'generic_exceptions_close.java'
-INSECURE_CODE = CODE_DIR + 'generic_exceptions_open.java'
+SECURE_CODE = CODE_DIR + 'GenericExceptionsClose.java'
+INSECURE_CODE = CODE_DIR + 'GenericExceptionsOpen.java'
 
 
 #
