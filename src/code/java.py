@@ -27,9 +27,9 @@ def has_generic_exceptions(java_dest):
     tk_type = Word(alphas)
     tk_object_name = Word(alphas)
     tk_object = Word(alphas)
-    generic_exception = tk_catch + Literal('(') + tk_generic_exc + \
-        Optional(Literal('(') + tk_type + Literal(')')) + tk_object_name + \
-        Optional(Literal('(') + tk_object + Literal(')'))
+    generic_exception = Optional(Literal('}')) + tk_catch + Literal('(') + \
+        tk_generic_exc + Optional(Literal('(') + tk_type + Literal(')')) + \
+        tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
     matches = code_helper.check_grammar(generic_exception, java_dest, '.java')
