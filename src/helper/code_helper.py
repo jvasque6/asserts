@@ -13,7 +13,7 @@ import os
 # None
 
 # local imports
-from pyparsing import ParseException
+from pyparsing import Or, ParseException
 
 LANGUAGE_SPECS = {
     'java':{
@@ -30,8 +30,8 @@ LANGUAGE_SPECS = {
     }
 }
 
-def __get_caller():
-    frm = inspect.stack()[2]
+def __get_caller(depth=2):
+    frm = inspect.stack()[depth]
     mod = inspect.getmodule(frm[0])
     assert mod.__name__.startswith('fluidasserts')
     caller = mod.__name__.split('.')[2]
@@ -42,10 +42,17 @@ def __get_caller():
 
 def __get_match_lines(grammar, code_file):
     """Check grammar in file."""
+    caller = __get_caller(3)
     with open(code_file) as file_fd:
         affected_lines = []
         counter = 1
         for line in file_fd.readlines():
+            try:
+                parser = ~Or(caller['line_comment'])
+                parser.parseString(line)
+            except ParseException:
+                counter += 1
+                continue
             try:
                 grammar.parseString(line)
                 affected_lines.append(counter)
