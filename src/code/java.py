@@ -33,13 +33,12 @@ def has_generic_exceptions(java_dest):
 
     result = False
     matches = code_helper.check_grammar(generic_exception, java_dest, '.java')
-    if matches:
-        for code_file, vulns in matches.items():
-            if vulns:
-                show_open('Code uses generic exceptions', details='File: {}, \
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses generic exceptions', details='File: {}, \
 Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
-                result = True
-            else:
-                show_close('Code does not use generic exceptions',
-                           details='File: {}'.format(code_file))
+            result = True
+        else:
+            show_close('Code does not use generic exceptions',
+                        details='File: {}'.format(code_file))
     return result
