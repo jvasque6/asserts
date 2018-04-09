@@ -1,0 +1,39 @@
+ * Definicion de directivas de compilacion
+HDatFmt(*YMD) DatEdit(*YMD) FixNbr(*Zoned) Option(*NoDebugIO:*SrcStmt)
+HAlwNull(*UsrCtl) DftActGrp(*No)
+
+
+ * Definicion de Archivos
+ * No Aplica.
+
+
+ * Definicion de parametros del programa.
+ * No Aplica.
+
+
+ * ------------------------------------------------------------------------
+ *  Bloque Principal
+ * ------------------------------------------------------------------------
+ /Free
+
+ * Definicion de Variables
+D wa_Id		  S              1A
+D wa_CodXTCOD     S              6A
+D wa_MsjXTCOD     S             45A
+D wa_PosVec       S              6S	0
+
+ /Free
+    If SQLCOD = 0;
+       V_Mensajes(ws_PosVec) = wa_CodXTCOD + wa_MsjXTCOD;
+       ws_PosVec += 1;
+       Exec SQL Fetch Cursor_Mensajes Into :wa_CodXTCOD, :wa_MsjXTCOD;"
+    EndIf;
+
+    If SQLCOD = 0;
+       V_Estados(ws_PosVec) = wa_Id;
+       ws_PosVec += 1;
+       Exec SQL Fetch Cursor_Estados Into :wa_Id;
+    EndIf;
+
+
+ /End-Free
