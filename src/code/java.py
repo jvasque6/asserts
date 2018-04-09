@@ -32,7 +32,7 @@ def has_generic_exceptions(java_dest):
         tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
-    matches = code_helper.check_grammar(generic_exception, java_dest, '.java')
+    matches = code_helper.check_grammar(generic_exception, java_dest)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions', details='File: {}, \
