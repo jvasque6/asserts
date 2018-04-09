@@ -22,14 +22,14 @@ from pyparsing import CaselessKeyword, Word, Literal, Optional, alphas
 @track
 def has_generic_exceptions(java_dest):
     """Search generic exceptions in file or dir."""
-    kw_catch = CaselessKeyword('catch')
-    kw_generic_exc = CaselessKeyword('exception')
-    kw_type = Word(alphas)
-    kw_object_name = Word(alphas)
-    kw_object = Word(alphas)
-    generic_exception = kw_catch + Literal('(') + kw_generic_exc + \
-        Optional(Literal('(') + kw_type + Literal(')')) + kw_object_name + \
-        Optional(Literal('(') + kw_object + Literal(')'))
+    tk_catch = CaselessKeyword('catch')
+    tk_generic_exc = CaselessKeyword('exception')
+    tk_type = Word(alphas)
+    tk_object_name = Word(alphas)
+    tk_object = Word(alphas)
+    generic_exception = tk_catch + Literal('(') + tk_generic_exc + \
+        Optional(Literal('(') + tk_type + Literal(')')) + tk_object_name + \
+        Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
     matches = code_helper.check_grammar(generic_exception, java_dest, '.java')
