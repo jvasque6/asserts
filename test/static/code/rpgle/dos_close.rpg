@@ -17,10 +17,10 @@ HAlwNull(*UsrCtl) DftActGrp(*No)
  /Free
 
  * Definicion de Variables
-D wa_Id		  S              1A
-D wa_CodXTCOD     S              6A
-D wa_MsjXTCOD     S             45A
-D wa_PosVec       S              6S	0
+D wa_Id		  S              1A Inz(*zero)
+D wa_CodXTCOD     S              6A Inz(*zero)
+D wa_MsjXTCOD     S             45A Inz(*zero)
+D wa_PosVec       S              6S	0 Inz(*zero)
 
  /Free
     If SQLCOD = 0;
