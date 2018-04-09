@@ -16,8 +16,8 @@ from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Literal, Word, Optional, NotAny,
-                       alphas, alphanums, nums)
+from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
+                       NotAny, alphas, alphanums, nums)
 
 
 @track
@@ -45,7 +45,7 @@ def has_dos_dow_sqlcod(rpg_dest):
 @track
 def has_unitialized_vars(rpg_dest):
     """Search for unitialized variables."""
-    tk_data = Word('D')
+    tk_data = Keyword('D')
     tk_first = Word(alphas+"_", exact=1)
     tk_rest = Word(alphanums+"_")
     tk_vartype = Word(alphas, exact=1)
@@ -54,7 +54,7 @@ def has_unitialized_vars(rpg_dest):
     tk_varname = tk_first + tk_rest
 
     unitialized = tk_data + tk_varname + Optional(tk_vartype) + \
-                  tk_varlen + Optional(Word(nums)) + NotAny(tk_inz)
+                  Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
 
     result = False
     matches = code_helper.check_grammar(unitialized, rpg_dest, '.rpg')
