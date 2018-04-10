@@ -18,6 +18,12 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 from pyparsing import CaselessKeyword, Word, Literal, Optional, alphas
 
+LANGUAGE_SPECS = {
+    'extensions': ['java'],
+    'block_comment_start': '/*',
+    'block_comment_end': '*/',
+    'line_comment': ['//'],
+}
 
 @track
 def has_generic_exceptions(java_dest):
@@ -32,7 +38,8 @@ def has_generic_exceptions(java_dest):
         tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
-    matches = code_helper.check_grammar(generic_exception, java_dest)
+    matches = code_helper.check_grammar(generic_exception, java_dest,
+                                        LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions', details='File: {}, \

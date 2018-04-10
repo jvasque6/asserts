@@ -19,6 +19,13 @@ from fluidasserts.utils.decorators import track
 from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
                        NotAny, alphas, alphanums, nums)
 
+LANGUAGE_SPECS = {
+    'extensions': ['rpg', 'rpgle'],
+    'block_comment_start': None,
+    'block_comment_end': None,
+    'line_comment': ['//', '*'],
+}
+
 
 @track
 def has_dos_dow_sqlcod(rpg_dest):
@@ -29,7 +36,8 @@ def has_dos_dow_sqlcod(rpg_dest):
     dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + Literal('0')
 
     result = False
-    matches = code_helper.check_grammar(dos_dow_sqlcod, rpg_dest)
+    matches = code_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
+                                        LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
@@ -57,7 +65,7 @@ def has_unitialized_vars(rpg_dest):
                   Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
 
     result = False
-    matches = code_helper.check_grammar(unitialized, rpg_dest)
+    matches = code_helper.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has unitialized variables',
