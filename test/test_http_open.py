@@ -384,3 +384,31 @@ def test_http_response_open():
     """Respuesta 201 CREATED?."""
     assert http.is_resource_accessible(
         '%s/reponse/fail' % (MOCK_SERVICE))
+
+
+def test_found_string_unknown():
+    """Could not connect."""
+    url = 'http://0.0.0.0/'
+    expected = 'Expected string'
+    assert http.has_text(url, expected)
+
+
+def test_notfound_string_unknown():
+    """Could not connect."""
+    url = 'http://0.0.0.0/'
+    expected = 'Expected string'
+    assert http.has_not_text(url, expected)
+
+
+def test_has_multiple_text_unknown():
+    """Could not connect."""
+    url = 'http://0.0.0.0/'
+    expected = 'Expected string'
+    assert http.has_multiple_text(url, '')
+
+
+def test_has_dirlisting_unknown():
+    """Could not connect."""
+    url = 'http://0.0.0.0/'
+    expected = 'Expected string'
+    assert http.has_dirlisting(url)
