@@ -441,7 +441,7 @@ def is_not_https_required(url):
         return True
     except http_helper.ConnError:
         show_unknown('Could not connect',
-                     details='URL="{}"'.format(http_session.url),
+                     details='URL="{}"'.format(url),
                      refs='apache/configurar-soporte-https')
         return False
 
