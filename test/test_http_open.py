@@ -435,7 +435,22 @@ def test_is_not_https_required_open():
     assert http.is_not_https_required(
         '%s/' % (MOCK_SERVICE))
 
-# def test_is_not_https_required_unknown():
-#     """El servidor no requiere usar HTTPS?."""
-#     url = 'http://0.0.0.0/'
-#     assert not http.is_not_https_required(url)
+
+def test_is_not_https_required_unknown():
+    """El servidor no requiere usar HTTPS?."""
+    url = 'http://0.0.0.0/'
+    assert not http.is_not_https_required(url)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_server_present_open():
+    """Header Serever esta presente?."""
+    assert http.is_header_server_present(
+        '%s/version/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_x_xxs_protection_missing_open():
+    """Header x-xss-protection establecido?."""
+    assert http.is_header_x_xxs_protection_missing(
+        '%s/xxs_protection/fail' % (BASE_URL))

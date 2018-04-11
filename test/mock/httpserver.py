@@ -406,6 +406,22 @@ def x_aspnet_version_fail():
     return resp
 
 
+@APP.route('/http/headers/xxs_protection/ok')
+def xxs_protection_ok():
+    """Encabezado X-XSS-Protection presente."""
+    resp = Response('Login successful')
+    resp.headers['X-XSS-Protection'] = '1; mode=block'
+    return resp
+
+
+@APP.route('/http/headers/xxs_protection/fail')
+def xxs_protection_fail():
+    """Encabezado X-XSS-Protection deshabilitado."""
+    resp = Response('Login successful')
+    resp.headers['X-XSS-Protection'] = '0'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
