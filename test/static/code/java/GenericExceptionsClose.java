@@ -11,6 +11,12 @@ class GenericExceptionsClose{
      catch(ArrayIndexOutOfBoundsException e){
         System.out.println("Warning: ArrayIndexOutOfBoundsException");
      }
-   System.out.println("Out of try-catch block...");
+/*
+     try {
+           System.out.println("Out of try-catch block...");
+  catch(Exception e){
+        System.out.println("Warning: Some Other exception");
+     }
+*/
   }
 }
