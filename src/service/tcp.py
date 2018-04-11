@@ -22,6 +22,7 @@ from fluidasserts.utils.decorators import track
 @track
 def is_port_open(ipaddress, port):
     """Check if a given port on an IP address is open."""
+    assert 1 <= port <= 65535
     result = True
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -45,6 +46,7 @@ def is_port_open(ipaddress, port):
 @track
 def is_port_insecure(ipaddress, port):
     """Check if a given port on an IP address is insecure."""
+    assert 1 <= port <= 65535
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(3)
