@@ -600,7 +600,6 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
                       details='URL="{}", Data used="{}"'.
                       format(url, str(_datas)))
             return True
-    show_open('Brute forcing possible',
-              details='URL="{}", Data used="{}"'.
-              format(url, str(_datas)))
+    show_close('Brute forcing not possible',
+               details='URL="{}"'.format(url))
     return False
