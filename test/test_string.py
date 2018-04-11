@@ -19,6 +19,7 @@ import fluidasserts.utils.decorators
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
 WEAK_USER_PASS = 'password'
+WEAK_USER_PASS = 'password2'
 STRONG_USER_PASS = 'P@ssw0rd1.'
 WEAK_SYSTEM_PASS = 'system_password'
 STRONG_SYSTEM_PASS = 'P@ssw0rd1.P@ssw0rd1.P@ssw0rd1.'
@@ -35,6 +36,7 @@ STRONG_SSID = 'S3cur3SSID'
 def test_user_password_open():
     """Weak user password?."""
     assert string.is_user_password_insecure(WEAK_USER_PASS)
+    assert string.is_user_password_insecure(WEAK_USER_PASS+'3')
 
 
 def test_system_password_open():

@@ -31,6 +31,9 @@ def __check_password_strength(password, length):
         show_open('{} is too short'.format(password),
                   details='Site={}'.format(len(password)))
         result = True
+    elif password in words:
+        show_open('{} is a dictionary password'.format(password))
+        result = True
     elif caps < 1 or lower < 1 or nums < 1 or special < 1:
         show_open('{} is too weak'.format(password),
                   details='{}'.
@@ -38,9 +41,6 @@ def __check_password_strength(password, length):
                          " Lower: " + str(lower) +
                          " Numbers: " + str(nums) +
                          " Special: " + str(special)))
-        result = True
-    elif password in words:
-        show_open('{} is a dictionary password'.format(password))
         result = True
     else:
         show_open('{} password is secure'.format(password),
