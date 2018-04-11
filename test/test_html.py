@@ -48,6 +48,7 @@ def test_is_cacheable_open():
     vulnerable.html
     """
     assert html.is_cacheable('test/static/vulnerable.html')
+    # assert html.is_cacheable('test/static/vulnerable-incomplete.html')
 
 
 def test_is_cacheable_close():

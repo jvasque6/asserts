@@ -363,6 +363,15 @@ def test_bruteforce_open():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+    assert http.can_brute_force(
+        '%s/bruteforce/fail' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data,
+        params='')
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -404,11 +413,29 @@ def test_has_multiple_text_unknown():
     """Could not connect."""
     url = 'http://0.0.0.0/'
     expected = 'Expected string'
-    assert http.has_multiple_text(url, '')
+    assert http.has_multiple_text(url, expected)
 
 
 def test_has_dirlisting_unknown():
     """Could not connect."""
     url = 'http://0.0.0.0/'
-    expected = 'Expected string'
     assert http.has_dirlisting(url)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_x_asp_net_version_present_open():
+    """Header X-AspNet-Version establecido?."""
+    assert http.is_header_x_asp_net_version_present(
+        '%s/x_aspnet_version/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_not_https_required_open():
+    """El servidor no requiere usar HTTPS?."""
+    assert http.is_not_https_required(
+        '%s/' % (MOCK_SERVICE))
+
+# def test_is_not_https_required_unknown():
+#     """El servidor no requiere usar HTTPS?."""
+#     url = 'http://0.0.0.0/'
+#     assert not http.is_not_https_required(url)

@@ -360,6 +360,15 @@ def test_bruteforce_close():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+    assert not http.can_brute_force(
+        '%s/bruteforce/ok' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data,
+        params='')
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -381,3 +390,10 @@ def test_http_response_close():
     """Respuesta 403 FORBIDDEN?."""
     assert not http.is_resource_accessible(
         '%s/reponse/ok' % (MOCK_SERVICE))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_x_asp_net_version_present_close():
+    """Header X-AspNet-Version establecido?."""
+    assert not http.is_header_x_asp_net_version_present(
+        '%s/x_aspnet_version/ok' % (BASE_URL))

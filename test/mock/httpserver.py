@@ -391,6 +391,21 @@ def http_only_ok():
     return resp
 
 
+@APP.route('/http/headers/x_aspnet_version/ok')
+def x_aspnet_version_ok():
+    """Encabezado X-AspNet-Version no presente."""
+    resp = Response('Login successful')
+    return resp
+
+
+@APP.route('/http/headers/x_aspnet_version/fail')
+def x_aspnet_version_fail():
+    """Encabezado X-AspNet-Version presente."""
+    resp = Response('Login successful')
+    resp.headers['X-AspNet-Version'] = '2.0.502727'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
