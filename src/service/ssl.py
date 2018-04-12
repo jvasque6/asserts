@@ -445,15 +445,8 @@ def is_sslv3_enabled(site, port=PORT):
             show_open('SSLv3 enabled on site',
                       details='Site="{}:{}"'.format(site, port))
             result = True
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('SSLv3 not enabled on site',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
-        show_close('SSLv3 not enabled on site',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSLocalAlert:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('SSLv3 not enabled on site',
                    details='Site="{}:{}"'.format(site, port))
         result = False
@@ -491,15 +484,8 @@ def is_tlsv1_enabled(site, port=PORT):
             show_open('TLSv1 enabled on site',
                       details='Site="{}:{}"'.format(site, port))
             result = True
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('TLSv1 not enabled on site',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
-        show_close('TLSv1 not enabled on site',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSLocalAlert:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('TLSv1 not enabled on site',
                    details='Site="{}:{}"'.format(site, port))
         result = False
@@ -526,11 +512,7 @@ def has_poodle_tls(site, port=PORT):
             show_open('Site vulnerable to POODLE TLS attack',
                       details='Site="{}:{}"'.format(site, port))
             result = True
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not vulnerable to POODLE TLS attack',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE TLS attack',
                    details='Site="{}:{}"'.format(site, port))
         result = False
@@ -560,9 +542,7 @@ def has_poodle_sslv3(site, port=PORT):
 be vulnerable to POODLE SSLv3 attack',
                        details='Site="{}:{}"'.format(site, port))
             return False
-    except tlslite.errors.TLSRemoteAlert:
-        pass
-    except tlslite.errors.TLSAbruptCloseError:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         pass
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
@@ -613,15 +593,8 @@ def allows_anon_ciphers(site, port=PORT):
             show_open('Site allows anonymous cipher suites',
                       details='Site="{}:{}"'.format(site, port))
             result = True
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not allows anonymous cipher suites',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not allows anonymous cipher suites',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSLocalAlert:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('Site not allows anonymous cipher suites',
                    details='Site="{}:{}"'.format(site, port))
         result = False
@@ -647,15 +620,8 @@ def allows_weak_ciphers(site, port=PORT):
             show_open('Site allows weak (RC4, 3DES and NULL) cipher \
 suites', details='Site="{}:{}"'.format(site, port))
             result = True
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
-suites', details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
-suites', details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSLocalAlert:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
 suites', details='Site="{}:{}"'.format(site, port))
         result = False
@@ -687,15 +653,8 @@ def has_beast(site, port=PORT):
 to be not an enabler to BEAST attack', details='Site="{}:{}"'.
                            format(site, port))
                 result = False
-    except tlslite.errors.TLSRemoteAlert:
-        show_close('Site not enables to BEAST attack to clients',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSAbruptCloseError:
-        show_close('Site not enables to BEAST attack to clients',
-                   details='Site="{}:{}"'.format(site, port))
-        result = False
-    except tlslite.errors.TLSLocalAlert:
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('Site not enables to BEAST attack to clients',
                    details='Site="{}:{}"'.format(site, port))
         result = False

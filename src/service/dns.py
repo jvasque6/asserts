@@ -41,23 +41,7 @@ def is_xfr_enabled(domain, nameserver):
         result = True
         show_open('Zone transfer enabled on server', details='{}:{}'.
                   format(domain, nameserver))
-    except NoSOA:
-        show_close('Zone transfer not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
-        result = False
-    except NoNS:
-        show_close('Zone transfer not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
-        result = False
-    except BadZone:
-        show_close('Zone transfer not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
-        result = False
-    except dns.query.BadResponse:
-        show_close('Zone transfer not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
-        result = False
-    except DNSException:
+    except (NoSOA, NoNS, BadZone, dns.query.BadResponse, DNSException):
         show_close('Zone transfer not enabled on server', details='{}:{}'.
                    format(domain, nameserver))
         result = False

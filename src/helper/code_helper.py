@@ -14,7 +14,7 @@ import os
 # local imports
 from pyparsing import Or, ParseException, Literal, SkipTo
 
-# pylint: disable=too-many-branches
+
 def __get_match_lines(grammar, code_file, lang_spec):
     """Check grammar in file."""
     with open(code_file) as file_fd:
@@ -35,9 +35,7 @@ def __get_match_lines(grammar, code_file, lang_spec):
                     parser.parseString(line)
                     counter += 1
                     in_block_comment = True
-                except ParseException:
-                    pass
-                except IndexError:
+                except (ParseException, IndexError):
                     pass
 
                 if in_block_comment:

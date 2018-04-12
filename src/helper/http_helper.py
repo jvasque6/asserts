@@ -91,7 +91,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
         self.do_request()
 
-    # pylint: disable=too-many-branches
     def do_request(self):
         """Do HTTP request."""
         if self.method in ['PUT', 'DELETE']:
@@ -111,9 +110,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           data=self.data,
                                           headers=self.headers)
                 self.response = ret
-            except requests.ConnectionError:
-                raise ConnError
-            except requests.exceptions.TooManyRedirects:
+            except (requests.ConnectionError,
+                    requests.exceptions.TooManyRedirects):
                 raise ConnError
         else:
             try:
@@ -143,9 +141,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                         self.cookies = ret.request._cookies
                 else:
                     self.cookies = ret.cookies
-            except requests.ConnectionError:
-                raise ConnError
-            except requests.exceptions.TooManyRedirects:
+            except (requests.ConnectionError,
+                    requests.exceptions.TooManyRedirects):
                 raise ConnError
         return ret
 
