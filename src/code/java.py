@@ -16,7 +16,8 @@ from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import CaselessKeyword, Word, Literal, Optional, alphas
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
+                       alphanums)
 
 LANGUAGE_SPECS = {
     'extensions': ['java'],
@@ -47,5 +48,26 @@ Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not use generic exceptions',
+                       details='File: {}'.format(code_file))
+    return result
+
+
+@track
+def uses_print_stack_trace(java_dest):
+    """Search printStackTrace calls."""
+    tk_object = Word(alphanums)
+    tk_pst = CaselessKeyword('printstacktrace')
+
+    pst = tk_object + Literal('.') + tk_pst + Literal('(') + Literal(')')
+
+    result = False
+    matches = code_helper.check_grammar(pst, java_dest, LANGUAGE_SPECS)
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses printStackTrace', details='File: {}, \
+Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
+            result = True
+        else:
+            show_close('Code does not use printStackTrace',
                        details='File: {}'.format(code_file))
     return result
