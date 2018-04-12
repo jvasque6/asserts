@@ -468,7 +468,12 @@ def has_dirlisting(url, *args, **kwargs):
 @track
 def is_resource_accessible(url, *args, **kwargs):
     """Check if url is available by checking response code."""
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    try:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    except http_helper.ConnError:
+        show_close('Resource not available',
+                   details='URL="{}"'.format(url))
+        return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
                    details='URL="{}", Status="{}"'.

@@ -101,14 +101,16 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                        params=self.params,
                                        cookies=self.cookies,
                                        data=self.data,
-                                       headers=self.headers)
+                                       headers=self.headers,
+                                       timeout=10)
                 if self.method == 'DELETE':
                     ret = requests.delete(self.url, verify=False,
                                           auth=self.auth,
                                           params=self.params,
                                           cookies=self.cookies,
                                           data=self.data,
-                                          headers=self.headers)
+                                          headers=self.headers,
+                                          timeout=10)
                 self.response = ret
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects):
@@ -121,7 +123,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                        params=self.params,
                                        cookies=self.cookies,
                                        headers=self.headers,
-                                       stream=self.stream)
+                                       stream=self.stream,
+                                       timeout=10)
                 else:
                     ret = requests.post(self.url, verify=False,
                                         data=self.data,
@@ -130,7 +133,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                         cookies=self.cookies,
                                         headers=self.headers,
                                         files=self.files,
-                                        stream=self.stream)
+                                        stream=self.stream,
+                                        timeout=10)
                 self.response = ret
                 if self.response.url != self.url:
                     self.url = self.response.url
