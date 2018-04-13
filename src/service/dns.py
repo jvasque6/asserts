@@ -127,7 +127,7 @@ def has_cache_snooping(nameserver):
 
     (supports non recursive queries)
     """
-    domain = 'google.com'
+    domain = 'isc.org.'
     name = dns.name.from_text(domain)
 
     try:
@@ -164,7 +164,7 @@ def has_cache_snooping(nameserver):
 @track
 def has_recursion(nameserver):
     """Check if nameserver has recursion enabled."""
-    domain = 'google.com.'
+    domain = 'isc.org.'
     name = dns.name.from_text(domain)
 
     try:
@@ -194,7 +194,7 @@ def has_recursion(nameserver):
 @track
 def can_amplify(nameserver):
     """Checks if nameserver allows amplification attacks."""
-    domain = 'google.com.'
+    domain = 'isc.org.'
     name = dns.name.from_text(domain)
 
     try:
