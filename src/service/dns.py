@@ -213,11 +213,13 @@ def can_amplify(nameserver):
             req_len = len(request.to_text())
             if req_len < resp_len:
                 show_open('Amplification attack is possible on server',
-                          details='Request length={}, Response length={}'.
-                          format(req_len, resp_len))
+                          details='{}: Request length={}, Response length={}'.
+                          format(nameserver, req_len, resp_len))
                 return True
-        show_close('Amplification attack is not possible on server')
+        show_close('Amplification attack is not possible on server',
+                   details='{}'.format(nameserver))
         return False
     except dns.exception.SyntaxError:
-        show_close('Amplification attack is not possible on server')
+        show_close('Amplification attack is not possible on server',
+                   details='{}'.format(nameserver))
         return False
