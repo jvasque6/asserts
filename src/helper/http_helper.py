@@ -84,10 +84,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             self.headers['Accept'] = '*/*'
         if 'Accept-Language' not in self.headers:
             self.headers['Accept-Language'] = 'en-US,en;q=0.5'
-        if not self.files:
-            if 'Content-Type' not in self.headers:
-                self.headers['Content-Type'] = \
-                    'application/x-www-form-urlencoded'
 
         self.do_request()
 
