@@ -6,6 +6,7 @@ This module allows to check Code vulnerabilities
 """
 
 # standard imports
+import os
 import re
 
 # 3rd party imports
@@ -48,4 +49,14 @@ def has_not_text(code_file, expected_text):
         return True
     show_close('Expected text present in code {}'.format(code_file),
                details='{}'.format(expected_text))
+    return False
+
+
+@track
+def file_exists(code_file):
+    """Check if a given file exists."""
+    if os.path.isfile(code_file):
+        show_open('File exists', details='Path="{}"'.format(code_file))
+        return True
+    show_close('File does not exist', details='Path="{}"'.format(code_file))
     return False
