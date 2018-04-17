@@ -8,6 +8,7 @@ import logging.config
 import os
 import tempfile
 import sys
+import yaml
 from pkg_resources import get_distribution, DistributionNotFound
 
 # 3rd party imports
@@ -66,6 +67,11 @@ class Message(object):
     def as_json(self):
         """Get JSON representation of message."""
         return json.dumps(self.__build_message())
+
+    def as_yaml(self):
+        """Get YAML representation of message."""
+        return yaml.dump(self.__build_message(), indent=2,
+                         default_flow_style=False, width=80)
 
     def as_logger(self):
         """Get logger representation of message."""
