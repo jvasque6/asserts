@@ -36,18 +36,18 @@ def is_xfr_enabled(domain, nameserver):
         zone = dns.zone.from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
             show_close('Zone transfer not enabled on server',
-                       details='{}:{}'.format(domain, nameserver))
+                       details=dict(domain=domain, nameserver=nameserver))
             result = False
         result = True
         show_open('Zone transfer enabled on server', details='{}:{}'.
                   format(domain, nameserver))
     except (NoSOA, NoNS, BadZone, dns.query.BadResponse, DNSException):
-        show_close('Zone transfer not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
+        show_close('Zone transfer not enabled on server',
+                   details=dict(domain=domain, nameserver=nameserver))
         result = False
     except socket.error:
-        show_unknown('Port closed for zone transfer', details='{}:{}'.
-                     format(domain, nameserver))
+        show_unknown('Port closed for zone transfer',
+                     details=dict(domain=domain, nameserver=nameserver))
         result = False
 
     return result
@@ -66,20 +66,20 @@ def is_dynupdate_enabled(domain, nameserver):
         result = True
 
         if response.rcode() > 0:
-            show_close('Zone update not enabled on server, \
-Details={}:{}'.format(domain, nameserver))
+            show_close('Zone update not enabled on server',
+                       details=dict(domain=domain, nameserver=nameserver))
             result = False
         else:
-            show_open('Zone update enabled on server', details='{}:{}'.
-                      format(domain, nameserver))
+            show_open('Zone update enabled on server',
+                      details=dict(domain=domain, nameserver=nameserver))
             result = True
     except dns.query.BadResponse:
-        show_close('Zone update not enabled on server', details='{}:{}'.
-                   format(domain, nameserver))
+        show_close('Zone update not enabled on server',
+                   details=dict(domain=domain, nameserver=nameserver))
         result = False
     except socket.error:
-        show_unknown('Port closed for DNS update', details='{}:{}'.
-                     format(domain, nameserver))
+        show_unknown('Port closed for DNS update',
+                     details=dict(domain=domain, nameserver=nameserver))
         result = False
     return result
 
@@ -99,23 +99,23 @@ def has_cache_poison(domain, nameserver):
     try:
         response = myresolver.query(name, 'DNSKEY')
     except DNSException:
-        show_open('Cache poisoning is possible on server', details='{}:{}'.
-                  format(domain, nameserver))
+        show_open('Cache poisoning is possible on server',
+                  details=dict(domain=domain, nameserver=nameserver))
         return True
 
     if response.response.rcode() != 0:
-        show_open('Cache poisoning is possible on server', details='{}:{}'.
-                  format(domain, nameserver))
+        show_open('Cache poisoning is possible on server',
+                  details=dict(domain=domain, nameserver=nameserver))
         result = True
     else:
         answer = response.rrset
         if len(answer) != 2:
-            show_open('Cache poisoning possible on server', details='{}:{}'.
-                      format(domain, nameserver))
+            show_open('Cache poisoning possible on server',
+                      details=dict(domain=domain, nameserver=nameserver))
             return True
         else:
             show_close('Cache poisoning not possible on server',
-                       details='{}:{}'.format(domain, nameserver))
+                       details=dict(domain=domain, nameserver=nameserver))
             result = False
 
     return result
@@ -146,16 +146,16 @@ def has_cache_snooping(nameserver):
 
         result = True
         if response.rcode() == 0:
-            show_open('Cache snooping possible on server', details='{}:{}'.
-                      format(domain, nameserver))
+            show_open('Cache snooping possible on server',
+                      details=dict(domain=domain, nameserver=nameserver))
             result = True
         else:
             show_close('Cache snooping not possible on server',
-                       details='{}:{}'.format(domain, nameserver))
+                       details=dict(domain=domain, nameserver=nameserver))
             result = False
     except dns.exception.SyntaxError:
-        show_close('Cache snooping not possible on server', details='{}:{}'.
-                   format(domain, nameserver))
+        show_close('Cache snooping not possible on server',
+                   details=dict(domain=domain, nameserver=nameserver))
         result = False
 
     return result
@@ -176,16 +176,16 @@ def has_recursion(nameserver):
 
         result = True
         if response.rcode() == 0:
-            show_open('Recursion possible on server', details='{}:{}'.
-                      format(domain, nameserver))
+            show_open('Recursion possible on server',
+                      details=dict(domain=domain, nameserver=nameserver))
             result = True
         else:
-            show_close('Recursion not possible on server', details='{}:{}'.
-                       format(domain, nameserver))
+            show_close('Recursion not possible on server',
+                       details=dict(domain=domain, nameserver=nameserver))
             result = False
     except dns.exception.SyntaxError:
-        show_close('Recursion not possible on server', details='{}:{}'.
-                   format(domain, nameserver))
+        show_close('Recursion not possible on server',
+                   details=dict(domain=domain, nameserver=nameserver))
         result = False
 
     return result
@@ -213,13 +213,14 @@ def can_amplify(nameserver):
             req_len = len(request.to_text())
             if req_len < resp_len:
                 show_open('Amplification attack is possible on server',
-                          details='{}: Request length={}, Response length={}'.
-                          format(nameserver, req_len, resp_len))
+                          details=dict(nameserver=nameserver,
+                                       request_len=req_len,
+                                       response_len=resp_len))
                 return True
         show_close('Amplification attack is not possible on server',
-                   details='{}'.format(nameserver))
+                   details=dict(nameserver=nameserver))
         return False
     except dns.exception.SyntaxError:
         show_close('Amplification attack is not possible on server',
-                   details='{}'.format(nameserver))
+                   details=dict(nameserver=nameserver))
         return False
