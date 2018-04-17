@@ -3,6 +3,7 @@
 from fluidasserts.system import linux_generic
 from fluidasserts.system import windows_server_2008_plus
 from fluidasserts.format import string
+from fluidasserts.format import x509
 #from fluidasserts.format import cookie
 from fluidasserts.format import html
 from fluidasserts.format import pdf
@@ -63,13 +64,22 @@ dns.has_recursion(nameserver)
 server = 'fluid.la'
 tcp.is_port_open(server, port=3389)
 
-site = 'fluid.la'
-ssl.is_cert_cn_not_equal_to_site(site, port=443)
-ssl.is_cert_inactive(site, port=443)
-ssl.is_cert_validity_lifespan_unsafe(site, port=443)
-ssl.is_pfs_disabled(site, port=443)
-ssl.is_sslv3_enabled(site, port=443)
-ssl.is_tlsv1_enabled(site, port=443)
+host = 'fluid.la'
+ssl.allows_anon_ciphers(host,port=443)
+ssl.allows_weak_ciphers(host,port=443)
+ssl.has_beast(host,port=443)
+ssl.has_breach(host,port=443)
+ssl.has_heartbleed(host,port=443)
+ssl.has_poodle_sslv3(host,port=443)
+ssl.has_poodle_tls(host,port=443)
+ssl.is_pfs_disabled(host,port=443)
+ssl.is_sslv3_enabled(host,port=443)
+ssl.is_tlsv1_enabled(host,port=443)
+x509.is_sha1_used(host,port=443)
+x509.is_md5_used(host,port=443)
+x509.is_cert_cn_not_equal_to_site(host,port=443)
+x509.is_cert_inactive(host,port=443)
+x509.is_cert_validity_lifespan_unsafe(host,port=443)
 
 #ldap.is_anonymous_bind_allowed(ldap_server, port=PORT)
 
