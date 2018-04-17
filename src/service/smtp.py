@@ -49,9 +49,8 @@ def is_version_visible(ip_address, port=PORT):
     result = True
     if version:
         result = True
-        show_open('SMTP version visible on {}:{}'.
-                  format(ip_address, port),
-                  details='Version={}'.format(version))
+        show_open('SMTP version visible on {}:{}'.format(ip_address, port),
+                  details=dict(version=version))
     else:
         result = False
         show_close('SMTP version not visible on {}:{}'.

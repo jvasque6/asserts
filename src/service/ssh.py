@@ -42,8 +42,8 @@ def is_cbc_used(site, port=PORT):
             cipher_text = ""
             for cipher in all_c:
                 cipher_text = cipher_text+cipher+","
-            show_close('{} SSH does not have insecure CBC encription \
-algorithms. Details={}'.format(site, cipher_text))
+            show_close('SSH does not have insecure CBC encription algorithms',
+                       details=dict(site=site, cipher_text=cipher_text))
             result = False
         else:
             all_c = ciphers.split(',')
@@ -60,7 +60,7 @@ Details={}'.format(site, cbc))
 
         return result
     except socket.timeout:
-        show_unknown('Port closed, Details={}:{}'.format(site, port))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
 
 @track
@@ -82,8 +82,8 @@ def is_hmac_used(site, port=PORT):
             cipher_text = ""
             for cipher in all_c:
                 cipher_text = cipher_text+cipher+","
-            show_close('{} SSH does not have insecure HMAC encription \
-algorithms. Details={}'.format(site, cipher_text))
+            show_close('SSH does not have insecure HMAC encription algorithms',
+                       details=dict(site=site, cipher_text=cipher_text))
             result = False
         else:
 
@@ -95,11 +95,11 @@ algorithms. Details={}'.format(site, cipher_text))
                     if __not_in(algos, cipher):
                         algos.append(cipher)
                         hmac = hmac + cipher +", "
-            show_open('{} SSH has insecure HMAC encription algorithms, \
-Details={}'.format(site, hmac))
+            show_open('SSH has insecure HMAC encription algorithms',
+                      details=dict(site=site, hmac=hmac))
             result = True
 
         return result
     except socket.timeout:
-        show_unknown('Port closed, Details={}:{}'.format(site, port))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False

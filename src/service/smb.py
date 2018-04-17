@@ -39,23 +39,25 @@ def has_dirlisting(share, *args, **kwargs):
     conn = __smb_connect(*args, **kwargs)
 
     if not conn:
-        show_unknown('Error while connecting', details='{}/{}:{}'.
-                     format(kwargs['domain'], kwargs['user'],
-                            kwargs['server']))
-
+        show_unknown('Error while connecting',
+                     details=dict(domain=kwargs['domain'],
+                                  user=kwargs['user'],
+                                  server=kwargs['server']))
         return False
 
     try:
         conn.listPath(share, '/')
-        show_open('Directory listing is possible', details='{}/{}:{}'.
-                  format(kwargs['domain'], kwargs['user'],
-                         kwargs['server']))
+        show_open('Directory listing is possible',
+                  details=dict(domain=kwargs['domain'],
+                               user=kwargs['user'],
+                               server=kwargs['server']))
 
         return True
     except smb_structs.OperationFailure:
-        show_close('Directory listing not possible', details='{}/{}:{}'.
-                   format(kwargs['domain'], kwargs['user'],
-                          kwargs['server']))
+        show_close('Directory listing not possible',
+                   details=dict(domain=kwargs['domain'],
+                                user=kwargs['user'],
+                                server=kwargs['server']))
 
         return False
 
@@ -69,10 +71,10 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
                          domain=domain)
 
     if not conn:
-        show_close('Anonymous login not possible', details='{}/{}:{}'.
-                   format(domain, user, server))
+        show_close('Anonymous login not possible',
+                   details=dict(domain=domain, user=user, server=server))
 
         return False
-    show_open('Anonymous login enabled', details='{}/{}:{}'.
-              format(domain, user, server))
+    show_open('Anonymous login enabled',
+              details=dict(domain=domain, user=user, server=server))
     return True

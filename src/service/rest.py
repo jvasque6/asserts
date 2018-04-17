@@ -40,8 +40,7 @@ def accepts_empty_content_type(url, *args, **kwargs):
 
     if session.response.status_code in error_codes:
         show_unknown('URL {} returned error'.format(url),
-                     details='Error={}'.
-                     format(session.response.status_code))
+                     details=dict(error=session.response.status_code))
         return True
     if session.response.status_code not in expected_codes:
         show_open('URL {} accepts empty Content-Type requests'.
@@ -65,8 +64,7 @@ def accepts_insecure_accept_header(url, *args, **kwargs):
 
     if session.response.status_code in error_codes:
         show_unknown('URL {} returned error'.format(url),
-                     details='Error={}'.
-                     format(session.response.status_code))
+                     details=dict(error=session.response.status_code))
         return True
     if session.response.status_code not in expected_codes:
         show_open('URL {} accepts insecure Accept request header value'.

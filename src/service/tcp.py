@@ -52,10 +52,8 @@ def is_port_insecure(ipaddress, port):
         sock.settimeout(3)
         ssl_sock = ssl.wrap_socket(sock)
         ssl_sock.connect_ex((ipaddress, port))
-        show_close('Port is secure', details='IP={}, Port={}'.
-                   format(ipaddress, port))
+        show_close('Port is secure', details=dict(ip=ipaddress, port=port))
         return False
     except ssl.SSLError:
-        show_open('Port is not secure', details='IP={}, Port={}'.
-                  format(ipaddress, port))
+        show_open('Port is not secure', details=dict(ip=ipaddress, port=port))
         return True
