@@ -2,23 +2,43 @@
 
 """FLUIDAsserts main package."""
 
+# pylint: disable=no-name-in-module
 # standard imports
+import datetime
+import inspect
 import json
 import logging.config
 import os
 import tempfile
 import sys
-import yaml
-from pkg_resources import get_distribution, DistributionNotFound
+from collections import OrderedDict
 
 # 3rd party imports
-from colorama import Fore, Back, Style, init
 import mixpanel
+import pyaml
+
+from pkg_resources import get_distribution, DistributionNotFound
+from pygments import highlight
+from pygments.lexers import YamlLexer, JsonLexer
+from pygments.formatters import TerminalTrueColorFormatter
 
 # local imports
 # none
 
 # pylint: disable=too-many-instance-attributes
+
+
+def get_caller_module():
+    """Get caller module."""
+    frm = inspect.stack()[3]
+    mod = inspect.getmodule(frm[0])
+    caller = mod.__name__
+    return caller
+
+
+def get_caller_function():
+    """Get caller function."""
+    return sys._getframe(3).f_code.co_name  # noqa
 
 
 class Message(object):
@@ -28,6 +48,7 @@ class Message(object):
         """Constructor method."""
         self.__ref_base = 'https://fluidattacks.com/web/es/defends/'
         self.__status_codes = ['OPEN', 'CLOSE', 'UNKNOWN', 'ERROR']
+        self.date = datetime.datetime.now()
         self.status = status
         self.message = message
         self.details = details
@@ -35,12 +56,8 @@ class Message(object):
             self.references = self.__ref_base + references
         else:
             self.references = None
-        self.caller = sys._getframe(2).f_code.co_name  # noqa
-        self.__open = Fore.WHITE + Back.RED + 'OPEN' + Style.RESET_ALL
-        self.__close = Fore.WHITE + Back.GREEN + 'CLOSE' + \
-            Style.RESET_ALL
-        self.__unknown = Fore.BLACK + Back.WHITE + 'UNKNOWN' + \
-            Style.RESET_ALL
+        self.caller_module = get_caller_module()
+        self.caller_function = get_caller_function()
 
     def __build_message(self):
         """Build message dict."""
@@ -49,55 +66,53 @@ class Message(object):
         if self.details is None:
             self.details = 'None'
 
-        if self.status == 'OPEN':
-            status = self.__open
-        elif self.status == 'CLOSE':
-            status = self.__close
-        elif self.status == 'UNKNOWN':
-            status = self.__unknown
-
-        ret = {'Status': status,
-               'Message': self.message,
-               'Details': self.details,
-               'Caller': self.caller,
-               'References': self.references}
-
-        return ret
+        data = [('when', self.date),
+                ('status', self.status),
+                ('message', self.message),
+                ('details', self.details),
+                ('caller_module', self.caller_module),
+                ('caller_function', self.caller_function)]
+        if self.references:
+            data.append(('references', self.references))
+        return OrderedDict(data)
 
     def as_json(self):
         """Get JSON representation of message."""
-        return json.dumps(self.__build_message())
+        message = json.dumps(self.__build_message())
+        print(highlight(message, JsonLexer(), TerminalTrueColorFormatter()))
 
     def as_yaml(self):
         """Get YAML representation of message."""
-        return yaml.dump(self.__build_message(), indent=2,
-                         default_flow_style=False, width=80)
+        message = pyaml.dump(self.__build_message())
+        print(highlight(message, YamlLexer(), TerminalTrueColorFormatter()))
 
     def as_logger(self):
         """Get logger representation of message."""
         message = self.__build_message()
-        if message['References']:
+        if message['references']:
             template = """\033[1mStatus:\033[0m {}
                                                 \033[1mResult:\033[0m {}
                                                 \033[1mDetails:\033[0m {}
                                                 \033[1mReferences:\033[0m {}
-                                                \033[1mCaller:\033[0m {}
+                                                \033[1mCaller Module:\033[0m {}
+                                                \033[1mCaller Function:\033[0m {}
                                                 """
-            msg = template.format(message['Status'], message['Message'],
-                                  message['Details'], message['References'],
-                                  message['Caller'])
+            msg = template.format(message['status'], message['message'],
+                                  message['details'], message['references'],
+                                  message['caller_module'],
+                                  message['caller_function'])
         else:
             template = """\033[1mStatus:\033[0m {}
                                                 \033[1mResult:\033[0m {}
                                                 \033[1mDetails:\033[0m {}
-                                                \033[1mCaller:\033[0m {}
+                                                \033[1mCaller Module:\033[0m {}
+                                                \033[1mCaller Function:\033[0m {}
                                                 """
-            msg = template.format(message['Status'], message['Message'],
-                                  message['Details'], message['Caller'])
-        return msg
-
-
-init(autoreset=True)
+            msg = template.format(message['status'], message['message'],
+                                  message['details'],
+                                  message['caller_module'],
+                                  message['caller_function'])
+        LOGGER.info(msg)
 
 # create LOGGER
 LOGGER = logging.getLogger('FLUIDAsserts')
@@ -163,12 +178,12 @@ USER_EMAIL = os.environ['FA_USER_EMAIL']
 
 try:
     HEADER = """
-FLUIDAsserts by FLUIDAttacks (https://fluidattacks.com)
-All rights reserved.
-Loading modules...
+---
+# FLUIDAsserts by FLUIDAttacks (https://fluidattacks.com)
+# All rights reserved.
+# Loading attack modules ...
     """
-    HEADER_COL = Style.BRIGHT + Fore.WHITE + HEADER + Style.RESET_ALL
-    print(HEADER_COL)
+    print(highlight(HEADER, YamlLexer(), TerminalTrueColorFormatter()))
 
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
@@ -179,13 +194,13 @@ except mixpanel.MixpanelException:
 def show_close(message, details=None, refs=None):
     """Show close message."""
     message = Message('CLOSE', message, details, refs)
-    LOGGER.info(message.as_logger())
+    message.as_yaml()
 
 
 def show_open(message, details=None, refs=None):
     """Show close message."""
     message = Message('OPEN', message, details, refs)
-    LOGGER.info(message.as_logger())
+    message.as_yaml()
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
             sys.exit(1)
@@ -194,4 +209,4 @@ def show_open(message, details=None, refs=None):
 def show_unknown(message, details=None, refs=None):
     """Show close message."""
     message = Message('UNKNOWN', message, details, refs)
-    LOGGER.info(message.as_logger())
+    message.as_yaml()

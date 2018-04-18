@@ -64,7 +64,8 @@ setup(
         'pytesseract==0.1.7',        # src.format.captcha
         'pillow==5.0.0',             # src.format.captcha
         'pyparsing==2.1.10',         # src.code
-        'pyyaml==3.12',              # src
+        'pyaml==17.12.1',            # src
+        'pygments==2.2.0',           # src
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

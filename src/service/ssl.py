@@ -307,7 +307,7 @@ def allows_anon_ciphers(site, port=PORT):
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('Site not allows anonymous cipher suites',
-                    details=dict(site=site, port=port))
+                   details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
@@ -406,7 +406,7 @@ but it\'s not vulnerable to Heartbleed.',
                                    details=dict(site=site, port=port))
                         return False
             sock.close()
-        show_close('Site doesn\'t support SSL/TLS heartbeats',
+        show_close("Site doesn't support SSL/TLS heartbeats",
                    details=dict(site=site, port=port))
         return False
     except socket.error:
