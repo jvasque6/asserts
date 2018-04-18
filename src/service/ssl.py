@@ -147,21 +147,20 @@ def is_pfs_disabled(site, port=PORT):
                      key_exchange_names=['dhe_rsa', 'ecdhe_rsa',
                                          'ecdh_anon', 'dh_anon']):
             show_close('Forward Secrecy enabled on site',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             result = False
     except tlslite.errors.TLSRemoteAlert:
         try:
             with connect_legacy(site, port, ciphers):
                 show_close('Forward Secrecy enabled on site',
-                           details=dict(site="{}:{}".format(site, port)))
+                           details=dict(site=site, port=port))
                 result = False
         except ssl.SSLError:
             show_open('Forward Secrecy not enabled on site',
-                      details=dict(site="{}:{}".format(site, port)))
+                      details=dict(site=site, port=port))
             return True
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         result = False
     return result
 
@@ -173,21 +172,20 @@ def is_sslv3_enabled(site, port=PORT):
     try:
         with connect(site, port=port, min_version=(3, 0), max_version=(3, 0)):
             show_open('SSLv3 enabled on site',
-                      details=dict(site="{}:{}".format(site, port)))
+                      details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('SSLv3 not enabled on site',
-                   details=dict(site="{}:{}".format(site, port)))
+                   details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('SSLv3 not enabled on site',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             result = False
         else:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             result = False
     return result
 
@@ -199,21 +197,20 @@ def is_tlsv1_enabled(site, port=PORT):
     try:
         with connect(site, port=port, min_version=(3, 1), max_version=(3, 1)):
             show_open('TLSv1 enabled on site',
-                      details=dict(site="{}:{}".format(site, port)))
+                      details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('TLSv1 not enabled on site',
-                   details=dict(site="{}:{}".format(site, port)))
+                   details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('TLSv1 not enabled on site',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             result = False
         else:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             result = False
     return result
 
@@ -227,20 +224,19 @@ def has_poodle_tls(site, port=PORT):
                      cipher_names=["aes256", "aes128", "3des"],
                      min_version=(3, 1)):
             show_open('Site vulnerable to POODLE TLS attack',
-                      details=dict(site="{}:{}".format(site, port)))
+                      details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE TLS attack',
-                   details=dict(site="{}:{}".format(site, port)))
+                   details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('Site not vulnerable to POODLE TLS attack',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             result = False
         else:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             result = False
     return result
 
@@ -253,21 +249,20 @@ def has_poodle_sslv3(site, port=PORT):
                      max_version=(3, 0)) as conn:
             if conn._recordLayer.isCBCMode():  # noqa
                 show_open('Site vulnerable to POODLE SSLv3 attack',
-                          details=dict(site="{}:{}".format(site, port)))
+                          details=dict(site=site, port=port))
                 return True
             show_close('Site allows SSLv3. However, it seems not to \
 be vulnerable to POODLE SSLv3 attack',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             return False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         pass
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('Site not vulnerable to POODLE SSLv3 attack',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             return False
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
     return False
 
@@ -288,15 +283,15 @@ def has_breach(site, port=PORT):
             if 'Content-Encoding' in sess.response.headers:
                 if compression in sess.response.headers['Content-Encoding']:
                     show_open('Site vulnerable to BREACH attack',
-                              details=dict(site="{}:{}".format(site, port),
+                              details=dict(site=site, port=port,
                                            compression=compression))
                     return True
         except http_helper.ConnError:
-            show_unknown('Could not connect', details=dict(site="{}:{}".
-                                                           format(site, port)))
+            show_unknown('Could not connect', details=dict(site=site,
+                                                           port=port))
             return False
     show_close('Site not vulnerable to BREACH attack',
-               details=dict(site="{}:{}".format(site, port)))
+               details=dict(site=site, port=port))
     return False
 
 
@@ -307,21 +302,20 @@ def allows_anon_ciphers(site, port=PORT):
     try:
         with connect(site, port=port, anon=True):
             show_open('Site allows anonymous cipher suites',
-                      details=dict(site="{}:{}".format(site, port)))
+                      details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('Site not allows anonymous cipher suites',
-                   details=dict(site="{}:{}".format(site, port)))
+                    details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('Site not allows anonymous cipher suites',
-                       details=dict(site="{}:{}".format(site, port)))
+                       details=dict(site=site, port=port))
             result = False
         else:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             result = False
     return result
 
@@ -334,21 +328,20 @@ def allows_weak_ciphers(site, port=PORT):
         with connect(site, port=port,
                      cipher_names=['rc4', '3des', 'null']):
             show_open('Site allows weak (RC4, 3DES and NULL) cipher \
-suites', details=dict(site="{}:{}".format(site, port)))
+suites', details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
-suites', details=dict(site="{}:{}".format(site, port)))
+suites', details=dict(site=site, port=port))
         result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
-suites', details=dict(site="{}:{}".format(site, port)))
+suites', details=dict(site=site, port=port))
             result = False
         else:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             result = False
     return result
 
@@ -362,21 +355,19 @@ def has_beast(site, port=PORT):
                      max_version=(3, 1)) as conn:
             if conn._recordLayer.isCBCMode():  # noqa
                 show_open('Site enables BEAST attack to clients',
-                          details=dict(site="{}:{}".format(site, port)))
+                          details=dict(site=site, port=port))
                 result = True
             else:
                 show_close('Site allows TLSv1.0. However, it seems \
-to be not an enabler to BEAST attack', details=dict(site="{}:{}".
-                                                    format(site, port)))
+to be not an enabler to BEAST attack', details=dict(site=site, port=port))
                 result = False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
             tlslite.errors.TLSLocalAlert):
         show_close('Site not enables to BEAST attack to clients',
-                   details=dict(site="{}:{}".format(site, port)))
+                   details=dict(site=site, port=port))
         result = False
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         result = False
     return result
 
@@ -408,20 +399,17 @@ def has_heartbleed(site, port=PORT):
                             # Length is higher than sent
                             show_open('Site vulnerable to Heartbleed \
 attack ({})'.format(vers),
-                                      details=dict(site="{}:{}".
-                                                   format(site, port)))
+                                      details=dict(site=site, port=port))
                             return True
                         show_close('Site supports SSL/TLS heartbeats, \
 but it\'s not vulnerable to Heartbleed.',
-                                   details=dict(site="{}:{}".
-                                                format(site, port)))
+                                   details=dict(site=site, port=port))
                         return False
             sock.close()
         show_close('Site doesn\'t support SSL/TLS heartbeats',
-                   details=dict(site="{}:{}".format(site, port)))
+                   details=dict(site=site, port=port))
         return False
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         result = False
     return result

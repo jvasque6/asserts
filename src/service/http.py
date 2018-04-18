@@ -28,15 +28,13 @@ SQLI_ERROR_MSG = {
     r'check the manual that corresponds to your (MySQL|MariaDB)',  # MySQL
     r'MySqlClient.',  # MySQL
     r'com.mysql.jdbc.exceptions',  # MySQL
-    r'com.mysql.jdbc.exceptions',  # PostgreSQL
     r'PostgreSQL.*ERROR',  # PostgreSQL
     r'Warning.*Wpg_.*',  # PostgreSQL
     r'valid PostgreSQL result',  # PostgreSQL
     r'Npgsql.',  # PostgreSQL
     r'PG::SyntaxError:',  # PostgreSQL
     r'org.postgresql.util.PSQLException',  # PostgreSQL
-    r'ERROR:sssyntax error at or near ',  # PostgreSQL
-    r'ERROR:sssyntax error at or near ',  # MS SQL Server
+    r'ERROR:sssyntax error at or near ',  # PostgreSQL, MS SQL Server
     r'Driver.* SQL[-_ ]*Server',  # MS SQL Server
     r'OLE DB.* SQL Server',  # MS SQL Server
     r'\bSQL Server[^&lt;&quot;]+Driver',  # MS SQL Server
@@ -49,57 +47,46 @@ SQLI_ERROR_MSG = {
     r'ODBC SQL Server Driver',  # MS SQL Server
     r'SQLServer JDBC Driver',  # MS SQL Server
     r'macromedia.jdbc.sqlserver',  # MS SQL Server
-    r'com.jnetdirect.jsql',  # MS SQL Server
-    r'com.jnetdirect.jsql',  # Microsoft Access
+    r'com.jnetdirect.jsql',  # MS SQL Server, Microsoft Access
     r'Microsoft Access (d+ )?Driver',  # Microsoft Access
     r'JET Database Engine',  # Microsoft Access
     r'Access Database Engine',  # Microsoft Access
     r'ODBC Microsoft Access',  # Microsoft Access
-    r'Syntax error (missing operator) in query expression',  # MS Access
-    r'Syntax error (missing operator) in query expression',  # Oracle
+    r'Syntax error (missing operator) in query expression',  # MSAccess, Oracle
     r'\bORA-d{5}',  # Oracle
     r'Oracle error',  # Oracle
     r'Oracle.*Driver',  # Oracle
     r'Warning.*Woci_.*',  # Oracle
     r'Warning.*Wora_.*',  # Oracle
     r'oracle.jdbc.driver',  # Oracle
-    r'quoted string not properly terminated',  # Oracle
-    r'quoted string not properly terminated',  # IBM DB2
+    r'quoted string not properly terminated',  # Oracle, IBM DB2
     r'CLI Driver.*DB2',  # IBM DB2
     r'DB2 SQL error',  # IBM DB2
     r'\bdb2_w+\(',  # IBM DB2
-    r'SQLSTATE.+SQLCODE',  # IBM DB2
-    r'SQLSTATE.+SQLCODE',  # Informix
+    r'SQLSTATE.+SQLCODE',  # IBM DB2, Informix
     r'Exception.*Informix',  # Informix
     r'Informix ODBC Driver',  # Informix
     r'com.informix.jdbc',  # Informix
     r'weblogic.jdbc.informix',  # Informix
-    r'weblogic.jdbc.informix',  # Firebird
     r'Dynamic SQL Error',  # Firebird
-    r'Warning.*ibase_.*',  # Firebird
-    r'Warning.*ibase_.*',  # SQLite
+    r'Warning.*ibase_.*',  # Firebird, SQLite
     r'SQLite/JDBCDriver',  # SQLite
     r'SQLite.Exception',  # SQLite
     r'System.Data.SQLite.SQLiteException',  # SQLite
     r'Warning.*sqlite_.*',  # SQLite
     r'Warning.*SQLite3::',  # SQLite
     r'\[SQLITE_ERROR\]',  # SQLite
-    r'\[SQLITE_ERROR\]',  # SAP MaxDB
     r'SQL error.*POS([0-9]+).*',  # SAP MaxDB
     r'Warning.*maxdb.*',  # SAP MaxDB
-    r'Warning.*maxdb.*',  # Sybase
     r'Warning.*sybase.*',  # Sybase
     r'Sybase message',  # Sybase
     r'Sybase.*Server message.*',  # Sybase
     r'SybSQLException',  # Sybase
     r'com.sybase.jdbc',  # Sybase
-    r'com.sybase.jdbc',  # Ingres
     r'Warning.*ingres_',  # Ingres
     r'Ingres SQLSTATE',  # Ingres
     r'IngresW.*Driver',  # Ingres
-    r'IngresW.*Driver',  # Frontbase
     r'Exception (condition )?d+. Transaction rollback.',  # Frontbase
-    r'Exception (condition )?d+. Transaction rollback.',  # HSQLDB
     r'org.hsqldb.jdbc',  # HSQLDB
     r'Unexpected end of command in statement \[',  # HSQLDB
     r'Unexpected token.*in statement \[',  # HSQLDB

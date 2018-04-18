@@ -33,8 +33,7 @@ def __uses_sign_alg(site, alg, port):
             __cert = connection.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
     except tlslite.errors.TLSRemoteAlert:
         try:
@@ -42,8 +41,7 @@ def __uses_sign_alg(site, alg, port):
                 __cert = conn.getpeercert(True)
                 cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
@@ -53,12 +51,12 @@ def __uses_sign_alg(site, alg, port):
     if alg in sign_algorith:
         show_open('Certificate has {} as signature algorithm'.
                   format(sign_algorith.upper()),
-                  details=dict(site="{}:{}".format(site, port)))
+                  details=dict(site=site, port=port))
         result = True
     else:
         show_close('Certificate does not use {} as signature algorithm'.
                    format(alg.upper()),
-                   details=dict(site="{}:{}".format(site, port),
+                   details=dict(site=site, port=port,
                                 algorithm=sign_algorith.upper()))
         result = False
     return result
@@ -74,8 +72,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
             __cert = conn.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
     except tlslite.errors.TLSRemoteAlert:
         try:
@@ -84,8 +81,7 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
                 cert = ssl.DER_cert_to_PEM_cert(__cert)
                 has_sni = True
         except socket.error:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -104,18 +100,15 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
         and not site.endswith(domain):
         if has_sni:
             show_close('{} CN not equals to site. However server \
-supports SNI'.format(cert_cn), details=dict(site="{}:{}".format(site, port),
-                                            cn=cert_cn))
+supports SNI'.format(cert_cn), details=dict(site=site, port=port, cn=cert_cn))
             result = False
         else:
             show_open('{} CN not equals to site'.format(cert_cn),
-                      details=dict(site="{}:{}".format(site, port),
-                                   cn=cert_cn))
+                      details=dict(site=site, port=port, cn=cert_cn))
             result = True
     else:
         show_close('{} CN equals to site'.format(cert_cn),
-                   details=dict(site="{}:{}".format(site, port),
-                                cn=cert_cn))
+                   details=dict(site=site, port=port, cn=cert_cn))
         result = False
     return result
 
@@ -129,8 +122,7 @@ def is_cert_inactive(site, port=PORT):
             __cert = conn.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
     except tlslite.errors.TLSRemoteAlert:
         try:
@@ -138,8 +130,7 @@ def is_cert_inactive(site, port=PORT):
                 __cert = conn.getpeercert(True)
                 cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -147,7 +138,7 @@ def is_cert_inactive(site, port=PORT):
 
     if cert_obj.not_valid_after > datetime.datetime.now():
         show_close('Certificate is still valid',
-                   details=dict(site="{}:{}".format(site, port),
+                   details=dict(site=site, port=port,
                                 not_valid_after=cert_obj.not_valid_after.
                                 isoformat(),
                                 current_time=datetime.datetime.now().
@@ -155,7 +146,7 @@ def is_cert_inactive(site, port=PORT):
         result = False
     else:
         show_open('Certificate is expired',
-                  details=dict(site="{}:{}".format(site, port),
+                  details=dict(site=site, port=port,
                                not_valid_after=cert_obj.not_valid_after.
                                isoformat(),
                                current_time=datetime.datetime.now().
@@ -175,8 +166,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
             __cert = conn.session.serverCertChain.x509List[0].bytes
             cert = ssl.DER_cert_to_PEM_cert(__cert)
     except socket.error:
-        show_unknown('Port closed', details=dict(site="{}:{}".
-                                                 format(site, port)))
+        show_unknown('Port closed', details=dict(site=site, port=port))
         return False
     except tlslite.errors.TLSRemoteAlert:
         try:
@@ -184,8 +174,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
                 __cert = conn.getpeercert(True)
                 cert = ssl.DER_cert_to_PEM_cert(__cert)
         except socket.error:
-            show_unknown('Port closed', details=dict(site="{}:{}".
-                                                     format(site, port)))
+            show_unknown('Port closed', details=dict(site=site, port=port))
             return False
 
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
@@ -196,7 +185,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
     if cert_validity.days <= max_validity_days:
         show_close('Certificate has a secure lifespan',
-                   details=dict(site="{}:{}".format(site, port),
+                   details=dict(site=site, port=port,
                                 not_valid_before=cert_obj.not_valid_before.
                                 isoformat(),
                                 not_valid_after=cert_obj.not_valid_after.
@@ -204,7 +193,7 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
         result = False
     else:
         show_open('Certificate has an insecure lifespan',
-                  details=dict(site="{}:{}".format(site, port),
+                  details=dict(site=site, port=port,
                                not_valid_before=cert_obj.not_valid_before.
                                isoformat(),
                                not_valid_after=cert_obj.not_valid_after.
