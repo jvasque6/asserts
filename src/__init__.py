@@ -15,7 +15,7 @@ from collections import OrderedDict
 
 # 3rd party imports
 import mixpanel
-import pyaml
+import oyaml as yaml
 
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
@@ -83,7 +83,7 @@ class Message(object):
 
     def as_yaml(self):
         """Get YAML representation of message."""
-        message = pyaml.dump(self.__build_message())
+        message = yaml.dump(self.__build_message(), default_flow_style=False)
         print(highlight(message, YamlLexer(), TerminalTrueColorFormatter()))
 
     def as_logger(self):
