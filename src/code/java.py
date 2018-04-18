@@ -44,11 +44,16 @@ def has_generic_exceptions(java_dest):
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
-                      details=dict(file=code_file, lines=vulns))
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=vulns))
             result = True
         else:
             show_close('Code does not use generic exceptions',
-                       details=dict(file=code_file))
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -65,9 +70,14 @@ def uses_print_stack_trace(java_dest):
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses printStackTrace',
-                      details=dict(file=code_file, lines=vulns))
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=vulns))
             result = True
         else:
             show_close('Code does not use printStackTrace',
-                       details=dict(file=code_file))
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
     return result

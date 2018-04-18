@@ -297,16 +297,16 @@ def has_method(url, method, *args, **kwargs):
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
             show_open('HTTP Method {} enabled'.format(method),
-                      details='URL="{}"'.format(url),
+                      details=dict(url=url),
                       refs='apache/restringir-metodo-http')
         else:
             show_close('HTTP Method {} disabled'.format(method),
-                       details='URL="{}"'.format(url),
+                       details=dict(url=url),
                        refs='apache/restringir-metodo-http')
             result = False
     else:
         show_close('HTTP Method {} disabled'.format(method),
-                   details='URL="{}"'.format(url),
+                   details=dict(url=url),
                    refs='apache/restringir-metodo-http')
         result = False
     return result
@@ -320,7 +320,7 @@ def has_insecure_header(url, header, *args, **kwargs):
         headers_info = http_session.response.headers
     except ConnError:
         show_unknown('HTTP error checking {}'.format(header),
-                     details='Could not connect to {}'.format(url))
+                     details=dict(url=url))
         return True
 
     if header == 'Access-Control-Allow-Origin':
@@ -335,20 +335,17 @@ def has_insecure_header(url, header, *args, **kwargs):
             if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
                 show_open('{} HTTP header is insecure'.
                           format(header),
-                          details='URL="{}", Header="{}: {}"'.
-                          format(url, header, value),
+                          details=dict(url=url, header=header, value=value),
                           refs='apache/habilitar-headers-seguridad')
                 return True
             show_close('HTTP header {} value is secure'.
                        format(header),
-                       details='URL="{}", Header="{}: {}"'.
-                       format(url, header, value),
+                       details=dict(url=url, header=header, value=value),
                        refs='apache/habilitar-headers-seguridad')
             return False
         show_close('HTTP header {} not present which is secure \
 by default'.format(header),
-                   details='URL="{}", Header="{}"'.
-                   format(url, header),
+                   details=dict(url=url, header=header),
                    refs='apache/habilitar-headers-seguridad')
         return False
 
@@ -359,14 +356,13 @@ by default'.format(header),
             value = headers_info[header]
             show_open('{} HTTP insecure header present'.
                       format(header),
-                      details='URL="{}", Header="{}: {}"'.
-                      format(url, header, value),
+                      details=dict(url=url, header=header, value=value),
                       refs='apache/habilitar-headers-seguridad')
             result = True
         else:
             show_close('{} HTTP insecure header not present'.
                        format(header),
-                       details='URL="{}"'.format(url),
+                       details=dict(url=url, header=header),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         return result
@@ -374,21 +370,19 @@ by default'.format(header),
         value = headers_info[header]
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
             show_close('HTTP header {} is secure'.format(header),
-                       details='URL="{}", Header="{}: {}"'.
-                       format(url, header, value),
+                       details=dict(url=url, header=header, value=value),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         else:
             show_open('{} HTTP header is insecure'.
                       format(header),
-                      details='URL="{}", Header="{}: {}"'.
-                      format(url, header, value),
+                      details=dict(url=url, header=header, value=value),
                       refs='apache/habilitar-headers-seguridad')
             result = True
     else:
         show_open('{} HTTP header not present'.
                   format(header),
-                  details='URL="{}"'.format(url),
+                  details=dict(url=url, header=header),
                   refs='apache/habilitar-headers-seguridad')
         result = True
 

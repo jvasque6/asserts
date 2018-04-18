@@ -6,6 +6,7 @@ This module has helper functions for code modules
 """
 
 # standard imports
+import hashlib
 import os
 
 # 3rd party imports
@@ -60,6 +61,18 @@ def __get_match_lines(grammar, code_file, lang_spec):
             finally:
                 counter += 1
     return affected_lines
+
+
+def file_hash(filename):
+    """Get SHA256 hash from file."""
+    sha256 = hashlib.sha256()
+    try:
+        with open(filename, 'rb', buffering=0) as code_fd:
+            for code_byte in iter(lambda: code_fd.read(128*1024), b''):
+                sha256.update(code_byte)
+    except FileNotFoundError:
+        pass
+    return "SHA256 {}".format(sha256.hexdigest())
 
 
 def check_grammar(grammar, code_dest, lang_spec):
