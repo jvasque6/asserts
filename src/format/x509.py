@@ -59,7 +59,7 @@ def __uses_sign_alg(site, alg, port):
         show_close('Certificate does not use {} as signature algorithm'.
                    format(alg.upper()),
                    details=dict(site="{}:{}".format(site, port),
-                                alg=sign_algorith.upper()))
+                                algorithm=sign_algorith.upper()))
         result = False
     return result
 

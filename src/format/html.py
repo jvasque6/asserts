@@ -50,8 +50,7 @@ def has_not_autocomplete(filename, selector):
     else:
         result = False
         show_close('{} attribute in {}'.format(attr, filename),
-                   details='Value={}'.format(value))
-
+                   details=dict(value=value))
     return result
 
 
@@ -74,8 +73,7 @@ def is_cacheable(filename):
     if has_http_equiv is False:
         result = True
         show_open('{} attribute in {}'.format(attr, filename),
-                  details='Value={}'.format(value))
-
+                  details=dict(value=value))
         return result
 
     attr = 'content'
@@ -86,8 +84,7 @@ def is_cacheable(filename):
     if has_content is False:
         result = True
         show_open('{} attribute in {}'.format(attr, filename),
-                  details='Value={}'.format(value))
-
+                  details=dict(value=value))
         return result
 
     attr = 'http-equiv'
@@ -98,8 +95,7 @@ def is_cacheable(filename):
     if has_http_equiv is False:
         result = True
         show_open('{} attribute in {}'.format(attr, filename),
-                  details='Value={}'.format(value))
-
+                  details=dict(value=value))
         return result
 
     attr = 'content'
@@ -110,12 +106,10 @@ def is_cacheable(filename):
     if has_content is False:
         result = True
         show_open('{} attribute in {}'.format(attr, filename),
-                  details='Value={}'.format(value))
-
+                  details=dict(value=value))
         return result
 
     result = False
     show_close('{} attribute in {}'.format(attr, filename),
-               details='Value={}'.format(value))
-
+               details=dict(value=value))
     return result

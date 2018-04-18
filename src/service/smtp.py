@@ -28,12 +28,11 @@ def has_vrfy(ip_address, port=PORT):
 
     result = True
     if 502 not in vrfy:
-        show_open('SMTP "VRFY" method', details='IP={}, Port={}'.
-                  format(ip_address, port))
+        show_open('SMTP "VRFY" method', details=dict(ip=ip_address, port=port))
         result = True
     else:
-        show_close('SMTP "VRFY" method', details='IP={}, Port={}'.
-                   format(ip_address, port))
+        show_close('SMTP "VRFY" method', details=dict(ip=ip_address,
+                                                      port=port))
         result = False
 
     server.quit()

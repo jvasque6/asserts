@@ -24,11 +24,11 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
 
     if out == '0027':
         show_close('{} server has secure default privileges'.
-                   format(server), details='umask={}'.format(out))
+                   format(server), details=dict(umask=out))
         result = False
     else:
         show_open('{} server has too open default privileges'.
-                  format(server), details='umask={}'.format(out))
+                  format(server), details=dict(umask=out))
         result = True
     return result
 
@@ -42,11 +42,11 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
 
     if out:
         show_close('{} server has sudo (or like) installed'.
-                   format(server), details='{}'.format(out))
+                   format(server), details=dict(paths=out))
         result = False
     else:
         show_open('{} server has not sudo (or like) installed'.
-                  format(server), details='{}'.format(out))
+                  format(server), details=dict(paths=out))
         result = True
     return result
 
@@ -62,11 +62,11 @@ def is_os_compilers_installed(server, username, password,
 
     if not out:
         show_close('{} server has not compilers installed'.
-                   format(server), details='{}'.format(out))
+                   format(server), details=dict(paths=out))
         result = False
     else:
         show_open('{} server has compilers installed'.format(server),
-                  details='{}'.format(out))
+                  details=dict(paths=out))
         result = True
     return result
 
@@ -81,11 +81,11 @@ def is_os_antimalware_not_installed(server, username, password,
 
     if out:
         show_close('{} server has an antivirus installed'.format(server),
-                   details='{}'.format(out))
+                   details=dict(paths=out))
         result = False
     else:
         show_open('{} server has not an antivirus installed'.
-                  format(server), details='{}'.format(out))
+                  format(server), details=dict(paths=out))
         result = True
     return result
 
@@ -101,11 +101,11 @@ def is_os_remote_admin_enabled(server, username, password,
 
     if not out:
         show_close('{} server has not remote admin login enabled'.
-                   format(server), details='{}'.format(out))
+                   format(server), details=dict(result=out))
         result = False
     else:
         show_open('{} server has remote admin login enabled'.
-                  format(server), details='{}'.format(out))
+                  format(server), details=dict(result=out))
         result = True
     return result
 
@@ -121,15 +121,15 @@ def is_os_syncookies_disabled(server, username, password,
 
     if not out:
         show_close('{} server has syncookies enabled'.
-                   format(server), details='{}'.format(out))
+                   format(server), details=dict(result=out))
         return False
 
     if int(out) == 1:
         show_close('{} server has syncookies enabled'.
-                   format(server), details='{}'.format(out))
+                   format(server), details=dict(result=out))
         result = False
     else:
         show_open('{} server has syncookies disabled'.
-                  format(server), details='{}'.format(out))
+                  format(server), details=dict(result=out))
         result = True
     return result

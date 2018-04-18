@@ -26,19 +26,19 @@ def is_anonymous_bind_allowed(ldap_server, port=PORT):
         server = Server(ldap_server)
         conn = Connection(server)
     except LDAPExceptionError:
-        show_close('LDAP anonymous bind failed', details='{}:{}'.
-                   format(server, port))
+        show_close('LDAP anonymous bind failed', details=dict(server=server,
+                                                              port=port))
         return False
     finally:
         conn.unbind()
 
     if conn.bind() is True:
-        show_open('LDAP anonymous bind success', details='{}:{}'.
-                  format(server, port))
+        show_open('LDAP anonymous bind success', details=dict(server=server,
+                                                              port=port))
         result = True
     else:
-        show_close('LDAP anonymous bind failed', details='{}:{}'.
-                   format(server, port))
+        show_close('LDAP anonymous bind failed', details=dict(server=server,
+                                                              port=port))
         result = False
 
     return result

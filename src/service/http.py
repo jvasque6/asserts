@@ -137,14 +137,14 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
         ret = __multi_generic_http_assert(url, regex_list, *args, **kwargs)
         if ret:
             show_open('A bad text was present: "{}"'.format(ret),
-                      details='URL="{}"'.format(url))
+                      details=dict(url=url))
             return True
         show_close('No bad text was present',
-                   details='URL="{}"'.format(url))
+                   details=dict(url=url))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect',
-                     details='URL="{}"'.format(url))
+                     details=dict(url=url))
         return True
 
 
@@ -155,14 +155,13 @@ def has_text(url, expected_text, *args, **kwargs):
         ret = __generic_http_assert(url, expected_text, *args, **kwargs)
         if ret:
             show_open('Bad text present: "{}"'.format(expected_text),
-                      details='URL="{}"'.format(url))
+                      details=dict(url=url))
             return True
         show_close('Bad text not present: "{}"'.format(expected_text),
-                   details='URL="{}"'.format(url))
+                   details=dict(url=url))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect',
-                     details='URL="{}"'.format(url))
+        show_unknown('Could not connect', details=dict(url=url))
         return True
 
 
@@ -173,15 +172,13 @@ def has_not_text(url, expected_text, *args, **kwargs):
         ret = __generic_http_assert(url, expected_text, *args, **kwargs)
         if not ret:
             show_open('Expected text not present "{}"'.
-                      format(expected_text),
-                      details='URL="{}"'.format(url))
+                      format(expected_text), details=dict(url=url))
             return True
         show_close('Expected text present "{}"'.format(expected_text),
-                   details='URL="{}"'.format(url))
+                   details=dict(url=url))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect',
-                     details='URL="{}"'.format(url))
+        show_unknown('Could not connect', details=dict(url=url))
         return True
 
 
@@ -390,13 +387,12 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     if match:
         result = True
         show_open('Session ID is exposed',
-                  details='URL="{}", SessionID="{}: {}"'.
-                  format(response_url, argument, match.group(2)))
+                  details=dict(url=response_url, session_id='{}: {}'.
+                               format(argument, match.group(2))))
     else:
         result = False
         show_close('Session ID is hidden',
-                   details='URL="{}", SessionID="{}"'.
-                   format(response_url, argument))
+                   details=dict(url=response_url, session_id=argument))
     return result
 
 
@@ -413,13 +409,12 @@ def is_version_visible(ip_address, ssl=False, port=80):
     if version:
         result = True
         show_open('HTTP version visible',
-                  details='Site="{}:{}", Version="{}"'.
-                  format(ip_address, port, version),
+                  details=dict(site=ip_address, port=port, version=version),
                   refs='apache/restringir-banner')
     else:
         result = False
         show_close('HTTP version not visible',
-                   details='Site="{}:{}"'.format(ip_address, port),
+                   details=dict(site=ip_address, port=port),
                    refs='apache/restringir-banner')
     return result
 
@@ -432,16 +427,15 @@ def is_not_https_required(url):
         http_session = http_helper.HTTPSession(url)
         if http_session.url.startswith('https'):
             show_close('HTTPS is forced on URL',
-                       details='URL="{}"'.format(http_session.url),
+                       details=dict(url=http_session.url),
                        refs='apache/configurar-soporte-https')
             return False
         show_open('HTTPS is not forced on URL',
-                  details='URL="{}"'.format(http_session.url),
+                  details=dict(url=http_session.url),
                   refs='apache/configurar-soporte-https')
         return True
     except http_helper.ConnError:
-        show_unknown('Could not connect',
-                     details='URL="{}"'.format(url),
+        show_unknown('Could not connect', details=dict(url=url),
                      refs='apache/configurar-soporte-https')
         return False
 
@@ -454,14 +448,14 @@ def has_dirlisting(url, *args, **kwargs):
         ret = __generic_http_assert(url, bad_text, *args, **kwargs)
         if ret:
             show_open('Directory listing enabled',
-                      details='URL="{}"'.format(url))
+                      details=dict(url=url))
             return True
         show_close('Directory listing not enabled',
                    details='URL="{}"'.format(url))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect',
-                     details='URL="{}"'.format(url))
+                     details=dict(url=url))
         return True
 
 
@@ -472,17 +466,16 @@ def is_resource_accessible(url, *args, **kwargs):
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
     except http_helper.ConnError:
         show_close('Resource not available',
-                   details='URL="{}"'.format(url))
+                   details=dict(url=url))
         return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
-                   details='URL="{}", Status="{}"'.
-                   format(http_session.url,
-                          http_session.response.status_code))
+                   details=dict(url=http_session.url,
+                                status=http_session.response.status_code))
         return False
     show_open('Resource available',
-              details='URL="{}", Status="{}"'.
-              format(http_session.url, http_session.response.status_code))
+              details=dict(url=http_session.url,
+                           status=http_session.response.status_code))
     return True
 
 
@@ -502,12 +495,11 @@ def is_response_delayed(url, *args, **kwargs):
 
     if delta >= 0:
         show_close('Response time is acceptable',
-                   details='URL="{}", Response time="{}"'.
-                   format(http_session.url, str(response_time)))
+                   details=dict(url=http_session.url,
+                                response_time=response_time))
         return False
     show_close('Response time not acceptable',
-               details='URL="{}", Response time="{}"'.
-               format(http_session.url, str(response_time)))
+               details=dict(url=http_session.url, response_time=response_time))
     return True
 
 
@@ -558,12 +550,10 @@ def has_user_enumeration(url, user_field, user_list=None,
 
     if rat > 0.95:
         show_close('User enumeration not possible',
-                   details='URL="{}", Similar answers="{}%"'.
-                   format(url, str(rat * 100)))
+                   details=dict(url=url, similar_answers_ratio=rat))
         return False
     show_open('User enumeration possible',
-              details='URL="{}", Similar answers="{}%"'.
-              format(url, str(rat * 100)))
+              details=dict(url=url, similar_answers_ratio=rat))
     return True
 
 
@@ -599,9 +589,7 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         if ok_regex in sess.response.text:
             show_open('Brute forcing possible',
-                      details='URL="{}", Data used="{}"'.
-                      format(url, str(_datas)))
+                      details=dict(url=url, data_used=_datas))
             return True
-    show_close('Brute forcing not possible',
-               details='URL="{}"'.format(url))
+    show_close('Brute forcing not possible', details=dict(url=url))
     return False

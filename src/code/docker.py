@@ -39,10 +39,9 @@ def not_pinned(file_dest):
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Dockerfile has not pinned base containers',
-                      details='File: {}, Lines: {}'.
-                      format(code_file, ",".join([str(x) for x in vulns])))
+                      details=dict(file=code_file, lines=vulns))
             result = True
         else:
             show_close('Dockerfile has pinned base containers',
-                       details='File: {}'.format(code_file))
+                       details=dict(file=code_file))
     return result

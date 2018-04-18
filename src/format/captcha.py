@@ -25,12 +25,10 @@ def is_insecure_in_image(image, expected_text):
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
         show_open('Captcha is insecure',
-                  details='Expected={}, Reversed={}'.
-                  format(expected_text, result))
+                  details=dict(expected=expected_text, reversed=result))
         return True
     show_close('Captcha is secure',
-               details='Expected={}, Reversed={}'.
-               format(expected_text, result))
+               details=dict(expected=expected_text, reversed=result))
     return False
 
 
@@ -42,10 +40,8 @@ def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
         show_open('Captcha is insecure',
-                  details='Expected={}, Reversed={}'.
-                  format(expected_text, result))
+                  details=dict(expected=expected_text, reversed=result))
         return True
     show_close('Captcha is secure',
-               details='Expected={}, Reversed={}'.
-               format(expected_text, result))
+               details=dict(expected=expected_text, reversed=result))
     return False

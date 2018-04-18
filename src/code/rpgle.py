@@ -41,12 +41,11 @@ def has_dos_dow_sqlcod(rpg_dest):
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
-                      details='File: {}, Lines: {}'.
-                      format(code_file, ",".join([str(x) for x in vulns])))
+                      details=dict(file=code_file, lines=vulns))
             result = True
         else:
             show_close('Code does not have DoS for using "DoW SQLCOD = 0"',
-                       details='File: {}'.format(code_file))
+                       details=dict(file=code_file))
     return result
 
 
@@ -69,10 +68,9 @@ def has_unitialized_vars(rpg_dest):
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has unitialized variables',
-                      details='File: {}, Lines: {}'.
-                      format(code_file, ",".join([str(x) for x in vulns])))
+                      details=dict(file=code_file, lines=vulns))
             result = True
         else:
             show_close('Code has not unitialized variables',
-                       details='File: {}'.format(code_file))
+                       details=dict(file=code_file))
     return result

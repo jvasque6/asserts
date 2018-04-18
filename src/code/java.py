@@ -43,12 +43,12 @@ def has_generic_exceptions(java_dest):
                                         LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
-            show_open('Code uses generic exceptions', details='File: {}, \
-Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
+            show_open('Code uses generic exceptions',
+                      details=dict(file=code_file, lines=vulns))
             result = True
         else:
             show_close('Code does not use generic exceptions',
-                       details='File: {}'.format(code_file))
+                       details=dict(file=code_file))
     return result
 
 
@@ -64,10 +64,10 @@ def uses_print_stack_trace(java_dest):
     matches = code_helper.check_grammar(pst, java_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
-            show_open('Code uses printStackTrace', details='File: {}, \
-Lines: {}'.format(code_file, ",".join([str(x) for x in vulns])))
+            show_open('Code uses printStackTrace',
+                      details=dict(file=code_file, lines=vulns))
             result = True
         else:
             show_close('Code does not use printStackTrace',
-                       details='File: {}'.format(code_file))
+                       details=dict(file=code_file))
     return result

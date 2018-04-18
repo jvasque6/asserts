@@ -29,17 +29,14 @@ def is_port_open(ipaddress, port):
         sock.settimeout(3)
         result = sock.connect_ex((ipaddress, port))
     except socket.error:
-        show_close('Port is close', details='IP={}, Port={}'.
-                   format(ipaddress, port))
+        show_close('Port is close', details=dict(ip=ipaddress, port=port))
         return False
     if result == 0:
-        show_open('Port is open', details='IP={}, Port={}'.
-                  format(ipaddress, port))
+        show_open('Port is open', details=dict(ip=ipaddress, port=port))
         result = True
     else:
         result = False
-        show_close('Port is close', details='IP={}, Port={}'.
-                   format(ipaddress, port))
+        show_close('Port is close', details=dict(ip=ipaddress, port=port))
     return result
 
 

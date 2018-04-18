@@ -38,12 +38,12 @@ def is_os_compilers_installed(server, username, password):
     result = True
     if installed_compilers > 0:
         show_open('{} server has compilers installed'.format(server),
-                  details='{}'.format(installed_software))
+                  details=dict(installed_software=installed_software))
         result = True
     else:
         show_close('{} server has not compilers installed'.
                    format(server),
-                   details='{}'.format(installed_software))
+                   details=dict(installed_software=installed_software))
         result = False
     return result
 
@@ -70,12 +70,12 @@ def is_os_antimalware_not_installed(server, username, password):
     result = True
     if installed_av > 0:
         show_close('{} server has an antivirus installed'.format(server),
-                   details='{}'.format(installed_software))
+                   details=dict(installed_software=installed_software))
         result = False
     else:
         show_open('{} server has not an antivirus installed'.
                   format(server),
-                  details='{}'.format(installed_software))
+                  details=dict(installed_software=installed_software))
         result = True
     return result
 
@@ -117,7 +117,7 @@ Component Based Servicing\Packages" /s'
     if installed_patches == len(security_patches):
         show_close('{} server has all required patches installed'.
                    format(server),
-                   details='{}'.format(",".join(security_patches)))
+                   details=dict(security_patches=security_patches))
         result = False
     else:
         cmd = b'reg query \
@@ -133,10 +133,10 @@ Component Based Servicing\Packages" /s'
                      re.IGNORECASE) is not None:
             result = False
             show_close('{} server has UseLogonCredentials\
-set to 0x0'.format(server), details='{}'.format('UseLogonCredential'))
+set to 0x0'.format(server))
         else:
             result = True
             show_open('{} server has not all required patches \
 installed'.format(server),
-                      details='{}'.format(",".join(security_patches)))
+                      details=dict(security_patches=security_patches))
     return result

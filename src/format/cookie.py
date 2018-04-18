@@ -20,8 +20,7 @@ from fluidasserts.utils.decorators import track
 def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo httponly."""
     if url is None and cookie_jar is None:
-        show_unknown('Cookie check for "{}"'.format(cookie_name),
-                     details='{}'.format('HttpOnly'))
+        show_unknown('Cookie HttpOnly check for "{}"'.format(cookie_name))
         return True
     if url is not None:
         sess = http_helper.HTTPSession(url, *args, **kwargs)
@@ -35,24 +34,21 @@ def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
         if cookie.name == cookie_name:
             if cookie.has_nonstandard_attr('HttpOnly') or \
                cookie.has_nonstandard_attr('httponly'):
-                show_close('Cookie check for "{}"'.format(cookie_name),
-                           details='{}'.format('HttpOnly'))
+                show_close('Cookie HttpOnly check for "{}"'.
+                           format(cookie_name))
                 result = False
             else:
-                show_open('Cookie check for "{}"'.format(cookie_name),
-                          details='{}'.format('HttpOnly'))
+                show_open('Cookie HttpOnly check for "{}"'.format(cookie_name))
                 result = True
             return result
-    show_unknown('Cookie "{}" not found'.format(cookie_name),
-                 details='{}'.format('HttpOnly'))
+    show_unknown('Cookie "{}" not found'.format(cookie_name))
     return True
 
 
 def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     """Verifica si la cookie tiene el atributo secure."""
     if url is None and cookie_jar is None:
-        show_unknown('Cookie check for "{}"'.format(cookie_name),
-                     details='{}'.format('Secure'))
+        show_unknown('Cookie Secure check for "{}"'.format(cookie_name))
         return True
     if url is not None:
         sess = http_helper.HTTPSession(url, *args, **kwargs)
@@ -65,16 +61,13 @@ def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.secure:
-                show_close('Cookie check for "{}"'.format(cookie_name),
-                           details='{}'.format('Secure'))
+                show_close('Cookie Secure check for "{}"'.format(cookie_name))
                 result = False
             else:
-                show_open('Cookie check for "{}"'.format(cookie_name),
-                          details='{}'.format('Secure'))
+                show_open('Cookie Secure check for "{}"'.format(cookie_name))
                 result = True
             return result
-    show_unknown('Cookie "{}" not found'.format(cookie_name),
-                 details='{}'.format('Secure'))
+    show_unknown('Cookie "{}" not found'.format(cookie_name))
     return True
 
 
