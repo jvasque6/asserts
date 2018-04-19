@@ -72,7 +72,7 @@ def file_hash(filename):
                 sha256.update(code_byte)
     except FileNotFoundError:
         pass
-    return "SHA256 {}".format(sha256.hexdigest())
+    return dict(sha256=sha256.hexdigest())
 
 
 def check_grammar(grammar, code_dest, lang_spec):
