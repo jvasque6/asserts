@@ -185,3 +185,28 @@ class HTTPSService(Service):
         if regex_match:
             return regex_match.group(1)
         return None
+
+
+class SSHService(Service):
+    """SSH Service definition."""
+
+    def __init__(self, port=22, is_active=False, is_ssl=False,
+                 payload=None):
+        """Return a new Service object."""
+        try:
+            super(SSHService, self).__init__(port=port,
+                                             is_active=is_active,
+                                             is_ssl=is_ssl,
+                                             payload=payload)
+        except TypeError:
+            super().__init__(port=port, is_active=is_active,
+                             is_ssl=is_ssl, payload=payload)
+
+    def get_version(self, server):
+        """Get version."""
+        banner = self.get_banner(server)
+        regex_match = re.search(b'(.*)', banner)
+        version = regex_match.group(1)
+        if len(version) < 3:
+            return None
+        return version

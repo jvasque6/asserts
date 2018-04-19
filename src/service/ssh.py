@@ -12,6 +12,7 @@ import socket
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.helper import banner_helper
 from fluidasserts.utils.decorators import track
 
 PORT = 22
@@ -26,10 +27,10 @@ def __not_in(alg_list, algo):
 @track
 def is_cbc_used(site, port=PORT):
     """Function to check whether ssh has CBC algorithms enabled"""
-
     result = True
     try:
-
+        service = banner_helper.SSHService(port)
+        fingerprint = service.get_fingerprint(site)
         conn = socket.create_connection((site, port), 5)
         conn.send('SSH-2.0-OpenSSH_6.0p1\r\n')
         version = conn.recv(50).split('\n')[0]
@@ -43,7 +44,8 @@ def is_cbc_used(site, port=PORT):
             for cipher in all_c:
                 cipher_text = cipher_text+cipher+","
             show_close('SSH does not have insecure CBC encription algorithms',
-                       details=dict(site=site, cipher_text=cipher_text))
+                       details=dict(site=site, cipher_text=cipher_text,
+                                    fingerprint=fingerprint))
             result = False
         else:
             all_c = ciphers.split(',')
@@ -54,8 +56,9 @@ def is_cbc_used(site, port=PORT):
                     if __not_in(algos, ciph):
                         algos.append(ciph)
                         cbc = cbc+ciph+", "
-            show_open('{} SSH has insecure CBC encription algorithms, \
-Details={}'.format(site, cbc))
+            show_open('SSH has insecure CBC encription algorithms',
+                      details=dict(site=site, cbc=cbc,
+                                   fingerprint=fingerprint))
             result = True
 
         return result
@@ -66,10 +69,10 @@ Details={}'.format(site, cbc))
 @track
 def is_hmac_used(site, port=PORT):
     """Function to check whether ssh has weak hmac algorithms enabled"""
-
     result = True
     try:
-
+        service = banner_helper.SSHService(port)
+        fingerprint = service.get_fingerprint(site)
         conn = socket.create_connection((site, port), 5)
         version = conn.recv(50).split('\n')[0]
         version = version+"do nothing"
@@ -83,7 +86,8 @@ def is_hmac_used(site, port=PORT):
             for cipher in all_c:
                 cipher_text = cipher_text+cipher+","
             show_close('SSH does not have insecure HMAC encription algorithms',
-                       details=dict(site=site, cipher_text=cipher_text))
+                       details=dict(site=site, cipher_text=cipher_text,
+                                    fingerprint=fingerprint))
             result = False
         else:
 
@@ -96,7 +100,8 @@ def is_hmac_used(site, port=PORT):
                         algos.append(cipher)
                         hmac = hmac + cipher +", "
             show_open('SSH has insecure HMAC encription algorithms',
-                      details=dict(site=site, hmac=hmac))
+                      details=dict(site=site, hmac=hmac,
+                                   fingerprint=fingerprint))
             result = True
 
         return result
