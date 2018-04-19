@@ -20,6 +20,7 @@ print version
 # standard imports
 from abc import ABCMeta
 from abc import abstractmethod
+import hashlib
 import re
 import socket
 import ssl
@@ -70,6 +71,13 @@ class Service(object):
 
         return banner.rstrip()
 
+    def get_fingerprint(self, server):
+        """Get fingerprint of the banner."""
+        sha256 = hashlib.sha256()
+        banner = self.get_banner(server)
+        sha256.update(banner)
+        return "SHA256 {}  # {}".format(sha256.hexdigest(), banner)
+
     @abstractmethod
     def get_version(self, server):
         """Parse the banner.
@@ -77,8 +85,6 @@ class Service(object):
         Return the product and version of the service.
         """
         pass
-
-
 
 
 class FTPService(Service):
