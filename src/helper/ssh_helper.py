@@ -11,13 +11,17 @@ import paramiko
 # local imports
 # none
 
+def build_ssh_object():
+    """Build SSH object."""
+    ssh = paramiko.SSHClient()
+    ssh.load_system_host_keys()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    return ssh
 
 # pylint: disable=R0914
 def ssh_user_pass(server, username, password, command):
     """Connect using SSH user and pass and exec specific command."""
-    ssh = paramiko.SSHClient()
-    ssh.load_system_host_keys()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh = build_ssh_object()
 
     out = False
     err = False
@@ -36,9 +40,7 @@ def ssh_user_pass(server, username, password, command):
 
 def ssh_with_config(server, username, config_file, command):
     """Connect using SSH config and exec specific command."""
-    ssh = paramiko.SSHClient()
-    ssh.load_system_host_keys()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh = build_ssh_object()
 
     out = False
     err = False
