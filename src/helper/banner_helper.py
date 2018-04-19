@@ -76,7 +76,7 @@ class Service(object):
         sha256 = hashlib.sha256()
         banner = self.get_banner(server)
         sha256.update(banner)
-        return "SHA256 {}  # {}".format(sha256.hexdigest(), banner)
+        return dict(sha256=sha256.hexdigest(), banner=banner)
 
     @abstractmethod
     def get_version(self, server):
