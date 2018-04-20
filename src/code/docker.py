@@ -42,7 +42,7 @@ def not_pinned(file_dest):
                       details=dict(file=code_file,
                                    fingerprint=code_helper.
                                    file_hash(code_file),
-                                   lines=vulns))
+                                   lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Dockerfile has pinned base containers',
