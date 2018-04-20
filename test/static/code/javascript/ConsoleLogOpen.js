@@ -1,11 +1,13 @@
-function functionWithConsoleLog() {
+function functionAWithConsoleLog() {
     var a = 13
     var b = 31
     console.log()
+    localStorage.getItem('key');
 }
 
-function functionWithConsoleLog() {
+function functionBWithConsoleLog() {
     var a = 13
     var b = 31
     console.log(a+b)
+    localStorage.clear();
 }

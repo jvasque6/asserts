@@ -16,7 +16,8 @@ from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Literal, nestedExpr)
+from pyparsing import (CaselessKeyword, Literal, Suppress, Word,
+                       alphanums, nestedExpr)
 
 LANGUAGE_SPECS = {
     'extensions': ['js', 'ts'],
@@ -27,11 +28,11 @@ LANGUAGE_SPECS = {
 
 @track
 def uses_console_log(js_dest):
-    """Search printStackTrace calls."""
+    """Search console.log() calls."""
     tk_object = CaselessKeyword('console')
-    tk_pst = CaselessKeyword('log')
+    tk_method = CaselessKeyword('log')
 
-    pst = tk_object + Literal('.') + tk_pst + nestedExpr()
+    pst = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
     result = False
     matches = code_helper.check_grammar(pst, js_dest, LANGUAGE_SPECS)
@@ -45,6 +46,31 @@ def uses_console_log(js_dest):
             result = True
         else:
             show_close('Code does not use console.log',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+    return result
+
+@track
+def uses_localstorage(js_dest):
+    """Search localStorage calls."""
+    tk_object = CaselessKeyword('localstorage')
+    tk_method = Word(alphanums)
+
+    pst = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
+
+    result = False
+    matches = code_helper.check_grammar(pst, js_dest, LANGUAGE_SPECS)
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses localStorage',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=vulns))
+            result = True
+        else:
+            show_close('Code does not use localStorage',
                        details=dict(file=code_file,
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
