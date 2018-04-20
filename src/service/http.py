@@ -366,6 +366,7 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     """Check if resulting URL has a session ID exposed."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response_url = http_session.response.url
+    fingerprint = http_session.get_fingerprint()
 
     regex = r'\b(' + argument + r')\b=([a-zA-Z0-9_-]+)'
 
@@ -375,7 +376,8 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
         result = True
         show_open('Session ID is exposed',
                   details=dict(url=response_url, session_id='{}: {}'.
-                               format(argument, match.group(2))))
+                               format(argument, match.group(2)),
+                               fingerprint=fingerprint))
     else:
         result = False
         show_close('Session ID is hidden',
@@ -391,17 +393,21 @@ def is_version_visible(ip_address, ssl=False, port=80):
     else:
         service = banner_helper.HTTPService(port)
     version = service.get_version(ip_address)
+    fingerprint = service.get_fingerprint(ip_address)
+
 
     result = True
     if version:
         result = True
         show_open('HTTP version visible',
-                  details=dict(site=ip_address, port=port, version=version),
+                  details=dict(site=ip_address, port=port,
+                               version=version, fingerprint=fingerprint),
                   refs='apache/restringir-banner')
     else:
         result = False
         show_close('HTTP version not visible',
-                   details=dict(site=ip_address, port=port),
+                   details=dict(site=ip_address, port=port,
+                                fingerprint=fingerprint),
                    refs='apache/restringir-banner')
     return result
 
@@ -412,13 +418,15 @@ def is_not_https_required(url):
     assert url.startswith('http://')
     try:
         http_session = http_helper.HTTPSession(url)
+        fingerprint = http_session.get_fingerprint()
         if http_session.url.startswith('https'):
             show_close('HTTPS is forced on URL',
-                       details=dict(url=http_session.url),
+                       details=dict(url=http_session.url,
+                                    fingerprint=fingerprint),
                        refs='apache/configurar-soporte-https')
             return False
         show_open('HTTPS is not forced on URL',
-                  details=dict(url=http_session.url),
+                  details=dict(url=http_session.url, fingerprint=fingerprint),
                   refs='apache/configurar-soporte-https')
         return True
     except http_helper.ConnError:
@@ -451,18 +459,21 @@ def is_resource_accessible(url, *args, **kwargs):
     """Check if url is available by checking response code."""
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError:
         show_close('Resource not available',
-                   details=dict(url=url))
+                   details=dict(url=url, fingerprint=fingerprint))
         return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
                    details=dict(url=http_session.url,
-                                status=http_session.response.status_code))
+                                status=http_session.response.status_code,
+                                fingerprint=fingerprint))
         return False
     show_open('Resource available',
               details=dict(url=http_session.url,
-                           status=http_session.response.status_code))
+                           status=http_session.response.status_code,
+                           fingerprint=fingerprint))
     return True
 
 
@@ -476,6 +487,7 @@ def is_response_delayed(url, *args, **kwargs):
     """
     max_response_time = 1
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    fingerprint = http_session.get_fingerprint()
 
     response_time = http_session.response.elapsed.total_seconds()
     delta = max_response_time - response_time
@@ -483,10 +495,13 @@ def is_response_delayed(url, *args, **kwargs):
     if delta >= 0:
         show_close('Response time is acceptable',
                    details=dict(url=http_session.url,
-                                response_time=response_time))
+                                response_time=response_time,
+                                fingerprint=fingerprint))
         return False
     show_close('Response time not acceptable',
-               details=dict(url=http_session.url, response_time=response_time))
+               details=dict(url=http_session.url,
+                            response_time=response_time,
+                            fingerprint=fingerprint))
     return True
 
 

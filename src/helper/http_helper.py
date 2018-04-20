@@ -8,10 +8,12 @@ import re
 # 3rd party imports
 try:
     from urlparse import parse_qsl as parse_qsl
+    from urlparse import urlparse
     from urllib import quote as quote
 except ImportError:
     from urllib.parse import parse_qsl as parse_qsl
     from urllib.parse import quote as quote
+    from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
@@ -25,6 +27,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts import LOGGER
+from fluidasserts.helper import banner_helper
 
 # pylint: disable=W0212
 # pylint: disable=R0902
@@ -254,6 +257,21 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return quote(text_to_get)
         return text_to_get
 
+    def get_fingerprint(self):
+        """Get HTTP fingerprint."""
+        parsed = urlparse(self.url)
+        host = parsed.netloc.split(':')[0]
+        if parsed.scheme == 'http':
+            if parsed.port:
+                service = banner_helper.HTTPService(parsed.port)
+            else:
+                service = banner_helper.HTTPService()
+        else:
+            if parsed.port:
+                service = banner_helper.HTTPSService(parsed.port)
+            else:
+                service = banner_helper.HTTPSService()
+        return service.get_fingerprint(host)
 
 def create_dataset(field, value_list, query_string):
     """Create dataset from values on list."""

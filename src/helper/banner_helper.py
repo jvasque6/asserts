@@ -141,7 +141,7 @@ class HTTPService(Service):
     """HTTP Service definition."""
 
     def __init__(self, port=80, is_active=True, is_ssl=False,
-                 payload=b'GET / HTTP/1.0\r\n\r\n'):
+                 payload=b'HEAD / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         try:
             super(HTTPService, self).__init__(port=port,
@@ -166,7 +166,7 @@ class HTTPSService(Service):
     """HTTPS Service definition."""
 
     def __init__(self, port=443, is_active=True, is_ssl=True,
-                 payload=b'GET / HTTP/1.0\r\n\r\n'):
+                 payload=b'HEAD / HTTP/1.0\r\n\r\n'):
         """Return a new Service object."""
         try:
             super(HTTPSService, self).__init__(port=port,
