@@ -64,12 +64,15 @@ class Message(object):
         assert self.status in self.__status_codes
         assert self.message is not None
         if self.details is None:
-            self.details = 'None'
+            details = 'None'
+        else:
+            import operator
+            details = sorted(self.details.items(), key=operator.itemgetter(0))
 
         data = [('when', self.date),
                 ('status', self.status),
                 ('message', self.message),
-                ('details', self.details),
+                ('details', OrderedDict(details)),
                 ('caller_module', self.caller_module),
                 ('caller_function', self.caller_function)]
         if self.references:
