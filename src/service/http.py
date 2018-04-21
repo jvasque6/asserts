@@ -445,8 +445,7 @@ def has_dirlisting(url, *args, **kwargs):
             show_open('Directory listing enabled',
                       details=dict(url=url))
             return True
-        show_close('Directory listing not enabled',
-                   details='URL="{}"'.format(url))
+        show_close('Directory listing not enabled', details=dict(url=url))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect',
