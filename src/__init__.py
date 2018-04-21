@@ -67,12 +67,13 @@ class Message(object):
             details = 'None'
         else:
             import operator
-            details = sorted(self.details.items(), key=operator.itemgetter(0))
+            details = OrderedDict(sorted(self.details.items(),
+                                         key=operator.itemgetter(0)))
 
         data = [('when', self.date),
                 ('status', self.status),
                 ('message', self.message),
-                ('details', OrderedDict(details)),
+                ('details', details),
                 ('caller_module', self.caller_module),
                 ('caller_function', self.caller_function)]
         if self.references:
