@@ -32,10 +32,10 @@ def uses_console_log(js_dest):
     tk_object = CaselessKeyword('console')
     tk_method = CaselessKeyword('log')
 
-    pst = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
+    clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
     result = False
-    matches = code_helper.check_grammar(pst, js_dest, LANGUAGE_SPECS)
+    matches = code_helper.check_grammar(clog, js_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses console.log',
@@ -57,10 +57,10 @@ def uses_localstorage(js_dest):
     tk_object = CaselessKeyword('localstorage')
     tk_method = Word(alphanums)
 
-    pst = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
+    lsto = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
     result = False
-    matches = code_helper.check_grammar(pst, js_dest, LANGUAGE_SPECS)
+    matches = code_helper.check_grammar(lsto, js_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses localStorage',
