@@ -86,7 +86,9 @@ def check_grammar(grammar, code_dest, lang_spec):
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            if not full_path.split('.')[1] in lang_spec['extensions']:
-                continue
-            vulns[full_path] = __get_match_lines(grammar, full_path, lang_spec)
+            if '.' in full_path:
+                if not full_path.split('.')[1] in lang_spec['extensions']:
+                    continue
+                vulns[full_path] = __get_match_lines(grammar, full_path,
+                                                     lang_spec)
     return vulns
