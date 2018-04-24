@@ -19,13 +19,16 @@ import oyaml as yaml
 
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
-from pygments.lexers import YamlLexer, JsonLexer
-from pygments.formatters import TerminalTrueColorFormatter
+from pygments.lexers import PropertiesLexer, JsonLexer
+from pygments.formatters import Terminal256Formatter
+from pygments.style import Style
+from pygments.token import Token
 
 # local imports
 # none
 
 # pylint: disable=too-many-instance-attributes
+# pylint: disable=too-few-public-methods
 
 
 def get_caller_module():
@@ -40,6 +43,30 @@ def get_caller_function():
     """Get caller function."""
     return sys._getframe(3).f_code.co_name  # noqa
 
+
+class MyStyleRed(Style):
+    """Output red-colored message."""
+    styles = {
+        Token.Name.Attribute: '#ansiblue',
+        Token.Error: '#ansired',
+        Token.String: '#ansired',
+    }
+
+class MyStyleGreen(Style):
+    """Output green-colored message."""
+    styles = {
+        Token.Name.Attribute: '#ansiblue',
+        Token.Error: '#ansigreen',
+        Token.String: '#ansigreen',
+    }
+
+class MyStyleGray(Style):
+    """Output white-colored message."""
+    styles = {
+        Token.Name.Attribute: '#ansiblue',
+        Token.Error: '#ansiwhite',
+        Token.String: '#ansiwhite',
+    }
 
 class Message(object):
     """Output message class."""
@@ -83,12 +110,19 @@ class Message(object):
     def as_json(self):
         """Get JSON representation of message."""
         message = json.dumps(self.__build_message())
-        print(highlight(message, JsonLexer(), TerminalTrueColorFormatter()))
+        print(highlight(message, JsonLexer(), Terminal256Formatter()))
 
     def as_yaml(self):
         """Get YAML representation of message."""
         message = yaml.dump(self.__build_message(), default_flow_style=False)
-        print(highlight(message, YamlLexer(), TerminalTrueColorFormatter()))
+        if self.status == 'OPEN':
+            style = MyStyleRed
+        elif self.status == 'CLOSE':
+            style = MyStyleGreen
+        elif self.status == 'UNKNOWN':
+            style = MyStyleGray
+        print(highlight(message, PropertiesLexer(),
+                        Terminal256Formatter(style=style)))
 
     def as_logger(self):
         """Get logger representation of message."""
@@ -187,7 +221,7 @@ try:
 # All rights reserved.
 # Loading attack modules ...
     """
-    print(highlight(HEADER, YamlLexer(), TerminalTrueColorFormatter()))
+    print(highlight(HEADER, PropertiesLexer(), Terminal256Formatter()))
 
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
