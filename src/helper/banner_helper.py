@@ -75,7 +75,10 @@ class Service(object):
         """Get fingerprint of the banner."""
         sha256 = hashlib.sha256()
         banner = self.get_banner(server)
-        sha256.update(banner)
+        try:
+            sha256.update(banner.encode('utf-8'))
+        except AttributeError:
+            sha256.update(banner)
         return dict(sha256=sha256.hexdigest(), banner=banner)
 
     @abstractmethod
