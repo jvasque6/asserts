@@ -17,7 +17,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
-                       alphanums)
+                       alphanums, Suppress, nestedExpr, javaStyleComment)
 
 LANGUAGE_SPECS = {
     'extensions': ['java'],
@@ -80,4 +80,43 @@ def uses_print_stack_trace(java_dest):
                        details=dict(file=code_file,
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
+    return result
+
+@track
+def has_empty_catches(java_dest):
+    """Check if an error is saved in a log."""
+    tk_catch = CaselessKeyword('catch')
+    tk_word = Word(alphas)
+    parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') + \
+        tk_word + Optional(Literal('(') + tk_word + Literal(')')) + \
+        tk_word + Literal(')'))
+    empty_catch = (Suppress(parser_catch) + \
+                   nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
+
+    result = False
+    catches = code_helper.check_grammar(parser_catch, java_dest,
+                                        LANGUAGE_SPECS)
+
+    for code_file, lines in catches.items():
+        vulns = []
+        with open(code_file) as code_f:
+            file_lines = code_f.readlines()
+            for line in lines:
+                txt = "".join(file_lines[line-1:])
+                exception_block = empty_catch.searchString(txt)[0]
+                if not exception_block[0]:
+                    vulns.append(line)
+
+        if not vulns:
+            show_close('Code does not has empty catches',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+        else:
+            show_open('Code has empty catches',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
+            result = True
     return result

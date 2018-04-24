@@ -1,3 +1,6 @@
+javascript.uses_localstorage(js_dest)
+javascript.uses_console_log(js_dest)
+java.has_empty_catches(java_dest)
 java.has_generic_exceptions(java_dest)
 java.uses_print_stack_trace(java_dest)
 docker.not_pinned(file_dest)
