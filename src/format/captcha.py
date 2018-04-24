@@ -36,12 +36,15 @@ def is_insecure_in_image(image, expected_text):
 def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
     """Check if the URL is an insecure CAPTCHA."""
     session = http_helper.HTTPSession(image_url, stream=True, *args, **kwargs)
+    fingerprint = session.get_fingerprint()
     image = session.response.raw
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
         show_open('Captcha is insecure',
-                  details=dict(expected=expected_text, reversed=result))
+                  details=dict(expected=expected_text, reversed=result,
+                               fingerprint=fingerprint))
         return True
     show_close('Captcha is secure',
-               details=dict(expected=expected_text, reversed=result))
+               details=dict(expected=expected_text, reversed=result,
+                            fingerprint=fingerprint))
     return False

@@ -280,11 +280,13 @@ def has_breach(site, port=PORT):
         header = {'Accept-Encoding': '{},deflate'.format(compression)}
         try:
             sess = http_helper.HTTPSession(url, headers=header)
+            fingerprint = sess.get_fingerprint()
             if 'Content-Encoding' in sess.response.headers:
                 if compression in sess.response.headers['Content-Encoding']:
                     show_open('Site vulnerable to BREACH attack',
                               details=dict(site=site, port=port,
-                                           compression=compression))
+                                           compression=compression,
+                                           fingerprint=fingerprint))
                     return True
         except http_helper.ConnError:
             show_unknown('Could not connect', details=dict(site=site,
