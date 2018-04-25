@@ -48,23 +48,23 @@ setup(
         'PyPDF2==1.26.0',            # src.format.pdf
         'requests==2.18.4',          # src.service.http
         'requests-oauthlib==0.8.0',  # src.service.http
-        'cryptography==2.1.4',       # src.service.ssl
-        'certifi==2017.11.5',        # src.service.ssl
-        'ldap3==2.4',                # src.service.ldap
-        'paramiko==2.4.0',           # src.helper.ssh_helper
+        'cryptography==2.2.2',       # src.service.ssl
+        'certifi==2018.4.16',        # src.service.ssl
+        'ldap3==2.5',                # src.service.ldap
+        'paramiko==2.4.1',           # src.helper.ssh_helper
         'pywinrm==0.3.0',            # src.helper.winrm_helper
         'beautifulsoup4==4.6.0',     # src.format.html
         'dnspython==1.15.0',         # src.service.dns
-        'tlslite-ng==0.7.1',         # src.service.ssl
+        'tlslite-ng==0.7.4',         # src.service.ssl
         'pyOpenSSL==17.5.0',         # src.service.ssl
         'colorama==0.3.9',           # logging
         'pysmb==1.1.22',             # src.service.smb
         'mixpanel==4.3.2',           # src.utils.decorators
         'requests_ntlm==1.1.0',      # src.helper.http_helper
-        'pytesseract==0.1.7',        # src.format.captcha
-        'pillow==5.0.0',             # src.format.captcha
-        'pyparsing==2.1.10',         # src.code
-        'oyaml==0.3',                # src
+        'pytesseract==0.2.0',        # src.format.captcha
+        'pillow==5.1.0',             # src.format.captcha
+        'pyparsing==2.2.0',          # src.code
+        'oyaml==0.4',                # src
         'pygments==2.2.0',           # src
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
