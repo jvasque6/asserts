@@ -20,9 +20,10 @@ def __get_match_lines(grammar, code_file, lang_spec):
     """Check grammar in file."""
     with open(code_file) as file_fd:
         affected_lines = []
-        counter = 1
+        counter = 0
         in_block_comment = False
         for line in file_fd.readlines():
+            counter += 1
             try:
                 parser = ~Or(lang_spec['line_comment'])
                 parser.parseString(line)
@@ -33,7 +34,6 @@ def __get_match_lines(grammar, code_file, lang_spec):
                     block_start = Literal(lang_spec['block_comment_start'])
                     parser = SkipTo(block_start) + block_start
                     parser.parseString(line)
-                    counter += 1
                     in_block_comment = True
                 except (ParseException, IndexError):
                     pass
@@ -55,8 +55,6 @@ def __get_match_lines(grammar, code_file, lang_spec):
                 affected_lines.append(counter)
             except ParseException:
                 pass
-            finally:
-                counter += 1
     return affected_lines
 
 
