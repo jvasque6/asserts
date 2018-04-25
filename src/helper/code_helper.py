@@ -65,7 +65,6 @@ def check_grammar_block(grammar, code_dest, lines):
         file_lines = code_f.readlines()
         for line in lines:
             txt = "".join(file_lines[line-1:])
-            print(txt)
             results = grammar.searchString(txt)[0]
             if not results[0]:
                 vulns.append(line)
