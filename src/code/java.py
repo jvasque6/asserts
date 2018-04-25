@@ -16,8 +16,9 @@ from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
-                       alphanums, Suppress, nestedExpr, javaStyleComment)
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
+                       alphanums, Suppress, nestedExpr, javaStyleComment,
+                       SkipTo)
 
 LANGUAGE_SPECS = {
     'extensions': ['java'],
@@ -84,7 +85,7 @@ def uses_print_stack_trace(java_dest):
 
 @track
 def has_empty_catches(java_dest):
-    """Check if an error is saved in a log."""
+    """Check if catches are empty or only have comments"""
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
     parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') + \
@@ -98,15 +99,7 @@ def has_empty_catches(java_dest):
                                         LANGUAGE_SPECS)
 
     for code_file, lines in catches.items():
-        vulns = []
-        with open(code_file) as code_f:
-            file_lines = code_f.readlines()
-            for line in lines:
-                txt = "".join(file_lines[line-1:])
-                exception_block = empty_catch.searchString(txt)[0]
-                if not exception_block[0]:
-                    vulns.append(line)
-
+        vulns = code_helper.check_grammar_block(empty_catch, code_file, lines)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
@@ -118,5 +111,41 @@ def has_empty_catches(java_dest):
                                    fingerprint=code_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
+            result = True
+    return result
+
+@track
+def has_switch_without_default(java_dest):
+    """Check if switches have default clause."""
+    tk_switch = CaselessKeyword('switch')
+    tk_case = CaselessKeyword('case') + (Word(alphanums))
+    tk_default = CaselessKeyword('default')
+    tk_break = CaselessKeyword('break') + Literal(';')
+    def_stmt = Or([Suppress(tk_case), tk_default]) + \
+               Suppress(Literal(':') + SkipTo(tk_break, include=True))
+    prsr_sw = tk_switch + nestedExpr()
+    switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
+    sw_wout_def = (Suppress(prsr_sw) + \
+                  nestedExpr(opener='{', closer='}',
+                             content=def_stmt)).ignore(javaStyleComment)
+
+    result = False
+    switches = code_helper.check_grammar(switch_head, java_dest,
+                                         LANGUAGE_SPECS)
+
+    for code_file, lines in switches.items():
+        print(lines)
+        vulns = code_helper.check_grammar_block(sw_wout_def, code_file, lines)
+        if not vulns:
+            show_close('Code has switch with default clause',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+        else:
+            show_close('Code does not has switch with default clause',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file),
+                                    lines=", ".join([str(x) for x in vulns])))
             result = True
     return result

@@ -27,7 +27,6 @@ def __get_match_lines(grammar, code_file, lang_spec):
                 parser = ~Or(lang_spec['line_comment'])
                 parser.parseString(line)
             except ParseException:
-                counter += 1
                 continue
             if lang_spec['block_comment_start']:
                 try:
@@ -51,8 +50,6 @@ def __get_match_lines(grammar, code_file, lang_spec):
                         continue
                     except IndexError:
                         pass
-                    finally:
-                        counter += 1
             try:
                 grammar.parseString(line)
                 affected_lines.append(counter)
@@ -61,6 +58,20 @@ def __get_match_lines(grammar, code_file, lang_spec):
             finally:
                 counter += 1
     return affected_lines
+
+
+def check_grammar_block(grammar, code_dest, lines):
+    """Check multiline grammar in a file."""
+    vulns = []
+    with open(code_dest) as code_f:
+        file_lines = code_f.readlines()
+        for line in lines:
+            txt = "".join(file_lines[line-1:])
+            print(txt)
+            results = grammar.searchString(txt)[0]
+            if not results[0]:
+                vulns.append(line)
+    return vulns
 
 
 def file_hash(filename):

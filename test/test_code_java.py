@@ -19,6 +19,8 @@ SECURE_CODE = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_CODE = CODE_DIR + 'GenericExceptionsOpen.java'
 SECURE_EMPTY_CATCH = CODE_DIR + 'GenericExceptionsOpen.java'
 INSECURE_EMPTY_CATCH = CODE_DIR + 'EmptyCatchOpen.java'
+INSECURE_SWITCH = CODE_DIR + 'SwitchDefaultOpen.java'
+SECURE_SWITCH = CODE_DIR + 'SwitchDefaultClose.java'
 
 #
 # Open tests
@@ -54,6 +56,17 @@ def test_has_empty_catches_in_dir_open():
     """Search empty catches."""
     assert java.has_empty_catches(CODE_DIR)
 
+
+def test_has_switch_without_default_open():
+    """Search switch without default clause."""
+    assert java.has_switch_without_default(INSECURE_SWITCH)
+
+
+def test_has_switch_without_default_in_dir_open():
+    """Search switch without default clause."""
+    assert java.has_switch_without_default(CODE_DIR)
+
+
 #
 # Closing tests
 #
@@ -72,3 +85,8 @@ def test_uses_print_stack_trace_close():
 def test_has_empty_catches_close():
     """Search empty catches."""
     assert not java.has_empty_catches(SECURE_EMPTY_CATCH)
+
+
+def test_has_switch_without_default_close():
+    """Search switch without default clause."""
+    assert not java.has_switch_without_default(SECURE_SWITCH)
