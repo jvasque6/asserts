@@ -6,7 +6,6 @@
 # standard imports
 import datetime
 import inspect
-import json
 import logging.config
 import os
 import tempfile
@@ -19,9 +18,10 @@ import oyaml as yaml
 
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
-from pygments.lexers import PropertiesLexer, JsonLexer
+from pygments.lexers import PropertiesLexer
 from pygments.formatters import Terminal256Formatter
 from pygments.style import Style
+from pygments.styles import get_style_by_name
 from pygments.token import Token
 
 # local imports
@@ -29,6 +29,23 @@ from pygments.token import Token
 
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
+# pylint: disable=no-member
+
+OUTFILE = sys.stdout
+
+if sys.platform in ('win32', 'cygwin'):
+    if sys.version_info > (3,):
+        from pygments.util import UnclosingTextIOWrapper
+        OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+    try:
+        import colorama.initialise
+    except ImportError:
+        pass
+    else:
+        OUTFILE = colorama.initialise.wrap_stream(OUTFILE, convert=None,
+                                                  strip=None,
+                                                  autoreset=False,
+                                                  wrap=True)
 
 
 def get_caller_module():
@@ -85,6 +102,7 @@ class Message(object):
             self.references = None
         self.caller_module = get_caller_module()
         self.caller_function = get_caller_function()
+        self.check = '{}.{}'.format(self.caller_module, self.caller_function)
 
     def __build_message(self):
         """Build message dict."""
@@ -97,60 +115,27 @@ class Message(object):
             details = OrderedDict(sorted(self.details.items(),
                                          key=operator.itemgetter(0)))
 
-        data = [('when', self.date),
+        data = [('check', self.check),
                 ('status', self.status),
                 ('message', self.message),
                 ('details', details),
-                ('caller_module', self.caller_module),
-                ('caller_function', self.caller_function)]
+                ('when', self.date)]
         if self.references:
             data.append(('references', self.references))
         return OrderedDict(data)
 
-    def as_json(self):
-        """Get JSON representation of message."""
-        message = json.dumps(self.__build_message())
-        print(highlight(message, JsonLexer(), Terminal256Formatter()))
-
     def as_yaml(self):
         """Get YAML representation of message."""
-        message = yaml.dump(self.__build_message(), default_flow_style=False)
+        message = yaml.dump(self.__build_message(), default_flow_style=False,
+                            explicit_start=True)
         if self.status == 'OPEN':
             style = MyStyleRed
         elif self.status == 'CLOSE':
             style = MyStyleGreen
         elif self.status == 'UNKNOWN':
             style = MyStyleGray
-        print(highlight(message, PropertiesLexer(),
-                        Terminal256Formatter(style=style)))
-
-    def as_logger(self):
-        """Get logger representation of message."""
-        message = self.__build_message()
-        if message['references']:
-            template = """\033[1mStatus:\033[0m {}
-                                                \033[1mResult:\033[0m {}
-                                                \033[1mDetails:\033[0m {}
-                                                \033[1mReferences:\033[0m {}
-                                                \033[1mCaller Module:\033[0m {}
-                                                \033[1mCaller Function:\033[0m {}
-                                                """
-            msg = template.format(message['status'], message['message'],
-                                  message['details'], message['references'],
-                                  message['caller_module'],
-                                  message['caller_function'])
-        else:
-            template = """\033[1mStatus:\033[0m {}
-                                                \033[1mResult:\033[0m {}
-                                                \033[1mDetails:\033[0m {}
-                                                \033[1mCaller Module:\033[0m {}
-                                                \033[1mCaller Function:\033[0m {}
-                                                """
-            msg = template.format(message['status'], message['message'],
-                                  message['details'],
-                                  message['caller_module'],
-                                  message['caller_function'])
-        LOGGER.info(msg)
+        highlight(message, PropertiesLexer(),
+                  Terminal256Formatter(style=style), OUTFILE)
 
 # create LOGGER
 LOGGER = logging.getLogger('FLUIDAsserts')
@@ -214,15 +199,18 @@ set but with an unknown value. It must be "true" or "false".')
 CLIENT_ID = os.environ['FA_LICENSE_KEY']
 USER_EMAIL = os.environ['FA_USER_EMAIL']
 
-try:
-    HEADER = """
+
+HEADER = """
 ---
 # FLUIDAsserts by FLUIDAttacks (https://fluidattacks.com)
 # All rights reserved.
 # Loading attack modules ...
-    """
-    print(highlight(HEADER, PropertiesLexer(), Terminal256Formatter()))
+"""
 
+HEADER_STYLE = get_style_by_name('igor')
+highlight(HEADER, PropertiesLexer(), Terminal256Formatter(style=HEADER_STYLE),
+          OUTFILE)
+try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
 except mixpanel.MixpanelException:
