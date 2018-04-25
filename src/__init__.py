@@ -47,23 +47,23 @@ def get_caller_function():
 class MyStyleRed(Style):
     """Output red-colored message."""
     styles = {
-        Token.Name.Attribute: '#ansiblue',
-        Token.Error: '#ansired',
-        Token.String: '#ansired',
+        Token.Name.Attribute: '#ansiturquoise',
+        Token.Error: '#F74E4E',
+        Token.String: '#F74E4E',
     }
 
 class MyStyleGreen(Style):
     """Output green-colored message."""
     styles = {
-        Token.Name.Attribute: '#ansiblue',
-        Token.Error: '#ansigreen',
-        Token.String: '#ansigreen',
+        Token.Name.Attribute: '#ansiturquoise',
+        Token.Error: '#929292',
+        Token.String: '#929292',
     }
 
 class MyStyleGray(Style):
     """Output white-colored message."""
     styles = {
-        Token.Name.Attribute: '#ansiblue',
+        Token.Name.Attribute: '#ansiturquoise',
         Token.Error: '#ansiwhite',
         Token.String: '#ansiwhite',
     }
