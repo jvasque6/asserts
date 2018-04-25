@@ -43,7 +43,7 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-	pip install -U pip==9.0.3 \
+	pip install -U pip \
         setuptools  \
         wheel && \
     pip install -U \
