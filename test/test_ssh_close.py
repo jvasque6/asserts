@@ -32,10 +32,17 @@ ADMIN_PASS = 'Puef8poh2tei9AeB'
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('os:weak', {'22/tcp': SSH_PORT})],
+                         [('os:hard', {'22/tcp': SSH_PORT})],
                          indirect=True)
 # pylint: disable=unused-argument
-def test_is_is_cbc_used_open(run_mock):
+def test_is_hmac_used_close(run_mock):
+    """Server SSH uses HMAC?."""
+    assert not ssh.is_hmac_used(CONTAINER_IP, username=ADMIN_USER,
+                                password=ADMIN_PASS)
+
+
+# pylint: disable=unused-argument
+def test_is_is_cbc_used_close(run_mock):
     """Server SSH uses CBC?."""
-    assert ssh.is_cbc_used(CONTAINER_IP, username=ADMIN_USER,
-                           password=ADMIN_PASS)
+    assert not ssh.is_cbc_used(CONTAINER_IP, username=ADMIN_USER,
+                               password=ADMIN_PASS)
