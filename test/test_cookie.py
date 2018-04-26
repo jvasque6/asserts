@@ -17,6 +17,7 @@ import pytest
 
 # local imports
 from fluidasserts.format import cookie
+from fluidasserts.helper import http_helper
 
 #
 # Constants
@@ -72,3 +73,43 @@ def test_has_not_httponly_set_close():
     url = '%s/http/cookies/http_only/ok' % (MOCK_SERVICE)
     cookie_name = 'JSESSID'
     assert not cookie.has_not_httponly_set(cookie_name, url)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_has_not_httponly_in_cookiejar_open():
+    """Cookiejar has http-only attribute?."""
+    url = '%s/http/cookies/http_only/fail' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http_helper.HTTPSession(url)
+    assert cookie.has_not_httponly_in_cookiejar(cookie_name, sess.cookies)
+    assert cookie.has_not_httponly_in_cookiejar(cookie_name, None)
+    assert cookie.has_not_httponly_in_cookiejar(None, sess.cookies)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_has_not_httponly_in_cookiejar_close():
+    """Cookiejar has http-only attribute?."""
+    url = '%s/http/cookies/http_only/ok' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http_helper.HTTPSession(url)
+    assert not cookie.has_not_httponly_in_cookiejar(cookie_name, sess.cookies)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_has_not_secure_in_cookiejar_open():
+    """Cookiejar has secure attribute?."""
+    url = '%s/http/cookies/secure/fail' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http_helper.HTTPSession(url)
+    assert cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
+    assert cookie.has_not_secure_in_cookiejar(cookie_name, None)
+    assert cookie.has_not_secure_in_cookiejar(None, sess.cookies)
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_has_not_secure_in_cookiejar_close():
+    """Cookiejar has secure attribute?."""
+    url = '%s/http/cookies/secure/ok' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http_helper.HTTPSession(url)
+    assert not cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
