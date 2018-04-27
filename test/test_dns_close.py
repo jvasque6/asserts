@@ -36,12 +36,14 @@ HARD_PORT = 53
 def test_is_xfr_enabled_close(run_mock):
     """Transferencia de zonas habilitado en server?."""
     assert not dns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
+    assert not dns.is_xfr_enabled(TEST_ZONE, '0.0.0.0')
 
 
 # pylint: disable=unused-argument
 def test_is_dynupdates_enabled_close(run_mock):
     """Actualizacion de zonas habilitado en server?."""
     assert not dns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
+    assert not dns.is_dynupdate_enabled(TEST_ZONE, '0.0.0.0')
 
 
 # pylint: disable=unused-argument
