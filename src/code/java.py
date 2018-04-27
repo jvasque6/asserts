@@ -134,7 +134,6 @@ def has_switch_without_default(java_dest):
                                          LANGUAGE_SPECS)
 
     for code_file, lines in switches.items():
-        print(lines)
         vulns = code_helper.check_grammar_block(sw_wout_def, code_file, lines)
         if not vulns:
             show_close('Code has switch with default clause',
@@ -142,10 +141,10 @@ def has_switch_without_default(java_dest):
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
         else:
-            show_close('Code does not has switch with default clause',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file),
-                                    lines=", ".join([str(x) for x in vulns])))
+            show_open('Code does not has switch with default clause',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
             result = True
     return result
