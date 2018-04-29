@@ -58,8 +58,21 @@ def __get_match_lines(grammar, code_file, lang_spec):
     return affected_lines
 
 
-def check_grammar_block(grammar, code_dest, lines):
-    """Check multiline grammar in a file."""
+def block_contains_grammar(grammar, code_dest, lines):
+    """Check block grammar."""
+    vulns = []
+    with open(code_dest) as code_f:
+        file_lines = [x.rstrip() for x in code_f.readlines()]
+        for line in lines:
+            txt = "".join(file_lines[line-1:])
+            results = grammar.searchString(txt)
+            if results:
+                vulns.append(line)
+    return vulns
+
+
+def block_contains_empty_grammar(grammar, code_dest, lines):
+    """Check empty block grammar."""
     vulns = []
     with open(code_dest) as code_f:
         file_lines = code_f.readlines()
