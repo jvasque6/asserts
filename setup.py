@@ -29,7 +29,7 @@ setup(
         ('', ['conf/conf.cfg', 'conf/conf.spec']),
         ],
     package_dir={
-        'fluidasserts': 'src',
+        'fluidasserts': 'fluidasserts',
     },
     classifiers=[
         'Environment :: Console',
@@ -44,28 +44,28 @@ setup(
         'Intended Audience :: System Administrators',
     ],
     install_requires=[
-        'configobj==5.0.6',          # src
-        'PyPDF2==1.26.0',            # src.format.pdf
-        'requests==2.18.4',          # src.service.http
-        'requests-oauthlib==0.8.0',  # src.service.http
-        'cryptography==2.2.2',       # src.service.ssl
-        'certifi==2018.4.16',        # src.service.ssl
-        'ldap3==2.5',                # src.service.ldap
-        'paramiko==2.4.1',           # src.helper.ssh_helper
-        'pywinrm==0.3.0',            # src.helper.winrm_helper
-        'beautifulsoup4==4.6.0',     # src.format.html
-        'dnspython==1.15.0',         # src.service.dns
-        'tlslite-ng==0.7.4',         # src.service.ssl
-        'pyOpenSSL==17.5.0',         # src.service.ssl
+        'configobj==5.0.6',          # fluidasserts
+        'PyPDF2==1.26.0',            # fluidasserts.format.pdf
+        'requests==2.18.4',          # fluidasserts.service.http
+        'requests-oauthlib==0.8.0',  # fluidasserts.service.http
+        'cryptography==2.2.2',       # fluidasserts.service.ssl
+        'certifi==2018.4.16',        # fluidasserts.service.ssl
+        'ldap3==2.5',                # fluidasserts.service.ldap
+        'paramiko==2.4.1',           # fluidasserts.helper.ssh_helper
+        'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
+        'beautifulsoup4==4.6.0',     # fluidasserts.format.html
+        'dnspython==1.15.0',         # fluidasserts.service.dns
+        'tlslite-ng==0.7.4',         # fluidasserts.service.ssl
+        'pyOpenSSL==17.5.0',         # fluidasserts.service.ssl
         'colorama==0.3.9',           # logging
-        'pysmb==1.1.22',             # src.service.smb
-        'mixpanel==4.3.2',           # src.utils.decorators
-        'requests_ntlm==1.1.0',      # src.helper.http_helper
-        'pytesseract==0.2.0',        # src.format.captcha
-        'pillow==5.1.0',             # src.format.captcha
-        'pyparsing==2.2.0',          # src.code
-        'oyaml==0.4',                # src
-        'pygments==2.2.0',           # src
+        'pysmb==1.1.22',             # fluidasserts.service.smb
+        'mixpanel==4.3.2',           # fluidasserts.utils.decorators
+        'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
+        'pytesseract==0.2.0',        # fluidasserts.format.captcha
+        'pillow==5.1.0',             # fluidasserts.format.captcha
+        'pyparsing==2.2.0',          # fluidasserts.code
+        'oyaml==0.4',                # fluidasserts
+        'pygments==2.2.0',           # fluidasserts
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

@@ -5,7 +5,7 @@ global-exclude *
 include setup.py
 
 # incluir explicitamente solo los archivos python de src
-recursive-include src *.py
+recursive-include fluidasserts *.py
 
 # incluir los archivos de configuracion del software
 include conf/conf.cfg
