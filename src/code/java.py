@@ -92,14 +92,15 @@ def has_empty_catches(java_dest):
         tk_word + Optional(Literal('(') + tk_word + Literal(')')) + \
         tk_word + Literal(')'))
     empty_catch = (Suppress(parser_catch) + \
-                   nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
+        nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
 
     result = False
     catches = code_helper.check_grammar(parser_catch, java_dest,
                                         LANGUAGE_SPECS)
 
     for code_file, lines in catches.items():
-        vulns = code_helper.check_grammar_block(empty_catch, code_file, lines)
+        vulns = code_helper.block_contains_empty_grammar(empty_catch,
+                                                         code_file, lines)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
@@ -134,7 +135,8 @@ def has_switch_without_default(java_dest):
                                          LANGUAGE_SPECS)
 
     for code_file, lines in switches.items():
-        vulns = code_helper.check_grammar_block(sw_wout_def, code_file, lines)
+        vulns = code_helper.block_contains_empty_grammar(sw_wout_def,
+                                                         code_file, lines)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,

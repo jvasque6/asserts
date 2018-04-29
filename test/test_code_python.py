@@ -48,7 +48,6 @@ def test_swallows_exceptions_in_dir_open():
 #
 
 
-
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not python.has_generic_exceptions(SECURE_CODE)

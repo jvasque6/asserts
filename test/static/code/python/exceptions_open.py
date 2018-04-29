@@ -1,4 +1,6 @@
 """
+exceptions_open.py.
+
 This is a test module to check exceptions.
 """
 # pylint: disable=bare-except
