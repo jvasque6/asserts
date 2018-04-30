@@ -21,8 +21,8 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
 
 LANGUAGE_SPECS = {
     'extensions': ['py'],
-    'block_comment_start': '"""',
-    'block_comment_end': '"""',
+    'block_comment_start': None,
+    'block_comment_end': None,
     'line_comment': ['#'],
 }
 
