@@ -18,7 +18,7 @@ from fluidasserts.utils.decorators import track
 
 
 def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo httponly."""
+    """Checks if the cookie has the httponly attribute"""
     if url is None and cookie_jar is None:
         show_unknown('Cookie HttpOnly check for "{}"'.format(cookie_name),
                      details=dict(url=url, cookie_jar=cookie_jar))
@@ -57,7 +57,7 @@ def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
 
 
 def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo secure."""
+    """Checks if the cookie has the secure attribute"""
     if url is None and cookie_jar is None:
         show_unknown('Cookie Secure check for "{}"'.format(cookie_name),
                      details=dict(url=url, cookie_jar=cookie_jar))
@@ -95,25 +95,25 @@ def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
 
 @track
 def has_not_httponly_set(cookie_name, url, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo httponly."""
+    """Checks if the cookie has the httponly attribute"""
     return __has_not_http_only(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_httponly_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo httponly."""
+    """Checks if the cookie has the httponly attribute"""
     return __has_not_http_only(cookie_name, None, cookie_jar,
                                *args, **kwargs)
 
 
 @track
 def has_not_secure_set(cookie_name, url, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo secure."""
+    """Checks if the cookie has the secure attribute"""
     return __has_not_secure(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_secure_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
-    """Verifica si la cookie tiene el atributo secure."""
+    """Checks if the cookie has the secure attribute"""
     return __has_not_secure(cookie_name, None, cookie_jar,
                             *args, **kwargs)

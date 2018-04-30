@@ -38,7 +38,7 @@ def __has_attribute(filename, selector, tag, attr, value):
 
 @track
 def has_not_autocomplete(filename, selector):
-    """Check autocomplete attrubute."""
+    """Check autocomplete attribute."""
     attr = 'autocomplete'
     value = 'off'
     has_attr = __has_attribute(
