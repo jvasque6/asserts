@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 
-"""Python module.
+"""
+Python module.
 
-This module allows to check Python code vulnerabilities
+This module allows to check Python code vulnerabilities.
 """
 
 # standard imports
 # None
 
 # 3rd party imports
-# None
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
+                       pythonStyleComment, Suppress)
 
 # local imports
 from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
-                       pythonStyleComment, Suppress)
+
 
 LANGUAGE_SPECS = {
     'extensions': ['py'],
@@ -28,7 +29,12 @@ LANGUAGE_SPECS = {
 
 @track
 def has_generic_exceptions(py_dest):
-    """Search generic exceptions in file or dir."""
+    """
+    Search for generic exceptions in a Python script or package.
+
+    :param py_dest: Path to a Python script or package.
+    :rtype: bool
+    """
     tk_except = CaselessKeyword('except')
     generic_exception = tk_except + Literal(':')
 
@@ -52,7 +58,15 @@ def has_generic_exceptions(py_dest):
 
 @track
 def swallows_exceptions(py_dest):
-    """Check if catches are empty or only have comments"""
+    """
+    Search for swallowed exceptions.
+
+    Identifies ``except`` blocks that are either empty
+    or only contain comments or the ``pass`` statement.
+
+    :param py_dest: Path to a Python script or package.
+    :rtype: bool
+    """
     tk_except = CaselessKeyword('except')
     tk_word = Word(alphas) + Optional('.')
     tk_pass = Literal('pass')
