@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""JavaScript module.
+"""
+JavaScript module.
 
-This module allows to check JavaScript code vulnerabilities
+This module allows to check JavaScript code vulnerabilities.
 """
 
 # standard imports
@@ -28,7 +29,12 @@ LANGUAGE_SPECS = {
 
 @track
 def uses_console_log(js_dest):
-    """Search console.log() calls."""
+    """
+    Search for ``console.log()`` calls in a JavaScript source file or directory.
+
+    :param js_dest: Path to a JavaScript source file or directory.
+    :rtype: bool
+    """
     tk_object = CaselessKeyword('console')
     tk_method = CaselessKeyword('log')
 
@@ -53,7 +59,12 @@ def uses_console_log(js_dest):
 
 @track
 def uses_localstorage(js_dest):
-    """Search localStorage calls."""
+    """
+    Search for ``localStorage`` calls in a JavaScript source file or directory.
+
+    :param js_dest: Path to a JavaScript source file or directory.
+    :rtype: bool
+    """
     tk_object = CaselessKeyword('localstorage')
     tk_method = Word(alphanums)
 
