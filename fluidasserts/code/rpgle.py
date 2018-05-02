@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""RPGLE module.
+"""
+RPGLE module.
 
-This module allows to check RPGLE code vulnerabilities
+This module allows to check RPGLE code vulnerabilities.
 """
 
 # standard imports
@@ -29,7 +30,12 @@ LANGUAGE_SPECS = {
 
 @track
 def has_dos_dow_sqlcod(rpg_dest):
-    """Search DoS for using DoW SQLCOD = 0."""
+    r"""
+    Search for DoS for using ``DoW SQLCOD = 0``\ .
+
+    :param rpg_dest: Path to a RPG source or directory.
+    :rtype: bool
+    """
     tk_dow = CaselessKeyword('dow')
     tk_sqlcod = CaselessKeyword('sqlcod')
 
@@ -56,7 +62,15 @@ def has_dos_dow_sqlcod(rpg_dest):
 
 @track
 def has_unitialized_vars(rpg_dest):
-    """Search for unitialized variables."""
+    """
+    Search for unitialized variables.
+
+    See `FLUIDDefends
+    <https://fluidattacks.com/web/es/defends/rpg/inicializar-variables/>`_.
+
+    :param rpg_dest: Path to a RPG source or directory.
+    :rtype: bool
+    """
     tk_data = Keyword('D')
     tk_first = Word(alphas+"_", exact=1)
     tk_rest = Word(alphanums+"_")
