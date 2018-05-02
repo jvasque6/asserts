@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""Java module.
+"""
+Java module.
 
 This module allows to check Java code vulnerabilities
 """
@@ -9,16 +10,16 @@ This module allows to check Java code vulnerabilities
 # None
 
 # 3rd party imports
-# None
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
+                       alphanums, Suppress, nestedExpr, javaStyleComment,
+                       SkipTo)
 
 # local imports
 from fluidasserts.helper import code_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
-                       alphanums, Suppress, nestedExpr, javaStyleComment,
-                       SkipTo)
+
 
 LANGUAGE_SPECS = {
     'extensions': ['java'],
@@ -29,7 +30,12 @@ LANGUAGE_SPECS = {
 
 @track
 def has_generic_exceptions(java_dest):
-    """Search generic exceptions in file or dir."""
+    """
+    Search for generic exceptions in a Java source file or package.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
     tk_catch = CaselessKeyword('catch')
     tk_generic_exc = CaselessKeyword('exception')
     tk_type = Word(alphas)
@@ -60,7 +66,12 @@ def has_generic_exceptions(java_dest):
 
 @track
 def uses_print_stack_trace(java_dest):
-    """Search printStackTrace calls."""
+    """
+    Search for ``printStackTrace`` calls in a  or package.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
     tk_object = Word(alphanums)
     tk_pst = CaselessKeyword('printstacktrace')
 
@@ -85,7 +96,14 @@ def uses_print_stack_trace(java_dest):
 
 @track
 def has_empty_catches(java_dest):
-    """Check if catches are empty or only have comments"""
+    """
+    Search for ``catch`` blocks that are empty or only have comments.
+
+    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
     parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') + \
@@ -117,7 +135,14 @@ def has_empty_catches(java_dest):
 
 @track
 def has_switch_without_default(java_dest):
-    """Check if switches have default clause."""
+    r"""
+    Check if all ``switch``\ es have a ``default`` clause.
+
+    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
     tk_switch = CaselessKeyword('switch')
     tk_case = CaselessKeyword('case') + (Word(alphanums))
     tk_default = CaselessKeyword('default')
