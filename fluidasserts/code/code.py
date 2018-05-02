@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Code module.
+"""
+Code module.
 
-This module allows to check Code vulnerabilities
+This module allows to check Code vulnerabilities.
 """
 
 # standard imports
@@ -20,7 +21,15 @@ from fluidasserts.utils.decorators import track
 
 
 def __generic_code_assert(code_file, expected_regex):
-    """Check if a text is present in code."""
+    """
+    Check if a text is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_file: Path to the file to be tested.
+    :param expected_text: Bad text to look for in the file.
+    :rtype: bool
+    """
     with open(code_file) as code_fd:
         if re.search(str(expected_regex), code_fd.read(), re.IGNORECASE):
             return True
@@ -29,7 +38,15 @@ def __generic_code_assert(code_file, expected_regex):
 
 @track
 def has_text(code_file, expected_text):
-    """Check if a bad text is present."""
+    """
+    Check if a bad text is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_file: Path to the file to be tested.
+    :param expected_text: Bad text to look for in the file.
+    :rtype: bool
+    """
     ret = __generic_code_assert(code_file, expected_text)
     if ret:
         show_open('Bad text present in code',
@@ -46,7 +63,15 @@ def has_text(code_file, expected_text):
 
 @track
 def has_not_text(code_file, expected_text):
-    """Check if a required text is not present."""
+    """
+    Check if a required text is not present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_file: Path to the file to be tested.
+    :param expected_text: Bad text to look for in the file.
+    :rtype: bool
+    """
     ret = __generic_code_assert(code_file, expected_text)
     if not ret:
         show_open('Expected text not present in code',
@@ -63,7 +88,12 @@ def has_not_text(code_file, expected_text):
 
 @track
 def file_exists(code_file):
-    """Check if a given file exists."""
+    """
+    Check if the given file exists.
+
+    :param code_file: Path to the file to be tested.
+    :rtype: bool
+    """
     if os.path.isfile(code_file):
         show_open('File exists',
                   details=dict(path=code_file,
