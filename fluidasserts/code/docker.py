@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""Docker module.
+"""
+Docker module.
 
-This module allows to check Docker code vulnerabilities
+This module allows to check Docker code vulnerabilities.
 """
 
 # standard imports
@@ -27,7 +28,13 @@ LANGUAGE_SPECS = {
 
 @track
 def not_pinned(file_dest):
-    """Search not pinned Dockerfiles."""
+    """
+    Check if the Dockerfile uses a ``FROM:...latest`` (unpinned) base image.
+
+    :param file_dest: Path to the Dockerfile to be tested.
+    :returns: True if unpinned (bad), False if pinned (good).
+    :rtype: bool
+    """
     tk_from = Word('FROM')
     tk_image = Word(alphas)
     tk_version = Word('latest')
@@ -38,14 +45,14 @@ def not_pinned(file_dest):
     matches = code_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
-            show_open('Dockerfile has not pinned base containers',
+            show_open('Dockerfile uses unpinned base image(s)',
                       details=dict(file=code_file,
                                    fingerprint=code_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
-            show_close('Dockerfile has pinned base containers',
+            show_close('Dockerfile has pinned base image(s)',
                        details=dict(file=code_file,
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
