@@ -24,7 +24,7 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def __uses_sign_alg(site, alg, port):
+def uses_sign_alg(site, alg, port):
     """Check whether cert use a hash method in their signature."""
     result = True
 
@@ -205,10 +205,10 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 @track
 def is_sha1_used(site, port=PORT):
     """Check whether cert use SHA1 in their signature algorithm."""
-    return __uses_sign_alg(site, 'sha1', port)
+    return uses_sign_alg(site, 'sha1', port)
 
 
 @track
 def is_md5_used(site, port=PORT):
     """Check whether cert use MD5 in their signature algorithm."""
-    return __uses_sign_alg(site, 'md5', port)
+    return uses_sign_alg(site, 'md5', port)

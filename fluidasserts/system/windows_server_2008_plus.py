@@ -135,6 +135,5 @@ set to 0x0'.format(server))
         else:
             result = True
             show_open('{} server has not all required patches \
-installed'.format(server),
-                      details=dict(security_patches=security_patches))
+installed'.format(server), details=dict(security_patches=security_patches))
     return result

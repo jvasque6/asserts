@@ -90,7 +90,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
         self.do_request()
 
-    def do_request(self):
+    def do_request(self):  # noqa
         """Do HTTP request."""
         if self.method in ['PUT', 'DELETE']:
             try:
@@ -332,7 +332,7 @@ def has_method(url, method, *args, **kwargs):
 
 
 # pylint: disable=too-many-branches
-def has_insecure_header(url, header, *args, **kwargs):
+def has_insecure_header(url, header, *args, **kwargs):  # noqa
     """Check if header is present."""
     try:
         http_session = HTTPSession(url, *args, **kwargs)

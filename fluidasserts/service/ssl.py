@@ -23,11 +23,13 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def __hex2bin(arr):
+def hex2bin(arr):
+    """Hex 2 Bin."""
     return ''.join('{:02x}'.format(x) for x in arr).decode('hex')
 
 
-def __rcv_tls_record(sock):
+def rcv_tls_record(sock):
+    """Receive TLS record."""
     try:
         tls_header = sock.recv(5)
         if not tls_header:
@@ -37,7 +39,7 @@ def __rcv_tls_record(sock):
         typ, ver, length = struct.unpack('>BHH', tls_header)
         message = ''
         while len(message) != length:
-            message += sock.recv(length-len(message))
+            message += sock.recv(length - len(message))
         if not message:
             return None, None, None
         return typ, ver, message
@@ -45,7 +47,8 @@ def __rcv_tls_record(sock):
         return None, None, None
 
 
-def __build_client_hello(tls_ver):
+def build_client_hello(tls_ver):
+    """Build CLIENTHELLO TLS message."""
     ssl_version_mapping = {
         'SSLv3':   0x00,
         'TLSv1.0': 0x01,
@@ -102,7 +105,8 @@ def __build_client_hello(tls_ver):
     return client_hello
 
 
-def __build_heartbeat(tls_ver):
+def build_heartbeat(tls_ver):
+    """Build heartbeat message."""
     ssl_version_mapping = {
         'SSLv3':   0x00,
         'TLSv1.0': 0x01,
@@ -384,15 +388,15 @@ def has_heartbleed(site, port=PORT):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(5)
             sock.connect((site, port))
-            sock.send(__hex2bin(__build_client_hello(vers)))
-            typ, _, _ = __rcv_tls_record(sock)
+            sock.send(hex2bin(build_client_hello(vers)))
+            typ, _, _ = rcv_tls_record(sock)
             if not typ:
                 continue
             if typ == 22:
                 # Received Server Hello
-                sock.send(__hex2bin(__build_heartbeat(vers)))
+                sock.send(hex2bin(build_heartbeat(vers)))
                 while True:
-                    typ, _, pay = __rcv_tls_record(sock)
+                    typ, _, pay = rcv_tls_record(sock)
                     if typ == 21 or typ is None:
                         break
                     if typ == 24:
@@ -400,8 +404,7 @@ def has_heartbleed(site, port=PORT):
                         if len(pay) > 3:
                             # Length is higher than sent
                             show_open('Site vulnerable to Heartbleed \
-attack ({})'.format(vers),
-                                      details=dict(site=site, port=port))
+attack ({})'.format(vers), details=dict(site=site, port=port))
                             return True
                         show_close('Site supports SSL/TLS heartbeats, \
 but it\'s not vulnerable to Heartbleed.',

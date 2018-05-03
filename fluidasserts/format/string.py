@@ -13,7 +13,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def __check_password_strength(password, length):
+def check_password_strength(password, length):
     """Check if a user password is secure."""
     dictionary = 'static/wordlists/password.lst'
 
@@ -53,7 +53,7 @@ def is_user_password_insecure(password):
     """Check if a user password is secure."""
     min_password_len = 8
 
-    return __check_password_strength(password, min_password_len)
+    return check_password_strength(password, min_password_len)
 
 
 @track
@@ -61,7 +61,7 @@ def is_system_password_insecure(password):
     """Check if a system password is secure."""
     min_password_len = 20
 
-    return __check_password_strength(password, min_password_len)
+    return check_password_strength(password, min_password_len)
 
 
 @track

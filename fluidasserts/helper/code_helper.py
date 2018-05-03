@@ -16,7 +16,7 @@ import os
 from pyparsing import Or, ParseException, Literal, SkipTo
 
 
-def __get_match_lines(grammar, code_file, lang_spec):
+def get_match_lines(grammar, code_file, lang_spec):  # noqa
     """Check grammar in file."""
     with open(code_file) as file_fd:
         affected_lines = []
@@ -64,7 +64,7 @@ def block_contains_grammar(grammar, code_dest, lines):
     with open(code_dest) as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
-            txt = "".join(file_lines[line-1:])
+            txt = "".join(file_lines[line - 1:])
             results = grammar.searchString(txt)
             if results:
                 vulns.append(line)
@@ -77,7 +77,7 @@ def block_contains_empty_grammar(grammar, code_dest, lines):
     with open(code_dest) as code_f:
         file_lines = code_f.readlines()
         for line in lines:
-            txt = "".join(file_lines[line-1:])
+            txt = "".join(file_lines[line - 1:])
             results = grammar.searchString(txt)[0]
             if not results[0]:
                 vulns.append(line)
@@ -89,7 +89,7 @@ def file_hash(filename):
     sha256 = hashlib.sha256()
     try:
         with open(filename, 'rb', buffering=0) as code_fd:
-            for code_byte in iter(lambda: code_fd.read(128*1024), b''):
+            for code_byte in iter(lambda: code_fd.read(128 * 1024), b''):
                 sha256.update(code_byte)
     except FileNotFoundError:
         pass
@@ -101,7 +101,7 @@ def check_grammar(grammar, code_dest, lang_spec):
     assert os.path.exists(code_dest)
     vulns = {}
     if os.path.isfile(code_dest):
-        vulns[code_dest] = __get_match_lines(grammar, code_dest, lang_spec)
+        vulns[code_dest] = get_match_lines(grammar, code_dest, lang_spec)
         return vulns
 
     for root, _, files in os.walk(code_dest):
@@ -110,6 +110,6 @@ def check_grammar(grammar, code_dest, lang_spec):
             if '.' in full_path:
                 if not full_path.split('.')[1] in lang_spec['extensions']:
                     continue
-                vulns[full_path] = __get_match_lines(grammar, full_path,
-                                                     lang_spec)
+                vulns[full_path] = get_match_lines(grammar, full_path,
+                                                   lang_spec)
     return vulns

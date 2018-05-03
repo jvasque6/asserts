@@ -72,8 +72,8 @@ def has_unitialized_vars(rpg_dest):
     :rtype: bool
     """
     tk_data = Keyword('D')
-    tk_first = Word(alphas+"_", exact=1)
-    tk_rest = Word(alphanums+"_")
+    tk_first = Word(alphas + "_", exact=1)
+    tk_rest = Word(alphanums + "_")
     tk_vartype = Word(alphas, exact=1)
     tk_varlen = Word(nums) + Word(alphas, exact=1)
     tk_inz = CaselessKeyword('inz')

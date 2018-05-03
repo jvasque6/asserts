@@ -16,8 +16,7 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
-def __smb_connect(server=None, user=None, password=None,
-                  domain='WORKGROUP'):
+def smb_connect(server=None, user=None, password=None, domain='WORKGROUP'):
     """Return a SMB connection handler."""
     try:
         client_machine_name = 'assertspc'
@@ -36,7 +35,7 @@ def __smb_connect(server=None, user=None, password=None,
 @track
 def has_dirlisting(share, *args, **kwargs):
     """Check if a SMB share has dirlisting."""
-    conn = __smb_connect(*args, **kwargs)
+    conn = smb_connect(*args, **kwargs)
 
     if not conn:
         show_unknown('Error while connecting',
@@ -67,8 +66,8 @@ def is_anonymous_enabled(server=None, domain='WORKGROUP'):
     """Check if a SMB share has dirlisting."""
     user = 'anonymous'
     password = ''
-    conn = __smb_connect(server=server, user=user, password=password,
-                         domain=domain)
+    conn = smb_connect(server=server, user=user, password=password,
+                       domain=domain)
 
     if not conn:
         show_close('Anonymous login not possible',

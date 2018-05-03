@@ -17,7 +17,7 @@ from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
 
 
-def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
+def has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
     """Checks if the cookie has the httponly attribute"""
     if url is None and cookie_jar is None:
         show_unknown('Cookie HttpOnly check for "{}"'.format(cookie_name),
@@ -56,7 +56,7 @@ def __has_not_http_only(cookie_name, url, cookie_jar, *args, **kwargs):
     return True
 
 
-def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
+def has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
     """Checks if the cookie has the secure attribute"""
     if url is None and cookie_jar is None:
         show_unknown('Cookie Secure check for "{}"'.format(cookie_name),
@@ -96,24 +96,24 @@ def __has_not_secure(cookie_name, url, cookie_jar, *args, **kwargs):
 @track
 def has_not_httponly_set(cookie_name, url, *args, **kwargs):
     """Checks if the cookie has the httponly attribute"""
-    return __has_not_http_only(cookie_name, url, None, *args, **kwargs)
+    return has_not_http_only(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_httponly_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Checks if the cookie has the httponly attribute"""
-    return __has_not_http_only(cookie_name, None, cookie_jar,
-                               *args, **kwargs)
+    return has_not_http_only(cookie_name, None, cookie_jar,
+                             *args, **kwargs)
 
 
 @track
 def has_not_secure_set(cookie_name, url, *args, **kwargs):
     """Checks if the cookie has the secure attribute"""
-    return __has_not_secure(cookie_name, url, None, *args, **kwargs)
+    return has_not_secure(cookie_name, url, None, *args, **kwargs)
 
 
 @track
 def has_not_secure_in_cookiejar(cookie_name, cookie_jar, *args, **kwargs):
     """Checks if the cookie has the secure attribute"""
-    return __has_not_secure(cookie_name, None, cookie_jar,
-                            *args, **kwargs)
+    return has_not_secure(cookie_name, None, cookie_jar,
+                          *args, **kwargs)

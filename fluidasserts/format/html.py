@@ -14,7 +14,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def __has_attribute(filename, selector, tag, attr, value):
+def has_attribute(filename, selector, tag, attr, value):
     """Check attribute value.
 
     This method checks whether the code retrieved by the selector
@@ -41,7 +41,7 @@ def has_not_autocomplete(filename, selector):
     """Check autocomplete attribute."""
     attr = 'autocomplete'
     value = 'off'
-    has_attr = __has_attribute(
+    has_attr = has_attribute(
         filename, selector, '[form|input]', attr, value)
 
     if has_attr is False:
@@ -67,7 +67,7 @@ def is_cacheable(filename):
 
     attr = 'http-equiv'
     value = 'pragma'
-    has_http_equiv = __has_attribute(
+    has_http_equiv = has_attribute(
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
@@ -78,7 +78,7 @@ def is_cacheable(filename):
 
     attr = 'content'
     value = r'no\-cache'
-    has_content = __has_attribute(
+    has_content = has_attribute(
         filename, selector, tag, attr, value)
 
     if has_content is False:
@@ -89,7 +89,7 @@ def is_cacheable(filename):
 
     attr = 'http-equiv'
     value = 'expires'
-    has_http_equiv = __has_attribute(
+    has_http_equiv = has_attribute(
         filename, selector, tag, attr, value)
 
     if has_http_equiv is False:
@@ -100,7 +100,7 @@ def is_cacheable(filename):
 
     attr = 'content'
     value = '-1'
-    has_content = __has_attribute(
+    has_content = has_attribute(
         filename, selector, tag, attr, value)
 
     if has_content is False:
