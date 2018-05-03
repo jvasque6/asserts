@@ -24,17 +24,20 @@ build:
     script:
         - docker build --cache-from registry.gitlab.com/fluidsignal/asserts:builder -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
         - docker build --no-cache --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS --build-arg branch=$CI_COMMIT_REF_NAME -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
+    retry: 2
 
 lint:
     stage: test
     script:
         - docker-compose run lint
         - docker-compose run overcommit
+    retry: 2
 
 test:
     stage: test
     script:
         - docker-compose run test
+    retry: 2
 
 codequality:
   image: docker:latest
@@ -46,6 +49,7 @@ codequality:
     - docker pull codeclimate/codeclimate
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
     - docker run --env SOURCE_CODE="$PWD" --volume "$PWD":/code --volume /var/run/docker.sock:/var/run/docker.sock "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION" /code analyze -e sonar-python -e pep8 -e randon -f json > codeclimate.json || true
+  retry: 2
   artifacts:
     paths: [codeclimate.json]
 
@@ -54,6 +58,7 @@ deploy:
     script:
         - docker-compose run deploy
         - docker build --no-cache --build-arg jfrog_user=$JFROG_USER --build-arg jfrog_pass=$JFROG_PASS -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
+    retry: 2
     only:
     - master
 
@@ -66,5 +71,6 @@ push_container:
         - docker push registry.gitlab.com/fluidsignal/asserts:base
         - docker push registry.gitlab.com/fluidsignal/asserts:builder
         - docker push registry.gitlab.com/fluidsignal/asserts:runner
+    retry: 2
     only:
     - master
