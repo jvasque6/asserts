@@ -139,8 +139,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                     self.url = self.response.url
 
                 if ret.cookies == {}:
-                    if ret.request._cookies != {} and \
-                    self.cookies != ret.request._cookies:
+                    if (ret.request._cookies != {} and
+                            self.cookies != ret.request._cookies):
                         self.cookies = ret.request._cookies
                 else:
                     self.cookies = ret.cookies
@@ -272,6 +272,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             else:
                 service = banner_helper.HTTPSService()
         return service.get_fingerprint(host)
+
 
 def create_dataset(field, value_list, query_string):
     """Create dataset from values on list."""

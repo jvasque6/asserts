@@ -8,10 +8,11 @@ from fluidasserts import MP, CLIENT_ID
 
 UNITTEST = False
 
+
 def track(func):
     """Decorator."""
     @functools.wraps(func)
-    def decorated(*args, **kwargs): # noqa
+    def decorated(*args, **kwargs):  # noqa
         """Decorate function."""
         try:
             MP.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)

@@ -395,7 +395,6 @@ def is_version_visible(ip_address, ssl=False, port=80):
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
 
-
     result = True
     if version:
         result = True

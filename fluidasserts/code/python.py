@@ -27,6 +27,7 @@ LANGUAGE_SPECS = {
     'line_comment': ['#'],
 }
 
+
 @track
 def has_generic_exceptions(py_dest):
     """
@@ -56,6 +57,7 @@ def has_generic_exceptions(py_dest):
                                     file_hash(code_file)))
     return result
 
+
 @track
 def swallows_exceptions(py_dest):
     """
@@ -72,8 +74,8 @@ def swallows_exceptions(py_dest):
     tk_pass = Literal('pass')
     parser_exception = tk_except + \
         Optional(tk_word + Optional(Literal('as') + tk_word)) + Literal(':')
-    empty_exception = (Suppress(parser_exception) + \
-        tk_pass).ignore(pythonStyleComment)
+    empty_exception = (Suppress(parser_exception) +
+                       tk_pass).ignore(pythonStyleComment)
 
     result = False
     matches = code_helper.check_grammar(parser_exception, py_dest,

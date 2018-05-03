@@ -17,6 +17,7 @@ from fluidasserts.utils.decorators import track
 PORT = 389
 SSL_PORT = 636
 
+
 @track
 def is_anonymous_bind_allowed(ldap_server, port=PORT):
     """Check whether anonymous binding is allowed on LDAP server."""

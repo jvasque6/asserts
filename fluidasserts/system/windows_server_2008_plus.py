@@ -14,14 +14,12 @@ from fluidasserts.helper.winrm_helper import winrm_exec_command
 from fluidasserts.utils.decorators import track
 
 
-# pylint: disable=W1401
-# pylint: disable=W1402
 @track
 def is_os_compilers_installed(server, username, password):
     """Check if there's any compiler installed in Windows Server."""
     common_compilers = ['Visual', 'Python', 'Mingw', 'CygWin']
     cmd = b'reg query \
-           "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s'
+"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s'
 
     installed_software = winrm_exec_command(server,
                                             username,
@@ -54,7 +52,7 @@ def is_os_antimalware_not_installed(server, username, password):
     common_av = ['Symantec', 'Norton', 'AVG', 'Kaspersky', 'TrendMicro',
                  'Panda', 'Sophos', 'McAfee', 'Eset']
     cmd = b'reg query \
-           "HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall" /s'
+"HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s'
     installed_software = winrm_exec_command(server,
                                             username,
                                             password,
@@ -98,8 +96,8 @@ def is_protected_users_disabled(server, username, password):
     """
     security_patches = ['KB2871997']
     cmd = b'reg query \
-"HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\\\
-Component Based Servicing\Packages" /s'
+"HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component\
+Based Servicing\\Packages" /s'
 
     installed_software = winrm_exec_command(server,
                                             username,
@@ -121,7 +119,7 @@ Component Based Servicing\Packages" /s'
         result = False
     else:
         cmd = b'reg query \
-"HKLM\System\CurrentControlSet\Control\SecurityProviders\WDigest" \
+"HKLM\\System\\CurrentControlSet\\Control\\SecurityProviders\\WDigest" \
 /v UseLogonCredential'
 
         has_logon_credentials = winrm_exec_command(server,

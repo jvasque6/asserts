@@ -96,8 +96,8 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
     if cert_cn.startswith('*.'):
         domain = '.' + cert_cn.split('*.')[1].lower()
 
-    if site.lower() != cert_cn and wc_cert != cert_cn \
-        and not site.endswith(domain):
+    if (site.lower() != cert_cn and wc_cert != cert_cn and
+            not site.endswith(domain)):
         if has_sni:
             show_close('{} CN not equals to site. However server \
 supports SNI'.format(cert_cn), details=dict(site=site, port=port, cn=cert_cn))

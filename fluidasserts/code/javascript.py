@@ -27,10 +27,11 @@ LANGUAGE_SPECS = {
     'line_comment': ['//'],
 }
 
+
 @track
 def uses_console_log(js_dest):
     """
-    Search for ``console.log()`` calls in a JavaScript source file or directory.
+    Search for ``console.log()`` calls in a JavaScript file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
     :rtype: bool
@@ -56,6 +57,7 @@ def uses_console_log(js_dest):
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
     return result
+
 
 @track
 def uses_localstorage(js_dest):

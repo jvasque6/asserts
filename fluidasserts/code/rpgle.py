@@ -80,7 +80,7 @@ def has_unitialized_vars(rpg_dest):
     tk_varname = tk_first + tk_rest
 
     unitialized = tk_data + tk_varname + Optional(tk_vartype) + \
-                  Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
+        Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
 
     result = False
     matches = code_helper.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)

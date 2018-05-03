@@ -69,6 +69,7 @@ class MyStyleRed(Style):
         Token.String: '#F74E4E',
     }
 
+
 class MyStyleGreen(Style):
     """Output green-colored message."""
     styles = {
@@ -77,6 +78,7 @@ class MyStyleGreen(Style):
         Token.String: '#5FF74E',
     }
 
+
 class MyStyleGray(Style):
     """Output white-colored message."""
     styles = {
@@ -84,6 +86,7 @@ class MyStyleGray(Style):
         Token.Error: '#929292',
         Token.String: '#929292',
     }
+
 
 class Message(object):
     """Output message class."""
@@ -136,6 +139,7 @@ class Message(object):
             style = MyStyleGray
         highlight(message, PropertiesLexer(),
                   Terminal256Formatter(style=style), OUTFILE)
+
 
 # create LOGGER
 LOGGER = logging.getLogger('FLUIDAsserts')

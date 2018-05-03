@@ -18,6 +18,7 @@ from fluidasserts.utils.decorators import track
 
 PORT = 22
 
+
 @track
 def is_cbc_used(host, port=PORT, username=None, password=None):
     """Function to check whether ssh has CBC algorithms enabled"""
@@ -50,6 +51,7 @@ def is_cbc_used(host, port=PORT, username=None, password=None):
         show_close('SSH does not have insecure HMAC encryption algorithms',
                    details=dict(host=host, fingerprint=fingerprint))
         return False
+
 
 @track
 def is_hmac_used(host, port=PORT, username=None, password=None):

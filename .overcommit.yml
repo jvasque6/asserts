@@ -193,7 +193,7 @@ PreCommit:
     include: 'test/**/*.py'
 
   Pycodestyle:
-    enabled: false
+    enabled: true
     description: 'Analyze with pycodestyle'
     required_executable: 'pycodestyle'
     install_command: 'pip install pycodestyle'

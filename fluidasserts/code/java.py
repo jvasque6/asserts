@@ -28,6 +28,7 @@ LANGUAGE_SPECS = {
     'line_comment': ['//'],
 }
 
+
 @track
 def has_generic_exceptions(java_dest):
     """
@@ -94,6 +95,7 @@ def uses_print_stack_trace(java_dest):
                                     file_hash(code_file)))
     return result
 
+
 @track
 def has_empty_catches(java_dest):
     """
@@ -106,11 +108,11 @@ def has_empty_catches(java_dest):
     """
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
-    parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') + \
-        tk_word + Optional(Literal('(') + tk_word + Literal(')')) + \
-        tk_word + Literal(')'))
-    empty_catch = (Suppress(parser_catch) + \
-        nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
+    parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') +
+                    tk_word + Optional(Literal('(') + tk_word + Literal(')')) +
+                    tk_word + Literal(')'))
+    empty_catch = (Suppress(parser_catch) +
+                   nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
 
     result = False
     catches = code_helper.check_grammar(parser_catch, java_dest,
@@ -133,6 +135,7 @@ def has_empty_catches(java_dest):
             result = True
     return result
 
+
 @track
 def has_switch_without_default(java_dest):
     r"""
@@ -148,12 +151,12 @@ def has_switch_without_default(java_dest):
     tk_default = CaselessKeyword('default')
     tk_break = CaselessKeyword('break') + Literal(';')
     def_stmt = Or([Suppress(tk_case), tk_default]) + \
-               Suppress(Literal(':') + SkipTo(tk_break, include=True))
+        Suppress(Literal(':') + SkipTo(tk_break, include=True))
     prsr_sw = tk_switch + nestedExpr()
     switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
-    sw_wout_def = (Suppress(prsr_sw) + \
-                  nestedExpr(opener='{', closer='}',
-                             content=def_stmt)).ignore(javaStyleComment)
+    sw_wout_def = (Suppress(prsr_sw) +
+                   nestedExpr(opener='{', closer='}',
+                              content=def_stmt)).ignore(javaStyleComment)
 
     result = False
     switches = code_helper.check_grammar(switch_head, java_dest,
