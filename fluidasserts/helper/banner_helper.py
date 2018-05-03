@@ -133,8 +133,7 @@ class SMTPService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        # pylint: disable=W1401
-        regex_match = re.search(b'220.*ESMTP\s+(.*)', banner)
+        regex_match = re.search(r'220.*ESMTP\s+(.*)', banner)
         if regex_match:
             return regex_match.group(1)
         return None
