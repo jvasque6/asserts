@@ -66,21 +66,6 @@ services:
      - DOCKER_USER=$DOCKER_USER
      - DOCKER_PASS=$DOCKER_PASS
 
-  inception:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
-    depends_on:
-     - deps
-    command: python example/inception.py
-    volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-     - JFROG_USER=$JFROG_USER
-     - JFROG_PASS=$JFROG_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
-
   dist:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
