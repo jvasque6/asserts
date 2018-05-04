@@ -51,8 +51,9 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
                     except IndexError:
                         pass
             try:
-                grammar.parseString(line)
-                affected_lines.append(counter)
+                results = grammar.searchString(line, maxMatches=1)
+                if results:
+                    affected_lines.append(counter)
             except ParseException:
                 pass
     return affected_lines
@@ -65,7 +66,7 @@ def block_contains_grammar(grammar, code_dest, lines):
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
             txt = "".join(file_lines[line - 1:])
-            results = grammar.searchString(txt)
+            results = grammar.searchString(txt, maxMatches=1)
             if results:
                 vulns.append(line)
     return vulns
@@ -78,7 +79,7 @@ def block_contains_empty_grammar(grammar, code_dest, lines):
         file_lines = code_f.readlines()
         for line in lines:
             txt = "".join(file_lines[line - 1:])
-            results = grammar.searchString(txt)[0]
+            results = grammar.searchString(txt, maxMatches=1)[0]
             if not results[0]:
                 vulns.append(line)
     return vulns

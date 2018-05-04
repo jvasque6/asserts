@@ -178,3 +178,38 @@ def has_switch_without_default(java_dest):
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
     return result
+
+
+@track
+def has_insecure_randoms(java_dest):
+    """
+    Check if code uses Math.Random()
+
+    See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
+    tk_class = CaselessKeyword('math')
+    tk_method = CaselessKeyword('random')
+    tk_params = nestedExpr()
+    call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
+
+    result = False
+    random_call = code_helper.check_grammar(call_function, java_dest,
+                                            LANGUAGE_SPECS)
+
+    for code_file, vulns in random_call.items():
+        if vulns:
+            show_open('Code generates insecure random numbers',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
+            result = True
+        else:
+            show_close('Code does not generates insecure random numbers',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+    return result

@@ -2,6 +2,7 @@ class GenericExceptionsClose{
    public static void main(String args[]){
      try{
          int a[]=new int[7];
+         a[0] = Math.random();
          a[4]=30/0;
          System.out.println("First print statement in try block");
      }
