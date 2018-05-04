@@ -97,7 +97,7 @@ def uses_print_stack_trace(java_dest):
 
 
 @track
-def has_empty_catches(java_dest):
+def swallows_exceptions(java_dest):
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
