@@ -14,8 +14,9 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-SECURE_CODE = 'test/static/code/c/secure.c'
-INSECURE_CODE = 'test/static/code/c/insecure.c'
+CODE_DIR = 'test/static/code/c/'
+SECURE_CODE = CODE_DIR + 'secure.c'
+INSECURE_CODE = CODE_DIR + 'insecure.c'
 
 
 #
@@ -28,9 +29,19 @@ def test_has_text_open():
     assert code.has_text(INSECURE_CODE, 'strcpy')
 
 
+def test_has_text_open_in_dir():
+    """Test code has text."""
+    assert code.has_text(CODE_DIR, 'strcpy')
+
+
 def test_has_not_text_open():
     """Test code has not text."""
     assert code.has_not_text(INSECURE_CODE, 'strncpy')
+
+
+def test_has_not_text_open_in_dir():
+    """Test code has not text."""
+    assert code.has_not_text(CODE_DIR, 'strncpy')
 
 
 def test_file_exists_open():
