@@ -21,6 +21,8 @@ SECURE_EMPTY_CATCH = CODE_DIR + 'GenericExceptionsOpen.cs'
 INSECURE_EMPTY_CATCH = CODE_DIR + 'EmptyCatchOpen.cs'
 INSECURE_SWITCH = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_SWITCH = CODE_DIR + 'SwitchDefaultClose.cs'
+INSECURE_RANDOM = CODE_DIR + 'SwitchDefaultOpen.cs'
+SECURE_RANDOM = CODE_DIR + 'SwitchDefaultClose.cs'
 
 #
 # Open tests
@@ -57,6 +59,16 @@ def test_has_switch_without_default_in_dir_open():
     assert csharp.has_switch_without_default(CODE_DIR)
 
 
+def test_has_insecure_randoms_open():
+    """Search switch without default clause."""
+    assert csharp.has_insecure_randoms(INSECURE_RANDOM)
+
+
+def test_has_insecure_randoms_in_dir_open():
+    """Search switch without default clause."""
+    assert csharp.has_insecure_randoms(CODE_DIR)
+
+
 #
 # Closing tests
 #
@@ -75,3 +87,8 @@ def test_swallows_exceptions_close():
 def test_has_switch_without_default_close():
     """Search switch without default clause."""
     assert not csharp.has_switch_without_default(SECURE_SWITCH)
+
+
+def test_has_insecure_randoms_close():
+    """Search switch without default clause."""
+    assert not csharp.has_insecure_randoms(SECURE_RANDOM)

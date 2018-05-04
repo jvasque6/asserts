@@ -1,6 +1,7 @@
 function functionAWithConsoleLog() {
     var a = 13
     var b = 31
+    var c = Math.floor((Math.random() * 100) + 1);
     console.log()
     localStorage.getItem('key');
 }

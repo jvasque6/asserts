@@ -4,6 +4,17 @@ class SwitchDefaultClose
 {
    public static void Main()
    {
+      RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+      var byteArray = new byte[4];
+      provider.GetBytes(byteArray);
+
+      var randomInteger = BitConverter.ToUInt32(byteArray, 0);
+
+      var byteArray2 = new byte[8];
+      provider.GetBytes(byteArray2);
+
+      var randomDouble = BitConverter.ToDouble(byteArray2, 0);
+
       string monthString;
       switch (month)
       {

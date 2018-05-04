@@ -147,3 +147,40 @@ def has_switch_without_default(csharp_dest):
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
     return result
+
+
+@track
+def has_insecure_randoms(csharp_dest):
+    """
+    Check if code instantiates ``Random`` class
+
+    See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
+
+    :param csharp_dest: Path to a C# source file or package.
+    :rtype: bool
+    """
+    tk_class = CaselessKeyword('random')
+    tk_variable = Word(alphanums)
+    tk_new = CaselessKeyword('new')
+    tk_params = nestedExpr()
+    call_function = tk_class + tk_variable + Literal('=') + tk_new + \
+        tk_class + Suppress(tk_params)
+
+    result = False
+    random_new = code_helper.check_grammar(call_function, csharp_dest,
+                                           LANGUAGE_SPECS)
+
+    for code_file, vulns in random_new.items():
+        if vulns:
+            show_open('Code generates insecure random numbers',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
+            result = True
+        else:
+            show_close('Code does not generates insecure random numbers',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+    return result

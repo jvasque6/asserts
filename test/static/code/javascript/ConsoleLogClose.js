@@ -17,5 +17,6 @@ function functionCWithoutConsoleLog() {
     /*
     console.log(a+b)
     localStorage.setItem("key")
+    var c = Math.floor((Math.random() * 100) + 1);
     */
 }

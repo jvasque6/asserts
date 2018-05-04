@@ -35,12 +35,22 @@ def test_uses_console_log_in_dir_open():
 
 def test_uses_localstorage_open():
     """Search localStorage calls."""
-    assert javascript.uses_localstorage(CODE_DIR)
+    assert javascript.uses_localstorage(INSECURE_CODE)
 
 
 def test_uses_localstorage_in_dir_open():
     """Search localStorage calls."""
-    assert javascript.uses_localstorage(INSECURE_CODE)
+    assert javascript.uses_localstorage(CODE_DIR)
+
+
+def test_has_insecure_randoms_open():
+    """Search localStorage calls."""
+    assert javascript.has_insecure_randoms(INSECURE_CODE)
+
+
+def test_has_insecure_randoms_in_dir_open():
+    """Search localStorage calls."""
+    assert javascript.has_insecure_randoms(CODE_DIR)
 
 #
 # Closing tests
@@ -55,3 +65,8 @@ def test_uses_console_log_close():
 def test_uses_localstorage_close():
     """Search localStorage calls."""
     assert not javascript.uses_localstorage(SECURE_CODE)
+
+
+def test_has_insecure_randoms_close():
+    """Search localStorage calls."""
+    assert not javascript.has_insecure_randoms(SECURE_CODE)

@@ -183,7 +183,7 @@ def has_switch_without_default(java_dest):
 @track
 def has_insecure_randoms(java_dest):
     """
-    Check if code uses Math.Random()
+    Check if code uses ``Math.Random()``
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
