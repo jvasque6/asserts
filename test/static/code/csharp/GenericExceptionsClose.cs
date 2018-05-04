@@ -21,7 +21,7 @@ public class GenericExceptionsClose
       Console.WriteLine("Warning: ArrayIndexOutOfBoundsException");
     }
 /*
-    try 
+    try
     {
       Console.WriteLine("Out of try-catch block...");
     }

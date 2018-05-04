@@ -26,7 +26,7 @@ public class GenericExceptionsOpen
       Console.WriteLine("Warning: Some Other exception");
     }
 
-    try 
+    try
     {
       Console.WriteLine("Out of try-catch block...");
     }

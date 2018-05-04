@@ -4,17 +4,17 @@ public class SwitchDefaultOpen{
    public static void Main()
    {
       string monthString;
-      switch (month) 
+      switch (month)
       {
          case 1:
             monthString = "January";
             break;
-         case 12: 
+         case 12:
             monthString = "December";
             break;
       }
 
-      switch (month) 
+      switch (month)
       {
          case 1:
             monthString = "January";
@@ -23,13 +23,13 @@ public class SwitchDefaultOpen{
             monthString = "December";
             break;
          /*
-         default: 
+         default:
             monthString = "Invalid month";
             break;
          */
       }
 
-      switch (month) 
+      switch (month)
       {
          case 1:
             monthString = "January";
@@ -37,7 +37,7 @@ public class SwitchDefaultOpen{
          case 12:
             monthString = "December";
             break;
-         //default: 
+         //default:
             //monthString = "Invalid month";
                   //break;
       }

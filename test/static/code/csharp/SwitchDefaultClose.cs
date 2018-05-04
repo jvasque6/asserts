@@ -5,7 +5,7 @@ class SwitchDefaultClose
    public static void Main()
    {
       string monthString;
-      switch (month) 
+      switch (month)
       {
          case 1:
             monthString = "January";
@@ -31,7 +31,7 @@ class SwitchDefaultClose
          case 8:
             monthString = "August";
             break;
-         case 9: 
+         case 9:
             monthString = "September";
             break;
          case 10:

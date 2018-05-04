@@ -1,6 +1,6 @@
 using System;
 
-public class Example 
+public class Example
 {
     public static void Main()
     {
@@ -30,7 +30,7 @@ public class Example
         }
     }
 /*
-    try 
+    try
     {
         Console.WriteLine("Out of try-catch block...");
         catch(Exception e)
