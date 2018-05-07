@@ -18,7 +18,6 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 HARD_PORT = 25
 
 #

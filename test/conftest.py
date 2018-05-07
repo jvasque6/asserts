@@ -22,7 +22,6 @@ import wait
 NETWORK_NAME = 'asserts_fluidasserts'
 NETWORK_SUBNET = '172.30.216.0/24'
 NETWORK_GW = '172.30.216.254'
-CONTAINER_IP = '172.30.216.101'
 
 
 @pytest.fixture(scope='module')
