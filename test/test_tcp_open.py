@@ -18,7 +18,6 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 WEAK_PORT = 80
 
 #
@@ -29,16 +28,15 @@ WEAK_PORT = 80
 @pytest.mark.parametrize('run_mock',
                          [('tcp:weak', {'21/tcp': WEAK_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_port_open_open(run_mock):
     """Check open port."""
-    assert tcp.is_port_open(CONTAINER_IP, WEAK_PORT)
+    assert tcp.is_port_open(run_mock, WEAK_PORT)
 
 
-def test_port_open_error():
+def test_port_open_error(run_mock):
     """Check open port with error."""
     with pytest.raises(AssertionError):
-        tcp.is_port_open(CONTAINER_IP, -1)
+        tcp.is_port_open(run_mock, -1)
 # El caso de prueba deberia generar AssertionError
 # se deja comentado mientras se realizan los cambios
 # necesarios en el codigo.
@@ -48,4 +46,4 @@ def test_port_open_error():
 
 def test_port_insecure_open(run_mock):
     """Check secure port."""
-    assert tcp.is_port_insecure(CONTAINER_IP, WEAK_PORT)
+    assert tcp.is_port_insecure(run_mock, WEAK_PORT)

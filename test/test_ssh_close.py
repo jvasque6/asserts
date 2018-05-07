@@ -21,7 +21,6 @@ import fluidasserts.utils.decorators
 # Constants
 #
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 SSH_PORT = 22
 ADMIN_USER = 'root'
 ADMIN_PASS = 'Puef8poh2tei9AeB'
@@ -34,15 +33,13 @@ ADMIN_PASS = 'Puef8poh2tei9AeB'
 @pytest.mark.parametrize('run_mock',
                          [('os:hard', {'22/tcp': SSH_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_is_hmac_used_close(run_mock):
     """Server SSH uses HMAC?."""
-    assert not ssh.is_hmac_used(CONTAINER_IP, username=ADMIN_USER,
+    assert not ssh.is_hmac_used(run_mock, username=ADMIN_USER,
                                 password=ADMIN_PASS)
 
 
-# pylint: disable=unused-argument
 def test_is_is_cbc_used_close(run_mock):
     """Server SSH uses CBC?."""
-    assert not ssh.is_cbc_used(CONTAINER_IP, username=ADMIN_USER,
+    assert not ssh.is_cbc_used(run_mock, username=ADMIN_USER,
                                password=ADMIN_PASS)

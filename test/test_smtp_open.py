@@ -18,9 +18,7 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 WEAK_PORT = 25
-HARD_PORT = 25
 
 #
 # Open tests
@@ -30,12 +28,11 @@ HARD_PORT = 25
 @pytest.mark.parametrize('run_mock',
                          [('smtp:weak', {'25/tcp': WEAK_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_has_vrfy_open(run_mock):
     """Funcion VRFY habilitada?."""
-    assert smtp.has_vrfy(CONTAINER_IP, WEAK_PORT)
+    assert smtp.has_vrfy(run_mock, WEAK_PORT)
 
 
 def test_is_version_visible_open(run_mock):
     """Check version visible."""
-    assert smtp.is_version_visible(CONTAINER_IP, WEAK_PORT)
+    assert smtp.is_version_visible(run_mock, WEAK_PORT)

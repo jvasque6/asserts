@@ -61,13 +61,18 @@ def run_mock(request):
                                  tty=True,
                                  detach=True)
 
-    mynet.connect(cont, ipv4_address=CONTAINER_IP)
+    mynet.connect(cont)
+    while True:
+        con = client.containers.get(cont.id)
+        c_ip = con.attrs['NetworkSettings']['Networks']\
+            ['asserts_fluidasserts']['IPAddress']
+        if c_ip:
+            break
 
     for value in port_mapping.values():
-        wait.tcp.open(int(value), host=CONTAINER_IP, timeout=120)
+        wait.tcp.open(int(value), host=c_ip, timeout=120)
         time.sleep(1)
 
-    def teardown():
-        """Detiene el contenedor."""
-        cont.stop(timeout=1)
-    request.addfinalizer(teardown)
+    yield c_ip
+    print('Stoping {} ...'.format(mock))
+    cont.stop(timeout=1)

@@ -26,7 +26,6 @@ import fluidasserts.utils.decorators
 # Constants
 #
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 ADMIN_PASS = 'ahViQu9E'
 NONPASS_USER = 'nonpass'
 SECURED_USER = 'secured'
@@ -42,31 +41,26 @@ FTP_PORT = 21
 @pytest.mark.parametrize('run_mock',
                          [('ftp:hard', {'21/tcp': FTP_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_is_anonymous_enabled_close(run_mock):
     """Servidor FTP vulnerable SI soporta conexion anonima?."""
-    assert not ftp.is_anonymous_enabled(CONTAINER_IP)
+    assert not ftp.is_anonymous_enabled(run_mock)
 
 
-# pylint: disable=unused-argument
 def test_is_admin_enabled_close(run_mock):
     """Servidor FTP vulnerable SI soporta conexion del ADMIN."""
-    assert not ftp.is_admin_enabled(CONTAINER_IP, ADMIN_PASS)
+    assert not ftp.is_admin_enabled(run_mock, ADMIN_PASS)
 
 
-# pylint: disable=unused-argument
 def test_user_without_password_close(run_mock):
     """Servidor FTP vulnerable SI autentica usuario sin clave?."""
-    assert not ftp.user_without_password(CONTAINER_IP, NONPASS_USER)
+    assert not ftp.user_without_password(run_mock, NONPASS_USER)
 
 
-# pylint: disable=unused-argument
 def test_is_a_valid_user_close(run_mock):
     """Servidor FTP vulnerable SI autentica a usuario adivinado?."""
-    assert not ftp.is_a_valid_user(CONTAINER_IP, GUESSED_USER, GUESSED_PASS)
+    assert not ftp.is_a_valid_user(run_mock, GUESSED_USER, GUESSED_PASS)
 
 
-# pylint: disable=unused-argument
 def test_is_version_visible_close(run_mock):
     """Servidor FTP vulnerable SI muestra version?."""
-    assert not ftp.is_version_visible(CONTAINER_IP)
+    assert not ftp.is_version_visible(run_mock)

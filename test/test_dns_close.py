@@ -18,7 +18,6 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 TEST_ZONE = 'fluid.la'
 WEAK_PORT = 53
 HARD_PORT = 53
@@ -27,44 +26,37 @@ HARD_PORT = 53
 # Closing tests
 #
 
-
 @pytest.mark.parametrize('run_mock',
                          [('dns:hard', {'53/tcp': HARD_PORT,
                                         '53/udp': HARD_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_is_xfr_enabled_close(run_mock):
     """Transferencia de zonas habilitado en server?."""
-    assert not dns.is_xfr_enabled(TEST_ZONE, CONTAINER_IP)
+    assert not dns.is_xfr_enabled(TEST_ZONE, run_mock)
     assert not dns.is_xfr_enabled(TEST_ZONE, '0.0.0.0')
 
 
-# pylint: disable=unused-argument
 def test_is_dynupdates_enabled_close(run_mock):
     """Actualizacion de zonas habilitado en server?."""
-    assert not dns.is_dynupdate_enabled(TEST_ZONE, CONTAINER_IP)
+    assert not dns.is_dynupdate_enabled(TEST_ZONE, run_mock)
     assert not dns.is_dynupdate_enabled(TEST_ZONE, '0.0.0.0')
 
 
-# pylint: disable=unused-argument
 def test_has_cache_poison_close(run_mock):
     """Server vulnerable a cache poison?."""
-    assert not dns.has_cache_poison(TEST_ZONE, CONTAINER_IP)
+    assert not dns.has_cache_poison(TEST_ZONE, run_mock)
 
 
-# pylint: disable=unused-argument
 def test_has_cache_snooping_close(run_mock):
     """Server vulnerable a cache snooping?."""
-    assert not dns.has_cache_snooping(CONTAINER_IP)
+    assert not dns.has_cache_snooping(run_mock)
 
 
-# pylint: disable=unused-argument
 def test_has_recursion_close(run_mock):
     """Server vulnerable a cache snooping?."""
-    assert not dns.has_recursion(CONTAINER_IP)
+    assert not dns.has_recursion(run_mock)
 
 
-# pylint: disable=unused-argument
 def test_can_amplify_close(run_mock):
     """Server can perform DNS amplification attacks?."""
-    assert not dns.can_amplify(CONTAINER_IP)
+    assert not dns.can_amplify(run_mock)

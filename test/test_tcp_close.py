@@ -30,12 +30,11 @@ WEAK_PORT = 21
 @pytest.mark.parametrize('run_mock',
                          [('tcp:hard', {'21/tcp': HARD_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_port_open_close(run_mock):
     """Check open port."""
-    assert not tcp.is_port_open(CONTAINER_IP, WEAK_PORT)
+    assert not tcp.is_port_open(run_mock, WEAK_PORT)
 
 
 def test_port_insecure_close(run_mock):
     """Check secure port."""
-    assert not tcp.is_port_insecure(CONTAINER_IP, HARD_PORT)
+    assert not tcp.is_port_insecure(run_mock, HARD_PORT)

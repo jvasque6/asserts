@@ -24,7 +24,6 @@ import fluidasserts.utils.decorators
 # Constants
 #
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/http/headers'
 BWAPP_PORT = 80
@@ -52,11 +51,11 @@ def mock_http(request):
     request.addfinalizer(teardown)
 
 
-def get_bwapp_cookies():
+def get_bwapp_cookies(cont_ip):
     """Log in to bWAPP and return valid cookie."""
-    install_url = 'http://' + CONTAINER_IP + '/install.php?install=yes'
+    install_url = 'http://' + cont_ip + '/install.php?install=yes'
     http_helper.HTTPSession(install_url)
-    login_url = 'http://' + CONTAINER_IP + '/login.php'
+    login_url = 'http://' + cont_ip + '/login.php'
     http_session = http_helper.HTTPSession(login_url)
 
     http_session.data = 'login=bee&password=bug&security_level=0&form=submit'
@@ -76,24 +75,21 @@ def get_bwapp_cookies():
 @pytest.mark.parametrize('run_mock',
                          [('bwapp', {'80/tcp': BWAPP_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_a1_sqli_open(run_mock):
     """App vulnerable a SQLi?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
-    vulnerable_url = 'http://' + CONTAINER_IP + '/sqli_1.php'
+    vulnerable_url = 'http://' + run_mock + '/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
     assert http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a1_os_injection_open(run_mock):
     """App vulnerable a command injection?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/commandi.php'
+    vulnerable_url = 'http://' + run_mock + '/commandi.php'
 
     data = {'target': 'www.nsa.gov;uname', 'form': 'submit'}
 
@@ -103,14 +99,12 @@ def test_a1_os_injection_open(run_mock):
                                           data=data, cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a1_php_injection_open(run_mock):
     """App vulnerable a PHP injection?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/phpi.php'
+    vulnerable_url = 'http://' + run_mock + '/phpi.php'
 
     params = {'message': 'test;phpinfo();'}
 
@@ -121,13 +115,12 @@ def test_a1_php_injection_open(run_mock):
                                               cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a1_hpp_open(run_mock):
     """App vulnerable a HTTP Parameter Polluiton?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
+    vulnerable_url = 'http://' + run_mock + \
         '/hpp-3.php?movie=6&movie=7&movie=8&name=pepe&action=vote'
 
     expected = 'HTTP Parameter Pollution detected'
@@ -136,14 +129,12 @@ def test_a1_hpp_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a1_insecure_upload_open(run_mock):
     """App vulnerable a insecure upload?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/unrestricted_file_upload.php'
+    vulnerable_url = 'http://' + run_mock + '/unrestricted_file_upload.php'
 
     file_param = 'file'
     file_path = 'test/provision/bwapp/exploit.php'
@@ -156,14 +147,12 @@ def test_a1_insecure_upload_open(run_mock):
                                         cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a2_sessionid_exposed_open(run_mock):
     """Session ID expuesto?."""
-    bwapp_cookie = get_bwapp_cookies()
-    bwapp_cookie.set('security_level', '0', domain=CONTAINER_IP, path='/')
+    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie.set('security_level', '0', domain=run_mock, path='/')
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/smgmt_sessionid_url.php'
+    vulnerable_url = 'http://' + run_mock + '/smgmt_sessionid_url.php'
 
     assert http.is_sessionid_exposed(vulnerable_url,
                                      argument='PHPSESSID',
@@ -177,14 +166,12 @@ def test_a2_session_fixation_open():
         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
-# pylint: disable=unused-argument
 def test_a3_xss_open(run_mock):
     """App vulnerable a XSS?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/xss_get.php'
+    vulnerable_url = 'http://' + run_mock + '/xss_get.php'
     params = {'firstname': '<script>alert(1)</script>',
               'lastname': 'b', 'form': 'submit'}
 
@@ -194,14 +181,12 @@ def test_a3_xss_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a4_insecure_dor_open(run_mock):
     """App vulnerable a direct object reference?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/insecure_direct_object_ref_2.php'
+    vulnerable_url = 'http://' + run_mock + '/insecure_direct_object_ref_2.php'
 
     data = {'ticket_quantity': '1', 'ticket_price': '31337',
             'action': 'order'}
@@ -212,14 +197,12 @@ def test_a4_insecure_dor_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a7_dirtraversal_open(run_mock):
     """App vulnerable a directory traversal?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/directory_traversal_2.php'
+    vulnerable_url = 'http://' + run_mock + '/directory_traversal_2.php'
 
     params = {'directory': '../'}
 
@@ -229,14 +212,12 @@ def test_a7_dirtraversal_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a7_lfi_open(run_mock):
     """App vulnerable a LFI?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/rlfi.php'
+    vulnerable_url = 'http://' + run_mock + '/rlfi.php'
 
     params = {'language': 'message.txt', 'action': 'go'}
 
@@ -246,14 +227,12 @@ def test_a7_lfi_open(run_mock):
                         cookies=bwapp_cookie)
 
 
-# pylint: disable=unused-argument
 def test_a8_csrf_open(run_mock):
     """App vulnerable a Cross-Site Request Forgery?."""
-    bwapp_cookie = get_bwapp_cookies()
+    bwapp_cookie = get_bwapp_cookies(run_mock)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + CONTAINER_IP + \
-        '/csrf_1.php'
+    vulnerable_url = 'http://' + run_mock + '/csrf_1.php'
 
     params = {'password_new': 'bug', 'password_conf': 'bug',
               'action': 'change'}

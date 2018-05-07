@@ -34,41 +34,36 @@ OS_PORT = 22
 @pytest.mark.parametrize('run_mock',
                          [('os:weak', {'22/tcp': OS_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_min_priv_enabled_open(run_mock):
     """Secure umask?."""
-    assert linux_generic.is_os_min_priv_disabled(CONTAINER_IP,
+    assert linux_generic.is_os_min_priv_disabled(run_mock,
                                                  NONPRIV_USER,
                                                  NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_os_sudo_enabled_open(run_mock):
     """Sudo enabled?."""
-    assert linux_generic.is_os_sudo_disabled(CONTAINER_IP,
+    assert linux_generic.is_os_sudo_disabled(run_mock,
                                              NONPRIV_USER,
                                              NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_compilers_installed_open(run_mock):
     """Compiler installed?."""
-    assert linux_generic.is_os_compilers_installed(CONTAINER_IP,
+    assert linux_generic.is_os_compilers_installed(run_mock,
                                                    NONPRIV_USER,
                                                    NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_antimalware_installed_open(run_mock):
     """Antimalware installed?."""
-    assert linux_generic.is_os_antimalware_not_installed(CONTAINER_IP,
+    assert linux_generic.is_os_antimalware_not_installed(run_mock,
                                                          NONPRIV_USER,
                                                          NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_remote_admin_enabled_open(run_mock):
     """Remote admin enabled?."""
-    assert linux_generic.is_os_remote_admin_enabled(CONTAINER_IP,
+    assert linux_generic.is_os_remote_admin_enabled(run_mock,
                                                     NONPRIV_USER,
                                                     NONPRIV_PASS)

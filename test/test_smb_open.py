@@ -18,7 +18,6 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 SMB_PORT = 445
 
 #
@@ -29,7 +28,6 @@ SMB_PORT = 445
 @pytest.mark.parametrize('run_mock',
                          [('smb:weak', {'445/tcp': SMB_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_is_anonymous_enabled_open(run_mock):
     """Conexion anonima habilitada?."""
-    assert smb.is_anonymous_enabled(CONTAINER_IP)
+    assert smb.is_anonymous_enabled(run_mock)

@@ -19,7 +19,6 @@ import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CONTAINER_IP = '172.30.216.101'
 ADMIN_USER = 'root'
 ADMIN_PASS = 'Puef8poh2tei9AeB'
 NONPRIV_USER = 'nonpriv'
@@ -35,40 +34,36 @@ OS_PORT = 22
 @pytest.mark.parametrize('run_mock',
                          [('os:hard', {'22/tcp': OS_PORT})],
                          indirect=True)
-# pylint: disable=unused-argument
 def test_os_sudo_enabled_close(run_mock):
     """Sudo enabled?."""
-    assert not linux_generic.is_os_sudo_disabled(CONTAINER_IP,
+    assert not linux_generic.is_os_sudo_disabled(run_mock,
                                                  NONPRIV_USER,
                                                  NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_compilers_installed_close(run_mock):
     """Compiler installed?."""
-    assert not linux_generic.is_os_compilers_installed(CONTAINER_IP,
+    assert not linux_generic.is_os_compilers_installed(run_mock,
                                                        NONPRIV_USER,
                                                        NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_antimalware_installed_close(run_mock):
     """Antimalware installed?."""
-    assert not linux_generic.is_os_antimalware_not_installed(CONTAINER_IP,
+    assert not linux_generic.is_os_antimalware_not_installed(run_mock,
                                                              NONPRIV_USER,
                                                              NONPRIV_PASS)
 
 
-# pylint: disable=unused-argument
 def test_remote_admin_enabled_close(run_mock):
     """Remote admin enabled?."""
-    assert not linux_generic.is_os_remote_admin_enabled(CONTAINER_IP,
+    assert not linux_generic.is_os_remote_admin_enabled(run_mock,
                                                         NONPRIV_USER,
                                                         NONPRIV_PASS)
 
 
-def test_syncookies_enabled_close():
+def test_syncookies_enabled_close(run_mock):
     """SYN Cookies enabled?."""
-    assert not linux_generic.is_os_syncookies_disabled(CONTAINER_IP,
+    assert not linux_generic.is_os_syncookies_disabled(run_mock,
                                                        NONPRIV_USER,
                                                        NONPRIV_PASS)
