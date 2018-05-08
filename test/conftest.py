@@ -26,11 +26,10 @@ NETWORK_GW = '172.30.216.254'
 
 @pytest.fixture(scope='module')
 def run_mock(request):
-    """Configura perfil de SMTP vulnerable."""
-    print('Running SMTP vulnerable playbook')
-
+    """Run mock with given parameters."""
     mock = request.param[0]
     port_mapping = request.param[1]
+    print('Running {} ... '.format(mock))
 
     client = docker.from_env()
 
