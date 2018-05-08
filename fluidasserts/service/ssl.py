@@ -25,7 +25,7 @@ PORT = 443
 
 def hex2bin(arr):
     """Hex 2 Bin."""
-    return ''.join('{:02x}'.format(x) for x in arr).decode('hex')
+    return ''.join(chr(x) for x in arr)
 
 
 def rcv_tls_record(sock):
