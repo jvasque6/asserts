@@ -79,6 +79,16 @@ def test_has_if_without_else_in_dir_open():
     assert csharp.has_if_without_else(CODE_DIR)
 
 
+def test_uses_md5_hash_open():
+    """Search MD5.Create() calls."""
+    assert csharp.uses_md5_hash(INSECURE_CODE)
+
+
+def test_uses_md5_hash_in_dir_open():
+    """Search MD5.Create() calls."""
+    assert csharp.uses_md5_hash(CODE_DIR)
+
+
 #
 # Closing tests
 #
@@ -107,3 +117,8 @@ def test_has_insecure_randoms_close():
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not csharp.has_if_without_else(SECURE_CODE)
+
+
+def test_uses_md5_hash_close():
+    """Search MD5.Create() calls."""
+    assert not csharp.uses_md5_hash(SECURE_CODE)

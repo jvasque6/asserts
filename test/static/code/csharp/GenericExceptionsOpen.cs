@@ -12,6 +12,9 @@ public class GenericExceptionsOpen
       if (a > 5) {
         Console.WriteLine("Big num")
       }
+      MD5 md5 = System.Security.Cryptography.MD5.Create();
+      byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+      byte[] hash = md5.ComputeHash(inputBytes);
     }
 
     catch(ArithmeticException e)

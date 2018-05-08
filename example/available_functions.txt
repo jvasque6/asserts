@@ -1,4 +1,5 @@
 webconfig.is_header_x_powered_by_present(webconf_dest)
+csharp.uses_md5_hash(csharp_dest)
 csharp.has_if_without_else(csharp_dest)
 csharp.has_insecure_randoms(csharp_dest)
 csharp.has_switch_without_default(csharp_dest)

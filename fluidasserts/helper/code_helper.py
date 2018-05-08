@@ -10,10 +10,11 @@ import hashlib
 import os
 
 # 3rd party imports
-# None
+from pyparsing import Or, ParseException, Literal, SkipTo, ParseResults
 
 # local imports
-from pyparsing import Or, ParseException, Literal, SkipTo, ParseResults
+from fluidasserts import show_close
+from fluidasserts import show_open
 
 
 def is_empty_result(parse_result):
@@ -123,3 +124,22 @@ def check_grammar(grammar, code_dest, lang_spec):
                 vulns[full_path] = get_match_lines(grammar, full_path,
                                                    lang_spec)
     return vulns
+
+
+def uses_insecure_method(grammar, code_dest, lang_spec, method):
+    """Check if code destination uses an insecure method."""
+    result = False
+    matches = check_grammar(grammar, code_dest, lang_spec)
+
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
+            result = True
+        else:
+            show_close('Code uses {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=file_hash(code_file)))
+    return result

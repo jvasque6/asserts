@@ -187,13 +187,13 @@ def has_insecure_randoms(csharp_dest):
 
 
 @track
-def has_if_without_else(cs_dest):
+def has_if_without_else(csharp_dest):
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
-    :param cs_dest: Path to a C# source file or package.
+    :param csharp_dest: Path to a C# source file or package.
     :rtype: bool
     """
     tk_if = CaselessKeyword('if')
@@ -205,7 +205,7 @@ def has_if_without_else(cs_dest):
     if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(cppStyleComment)
 
     result = False
-    conds = code_helper.check_grammar(if_head, cs_dest, LANGUAGE_SPECS)
+    conds = code_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
 
     for code_file, lines in conds.items():
         vulns = code_helper.block_contains_empty_grammar(if_wout_else,
@@ -222,4 +222,25 @@ def has_if_without_else(cs_dest):
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
+    return result
+
+
+@track
+def uses_md5_hash(csharp_dest):
+    """
+    Check if code uses MD5 as hashing algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+
+    :param csharp_dest: Path to a C# source file or package.
+    :rtype: bool
+    """
+    method = 'MD5.Create()'
+    tk_md5 = CaselessKeyword('md5')
+    tk_create = CaselessKeyword('create')
+    tk_params = nestedExpr()
+    call_function = tk_md5 + Literal('.') + tk_create + tk_params
+
+    result = code_helper.uses_insecure_method(call_function, csharp_dest,
+                                              LANGUAGE_SPECS, method)
     return result
