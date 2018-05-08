@@ -13,7 +13,16 @@ import os
 # None
 
 # local imports
-from pyparsing import Or, ParseException, Literal, SkipTo
+from pyparsing import Or, ParseException, Literal, SkipTo, ParseResults
+
+
+def is_empty_result(parse_result):
+    """Checks if a ParseResults is empty"""
+    if isinstance(parse_result, ParseResults):
+        if parse_result:
+            return is_empty_result(parse_result[0])
+        return True
+    return False
 
 
 def get_match_lines(grammar, code_file, lang_spec):  # noqa
@@ -25,13 +34,14 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
         for line in file_fd.readlines():
             counter += 1
             try:
-                parser = ~Or(lang_spec['line_comment'])
-                parser.parseString(line)
+                if lang_spec.get('line_comment'):
+                    parser = ~Or(lang_spec.get('line_comment'))
+                    parser.parseString(line)
             except ParseException:
                 continue
-            if lang_spec['block_comment_start']:
+            if lang_spec.get('block_comment_start'):
                 try:
-                    block_start = Literal(lang_spec['block_comment_start'])
+                    block_start = Literal(lang_spec.get('block_comment_start'))
                     parser = SkipTo(block_start) + block_start
                     parser.parseString(line)
                     in_block_comment = True
@@ -40,10 +50,9 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
 
                 if in_block_comment:
                     try:
-                        block_end = Literal(lang_spec['block_comment_end'])
+                        block_end = Literal(lang_spec.get('block_comment_end'))
                         parser = SkipTo(block_end) + block_end
                         parser.parseString(line, parseAll=True)
-
                         in_block_comment = False
                         continue
                     except ParseException:
@@ -79,8 +88,8 @@ def block_contains_empty_grammar(grammar, code_dest, lines):
         file_lines = code_f.readlines()
         for line in lines:
             txt = "".join(file_lines[line - 1:])
-            results = grammar.searchString(txt, maxMatches=1)[0]
-            if not results[0]:
+            results = grammar.searchString(txt, maxMatches=1)
+            if is_empty_result(results):
                 vulns.append(line)
     return vulns
 
