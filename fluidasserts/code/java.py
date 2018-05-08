@@ -213,3 +213,42 @@ def has_insecure_randoms(java_dest):
                                     fingerprint=code_helper.
                                     file_hash(code_file)))
     return result
+
+
+@track
+def has_if_without_else(java_dest):
+    r"""
+    Check if all ``if``\ s have an ``else`` clause.
+
+    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
+    tk_if = CaselessKeyword('if')
+    tk_else = CaselessKeyword('else')
+    block = nestedExpr(opener='{', closer='}')
+    prsr_if = tk_if + nestedExpr() + block
+    prsr_else = Suppress(tk_else) + (prsr_if | block)
+    if_head = tk_if + nestedExpr() + Optional(Literal('{'))
+    if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(javaStyleComment)
+
+    result = False
+    conds = code_helper.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
+
+    for code_file, lines in conds.items():
+        vulns = code_helper.block_contains_empty_grammar(if_wout_else,
+                                                         code_file, lines)
+        if not vulns:
+            show_close('Code has if with else clause',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+        else:
+            show_open('Code does not has if with else clause',
+                      details=dict(file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns])))
+            result = True
+    return result

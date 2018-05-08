@@ -9,6 +9,9 @@ public class GenericExceptionsOpen
       int[] a = new int[7];
       a[4]=30/0;
       Console.WriteLine("First print statement in try block");
+      if (a > 5) {
+        Console.WriteLine("Big num")
+      }
     }
 
     catch(ArithmeticException e)

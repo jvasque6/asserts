@@ -60,13 +60,23 @@ def test_has_switch_without_default_in_dir_open():
 
 
 def test_has_insecure_randoms_open():
-    """Search switch without default clause."""
+    """Search class Random instantiation."""
     assert csharp.has_insecure_randoms(INSECURE_RANDOM)
 
 
 def test_has_insecure_randoms_in_dir_open():
-    """Search switch without default clause."""
+    """Search class Random instantiation."""
     assert csharp.has_insecure_randoms(CODE_DIR)
+
+
+def test_has_if_without_else_open():
+    """Search conditionals without an else option."""
+    assert csharp.has_if_without_else(INSECURE_CODE)
+
+
+def test_has_if_without_else_in_dir_open():
+    """Search conditionals without an else option."""
+    assert csharp.has_if_without_else(CODE_DIR)
 
 
 #
@@ -90,5 +100,10 @@ def test_has_switch_without_default_close():
 
 
 def test_has_insecure_randoms_close():
-    """Search switch without default clause."""
+    """Search class Random instantiation."""
     assert not csharp.has_insecure_randoms(SECURE_RANDOM)
+
+
+def test_has_if_without_else_close():
+    """Search conditionals without an else option."""
+    assert not csharp.has_if_without_else(SECURE_CODE)

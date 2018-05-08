@@ -9,6 +9,13 @@ class GenericExceptionsClose{
          a[0]=random.nextBytes(bytes);
          a[4]=30/0;
          System.out.println("First print statement in try block");
+         if (a[0] > 200) {
+            System.out.println("Big num");
+         } else  if (a[0] < 100){
+            System.out.println("Small num");
+         } else {
+            System.out.println("Average num");
+         }
      }
      catch(ArithmeticException e){
         System.out.println("Warning: ArithmeticException");
@@ -20,6 +27,9 @@ class GenericExceptionsClose{
      try {
            System.out.println("Out of try-catch block...");
            int a = Math.random();
+           if (a[0] > 200) {
+              System.out.println("Big num");
+           }
   catch(Exception e){
         System.out.println("Warning: Some Other exception");
      }
