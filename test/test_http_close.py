@@ -384,7 +384,14 @@ def test_is_header_x_asp_net_version_present_close():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_is_header_x_xxs_protection_missing_open():
+def test_is_header_x_xxs_protection_missing_close():
     """Header x-xss-protection establecido?."""
-    assert http.is_header_x_xxs_protection_missing(
-        '%s/xxs_protection/fail' % (BASE_URL))
+    assert not http.is_header_x_xxs_protection_missing(
+        '%s/xxs_protection/ok' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_perm_cross_dom_pol_missing_close():
+    """Header cross-domain-policy establecido?."""
+    assert not http.is_header_perm_cross_dom_pol_missing(
+        '%s/perm_cross_dom_pol/ok' % (BASE_URL))

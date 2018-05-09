@@ -423,7 +423,7 @@ def test_is_not_https_required_unknown():
 
 @pytest.mark.usefixtures('mock_http')
 def test_is_header_server_present_open():
-    """Header Serever esta presente?."""
+    """Header Server esta presente?."""
     assert http.is_header_server_present(
         '%s/version/fail' % (BASE_URL))
 
@@ -433,3 +433,10 @@ def test_is_header_x_xxs_protection_missing_open():
     """Header x-xss-protection establecido?."""
     assert http.is_header_x_xxs_protection_missing(
         '%s/xxs_protection/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_header_perm_cross_dom_pol_missing_open():
+    """Header cross-domain-policy establecido?."""
+    assert http.is_header_perm_cross_dom_pol_missing(
+        '%s/perm_cross_dom_pol/fail' % (BASE_URL))

@@ -47,7 +47,7 @@ HDR_RGX = {
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',
-    'x-permitted-cross-domain-policies': '^\\s*master\\-only\\s*$',
+    'x-permitted-cross-domain-policies': '^((?!all).)*$',
     'x-xss-protection': '^1(\\s*;\\s*mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$',
     'x-powered-by': '^ASP.NET'

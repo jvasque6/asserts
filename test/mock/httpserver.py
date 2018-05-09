@@ -422,6 +422,22 @@ def xxs_protection_fail():
     return resp
 
 
+@APP.route('/http/headers/perm_cross_dom_pol/ok')
+def perm_cross_dom_pol_ok():
+    """Encabezado X-XSS-Protection presente."""
+    resp = Response('Login successful')
+    resp.headers['X-Permitted-Cross-Domain-Policies'] = 'none'
+    return resp
+
+
+@APP.route('/http/headers/perm_cross_dom_pol/fail')
+def perm_cross_dom_pol_fail():
+    """Encabezado X-XSS-Protection deshabilitado."""
+    resp = Response('Login successful')
+    resp.headers['X-Permitted-Cross-Domain-Policies'] = 'all'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
