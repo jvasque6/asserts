@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Strings check module."""
+"""
+Strings check module.
+
+This module allows to check Password and other text vulnerabilities.
+"""
 
 # standard imports
 # None
@@ -14,7 +18,23 @@ from fluidasserts.utils.decorators import track
 
 
 def check_password_strength(password, length):
-    """Check if a user password is secure."""
+    """
+    Check if a user password is secure
+    according to the following criteria:
+
+    - Password length must be at least the given parameter ``length``.
+    - Password must contain at least one uppercase character,
+      one lowercase character, one number and one special character.
+    - Password must not be a typical dictionary word.
+
+    :param password: string to be tested.
+    :type password: string
+    :param length: minimum accepted password length.
+    :type length: int
+    :rtype: bool
+    :returns: False if all conditions are met (secure),
+    True otherwise (insecure).
+    """
     dictionary = 'static/wordlists/password.lst'
 
     caps = sum(1 for c in password if c.isupper())
@@ -50,7 +70,15 @@ def check_password_strength(password, length):
 
 @track
 def is_user_password_insecure(password):
-    """Check if a user password is secure."""
+    """
+    Check if a user password is insecure.
+
+    A user password is considered secure if it is at least
+    8 characters long, and satisfies all other password criteria.
+
+    :rtype: bool
+    :returns: True if password insecure, False if secure.
+    """
     min_password_len = 8
 
     return check_password_strength(password, min_password_len)
@@ -58,7 +86,15 @@ def is_user_password_insecure(password):
 
 @track
 def is_system_password_insecure(password):
-    """Check if a system password is secure."""
+    """
+    Check if a system password is insecure.
+
+    A user password is considered secure if it is at least
+    20 characters long, and satisfies all other password criteria.
+
+    :rtype: bool
+    :returns: True if password insecure, False if secure.
+    """
     min_password_len = 20
 
     return check_password_strength(password, min_password_len)
@@ -66,7 +102,15 @@ def is_system_password_insecure(password):
 
 @track
 def is_otp_token_insecure(password):
-    """Check if a system password is secure."""
+    """
+    Check if a one-time password token is insecure.
+
+    A one-time password token is considered secure if it is at least
+    6 characters long.
+
+    :rtype: bool
+    :returns: True if insecure, False if secure.
+    """
     min_password_len = 6
 
     result = True
@@ -84,7 +128,15 @@ def is_otp_token_insecure(password):
 
 @track
 def is_ssid_insecure(ssid):
-    """Check if a given SSID is secure."""
+    """
+    Check if a given SSID is insecure.
+
+    An SSID is considered secure if it is not a typical dictionary
+    word such as "home" or "network".
+
+    :rtype: bool
+    :returns: True if insecure, False if secure.
+    """
     dictionary = 'static/wordlists/password.lst'
 
     with open(dictionary) as dict_fd:
