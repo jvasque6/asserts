@@ -27,9 +27,9 @@ def check_password_strength(password, length):
       one lowercase character, one number and one special character.
     - Password must not be a typical dictionary word.
 
-    :param password: string to be tested.
-    :type password: string
-    :param length: minimum accepted password length.
+    :param password: String to be tested.
+    :type password: String
+    :param length: Minimum accepted password length.
     :type length: int
     :rtype: bool
     :returns: False if all conditions are met (secure),
@@ -74,8 +74,10 @@ def is_user_password_insecure(password):
     Check if a user password is insecure.
 
     A user password is considered secure if it is at least
-    8 characters long, and satisfies all other password criteria.
+    8 characters long and satisfies all other password criteria.
 
+    :param password: Password to be tested.
+    :type password: String
     :rtype: bool
     :returns: True if password insecure, False if secure.
     """
@@ -89,9 +91,11 @@ def is_system_password_insecure(password):
     """
     Check if a system password is insecure.
 
-    A user password is considered secure if it is at least
-    20 characters long, and satisfies all other password criteria.
+    A system password is considered secure if it is at least
+    20 characters long and satisfies all other password criteria.
 
+    :param password: Password to be tested.
+    :type password: String
     :rtype: bool
     :returns: True if password insecure, False if secure.
     """
@@ -108,6 +112,8 @@ def is_otp_token_insecure(password):
     A one-time password token is considered secure if it is at least
     6 characters long.
 
+    :param password: Password to be tested.
+    :type password: String
     :rtype: bool
     :returns: True if insecure, False if secure.
     """
@@ -134,6 +140,8 @@ def is_ssid_insecure(ssid):
     An SSID is considered secure if it is not a typical dictionary
     word such as "home" or "network".
 
+    :param ssid: SSID to be tested.
+    :type password: String
     :rtype: bool
     :returns: True if insecure, False if secure.
     """
