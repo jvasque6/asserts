@@ -225,3 +225,53 @@ def has_if_without_else(java_dest):
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
     return result
+
+
+def uses_insecure_hash(java_dest, algorithm):
+    """
+    Check if code uses an insecure hashing algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
+    method = 'MessageDigest.getInstance("{}")'.format(algorithm.upper())
+    tk_mess_dig = CaselessKeyword('messagedigest')
+    tk_get_inst = CaselessKeyword('getinstance')
+    tk_alg = Literal('"') + CaselessKeyword(algorithm.lower()) + Literal('"')
+    tk_params = Literal('(') + tk_alg + Literal(')')
+    instance_md5 = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
+
+    result = code_helper.uses_insecure_method(instance_md5, java_dest,
+                                              LANGUAGE_SPECS, method)
+    return result
+
+
+@track
+def uses_md5_hash(java_dest):
+    """
+    Check if code uses MD5 as hashing algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
+    result = uses_insecure_hash(java_dest, 'md5')
+    return result
+
+
+@track
+def uses_sha1_hash(java_dest):
+    """
+    Check if code uses MD5 as hashing algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    :rtype: bool
+    """
+
+    result = uses_insecure_hash(java_dest, 'sha-1')
+    return result

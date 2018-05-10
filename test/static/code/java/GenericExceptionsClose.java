@@ -1,4 +1,6 @@
 import java.security.SecureRandom;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 class GenericExceptionsClose{
    public static void main(String args[]){
@@ -9,6 +11,12 @@ class GenericExceptionsClose{
          a[0]=random.nextBytes(bytes);
          a[4]=30/0;
          System.out.println("First print statement in try block");
+
+         MessageDigest messageDigest, messageDigest2;
+         messageDigest = MessageDigest.getInstance("SHA-256");
+         messageDigest.update(data.getBytes());
+         byte[] messageDigestSHA256 = messageDigest.digest();
+
          if (a[0] > 200) {
             System.out.println("Big num");
          } else  if (a[0] < 100){
@@ -22,6 +30,9 @@ class GenericExceptionsClose{
      }
      catch(ArrayIndexOutOfBoundsException e){
         System.out.println("Warning: ArrayIndexOutOfBoundsException");
+     }
+     catch (NoSuchAlgorithmException exception) {
+        System.out.println("Warning: NoSuchAlgorithmException");
      }
 /*
      try {

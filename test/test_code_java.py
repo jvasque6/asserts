@@ -23,6 +23,8 @@ INSECURE_SWITCH = CODE_DIR + 'SwitchDefaultOpen.java'
 SECURE_SWITCH = CODE_DIR + 'SwitchDefaultClose.java'
 SECURE_RANDOM = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_RANDOM = CODE_DIR + 'EmptyCatchOpen.java'
+SECURE_HASH = CODE_DIR + 'GenericExceptionsClose.java'
+INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
 
 #
 # Open tests
@@ -89,6 +91,25 @@ def test_has_if_without_else_in_dir_open():
     assert java.has_if_without_else(CODE_DIR)
 
 
+def test_uses_md5_hash_open():
+    """Search MD5 hash algorithm."""
+    assert java.uses_md5_hash(INSECURE_HASH)
+
+
+def test_uses_md5_hash_open_in_dir():
+    """Search MD5 hash algorithm."""
+    assert java.uses_md5_hash(CODE_DIR)
+
+
+def test_uses_sha1_hash_open():
+    """Search SHA-1 hash algorithm."""
+    assert java.uses_sha1_hash(INSECURE_HASH)
+
+
+def test_uses_sha1_hash_open_in_dir():
+    """Search SHA-1 hash algorithm."""
+    assert java.uses_sha1_hash(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -117,3 +138,13 @@ def test_has_switch_without_default_close():
 def test_has_insecure_randoms_close():
     """Search conditionals without an else option."""
     assert not java.has_insecure_randoms(SECURE_CODE)
+
+
+def test_uses_md5_hash_close():
+    """Search MD5 hash algorithm."""
+    assert not java.uses_md5_hash(SECURE_HASH)
+
+
+def test_uses_sha1_hash_close():
+    """Search SHA-1 hash algorithm."""
+    assert not java.uses_sha1_hash(SECURE_HASH)
