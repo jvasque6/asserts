@@ -7,10 +7,16 @@ Welcome to FLUIDAsserts's documentation!
 ========================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 4
+   :caption: Packages:
 
-
+   fluidasserts.code
+   fluidasserts.format
+   fluidasserts.helper
+   fluidasserts.service
+   fluidasserts.system
+   fluidasserts.utils
+   fluidasserts
 
 Indices and tables
 ==================

@@ -103,5 +103,3 @@ pages:
     - scons sphinxdoc
   artifacts:
     paths: [public/,]
-  only:
-    - master
