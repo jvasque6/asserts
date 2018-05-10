@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""CAPTCHA module."""
+"""
+CAPTCHA module.
+
+This module allows to check ``CAPTCHA`` vulnerabilities.
+"""
 
 
 # standard imports
@@ -21,7 +25,15 @@ from fluidasserts.utils.decorators import track
 
 @track
 def is_insecure_in_image(image, expected_text):
-    """Check if the image is an insecure CAPTCHA."""
+    """
+    Check if the image is an insecure CAPTCHA.
+
+    :param image: Path to the image to be tested.
+    :type image: string
+    :param expected_text: Text the image might contain.
+    :type expected_text: string
+    :rtype: bool
+    """
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
         show_open('Captcha is insecure',
@@ -34,7 +46,19 @@ def is_insecure_in_image(image, expected_text):
 
 @track
 def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
-    """Check if the URL is an insecure CAPTCHA."""
+    r"""
+    Check if the URL is an insecure CAPTCHA.
+
+    :param image: Path to the image to be tested.
+    :type image: string
+    :param expected_text: Text the image might contain.
+    :type expected_text: string
+    :param \*args: Optional positional arguments for
+        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+    :param \*\*kwargs: Optional keyword arguments for
+        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+    :rtype: bool
+    """
     session = http_helper.HTTPSession(image_url, stream=True, *args, **kwargs)
     fingerprint = session.get_fingerprint()
     image = session.response.raw
