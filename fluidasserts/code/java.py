@@ -73,26 +73,13 @@ def uses_print_stack_trace(java_dest):
     :param java_dest: Path to a Java source file or package.
     :rtype: bool
     """
+    method = 'exc.printStackTrace()'
     tk_object = Word(alphanums)
     tk_pst = CaselessKeyword('printstacktrace')
-
     pst = tk_object + Literal('.') + tk_pst + Literal('(') + Literal(')')
 
-    result = False
-    matches = code_helper.check_grammar(pst, java_dest, LANGUAGE_SPECS)
-    for code_file, vulns in matches.items():
-        if vulns:
-            show_open('Code uses printStackTrace',
-                      details=dict(file=code_file,
-                                   fingerprint=code_helper.
-                                   file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
-            result = True
-        else:
-            show_close('Code does not use printStackTrace',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file)))
+    result = code_helper.uses_insecure_method(pst, java_dest,
+                                              LANGUAGE_SPECS, method)
     return result
 
 
@@ -190,28 +177,14 @@ def has_insecure_randoms(java_dest):
     :param java_dest: Path to a Java source file or package.
     :rtype: bool
     """
+    method = "Math.random()"
     tk_class = CaselessKeyword('math')
     tk_method = CaselessKeyword('random')
     tk_params = nestedExpr()
     call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
 
-    result = False
-    random_call = code_helper.check_grammar(call_function, java_dest,
-                                            LANGUAGE_SPECS)
-
-    for code_file, vulns in random_call.items():
-        if vulns:
-            show_open('Code generates insecure random numbers',
-                      details=dict(file=code_file,
-                                   fingerprint=code_helper.
-                                   file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
-            result = True
-        else:
-            show_close('Code does not generates insecure random numbers',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file)))
+    result = code_helper.uses_insecure_method(call_function, java_dest,
+                                              LANGUAGE_SPECS, method)
     return result
 
 

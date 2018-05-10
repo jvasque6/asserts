@@ -62,7 +62,7 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
                         pass
             try:
                 results = grammar.searchString(line, maxMatches=1)
-                if results:
+                if not is_empty_result(results):
                     affected_lines.append(counter)
             except ParseException:
                 pass
@@ -77,7 +77,7 @@ def block_contains_grammar(grammar, code_dest, lines):
         for line in lines:
             txt = "".join(file_lines[line - 1:])
             results = grammar.searchString(txt, maxMatches=1)
-            if results:
+            if not is_empty_result(results):
                 vulns.append(line)
     return vulns
 

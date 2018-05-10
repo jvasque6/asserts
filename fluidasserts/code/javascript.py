@@ -35,26 +35,14 @@ def uses_console_log(js_dest):
     :param js_dest: Path to a JavaScript source file or directory.
     :rtype: bool
     """
+    method = 'Console.log()'
     tk_object = CaselessKeyword('console')
     tk_method = CaselessKeyword('log')
 
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
+    result = code_helper.uses_insecure_method(clog, js_dest,
+                                              LANGUAGE_SPECS, method)
 
-    result = False
-    matches = code_helper.check_grammar(clog, js_dest, LANGUAGE_SPECS)
-    for code_file, vulns in matches.items():
-        if vulns:
-            show_open('Code uses console.log',
-                      details=dict(file=code_file,
-                                   fingerprint=code_helper.
-                                   file_hash(code_file),
-                                   lines=vulns))
-            result = True
-        else:
-            show_close('Code does not use console.log',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file)))
     return result
 
 
@@ -66,26 +54,15 @@ def uses_localstorage(js_dest):
     :param js_dest: Path to a JavaScript source file or directory.
     :rtype: bool
     """
+    method = 'window.localStorage'
     tk_object = CaselessKeyword('localstorage')
     tk_method = Word(alphanums)
 
     lsto = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
-    result = False
-    matches = code_helper.check_grammar(lsto, js_dest, LANGUAGE_SPECS)
-    for code_file, vulns in matches.items():
-        if vulns:
-            show_open('Code uses localStorage',
-                      details=dict(file=code_file,
-                                   fingerprint=code_helper.
-                                   file_hash(code_file),
-                                   lines=vulns))
-            result = True
-        else:
-            show_close('Code does not use localStorage',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file)))
+    result = code_helper.uses_insecure_method(lsto, js_dest,
+                                              LANGUAGE_SPECS, method)
+
     return result
 
 
@@ -99,28 +76,15 @@ def has_insecure_randoms(js_dest):
     :param js_dest: Path to a JavaScript source file or package.
     :rtype: bool
     """
+    method = 'Math.random()'
     tk_class = CaselessKeyword('math')
     tk_method = CaselessKeyword('random')
     tk_params = nestedExpr()
     call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
 
-    result = False
-    random_call = code_helper.check_grammar(call_function, js_dest,
-                                            LANGUAGE_SPECS)
+    result = code_helper.uses_insecure_method(call_function, js_dest,
+                                              LANGUAGE_SPECS, method)
 
-    for code_file, vulns in random_call.items():
-        if vulns:
-            show_open('Code generates insecure random numbers',
-                      details=dict(file=code_file,
-                                   fingerprint=code_helper.
-                                   file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
-            result = True
-        else:
-            show_close('Code does not generates insecure random numbers',
-                       details=dict(file=code_file,
-                                    fingerprint=code_helper.
-                                    file_hash(code_file)))
     return result
 
 
