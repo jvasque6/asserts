@@ -10,7 +10,9 @@ services:
 
 before_script:
   - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
-  - docker build --cache-from registry.gitlab.com/fluidsignal/asserts:base -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
+  - docker build
+    --cache-from registry.gitlab.com/fluidsignal/asserts:base
+    -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
 
 
 stages:
@@ -20,30 +22,36 @@ stages:
   - postdeploy
 
 build:
-    stage: build
-    script:
-        - docker build --cache-from registry.gitlab.com/fluidsignal/asserts:builder -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
-        - docker build --no-cache --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS --build-arg branch=$CI_COMMIT_REF_NAME -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
-    retry: 2
+  stage: build
+  script:
+    - docker build
+      --cache-from registry.gitlab.com/fluidsignal/asserts:builder
+      -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
+    - docker build --no-cache
+        --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS
+        --build-arg branch=$CI_COMMIT_REF_NAME
+        -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
+  retry: 2
 
 lint:
-    stage: test
-    script:
-        - docker-compose run lint
-        - docker-compose run overcommit
-    retry: 2
+  stage: test
+  script:
+    - docker-compose run lint
+    - docker-compose run overcommit
+  retry: 2
 
 test:
-    stage: test
-    script:
-        - docker-compose run test
-    retry: 2
+  stage: test
+  script:
+    - docker-compose run test
+  retry: 2
 
 fluidasserts:
-    script:
-        - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
-        - docker pull fluid-docker.jfrog.io/$ORG:$APP
-        - docker run -e ORG=$ORG -e APP=$APP -e USER=$JFROG_USER -e PASS=$JFROG_PASS -e FA_STRICT="false" -v "$PWD":/code fluid-docker.jfrog.io/$ORG:$APP
+  script:
+    - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
+    - docker pull fluid-docker.jfrog.io/$ORG:$APP
+    - docker run -e ORG=$ORG -e APP=$APP -e USER=$JFROG_USER -e PASS=$JFROG_PASS
+      -e FA_STRICT="false" -v "$PWD":/code fluid-docker.jfrog.io/$ORG:$APP
 
 codequality:
   image: docker:latest
@@ -63,23 +71,37 @@ codequality:
     paths: [codeclimate.json]
 
 deploy:
-    stage: deploy
-    script:
-        - docker-compose run deploy
-        - docker build --no-cache --build-arg jfrog_user=$JFROG_USER --build-arg jfrog_pass=$JFROG_PASS -f Dockerfile.runner -t registry.gitlab.com/fluidsignal/asserts:runner .
-    retry: 2
-    only:
+  stage: deploy
+  script:
+    - docker-compose run deploy
+    - docker build --no-cache --build-arg jfrog_user=$JFROG_USER
+      --build-arg jfrog_pass=$JFROG_PASS -f Dockerfile.runner
+      -t registry.gitlab.com/fluidsignal/asserts:runner .
+  retry: 2
+  only:
     - master
 
 push_container:
-    stage: postdeploy
-    script:
-        - docker push registry.gitlab.com/fluidsignal/asserts:dev
-        - docker tag registry.gitlab.com/fluidsignal/asserts:dev registry.gitlab.com/fluidsignal/asserts:master
-        - docker push registry.gitlab.com/fluidsignal/asserts:master
-        - docker push registry.gitlab.com/fluidsignal/asserts:base
-        - docker push registry.gitlab.com/fluidsignal/asserts:builder
-        - docker push registry.gitlab.com/fluidsignal/asserts:runner
-    retry: 2
-    only:
+  stage: postdeploy
+  script:
+    - docker push registry.gitlab.com/fluidsignal/asserts:dev
+    - docker tag registry.gitlab.com/fluidsignal/asserts:dev
+      registry.gitlab.com/fluidsignal/asserts:master
+    - docker push registry.gitlab.com/fluidsignal/asserts:master
+    - docker push registry.gitlab.com/fluidsignal/asserts:base
+    - docker push registry.gitlab.com/fluidsignal/asserts:builder
+    - docker push registry.gitlab.com/fluidsignal/asserts:runner
+  retry: 2
+  only:
+    - master
+
+pages:
+  image: registry.gitlab.com/fluidsignal/asserts:dev
+  stage: deploy
+  script:
+    - mkdir -p public/
+    - scons sphinxdoc
+  artifacts:
+    paths: [public/,]
+  only:
     - master
