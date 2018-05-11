@@ -2,11 +2,8 @@
 
 """HTML check module."""
 
-# standard imports
-import re
-
 # 3rd party imports
-from bs4 import BeautifulSoup
+from pyparsing import (makeHTMLTags)
 
 # local imports
 from fluidasserts import show_close
@@ -14,7 +11,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def has_attribute(filename, selector, tag, attr, value):
+def has_attribute(filename, tag, attr, value):
     """
     Check ``HTML`` attributes` values.
 
@@ -22,12 +19,8 @@ def has_attribute(filename, selector, tag, attr, value):
     (``selector``) inside the file (``filename``)
     has an attribute (``attr``) with the specific value (``value``).
 
-    All the parameters except the filename can be Python regular expressions.
-
     :param filename: Path to the ``HTML`` source.
     :type filename: string
-    :param selector: ``CSS`` selector to test.
-    :type selector: string
     :param tag: ``HTML`` tag to search.
     :type tag: string.
     :param attr: Attribute to search.
@@ -41,19 +34,19 @@ def has_attribute(filename, selector, tag, attr, value):
     html_doc = handle.read()
     handle.close()
 
-    soup = BeautifulSoup(html_doc, 'html.parser')
-    form = soup.select(selector)
+    tag_s, _ = makeHTMLTags(tag)
+    tag_expr = tag_s
 
-    cache_rgx = r'<%s.+%s\s*=\s*["%s"|\'%s\'].*>' % (
-        tag, attr, value, value)
-    prog = re.compile('%s' % cache_rgx, flags=re.IGNORECASE)
-    match = prog.search(str(form))
+    for expr in tag_expr.searchString(html_doc):
+        if hasattr(expr, attr):
+            if getattr(expr, attr).casefold() == value.casefold():
+                return True
 
-    return match is not None
+    return False
 
 
 @track
-def has_not_autocomplete(filename, selector):
+def has_not_autocomplete(filename):
     """
     Check the autocomplete attribute.
 
@@ -63,14 +56,16 @@ def has_not_autocomplete(filename, selector):
     :param filename: Path to the ``HTML`` source.
     :type filename: string
     :param selector: CSS selector to test.
-    :type selector: string
     """
+
     attr = 'autocomplete'
     value = 'off'
-    has_attr = has_attribute(
-        filename, selector, '[form|input]', attr, value)
+    tag_i = 'input'
+    tag_f = 'form'
+    has_attr_i = has_attribute(filename, tag_i, attr, value)
+    has_attr_f = has_attribute(filename, tag_f, attr, value)
 
-    if has_attr is False:
+    if (has_attr_i or has_attr_f) is False:
         result = True
         show_open('{} attribute in {}'.format(attr, filename))
     else:
@@ -91,13 +86,12 @@ def is_cacheable(filename):
     :param filename: Path to the ``HTML`` source.
     :type filename: string
     """
-    selector = 'html'
     tag = 'meta'
 
     attr = 'http-equiv'
     value = 'pragma'
     has_http_equiv = has_attribute(
-        filename, selector, tag, attr, value)
+        filename, tag, attr, value)
 
     if not has_http_equiv:
         result = True
@@ -106,9 +100,9 @@ def is_cacheable(filename):
         return result
 
     attr = 'content'
-    value = r'no\-cache'
+    value = 'no-cache'
     has_content = has_attribute(
-        filename, selector, tag, attr, value)
+        filename, tag, attr, value)
 
     if not has_content:
         result = True
@@ -119,7 +113,7 @@ def is_cacheable(filename):
     attr = 'http-equiv'
     value = 'expires'
     has_http_equiv = has_attribute(
-        filename, selector, tag, attr, value)
+        filename, tag, attr, value)
 
     if not has_http_equiv:
         result = True
@@ -130,7 +124,7 @@ def is_cacheable(filename):
     attr = 'content'
     value = '-1'
     has_content = has_attribute(
-        filename, selector, tag, attr, value)
+        filename, tag, attr, value)
 
     if not has_content:
         result = True

@@ -11,7 +11,7 @@ HTML se encuentra adecuadamente implementado.
 # 3rd party imports
 
 # local imports
-from fluidasserts.format import html
+from fluidasserts.code import html
 import fluidasserts.utils.decorators
 
 # Constants
@@ -24,10 +24,11 @@ def test_form_autocomplete_open():
     Verifica si el atributo autocomplete=off se encuentra en el
     codigo HTML de vulnerable.html
     """
+    # assert html.has_not_autocomplete(
+    #    'test/static/vulnerable.html',
+    #    'body > form')
     assert html.has_not_autocomplete(
-        'test/static/vulnerable.html',
-        'body > form')
-
+        'test/static/vulnerable.html')
 
 def test_form_autocomplete_close():
     """Funcion test_form_autocomplete_close.
@@ -35,9 +36,11 @@ def test_form_autocomplete_close():
     Verifica si el atributo autocomplete=off se encuentra en el
     codigo HTML de non-vulnerable.html?
     """
+    # assert not html.has_not_autocomplete(
+    #    'test/static/non-vulnerable.html',
+    #    'body > form')
     assert not html.has_not_autocomplete(
-        'test/static/non-vulnerable.html',
-        'body > form')
+        'test/static/non-vulnerable.html')
 
 
 def test_is_cacheable_open():

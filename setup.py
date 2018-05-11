@@ -53,7 +53,7 @@ setup(
         'ldap3==2.5',                # fluidasserts.service.ldap
         'paramiko==2.4.1',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
-        'beautifulsoup4==4.6.0',     # fluidasserts.format.html
+        'beautifulsoup4==4.6.0',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.service.dns
         'tlslite-ng==0.7.4',         # fluidasserts.service.ssl
         'pyOpenSSL==17.5.0',         # fluidasserts.service.ssl
