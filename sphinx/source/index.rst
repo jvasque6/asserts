@@ -6,6 +6,10 @@
 Welcome to FLUIDAsserts's documentation!
 ========================================
 
+``FLUIDAsserts`` is an engine
+to automate the closing of security findings
+over execution environments (``DAST``).
+
 .. toctree::
    :maxdepth: 4
    :caption: Packages:
