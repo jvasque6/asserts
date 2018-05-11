@@ -11,7 +11,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def has_attribute(filename, tag, attr, value):
+def has_attributes(filename, tag, attrs):
     """
     Check ``HTML`` attributes` values.
 
@@ -23,10 +23,8 @@ def has_attribute(filename, tag, attr, value):
     :type filename: string
     :param tag: ``HTML`` tag to search.
     :type tag: string.
-    :param attr: Attribute to search.
-    :type attr: string
-    :param value: Value the attribute should have.
-    :type value: string
+    :param attr: Attributes with values to search.
+    :type attr: dictionary
     :rtype: bool
     :returns: True if attribute set as specified, False otherwise.
     """
@@ -38,10 +36,10 @@ def has_attribute(filename, tag, attr, value):
     tag_expr = tag_s
 
     for expr in tag_expr.searchString(html_doc):
-        if hasattr(expr, attr):
-            if getattr(expr, attr).casefold() == value.casefold():
-                return True
-
+        for attr, value in attrs.items():
+            if getattr(expr, attr).casefold() != value.casefold():
+                break
+            return True
     return False
 
 
@@ -55,23 +53,25 @@ def has_not_autocomplete(filename):
 
     :param filename: Path to the ``HTML`` source.
     :type filename: string
-    :param selector: CSS selector to test.
+    :rtype: bool
+    :returns: True if tags ``form`` and ``input`` have attribute
+    ``autocomplete`` set as specified, False otherwise.
     """
 
-    attr = 'autocomplete'
-    value = 'off'
+    attr = {'autocomplete': 'off'}
     tag_i = 'input'
     tag_f = 'form'
-    has_attr_i = has_attribute(filename, tag_i, attr, value)
-    has_attr_f = has_attribute(filename, tag_f, attr, value)
+    has_attr_i = has_attributes(filename, tag_i, attr)
+    has_attr_f = has_attributes(filename, tag_f, attr)
 
     if (has_attr_i or has_attr_f) is False:
         result = True
-        show_open('{} attribute in {}'.format(attr, filename))
+        show_open('Attribute in {}'.format(filename),
+                  details=dict(atributes=attr))
     else:
         result = False
-        show_close('{} attribute in {}'.format(attr, filename),
-                   details=dict(value=value))
+        show_close('Attribute in {}'.format(filename),
+                   details=dict(atributes=attr))
     return result
 
 
@@ -85,54 +85,33 @@ def is_cacheable(filename):
 
     :param filename: Path to the ``HTML`` source.
     :type filename: string
+    :rtype: bool
+    :returns: True if tag ``meta`` have attributes ``http-equiv``
+    and ``content`` set as specified, False otherwise.
     """
     tag = 'meta'
 
-    attr = 'http-equiv'
-    value = 'pragma'
-    has_http_equiv = has_attribute(
-        filename, tag, attr, value)
+    attrs = {'http-equiv': 'pragma',
+             'content': 'no-cache'}
+    has_http_equiv = has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
         result = True
-        show_open('{} attribute in {}'.format(attr, filename),
-                  details=dict(value=value))
+        show_open('Attributes in {}'.format(filename),
+                  details=dict(attributes=attrs))
         return result
 
-    attr = 'content'
-    value = 'no-cache'
-    has_content = has_attribute(
-        filename, tag, attr, value)
-
-    if not has_content:
-        result = True
-        show_open('{} attribute in {}'.format(attr, filename),
-                  details=dict(value=value))
-        return result
-
-    attr = 'http-equiv'
-    value = 'expires'
-    has_http_equiv = has_attribute(
-        filename, tag, attr, value)
+    attrs = {'http-equiv': 'expires',
+             'content': '-1'}
+    has_http_equiv = has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
         result = True
-        show_open('{} attribute in {}'.format(attr, filename),
-                  details=dict(value=value))
-        return result
-
-    attr = 'content'
-    value = '-1'
-    has_content = has_attribute(
-        filename, tag, attr, value)
-
-    if not has_content:
-        result = True
-        show_open('{} attribute in {}'.format(attr, filename),
-                  details=dict(value=value))
+        show_open('Attributes in {}'.format(filename),
+                  details=dict(attributes=attrs))
         return result
 
     result = False
-    show_close('{} attribute in {}'.format(attr, filename),
-               details=dict(value=value))
+    show_close('Attributes in {}'.format(filename),
+               details=dict(attributes=attrs))
     return result
