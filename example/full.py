@@ -5,7 +5,7 @@ from fluidasserts.system import windows_server_2008_plus
 from fluidasserts.format import string
 from fluidasserts.format import x509
 #from fluidasserts.format import cookie
-from fluidasserts.format import html
+from fluidasserts.code import html
 from fluidasserts.format import pdf
 from fluidasserts.service import smtp
 #from fluidasserts.service import webservices
@@ -41,7 +41,7 @@ string.is_otp_token_insecure(otp)
 #cookie.has_not_http_only(url, cookie_name)
 #cookie.has_not_secure(url, cookie_name)
 
-#html.has_not_autocomplete(filename, selector)
+#html.has_not_autocomplete(filename)
 #html.is_cacheable(filename)
 
 #pdf.has_creator(filename)
