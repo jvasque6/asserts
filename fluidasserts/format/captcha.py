@@ -24,15 +24,12 @@ from fluidasserts.utils.decorators import track
 
 
 @track
-def is_insecure_in_image(image, expected_text):
+def is_insecure_in_image(image: str, expected_text: str) -> bool:
     """
     Check if the image is an insecure CAPTCHA.
 
     :param image: Path to the image to be tested.
-    :type image: string
     :param expected_text: Text the image might contain.
-    :type expected_text: string
-    :rtype: bool
     """
     result = pytesseract.image_to_string(Image.open(image))
     if result == expected_text:
@@ -45,19 +42,17 @@ def is_insecure_in_image(image, expected_text):
 
 
 @track
-def is_insecure_in_url(image_url, expected_text, *args, **kwargs):
+def is_insecure_in_url(image_url: str, expected_text: str,
+                       *args, **kwargs) -> bool:
     r"""
     Check if the URL is an insecure CAPTCHA.
 
-    :param image: Path to the image to be tested.
-    :type image: string
+    :param image_url: Path to the image to be tested.
     :param expected_text: Text the image might contain.
-    :type expected_text: string
     :param \*args: Optional positional arguments for
         :class:`~fluidasserts.helper.http_helper.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
         :class:`~fluidasserts.helper.http_helper.HTTPSession`.
-    :rtype: bool
     """
     session = http_helper.HTTPSession(image_url, stream=True, *args, **kwargs)
     fingerprint = session.get_fingerprint()

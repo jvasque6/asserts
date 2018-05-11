@@ -24,8 +24,14 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def _uses_sign_alg(site, alg, port):
-    """Check whether cert use a hash method in their signature."""
+def _uses_sign_alg(site: str, alg: str, port: str) -> bool:
+    """
+    Check if cert uses a hash method in their signature.
+
+    :param site: Address to connect to.
+    :param alg: Hashing method to check.
+    :param port: Port to connect to.
+    """
     result = True
 
     try:
@@ -63,8 +69,13 @@ def _uses_sign_alg(site, alg, port):
 
 
 @track
-def is_cert_cn_not_equal_to_site(site, port=PORT):
-    """Check whether cert cn is equal to site."""
+def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
+    """
+    Check if cert cn is equal to site.
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
     result = True
     has_sni = False
     try:
@@ -99,8 +110,9 @@ def is_cert_cn_not_equal_to_site(site, port=PORT):
     if (site.lower() != cert_cn and wc_cert != cert_cn and
             not site.endswith(domain)):
         if has_sni:
-            show_close('{} CN not equals to site. However server \
-supports SNI'.format(cert_cn), details=dict(site=site, port=port, cn=cert_cn))
+            msg = '{} CN not equals to site. However server supports SNI'
+            show_close(msg.format(cert_cn),
+                       details=dict(site=site, port=port, cn=cert_cn))
             result = False
         else:
             show_open('{} CN not equals to site'.format(cert_cn),
@@ -114,8 +126,13 @@ supports SNI'.format(cert_cn), details=dict(site=site, port=port, cn=cert_cn))
 
 
 @track
-def is_cert_inactive(site, port=PORT):
-    """Check whether cert is still valid."""
+def is_cert_inactive(site: str, port: int = PORT) -> bool:
+    """
+    Check whether cert is still valid.
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port) as conn:
@@ -156,8 +173,13 @@ def is_cert_inactive(site, port=PORT):
 
 
 @track
-def is_cert_validity_lifespan_unsafe(site, port=PORT):
-    """Check whether cert lifespan is safe."""
+def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
+    """
+    Check whether cert lifespan is safe.
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
     max_validity_days = 730
 
     result = True
@@ -203,12 +225,22 @@ def is_cert_validity_lifespan_unsafe(site, port=PORT):
 
 
 @track
-def is_sha1_used(site, port=PORT):
-    """Check whether cert use SHA1 in their signature algorithm."""
+def is_sha1_used(site: str, port: int = PORT) -> bool:
+    """
+    Check if cert uses SHA1 in their signature algorithm.
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
     return _uses_sign_alg(site, 'sha1', port)
 
 
 @track
-def is_md5_used(site, port=PORT):
-    """Check whether cert use MD5 in their signature algorithm."""
+def is_md5_used(site: str, port: int = PORT) -> bool:
+    """
+    Check if cert use MD5 in their signature algorithm.
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
     return _uses_sign_alg(site, 'md5', port)

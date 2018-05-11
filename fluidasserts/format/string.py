@@ -17,7 +17,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def _check_password_strength(password, length):
+def _check_password_strength(password: str, length: str) -> bool:
     """
     Check if a user password is secure.
 
@@ -29,10 +29,7 @@ def _check_password_strength(password, length):
     - Password must not be a typical dictionary word.
 
     :param password: String to be tested.
-    :type password: String
     :param length: Minimum accepted password length.
-    :type length: int
-    :rtype: bool
     :returns: False if all conditions are met (secure),
     True otherwise (insecure).
     """
@@ -70,7 +67,7 @@ def _check_password_strength(password, length):
 
 
 @track
-def is_user_password_insecure(password):
+def is_user_password_insecure(password: str) -> bool:
     """
     Check if a user password is insecure.
 
@@ -78,8 +75,6 @@ def is_user_password_insecure(password):
     8 characters long and satisfies all other password criteria.
 
     :param password: Password to be tested.
-    :type password: String
-    :rtype: bool
     :returns: True if password insecure, False if secure.
     """
     min_password_len = 8
@@ -88,7 +83,7 @@ def is_user_password_insecure(password):
 
 
 @track
-def is_system_password_insecure(password):
+def is_system_password_insecure(password: str) -> bool:
     """
     Check if a system password is insecure.
 
@@ -96,8 +91,6 @@ def is_system_password_insecure(password):
     20 characters long and satisfies all other password criteria.
 
     :param password: Password to be tested.
-    :type password: String
-    :rtype: bool
     :returns: True if password insecure, False if secure.
     """
     min_password_len = 20
@@ -106,7 +99,7 @@ def is_system_password_insecure(password):
 
 
 @track
-def is_otp_token_insecure(password):
+def is_otp_token_insecure(password: str) -> bool:
     """
     Check if a one-time password token is insecure.
 
@@ -114,8 +107,6 @@ def is_otp_token_insecure(password):
     6 characters long.
 
     :param password: Password to be tested.
-    :type password: String
-    :rtype: bool
     :returns: True if insecure, False if secure.
     """
     min_password_len = 6
@@ -134,7 +125,7 @@ def is_otp_token_insecure(password):
 
 
 @track
-def is_ssid_insecure(ssid):
+def is_ssid_insecure(ssid: str) -> bool:
     """
     Check if a given SSID is insecure.
 
@@ -142,8 +133,6 @@ def is_ssid_insecure(ssid):
     word such as "home" or "network".
 
     :param ssid: SSID to be tested.
-    :type password: String
-    :rtype: bool
     :returns: True if insecure, False if secure.
     """
     dictionary = 'static/wordlists/password.lst'

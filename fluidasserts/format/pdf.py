@@ -14,8 +14,13 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def _has_attribute(filename, metaname):
-    """Check if docinfo attribute is present."""
+def _has_attribute(filename: str, metaname: str) -> bool:
+    """
+    Check if ``docinfo`` attribute is present.
+
+    :param filename: Path to the ``PDF`` file.
+    :param metaname: Name of the attribute to search.
+    """
     input_pdf = PdfFileReader(open(filename, 'rb'))
     pdf_docinfo = input_pdf.getDocumentInfo()
     metavalue = getattr(pdf_docinfo, metaname)
@@ -31,20 +36,32 @@ def _has_attribute(filename, metaname):
 
 
 @track
-def has_creator(filename):
-    """Check if creator attribute is present in docinfo section."""
+def has_creator(filename: str) -> bool:
+    """
+    Check if ``creator`` attribute is present.
+
+    :param filename: Path to the ``PDF`` file.
+    """
     return _has_attribute(filename, 'creator')
 
 
 @track
-def has_producer(filename):
-    """Check if producer attribute is present in docinfo section."""
+def has_producer(filename: str) -> bool:
+    """
+    Check if ``producer`` attribute is present.
+
+    :param filename: Path to the ``PDF`` file.
+    """
     return _has_attribute(filename, 'producer')
 
 
 @track
-def has_author(filename):
-    """Check if author attribute is present in docinfo section."""
+def has_author(filename: str) -> bool:
+    """
+    Check if ``author`` attribute is present.
+
+    :param filename: Path to the ``PDF`` file.
+    """
     return _has_attribute(filename, 'author')
 
 
