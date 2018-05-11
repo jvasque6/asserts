@@ -27,12 +27,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def is_header_x_powered_by_present(webconf_dest):
+def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     """
     Search for X-Powered-By headers in a Web.config source file or package.
 
     :param webconf_dest: Path to a Web.config source file or package.
-    :rtype: bool
     """
     tk_tag_s, _ = makeXMLTags('customHeaders')
     tk_add_tag, _ = makeXMLTags('add')

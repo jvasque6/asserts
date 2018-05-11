@@ -30,12 +30,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def has_generic_exceptions(csharp_dest):
+def has_generic_exceptions(csharp_dest: str) -> bool:
     """
     Search for generic exceptions in a C# source file or package.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     tk_catch = CaselessKeyword('catch')
     tk_generic_exc = CaselessKeyword('exception')
@@ -66,14 +65,13 @@ def has_generic_exceptions(csharp_dest):
 
 
 @track
-def swallows_exceptions(csharp_dest):
+def swallows_exceptions(csharp_dest: str) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
@@ -106,14 +104,13 @@ def swallows_exceptions(csharp_dest):
 
 
 @track
-def has_switch_without_default(csharp_dest):
+def has_switch_without_default(csharp_dest: str) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     tk_switch = CaselessKeyword('switch')
     tk_case = CaselessKeyword('case') + (Word(alphanums))
@@ -150,14 +147,13 @@ def has_switch_without_default(csharp_dest):
 
 
 @track
-def has_insecure_randoms(csharp_dest):
+def has_insecure_randoms(csharp_dest: str) -> bool:
     """
     Check if code instantiates ``Random`` class.
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     tk_class = CaselessKeyword('random')
     tk_variable = Word(alphanums)
@@ -187,14 +183,13 @@ def has_insecure_randoms(csharp_dest):
 
 
 @track
-def has_if_without_else(csharp_dest):
+def has_if_without_else(csharp_dest: str) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     tk_if = CaselessKeyword('if')
     tk_else = CaselessKeyword('else')
@@ -226,14 +221,13 @@ def has_if_without_else(csharp_dest):
 
 
 @track
-def uses_md5_hash(csharp_dest):
+def uses_md5_hash(csharp_dest: str) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
     See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     method = 'MD5.Create(), new MD5CryptoServiceProvider()'
     tk_md5 = CaselessKeyword('md5')

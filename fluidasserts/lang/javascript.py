@@ -28,12 +28,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def uses_console_log(js_dest):
+def uses_console_log(js_dest: str) -> bool:
     """
     Search for ``console.log()`` calls in a JavaScript file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
-    :rtype: bool
     """
     method = 'Console.log()'
     tk_object = CaselessKeyword('console')
@@ -62,12 +61,11 @@ def uses_eval(js_dest):
 
 
 @track
-def uses_localstorage(js_dest):
+def uses_localstorage(js_dest: str) -> bool:
     """
     Search for ``localStorage`` calls in a JavaScript source file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
-    :rtype: bool
     """
     method = 'window.localStorage'
     tk_object = CaselessKeyword('localstorage')
@@ -81,14 +79,13 @@ def uses_localstorage(js_dest):
 
 
 @track
-def has_insecure_randoms(js_dest):
+def has_insecure_randoms(js_dest: str) -> bool:
     r"""
     Check if code uses ``Math.Random()``\ .
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
-    :rtype: bool
     """
     method = 'Math.random()'
     tk_class = CaselessKeyword('math')
@@ -102,14 +99,13 @@ def has_insecure_randoms(js_dest):
 
 
 @track
-def swallows_exceptions(js_dest):
+def swallows_exceptions(js_dest: str) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
-    :rtype: bool
     """
     tk_catch = CaselessKeyword('catch')
     parser_catch = (Optional(Literal('}')) + tk_catch + nestedExpr())
@@ -139,14 +135,13 @@ def swallows_exceptions(js_dest):
 
 
 @track
-def has_switch_without_default(js_dest):
+def has_switch_without_default(js_dest: str) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
-    :rtype: bool
     """
     tk_switch = CaselessKeyword('switch')
     tk_case = CaselessKeyword('case') + (Word(alphanums))
@@ -184,14 +179,13 @@ def has_switch_without_default(js_dest):
 
 
 @track
-def has_if_without_else(js_dest):
+def has_if_without_else(js_dest: str) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
-    :rtype: bool
     """
     tk_if = CaselessKeyword('if')
     tk_else = CaselessKeyword('else')

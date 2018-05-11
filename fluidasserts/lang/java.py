@@ -30,12 +30,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def has_generic_exceptions(java_dest):
+def has_generic_exceptions(java_dest: str) -> bool:
     """
     Search for generic exceptions in a Java source file or package.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     tk_catch = CaselessKeyword('catch')
     tk_generic_exc = CaselessKeyword('exception')
@@ -66,12 +65,11 @@ def has_generic_exceptions(java_dest):
 
 
 @track
-def uses_print_stack_trace(java_dest):
+def uses_print_stack_trace(java_dest: str) -> bool:
     """
     Search for ``printStackTrace`` calls in a  or package.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     method = 'exc.printStackTrace()'
     tk_object = Word(alphanums)
@@ -84,14 +82,13 @@ def uses_print_stack_trace(java_dest):
 
 
 @track
-def swallows_exceptions(java_dest):
+def swallows_exceptions(java_dest: str) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
@@ -124,14 +121,13 @@ def swallows_exceptions(java_dest):
 
 
 @track
-def has_switch_without_default(java_dest):
+def has_switch_without_default(java_dest: str) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     tk_switch = CaselessKeyword('switch')
     tk_case = CaselessKeyword('case') + (Word(alphanums))
@@ -168,14 +164,13 @@ def has_switch_without_default(java_dest):
 
 
 @track
-def has_insecure_randoms(java_dest):
+def has_insecure_randoms(java_dest: str) -> bool:
     r"""
     Check if code uses ``Math.Random()``\ .
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     method = "Math.random()"
     tk_class = CaselessKeyword('math')
@@ -189,14 +184,13 @@ def has_insecure_randoms(java_dest):
 
 
 @track
-def has_if_without_else(java_dest):
+def has_if_without_else(java_dest: str) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
     See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     tk_if = CaselessKeyword('if')
     tk_else = CaselessKeyword('else')
@@ -227,14 +221,14 @@ def has_if_without_else(java_dest):
     return result
 
 
-def uses_insecure_hash(java_dest, algorithm):
+def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     """
     Check if code uses an insecure hashing algorithm.
 
     See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
+    :param algorithm: Insecure algorithm.
     """
     method = 'MessageDigest.getInstance("{}")'.format(algorithm.upper())
     tk_mess_dig = CaselessKeyword('messagedigest')
@@ -249,28 +243,26 @@ def uses_insecure_hash(java_dest, algorithm):
 
 
 @track
-def uses_md5_hash(java_dest):
+def uses_md5_hash(java_dest: str) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
     See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     result = uses_insecure_hash(java_dest, 'md5')
     return result
 
 
 @track
-def uses_sha1_hash(java_dest):
+def uses_sha1_hash(java_dest: str) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
     See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
-    :rtype: bool
     """
     result = uses_insecure_hash(java_dest, 'sha-1')
     return result

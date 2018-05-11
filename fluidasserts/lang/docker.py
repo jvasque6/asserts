@@ -28,13 +28,12 @@ LANGUAGE_SPECS = {
 
 
 @track
-def not_pinned(file_dest):
+def not_pinned(file_dest: str) -> bool:
     """
     Check if the Dockerfile uses a ``FROM:...latest`` (unpinned) base image.
 
     :param file_dest: Path to the Dockerfile to be tested.
     :returns: True if unpinned (bad), False if pinned (good).
-    :rtype: bool
     """
     tk_from = Word('FROM')
     tk_image = Word(alphas)

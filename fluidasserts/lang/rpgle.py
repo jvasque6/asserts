@@ -29,12 +29,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def has_dos_dow_sqlcod(rpg_dest):
+def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     r"""
     Search for DoS for using ``DoW SQLCOD = 0``\ .
 
     :param rpg_dest: Path to a RPG source or directory.
-    :rtype: bool
     """
     tk_dow = CaselessKeyword('dow')
     tk_sqlcod = CaselessKeyword('sqlcod')
@@ -61,7 +60,7 @@ def has_dos_dow_sqlcod(rpg_dest):
 
 
 @track
-def has_unitialized_vars(rpg_dest):
+def has_unitialized_vars(rpg_dest: str) -> bool:
     """
     Search for unitialized variables.
 
@@ -69,7 +68,6 @@ def has_unitialized_vars(rpg_dest):
     <https://fluidattacks.com/web/es/defends/rpg/inicializar-variables/>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
-    :rtype: bool
     """
     tk_data = Keyword('D')
     tk_first = Word(alphas + "_", exact=1)

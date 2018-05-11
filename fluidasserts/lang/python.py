@@ -29,12 +29,11 @@ LANGUAGE_SPECS = {
 
 
 @track
-def has_generic_exceptions(py_dest):
+def has_generic_exceptions(py_dest: str) -> bool:
     """
     Search for generic exceptions in a Python script or package.
 
     :param py_dest: Path to a Python script or package.
-    :rtype: bool
     """
     tk_except = CaselessKeyword('except')
     generic_exception = tk_except + Literal(':')
@@ -59,7 +58,7 @@ def has_generic_exceptions(py_dest):
 
 
 @track
-def swallows_exceptions(py_dest):
+def swallows_exceptions(py_dest: str) -> bool:
     """
     Search for swallowed exceptions.
 
@@ -67,7 +66,6 @@ def swallows_exceptions(py_dest):
     or only contain comments or the ``pass`` statement.
 
     :param py_dest: Path to a Python script or package.
-    :rtype: bool
     """
     tk_except = CaselessKeyword('except')
     tk_word = Word(alphas) + Optional('.')
