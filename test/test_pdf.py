@@ -30,17 +30,17 @@ fluidasserts.utils.decorators.UNITTEST = True
 
 def test_pdf_has_author_open():
     """PDF tiene metados de autor en el docinfo?."""
-    assert pdf.has_author('test/static/vulnerable.pdf')
+    assert pdf.has_author('test/static/format/pdf/vulnerable.pdf')
 
 
 def test_pdf_has_creator_open():
     """PDF tiene metados de creador en el docinfo?."""
-    assert pdf.has_creator('test/static/vulnerable.pdf')
+    assert pdf.has_creator('test/static/format/pdf/vulnerable.pdf')
 
 
 def test_pdf_has_producer_open():
     """PDF tiene metados de productor en el docinfo?."""
-    assert pdf.has_producer('test/static/vulnerable.pdf')
+    assert pdf.has_producer('test/static/format/pdf/vulnerable.pdf')
 
 
 #
@@ -50,17 +50,17 @@ def test_pdf_has_producer_open():
 
 def test_pdf_has_author_close():
     """PDF no tiene metados de autor en el docinfo?."""
-    assert not pdf.has_author('test/static/non-vulnerable.pdf')
+    assert not pdf.has_author('test/static/format/pdf/non-vulnerable.pdf')
 
 
 def test_pdf_has_creator_close():
     """PDF no tiene metados de creador en el docinfo?."""
-    assert not pdf.has_creator('test/static/non-vulnerable.pdf')
+    assert not pdf.has_creator('test/static/format/pdf/non-vulnerable.pdf')
 
 
 def test_pdf_has_producer_close():
     """PDF no tiene metados de productor en el docinfo?."""
-    assert not pdf.has_producer('test/static/non-vulnerable.pdf')
+    assert not pdf.has_producer('test/static/format/pdf/non-vulnerable.pdf')
 
 # pendiente incluir soporte de metadata xdf
 # pdf.has_create_date('test/vulnerable.pdf')

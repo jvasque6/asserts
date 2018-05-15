@@ -16,12 +16,12 @@ función.
 # none
 
 # local imports (solo fluidasserts)
-from fluidasserts.service import ftp, pdf
+from fluidasserts.service import ftp
 from fluidasserts.format import pdf
 
 # PDF
-PDF_HARDENED = 'test/data/non-vulnerable.pdf'
-PDF_VULNERABLE = 'test/data/vulnerable.pdf'
+PDF_HARDENED = 'test/static/format/pdf/non-vulnerable.pdf'
+PDF_VULNERABLE = 'test/static/format/pdf/vulnerable.pdf'
 pdf.has_author(PDF_HARDENED)
 pdf.has_author(PDF_VULNERABLE)
 pdf.has_creator(PDF_HARDENED)
