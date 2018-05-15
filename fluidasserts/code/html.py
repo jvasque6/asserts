@@ -3,7 +3,7 @@
 """HTML check module."""
 
 # 3rd party imports
-from pyparsing import (makeHTMLTags)
+from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException)
 
 # local imports
 from fluidasserts import show_close
@@ -37,7 +37,9 @@ def has_attributes(filename, tag, attrs):
 
     for expr in tag_expr.searchString(html_doc):
         for attr, value in attrs.items():
-            if getattr(expr, attr).casefold() != value.casefold():
+            try:
+                value.parseString(getattr(expr, attr))
+            except ParseException:
                 break
             return True
     return False
@@ -57,8 +59,8 @@ def has_not_autocomplete(filename):
     :returns: True if tags ``form`` and ``input`` have attribute
     ``autocomplete`` set as specified, False otherwise.
     """
-
-    attr = {'autocomplete': 'off'}
+    tk_off = CaselessKeyword('off')
+    attr = {'autocomplete': tk_off}
     tag_i = 'input'
     tag_f = 'form'
     has_attr_i = has_attributes(filename, tag_i, attr)
@@ -90,9 +92,10 @@ def is_cacheable(filename):
     and ``content`` set as specified, False otherwise.
     """
     tag = 'meta'
-
-    attrs = {'http-equiv': 'pragma',
-             'content': 'no-cache'}
+    tk_pragma = CaselessKeyword('pragma')
+    tk_nocache = CaselessKeyword('tk_nocache')
+    attrs = {'http-equiv': tk_pragma,
+             'content': tk_nocache}
     has_http_equiv = has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
@@ -101,8 +104,10 @@ def is_cacheable(filename):
                   details=dict(attributes=attrs))
         return result
 
-    attrs = {'http-equiv': 'expires',
-             'content': '-1'}
+    tk_expires = CaselessKeyword('expires')
+    tk_minusone = CaselessKeyword('-1')
+    attrs = {'http-equiv': tk_expires,
+             'content': tk_minusone}
     has_http_equiv = has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
