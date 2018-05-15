@@ -201,14 +201,14 @@ def is_header_content_security_policy_missing(url, *args, **kwargs):
 
 @track
 def is_header_content_type_missing(url, *args, **kwargs):
-    """Check if content-security-policy header is missing."""
+    """Check if content-type header is missing."""
     return http_helper.has_insecure_header(url, 'Content-Type',
                                            *args, **kwargs)
 
 
 @track
 def is_header_expires_missing(url, *args, **kwargs):
-    """Check if content-security-policy header is missing."""
+    """Check if expires header is missing."""
     return http_helper.has_insecure_header(url, 'Expires',
                                            *args, **kwargs)
 
