@@ -21,10 +21,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts.utils.decorators import track
 
 
-LANGUAGE_SPECS = {}
-
-
-def _generic_lang_assert(code_file, expected_regex):
+def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
     """
     Check if a text is present in given source file.
 
@@ -32,7 +29,6 @@ def _generic_lang_assert(code_file, expected_regex):
 
     :param code_file: Path to the file to be tested.
     :param expected_text: Bad text to look for in the file.
-    :rtype: bool
     """
     with open(code_file) as code_fd:
         if re.search(str(expected_regex), code_fd.read(), re.IGNORECASE):
@@ -40,14 +36,13 @@ def _generic_lang_assert(code_file, expected_regex):
         return False
 
 
-def _show_has_text(is_open, code_file, expected_text):
+def _show_has_text(is_open: bool, code_file: str, expected_text: str) -> None:
     """
-    Show open or close based in is_open param.
+    Show open or close according to ``is_open`` parameter.
 
     :param is_open: Indicates if finding is open.
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
-    :rtype: bool
     """
     if is_open:
         show_open('Bad text present in code',
@@ -61,14 +56,14 @@ def _show_has_text(is_open, code_file, expected_text):
                                 expected_text=expected_text))
 
 
-def _show_has_not_text(is_open, code_file, expected_text):
+def _show_has_not_text(is_open: bool, code_file: str,
+                      expected_text: str) -> None:
     """
     Show open or close based in is_open param.
 
     :param is_open: Indicates if finding is open.
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
-    :rtype: bool
     """
     if is_open:
         show_open('Expected text not present in code',
@@ -83,7 +78,7 @@ def _show_has_not_text(is_open, code_file, expected_text):
 
 
 @track
-def has_text(code_dest, expected_text):
+def has_text(code_dest: str, expected_text: str) -> bool:
     """
     Check if a bad text is present in given source file.
 
@@ -91,7 +86,6 @@ def has_text(code_dest, expected_text):
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
-    :rtype: bool
     """
     if os.path.isfile(code_dest):
         ret = _generic_lang_assert(code_dest, expected_text)
@@ -109,7 +103,7 @@ def has_text(code_dest, expected_text):
 
 
 @track
-def has_not_text(code_dest, expected_text):
+def has_not_text(code_dest: str, expected_text: str) -> bool:
     """
     Check if a required text is not present in given source file.
 
@@ -117,7 +111,6 @@ def has_not_text(code_dest, expected_text):
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
-    :rtype: bool
     """
     if os.path.isfile(code_dest):
         ret = _generic_lang_assert(code_dest, expected_text)
@@ -135,12 +128,11 @@ def has_not_text(code_dest, expected_text):
 
 
 @track
-def file_exists(code_file):
+def file_exists(code_file: str) -> bool:
     """
     Check if the given file exists.
 
     :param code_file: Path to the file to be tested.
-    :rtype: bool
     """
     if os.path.isfile(code_file):
         show_open('File exists',
