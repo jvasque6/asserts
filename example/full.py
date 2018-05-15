@@ -7,14 +7,14 @@ from fluidasserts.format import x509
 #from fluidasserts.format import cookie
 from fluidasserts.code import html
 from fluidasserts.format import pdf
-from fluidasserts.service import smtp
-#from fluidasserts.service import webservices
-from fluidasserts.service import dns
-from fluidasserts.service import tcp
-from fluidasserts.service import http
-from fluidasserts.service import ssl
-from fluidasserts.service import ldap
-from fluidasserts.service import ftp
+from fluidasserts.proto import smtp
+#from fluidasserts.proto import webservices
+from fluidasserts.proto import dns
+from fluidasserts.proto import tcp
+from fluidasserts.proto import http
+from fluidasserts.proto import ssl
+from fluidasserts.proto import ldap
+from fluidasserts.proto import ftp
 
 
 #linux_generic.is_os_min_priv_disabled(server, username, password, ssh_config=None)

@@ -1,6 +1,6 @@
-from fluidasserts.service import http
-from fluidasserts.service import ssl
-from fluidasserts.service import dns
+from fluidasserts.proto import http
+from fluidasserts.proto import ssl
+from fluidasserts.proto import dns
 
 url = 'https://fluid.la'
 http.is_header_x_asp_net_version_present(url)

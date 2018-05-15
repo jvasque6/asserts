@@ -1,93 +1,93 @@
-fluidasserts.service package
+fluidasserts.proto package
 ============================
 
 Submodules
 ----------
 
-fluidasserts.service.dns module
+fluidasserts.proto.dns module
 -------------------------------
 
-.. automodule:: fluidasserts.service.dns
+.. automodule:: fluidasserts.proto.dns
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.ftp module
+fluidasserts.proto.ftp module
 -------------------------------
 
-.. automodule:: fluidasserts.service.ftp
+.. automodule:: fluidasserts.proto.ftp
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.http module
+fluidasserts.proto.http module
 --------------------------------
 
-.. automodule:: fluidasserts.service.http
+.. automodule:: fluidasserts.proto.http
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.ldap module
+fluidasserts.proto.ldap module
 --------------------------------
 
-.. automodule:: fluidasserts.service.ldap
+.. automodule:: fluidasserts.proto.ldap
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.rest module
+fluidasserts.proto.rest module
 --------------------------------
 
-.. automodule:: fluidasserts.service.rest
+.. automodule:: fluidasserts.proto.rest
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.smb module
+fluidasserts.proto.smb module
 -------------------------------
 
-.. automodule:: fluidasserts.service.smb
+.. automodule:: fluidasserts.proto.smb
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.smtp module
+fluidasserts.proto.smtp module
 --------------------------------
 
-.. automodule:: fluidasserts.service.smtp
+.. automodule:: fluidasserts.proto.smtp
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.soap module
+fluidasserts.proto.soap module
 --------------------------------
 
-.. automodule:: fluidasserts.service.soap
+.. automodule:: fluidasserts.proto.soap
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.ssh module
+fluidasserts.proto.ssh module
 -------------------------------
 
-.. automodule:: fluidasserts.service.ssh
+.. automodule:: fluidasserts.proto.ssh
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.ssl module
+fluidasserts.proto.ssl module
 -------------------------------
 
-.. automodule:: fluidasserts.service.ssl
+.. automodule:: fluidasserts.proto.ssl
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.service.tcp module
+fluidasserts.proto.tcp module
 -------------------------------
 
-.. automodule:: fluidasserts.service.tcp
+.. automodule:: fluidasserts.proto.tcp
     :members:
     :undoc-members:
     :show-inheritance:
@@ -96,7 +96,7 @@ fluidasserts.service.tcp module
 Module contents
 ---------------
 
-.. automodule:: fluidasserts.service
+.. automodule:: fluidasserts.proto
     :members:
     :undoc-members:
     :show-inheritance:

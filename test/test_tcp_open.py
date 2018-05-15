@@ -13,7 +13,7 @@ from __future__ import print_function
 import pytest
 
 # local imports
-from fluidasserts.service import tcp
+from fluidasserts.proto import tcp
 import fluidasserts.utils.decorators
 
 # Constants

@@ -4,6 +4,8 @@
 
 # pylint: disable=no-name-in-module
 # standard imports
+from __future__ import absolute_import
+
 import datetime
 import hashlib
 import inspect

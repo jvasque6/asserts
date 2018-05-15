@@ -17,7 +17,7 @@ import pytest
 
 # local imports
 from fluidasserts.helper import http_helper
-from fluidasserts.service import http
+from fluidasserts.proto import http
 import fluidasserts.utils.decorators
 
 #

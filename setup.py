@@ -21,7 +21,7 @@ setup(
         'fluidasserts.format',
         'fluidasserts.helper',
         'fluidasserts.system',
-        'fluidasserts.service',
+        'fluidasserts.proto',
         'fluidasserts.code',
         'fluidasserts.utils',
     ],
@@ -46,19 +46,19 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
-        'requests==2.18.4',          # fluidasserts.service.http
-        'requests-oauthlib==0.8.0',  # fluidasserts.service.http
-        'cryptography==2.2.2',       # fluidasserts.service.ssl
-        'certifi==2018.4.16',        # fluidasserts.service.ssl
-        'ldap3==2.5',                # fluidasserts.service.ldap
+        'requests==2.18.4',          # fluidasserts.proto.http
+        'requests-oauthlib==0.8.0',  # fluidasserts.proto.http
+        'cryptography==2.2.2',       # fluidasserts.proto.ssl
+        'certifi==2018.4.16',        # fluidasserts.proto.ssl
+        'ldap3==2.5',                # fluidasserts.proto.ldap
         'paramiko==2.4.1',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
         'beautifulsoup4==4.6.0',     # fluidasserts.helper.http_helper
-        'dnspython==1.15.0',         # fluidasserts.service.dns
-        'tlslite-ng==0.7.4',         # fluidasserts.service.ssl
-        'pyOpenSSL==17.5.0',         # fluidasserts.service.ssl
+        'dnspython==1.15.0',         # fluidasserts.proto.dns
+        'tlslite-ng==0.7.4',         # fluidasserts.proto.ssl
+        'pyOpenSSL==17.5.0',         # fluidasserts.proto.ssl
         'colorama==0.3.9',           # logging
-        'pysmb==1.1.22',             # fluidasserts.service.smb
+        'pysmb==1.1.22',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
         'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
         'pytesseract==0.2.0',        # fluidasserts.format.captcha

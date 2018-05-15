@@ -14,7 +14,7 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 from fluidasserts.helper import http_helper
-from fluidasserts.service import http
+from fluidasserts.proto import http
 
 
 @track

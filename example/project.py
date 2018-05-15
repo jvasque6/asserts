@@ -16,7 +16,7 @@ función.
 # none
 
 # local imports (solo fluidasserts)
-from fluidasserts.service import ftp
+from fluidasserts.proto import ftp
 from fluidasserts.format import pdf
 
 # PDF

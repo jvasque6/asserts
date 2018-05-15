@@ -13,7 +13,7 @@ from __future__ import print_function
 import pytest
 
 # local imports
-from fluidasserts.service import ssh
+from fluidasserts.proto import ssh
 import fluidasserts.utils.decorators
 
 

@@ -9,7 +9,7 @@ Subpackages
     fluidasserts.code
     fluidasserts.format
     fluidasserts.helper
-    fluidasserts.service
+    fluidasserts.proto
     fluidasserts.system
     fluidasserts.utils
 

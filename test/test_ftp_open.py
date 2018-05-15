@@ -18,7 +18,7 @@ from __future__ import print_function
 import pytest
 
 # local imports
-from fluidasserts.service import ftp
+from fluidasserts.proto import ftp
 import fluidasserts.utils.decorators
 
 
