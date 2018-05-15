@@ -19,10 +19,9 @@ import oyaml as yaml
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
 from pygments.lexers import PropertiesLexer
-from pygments.formatters import Terminal256Formatter
-from pygments.style import Style
-from pygments.styles import get_style_by_name
-from pygments.token import Token
+from pygments.formatters import TerminalFormatter
+from pygments.token import Keyword, Name, Comment, String, Error, \
+    Number, Operator, Generic, Token, Whitespace
 
 # local imports
 # none
@@ -47,6 +46,93 @@ if sys.platform in ('win32', 'cygwin'):
                                                   autoreset=False,
                                                   wrap=True)
 
+OPEN_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('red', 'red'),
+    Number: ('red', 'red'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('red', 'red'),
+}
+
+CLOSE_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('darkgreen', 'green'),
+    Number: ('darkgreen', 'green'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('darkgreen', 'green'),
+}
+
+UNKNOWN_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('darkgray', 'darkgray'),
+    Number: ('darkgray', 'darkgray'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('darkgray', 'darkgray'),
+}
+
 
 def get_caller_module():
     """Get caller module."""
@@ -59,33 +145,6 @@ def get_caller_module():
 def get_caller_function():
     """Get caller function."""
     return sys._getframe(3).f_code.co_name  # noqa
-
-
-class MyStyleRed(Style):
-    """Output red-colored message."""
-    styles = {
-        Token.Name.Attribute: '#ansiwhite',
-        Token.Error: '#F74E4E',
-        Token.String: '#F74E4E',
-    }
-
-
-class MyStyleGreen(Style):
-    """Output green-colored message."""
-    styles = {
-        Token.Name.Attribute: '#ansiwhite',
-        Token.Error: '#5FF74E',
-        Token.String: '#5FF74E',
-    }
-
-
-class MyStyleGray(Style):
-    """Output white-colored message."""
-    styles = {
-        Token.Name.Attribute: '#ansiwhite',
-        Token.Error: '#929292',
-        Token.String: '#929292',
-    }
 
 
 class Message(object):
@@ -132,13 +191,13 @@ class Message(object):
         message = yaml.dump(self.__build_message(), default_flow_style=False,
                             explicit_start=True)
         if self.status == 'OPEN':
-            style = MyStyleRed
+            style = OPEN_COLORS
         elif self.status == 'CLOSE':
-            style = MyStyleGreen
+            style = CLOSE_COLORS
         elif self.status == 'UNKNOWN':
-            style = MyStyleGray
+            style = UNKNOWN_COLORS
         highlight(message, PropertiesLexer(),
-                  Terminal256Formatter(style=style), OUTFILE)
+                  TerminalFormatter(colorscheme=style), OUTFILE)
 
 
 # create LOGGER
@@ -211,8 +270,7 @@ HEADER = """
 # Loading attack modules ...
 """
 
-HEADER_STYLE = get_style_by_name('igor')
-highlight(HEADER, PropertiesLexer(), Terminal256Formatter(style=HEADER_STYLE),
+highlight(HEADER, PropertiesLexer(), TerminalFormatter(),
           OUTFILE)
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
