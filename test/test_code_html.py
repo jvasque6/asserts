@@ -17,6 +17,14 @@ import fluidasserts.utils.decorators
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
 
+CODE_DIR = 'test/static/code/html/'
+SECURE_CODE = CODE_DIR + 'non-vulnerable.html'
+INSECURE_CODE = CODE_DIR + 'vulnerable.html'
+
+#
+# Open tests
+#
+
 
 def test_form_autocomplete_open():
     """Funcion test_form_autocomplete_open.
@@ -24,23 +32,7 @@ def test_form_autocomplete_open():
     Verifica si el atributo autocomplete=off se encuentra en el
     codigo HTML de vulnerable.html
     """
-    # assert html.has_not_autocomplete(
-    #    'test/static/vulnerable.html',
-    #    'body > form')
-    assert html.has_not_autocomplete(
-        'test/static/vulnerable.html')
-
-def test_form_autocomplete_close():
-    """Funcion test_form_autocomplete_close.
-
-    Verifica si el atributo autocomplete=off se encuentra en el
-    codigo HTML de non-vulnerable.html?
-    """
-    # assert not html.has_not_autocomplete(
-    #    'test/static/non-vulnerable.html',
-    #    'body > form')
-    assert not html.has_not_autocomplete(
-        'test/static/non-vulnerable.html')
+    assert html.has_not_autocomplete(INSECURE_CODE)
 
 
 def test_is_cacheable_open():
@@ -50,8 +42,21 @@ def test_is_cacheable_open():
     memoria cache estan definidas en el codigo HTML de
     vulnerable.html
     """
-    assert html.is_cacheable('test/static/vulnerable.html')
-    # assert html.is_cacheable('test/static/vulnerable-incomplete.html')
+    assert html.is_cacheable(INSECURE_CODE)
+
+
+#
+# Closing tests
+#
+
+
+def test_form_autocomplete_close():
+    """Funcion test_form_autocomplete_close.
+
+    Verifica si el atributo autocomplete=off se encuentra en el
+    codigo HTML de non-vulnerable.html?
+    """
+    assert not html.has_not_autocomplete(SECURE_CODE)
 
 
 def test_is_cacheable_close():
@@ -61,4 +66,4 @@ def test_is_cacheable_close():
     memoria cache estan definidas en el codigo HTML de
     non-vulnerable.html
     """
-    assert not html.is_cacheable('test/static/non-vulnerable.html')
+    assert not html.is_cacheable(SECURE_CODE)
