@@ -1,3 +1,2 @@
 [global]
 index-url = https://pypi.python.org/simple/
-extra-index-url = https://__jfrog_user__:__jfrog_pass__@fluid.jfrog.io/fluid/api/pypi/python/simple

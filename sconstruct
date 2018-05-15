@@ -13,12 +13,10 @@ env = Environment()
 env['ENV']['PATH'] = os.environ['PATH']
 env['ENV']['HOME'] = os.environ['HOME']
 try:
-    env['ENV']['FA_LICENSE_KEY'] = os.environ['FA_LICENSE_KEY']
-    env['ENV']['FA_USER_EMAIL'] = os.environ['FA_USER_EMAIL']
     env['ENV']['DOCKER_USER'] = os.environ['DOCKER_USER']
     env['ENV']['DOCKER_PASS'] = os.environ['DOCKER_PASS']
 except:
-    print('FA_LICENSE_KEY and FA_USER_EMAIL envs variable must be set')
+    print('DOCKER_USER and DOCKER_PASS envs variable must be set')
     sys.exit(1)
 
 # Variables que se propagan del entorno exterior en caso de existir

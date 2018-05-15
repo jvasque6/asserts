@@ -18,7 +18,7 @@ stdenv.mkDerivation rec {
  FA_LICENSE_KEY  = "set";
  DOCKER_PASS = "set";
  DOCKER_USER = "set";
- JFROG_USER="set";
- JFROG_PASS="set";
+ PYPI_USER="set";
+ PYPI_PASS="set";
 
 }

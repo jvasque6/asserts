@@ -1,8 +1,5 @@
 FROM alpine:latest
 
-ARG jfrog_user
-ARG jfrog_pass
-
 RUN apk update \
     && apk upgrade \
     && apk add python \
@@ -18,7 +15,5 @@ RUN apk update \
 
 RUN mkdir -p /root/.pip/
 COPY conf/pipconf /root/.pip/pip.conf
-RUN sed -i -e "s/__jfrog_user__/$jfrog_user/g" /root/.pip/pip.conf \
-    && sed -i -e "s/__jfrog_pass__/$jfrog_pass/g" /root/.pip/pip.conf
 
 RUN pip install fluidasserts
