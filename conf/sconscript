@@ -113,7 +113,7 @@ PhonyTargets(lenv, deploy=[
     'cp conf/dotpypirc ~/.pypirc',
     'sed -i -e "s/__pypi_user__/' +  lenv['ENV']['PYPI_USER'] + '/g" ~/.pypirc',
     'sed -i -e "s/__pypi_pass__/' +  lenv['ENV']['PYPI_PASS'] + '/g" ~/.pypirc',
-    'python setup.py sdist bdist_wheel upload -r pypi',
+    'python setup.py sdist bdist_wheel upload',
     'python deploy/send_mail.py'
 ])
 
