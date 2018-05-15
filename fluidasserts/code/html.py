@@ -3,7 +3,8 @@
 """HTML check module."""
 
 # 3rd party imports
-from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException)
+from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException,
+                       Literal, SkipTo, stringEnd)
 
 # local imports
 from fluidasserts import show_close
@@ -108,6 +109,50 @@ def is_cacheable(filename):
     tk_minusone = CaselessKeyword('-1')
     attrs = {'http-equiv': tk_expires,
              'content': tk_minusone}
+    has_http_equiv = has_attributes(filename, tag, attrs)
+
+    if not has_http_equiv:
+        result = True
+        show_open('Attributes in {}'.format(filename),
+                  details=dict(attributes=attrs))
+        return result
+
+    result = False
+    show_close('Attributes in {}'.format(filename),
+               details=dict(attributes=attrs))
+    return result
+
+
+@track
+def is_header_content_type_missing(filename):
+    """Check if Content-Type header is missing.
+
+    Verifies if the file has the tags::
+       <META HTTP-EQUIV="Content-Type" CONTENT="no-cache">
+
+    :param filename: Path to the ``HTML`` source.
+    :type filename: string
+    :rtype: bool
+    :returns: True if tag ``meta`` have attributes ``http-equiv``
+    and ``content`` set as specified, False otherwise.
+    """
+    tag = 'meta'
+    tk_content = CaselessKeyword('content')
+    tk_type = CaselessKeyword('type')
+    prs_cont_typ = tk_content + Literal('-') + tk_type
+
+    tk_type = SkipTo(Literal('/'), include=True)
+    tk_subtype = SkipTo(Literal(';'), include=True)
+    prs_mime = tk_type + tk_subtype
+
+    tk_charset = CaselessKeyword('charset')
+    tk_charset_value = SkipTo(stringEnd)
+    prs_charset = tk_charset + Literal('=') + tk_charset_value
+
+    prs_content_val = prs_mime + prs_charset
+
+    attrs = {'http-equiv': prs_cont_typ,
+             'content': prs_content_val}
     has_http_equiv = has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:

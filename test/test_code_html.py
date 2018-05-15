@@ -45,6 +45,15 @@ def test_is_cacheable_open():
     assert html.is_cacheable(INSECURE_CODE)
 
 
+def test_is_header_content_type_missing_open():
+    """Funcion test_is_header_content_type_missing_open.
+
+    Validar si las etiquetas que establecen la cabecera Content-Type
+    estan definidas en el codigo HTML de vulnerable.html
+    """
+    assert html.is_header_content_type_missing(INSECURE_CODE)
+
+
 #
 # Closing tests
 #
@@ -67,3 +76,12 @@ def test_is_cacheable_close():
     non-vulnerable.html
     """
     assert not html.is_cacheable(SECURE_CODE)
+
+
+def test_is_header_content_type_missing_close():
+    """Funcion test_is_header_content_type_missing_open.
+
+    Validar si las etiquetas que establecen la cabecera Content-Type
+    estan definidas en el codigo HTML de non-vulnerable.html
+    """
+    assert not html.is_header_content_type_missing(SECURE_CODE)
