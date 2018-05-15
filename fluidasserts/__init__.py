@@ -5,9 +5,11 @@
 # pylint: disable=no-name-in-module
 # standard imports
 import datetime
+import hashlib
 import inspect
 import logging.config
 import os
+import platform
 import tempfile
 import sys
 from collections import OrderedDict
@@ -15,6 +17,7 @@ from collections import OrderedDict
 # 3rd party imports
 import mixpanel
 import oyaml as yaml
+import requests
 
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
@@ -22,6 +25,8 @@ from pygments.lexers import PropertiesLexer
 from pygments.formatters import TerminalFormatter
 from pygments.token import Keyword, Name, Comment, String, Error, \
     Number, Operator, Generic, Token, Whitespace
+if sys.version_info > (3,):
+    from pygments.util import UnclosingTextIOWrapper
 
 # local imports
 # none
@@ -34,7 +39,6 @@ OUTFILE = sys.stdout
 
 if sys.platform in ('win32', 'cygwin'):
     if sys.version_info > (3,):
-        from pygments.util import UnclosingTextIOWrapper
         OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
     try:
         import colorama.initialise
@@ -132,6 +136,23 @@ UNKNOWN_COLORS = {
     Generic.Error: ('red', 'red'),
     Error: ('darkgray', 'darkgray'),
 }
+
+
+def get_os_fingerprint():
+    """Gets fingerprint of running OS."""
+    sha256 = hashlib.sha256()
+    data = sys.platform + sys.version + platform.node()
+    sha256.update(data.encode('utf-8'))
+    return sha256.hexdigest()
+
+
+def get_public_ip():
+    """Gets public IP of system."""
+    try:
+        my_ip = requests.get('https://api.ipify.org').text
+    except requests.exceptions.ConnectionError:
+        my_ip = 'Private IP'
+    return my_ip
 
 
 def get_caller_module():
@@ -243,15 +264,6 @@ else:
 
 PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
 
-KEYS = ['FA_LICENSE_KEY', 'FA_USER_EMAIL']
-
-for key in KEYS:
-    try:
-        os.environ[key]
-    except KeyError:
-        print(key + ' env variable must be set')
-        sys.exit(-1)
-
 if 'FA_STRICT' in os.environ:
     if os.environ['FA_STRICT'] != 'true' and \
        os.environ['FA_STRICT'] != 'false':
@@ -259,8 +271,8 @@ if 'FA_STRICT' in os.environ:
 set but with an unknown value. It must be "true" or "false".')
         sys.exit(-1)
 
-CLIENT_ID = os.environ['FA_LICENSE_KEY']
-USER_EMAIL = os.environ['FA_USER_EMAIL']
+CLIENT_ID = get_os_fingerprint()
+CLIENT_IP = get_public_ip()
 
 
 HEADER = """
@@ -274,7 +286,7 @@ highlight(HEADER, PropertiesLexer(), TerminalFormatter(),
           OUTFILE)
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
-    MP.people_set(CLIENT_ID, {'$email': USER_EMAIL})
+    MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
 except mixpanel.MixpanelException:
     pass
 
