@@ -26,7 +26,6 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts import LOGGER
 from fluidasserts.helper import banner_helper
 
 # pylint: disable=W0212
@@ -157,16 +156,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
         http_req = self.do_request()
 
-        if http_req.status_code == code:
-            self.is_auth = True
-            LOGGER.info('POST Authentication %s, Details=%s',
-                        self.url, 'Success with ' + str(self.data))
-        else:
-            self.is_auth = False
-            LOGGER.info('POST Authentication %s, Details=%s',
-                        self.url,
-                        'Error code (' + str(http_req.status_code) +
-                        ') ' + str(self.data))
+        self.is_auth = bool(http_req.status_code == code)
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
@@ -186,16 +176,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         http_req = self.do_request()
         if http_req is None:
             return None
-        if http_req.text.find(text) >= 0:
-            self.is_auth = True
-            LOGGER.debug('POST Authentication %s, Details=%s',
-                         self.url, 'Success with ' + str(self.data))
-        else:
-            self.is_auth = False
-            LOGGER.debug(
-                'POST Authentication %s, Details=%s',
-                self.url,
-                'Error text (' + http_req.text + ') ' + str(self.data))
+        self.is_auth = bool(http_req.text.find(text) >= 0)
 
         if http_req.cookies == {}:
             if http_req.request._cookies != {} and \
@@ -237,16 +218,10 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 self.cookies = resp.cookies
                 self.response = resp
                 self.is_auth = True
-                LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
-                            'Success with [ ' + user + ' : ' + passw + ' ]')
             else:
                 self.is_auth = False
-                LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
-                            'Fail with [ ' + user + ' : ' + passw + ' ]')
         else:
             self.is_auth = False
-            LOGGER.info('%s Auth: %s, Details=%s', method, self.url,
-                        'Not present')
 
     def get_html_value(self, field_type, field_name, field='value', enc=False):
         """Get a value from a HTML field."""
@@ -306,7 +281,7 @@ def options_request(url, *args, **kwargs):
     try:
         return requests.options(url, verify=False, *args, **kwargs)
     except requests.ConnectionError:
-        LOGGER.error('Sin acceso a %s , %s', url, 'ERROR')
+        raise ConnError
 
 
 def has_method(url, method, *args, **kwargs):

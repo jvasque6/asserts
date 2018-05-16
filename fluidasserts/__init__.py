@@ -9,10 +9,8 @@ from __future__ import absolute_import
 import datetime
 import hashlib
 import inspect
-import logging.config
 import os
 import platform
-import tempfile
 import sys
 from collections import OrderedDict
 
@@ -221,32 +219,6 @@ class Message(object):
             style = UNKNOWN_COLORS
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=style), OUTFILE)
-
-
-# create LOGGER
-LOGGER = logging.getLogger('FLUIDAsserts')
-LOGGER.setLevel(logging.DEBUG)
-
-# create console handler and set level to debug
-CONSOLE_HANDLER = logging.StreamHandler(sys.stdout)
-CONSOLE_HANDLER.setLevel(logging.INFO)
-TMP_DIR = tempfile.gettempdir()
-FILE_HANDLER = logging.FileHandler(
-    os.path.join(TMP_DIR, 'fluidasserts.log')
-    )
-FILE_HANDLER.setLevel(logging.DEBUG)
-
-# create FORMATTER
-FORMATTER = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# add FORMATTER to CONSOLE_HANDLER
-CONSOLE_HANDLER.setFormatter(FORMATTER)
-FILE_HANDLER.setFormatter(FORMATTER)
-
-# add handlers to LOGGER
-LOGGER.addHandler(CONSOLE_HANDLER)
-LOGGER.addHandler(FILE_HANDLER)
 
 
 # Set __version__

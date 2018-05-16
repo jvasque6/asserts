@@ -51,7 +51,7 @@ API Documentation
    fluidasserts.system
    fluidasserts.utils
    fluidasserts
-   modules 
+   modules
 
 Indices and tables
 ==================
