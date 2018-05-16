@@ -58,7 +58,7 @@ def has_not_autocomplete(filename):
     :type filename: string
     :rtype: bool
     :returns: True if tags ``form`` and ``input`` have attribute
-    ``autocomplete`` set as specified, False otherwise.
+              ``autocomplete`` set as specified, False otherwise.
     """
     tk_off = CaselessKeyword('off')
     attr = {'autocomplete': tk_off}
@@ -90,7 +90,7 @@ def is_cacheable(filename):
     :type filename: string
     :rtype: bool
     :returns: True if tag ``meta`` have attributes ``http-equiv``
-    and ``content`` set as specified, False otherwise.
+              and ``content`` set as specified, False otherwise.
     """
     tag = 'meta'
     tk_pragma = CaselessKeyword('pragma')
@@ -134,7 +134,7 @@ def is_header_content_type_missing(filename):
     :type filename: string
     :rtype: bool
     :returns: True if tag ``meta`` have attributes ``http-equiv``
-    and ``content`` set as specified, False otherwise.
+              and ``content`` set as specified, False otherwise.
     """
     tag = 'meta'
     tk_content = CaselessKeyword('content')

@@ -60,13 +60,6 @@ fluidasserts.proto.smtp module
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.proto.soap module
---------------------------------
-
-.. automodule:: fluidasserts.proto.soap
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 fluidasserts.proto.ssh module
 -------------------------------

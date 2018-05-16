@@ -20,6 +20,14 @@ fluidasserts.code.docker module
     :undoc-members:
     :show-inheritance:
 
+fluidasserts.code.html module
+-------------------------------
+
+.. automodule:: fluidasserts.code.html
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 fluidasserts.code.java module
 -----------------------------
 

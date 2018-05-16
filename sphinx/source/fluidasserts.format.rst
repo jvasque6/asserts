@@ -20,14 +20,6 @@ fluidasserts.format.cookie module
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.format.html module
--------------------------------
-
-.. automodule:: fluidasserts.format.html
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 fluidasserts.format.pdf module
 ------------------------------
 
