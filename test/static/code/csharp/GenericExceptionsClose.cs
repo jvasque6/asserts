@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 
 public class GenericExceptionsClose
 {
@@ -35,6 +36,12 @@ public class GenericExceptionsClose
       MD5 md5 = System.Security.Cryptography.MD5.Create();
       byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
       byte[] hash = md5.ComputeHash(inputBytes);
+
+      MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
+      byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+
+      SHA1 shaM = new SHA1Managed();
+      result = shaM.ComputeHash(data);
     }
 
     catch(Exception e)

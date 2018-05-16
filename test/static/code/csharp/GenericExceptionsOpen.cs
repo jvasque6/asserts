@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 
 public class GenericExceptionsOpen
 {
@@ -15,6 +16,19 @@ public class GenericExceptionsOpen
       MD5 md5 = System.Security.Cryptography.MD5.Create();
       byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
       byte[] hash = md5.ComputeHash(inputBytes);
+
+      byte[] data = new byte[DATA_SIZE];
+      byte[] result;
+
+      MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
+      byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+
+      SHA1 shaM = new SHA1Managed();
+      result = shaM.ComputeHash(data);
+
+      SHA1CryptoServiceProvider sha1Hasher = new SHA1CryptoServiceProvider();
+      byte[] data = sha1Hasher.ComputeHash(Encoding.Default.GetBytes(input));
+
     }
 
     catch(ArithmeticException e)

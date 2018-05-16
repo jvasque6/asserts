@@ -235,11 +235,39 @@ def uses_md5_hash(csharp_dest):
     :param csharp_dest: Path to a C# source file or package.
     :rtype: bool
     """
-    method = 'MD5.Create()'
+    method = 'MD5.Create(), new MD5CryptoServiceProvider()'
     tk_md5 = CaselessKeyword('md5')
     tk_create = CaselessKeyword('create')
     tk_params = nestedExpr()
-    call_function = tk_md5 + Literal('.') + tk_create + tk_params
+    fn_1 = tk_md5 + Literal('.') + tk_create + tk_params
+
+    tk_new = CaselessKeyword('new')
+    tk_md5cry = CaselessKeyword('MD5CryptoServiceProvider')
+    tk_params = nestedExpr()
+    fn_2 = tk_new + tk_md5cry + tk_params
+
+    call_function = Or([fn_1, fn_2])
+
+    result = code_helper.uses_insecure_method(call_function, csharp_dest,
+                                              LANGUAGE_SPECS, method)
+    return result
+
+
+def uses_sha1_hash(csharp_dest):
+    """
+    Check if code uses SHA1 as hashing algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+
+    :param csharp_dest: Path to a C# source file or package.
+    :rtype: bool
+    """
+    method = "new SHA1CryptoServiceProvider(), new SHA1Managed()"
+    tk_new = CaselessKeyword('new')
+    tk_sha1cry = CaselessKeyword('SHA1CryptoServiceProvider')
+    tk_sha1man = CaselessKeyword('SHA1Managed')
+    tk_params = nestedExpr()
+    call_function = tk_new + Or([tk_sha1cry, tk_sha1man]) + tk_params
 
     result = code_helper.uses_insecure_method(call_function, csharp_dest,
                                               LANGUAGE_SPECS, method)
