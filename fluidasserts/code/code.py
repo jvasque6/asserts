@@ -9,15 +9,19 @@ This module allows to check Code vulnerabilities.
 # standard imports
 import os
 import re
+import base64
 
 # 3rd party imports
-# None
+from pyparsing import Literal
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.helper import code_helper
 from fluidasserts.utils.decorators import track
+
+
+LANGUAGE_SPECS = {}
 
 
 def generic_code_assert(code_file, expected_regex):
@@ -147,3 +151,39 @@ def file_exists(code_file):
                details=dict(path=code_file,
                             fingerprint=code_helper.file_hash(code_file)))
     return False
+
+
+@track
+def has_weak_cipher(code_dest, expected_text):
+    """
+    Check if code uses base 64 to cipher confidential data.
+
+    See `REQ.185 <https://fluidattacks.com/web/es/rules/185/>`_.
+
+    :param code_dest: Path to a code source file or package.
+    :param expected_text: Text that might be in source file or package
+    :rtype: bool
+    """
+    enc_text = base64.b64encode(expected_text.encode('utf-8'))
+    prs_base64 = Literal(enc_text.decode('utf-8'))
+
+    result = False
+    b64_matches = code_helper.check_grammar(prs_base64, code_dest,
+                                            LANGUAGE_SPECS)
+
+    for code_file, vulns in b64_matches.items():
+        if vulns:
+            show_open('Code has confidential data encoded in base64',
+                      details=dict(expected=expected_text,
+                                   file=code_file,
+                                   fingerprint=code_helper.
+                                   file_hash(code_file),
+                                   lines=", ".
+                                   join([str(x) for x in vulns])))
+            result = True
+        else:
+            show_close('Code does not has confidential data encoded in base64',
+                       details=dict(file=code_file,
+                                    fingerprint=code_helper.
+                                    file_hash(code_file)))
+    return result

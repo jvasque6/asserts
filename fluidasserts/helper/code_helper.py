@@ -23,7 +23,7 @@ def is_empty_result(parse_result):
         if parse_result:
             return is_empty_result(parse_result[0])
         return True
-    return False
+    return not bool(parse_result)
 
 
 def get_match_lines(grammar, code_file, lang_spec):  # noqa
@@ -49,7 +49,7 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
                 except (ParseException, IndexError):
                     pass
 
-                if in_block_comment:
+                if in_block_comment and lang_spec.get('block_comment_end'):
                     try:
                         block_end = Literal(lang_spec.get('block_comment_end'))
                         parser = SkipTo(block_end) + block_end
@@ -118,9 +118,12 @@ def check_grammar(grammar, code_dest, lang_spec):
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            if '.' in full_path:
-                if not full_path.split('.')[1] in lang_spec['extensions']:
-                    continue
+            if lang_spec.get('extensions'):
+                if '.' in full_path:
+                    if full_path.split('.')[1] in lang_spec.get('extensions'):
+                        vulns[full_path] = get_match_lines(grammar, full_path,
+                                                           lang_spec)
+            else:
                 vulns[full_path] = get_match_lines(grammar, full_path,
                                                    lang_spec)
     return vulns
