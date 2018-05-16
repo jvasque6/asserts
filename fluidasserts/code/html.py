@@ -44,7 +44,10 @@ def _has_attributes(filename, tag, attrs):
                 value.parseString(getattr(expr, attr))
                 result = True
             except ParseException:
-                continue
+                result = False
+                break
+        if result:
+            break
     return result
 
 
@@ -66,10 +69,10 @@ def has_not_autocomplete(filename):
     attr = {'autocomplete': tk_off}
     tag_i = 'input'
     tag_f = 'form'
-    has_attr_i = _has_attributes(filename, tag_i, attr)
-    has_attr_f = _has_attributes(filename, tag_f, attr)
+    has_input = _has_attributes(filename, tag_i, attr)
+    has_form = _has_attributes(filename, tag_f, attr)
 
-    if (has_attr_i or has_attr_f) is False:
+    if not (has_input or has_form):
         result = True
         show_open('Attribute in {}'.format(filename),
                   details=dict(atributes=attr))
@@ -99,29 +102,22 @@ def is_cacheable(filename):
     tk_nocache = CaselessKeyword('no-cache')
     attrs = {'http-equiv': tk_pragma,
              'content': tk_nocache}
-    has_http_equiv = _has_attributes(filename, tag, attrs)
-
-    if not has_http_equiv:
-        result = True
-        show_open('Attributes in {}'.format(filename),
-                  details=dict(attributes=attrs))
-        return result
+    has_pragma = _has_attributes(filename, tag, attrs)
 
     tk_expires = CaselessKeyword('expires')
     tk_minusone = CaselessKeyword('-1')
     attrs = {'http-equiv': tk_expires,
              'content': tk_minusone}
-    has_http_equiv = _has_attributes(filename, tag, attrs)
+    has_expires = _has_attributes(filename, tag, attrs)
 
-    if not has_http_equiv:
+    if not has_pragma or not has_expires:
         result = True
         show_open('Attributes in {}'.format(filename),
                   details=dict(attributes=attrs))
-        return result
-
-    result = False
-    show_close('Attributes in {}'.format(filename),
-               details=dict(attributes=attrs))
+    else:
+        result = False
+        show_close('Attributes in {}'.format(filename),
+                   details=dict(attributes=attrs))
     return result
 
 
@@ -155,15 +151,14 @@ def is_header_content_type_missing(filename):
 
     attrs = {'http-equiv': prs_cont_typ,
              'content': prs_content_val}
-    has_http_equiv = _has_attributes(filename, tag, attrs)
+    has_content_type = _has_attributes(filename, tag, attrs)
 
-    if not has_http_equiv:
+    if not has_content_type:
         result = True
         show_open('Attributes in {}'.format(filename),
                   details=dict(attributes=attrs))
-        return result
-
-    result = False
-    show_close('Attributes in {}'.format(filename),
-               details=dict(attributes=attrs))
+    else:
+        result = False
+        show_close('Attributes in {}'.format(filename),
+                   details=dict(attributes=attrs))
     return result
