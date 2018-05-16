@@ -189,8 +189,9 @@ PreCommit:
     description: 'Analyze docstrings with pep257'
     required_executable: 'pep257'
     install_command: 'pip install pep257'
-    include: 'fluidasserts/**/*.py'
-    include: 'test/**/*.py'
+    include:
+      - 'fluidasserts/**/*.py'
+      - 'test/**/*.py'
 
   Pycodestyle:
     enabled: true
@@ -204,8 +205,9 @@ PreCommit:
     description: 'Analyze with pyflakes'
     required_executable: 'pyflakes'
     install_command: 'pip install pyflakes'
-    include: 'fluidasserts/**/*.py'
-    include: 'test/**/*.py'
+    include:
+      - 'fluidasserts/**/*.py'
+      - 'test/**/*.py'
 
   Pylint:
     enabled: true

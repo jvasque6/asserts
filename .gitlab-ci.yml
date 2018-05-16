@@ -62,12 +62,14 @@ codequality:
   script:
     - mkdir -p /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}
     - cp -r $PWD/* /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}
-    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" | sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
+    - export SP_VERSION=$(echo "$CI_SERVER_VERSION" |
+        sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
     - docker run
-        --env SOURCE_CODE="/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}"
-        --volume "/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}":/code
-        --volume /var/run/docker.sock:/var/run/docker.sock
-        codeclimate/codeclimate analyze -e sonar-python -e pep8 -e randon -f json > codeclimate.json || true
+      --env SOURCE_CODE="/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}"
+      --volume "/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}":/code
+      --volume /var/run/docker.sock:/var/run/docker.sock
+      codeclimate/codeclimate analyze -e sonar-python -e pep8 -e randon -f json
+      > codeclimate.json || true
   after_script:
     - rm -rf /tmp${CI_PROJECT_DIR}
   retry: 2
@@ -106,6 +108,6 @@ pages:
     - mkdir -p public/
     - scons sphinxdoc
   artifacts:
-    paths: [public/,]
+    paths: [public/]
   only:
     - master

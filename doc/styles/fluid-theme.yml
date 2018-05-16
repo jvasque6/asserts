@@ -145,7 +145,11 @@ blockquote:
   font_size: $base_font_size_large
   border_color: $base_border_color
   border_width: 5
-  padding: [$vertical_rhythm / 2, $horizontal_rhythm, $vertical_rhythm / -2, $horizontal_rhythm + $blockquote_border_width / 2]
+  padding:
+    - $vertical_rhythm / 2
+    - $horizontal_rhythm
+    - $vertical_rhythm / -2
+    - $horizontal_rhythm + $blockquote_border_width / 2
   cite_font_size: $base_font_size_small
   cite_font_color: 999999
 # code is used for source blocks (perhaps change to source or listing?)
@@ -170,7 +174,11 @@ example:
   border_width: 0.75
   background_color: transparent
   # FIXME reenable margin bottom once margin collapsing is implemented
-  padding: [$vertical_rhythm, $horizontal_rhythm, 0, $horizontal_rhythm]
+  padding:
+    - $vertical_rhythm
+    - $horizontal_rhythm
+    - 0
+    - $horizontal_rhythm]
 image:
   align: left
 prose:
@@ -182,7 +190,11 @@ sidebar:
   border_width: $base_border_width
   background_color: eeeeee
   # FIXME reenable margin bottom once margin collapsing is implemented
-  padding: [$vertical_rhythm, $vertical_rhythm * 1.25, 0, $vertical_rhythm * 1.25]
+  padding:
+    - $vertical_rhythm
+    - $vertical_rhythm * 1.25
+    - 0
+    - $vertical_rhythm * 1.25
   title:
     align: center
     font_color: $heading_font_color

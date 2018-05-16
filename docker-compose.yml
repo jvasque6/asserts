@@ -1,3 +1,4 @@
+---
 version: '3'
 services:
   deps:
@@ -12,107 +13,107 @@ services:
     container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:dev
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   self:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
+      - deps
     command: scons self
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   lint:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
+      - deps
     command: scons lint
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   overcommit:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
+      - deps
     command: bash -c "overcommit --sign && overcommit --run"
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   dist:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
+      - deps
     command: scons dist
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   test:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
+      - deps
     command: scons test
     networks:
-     - fluidasserts
+      - fluidasserts
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
   deploy:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     depends_on:
-     - deps
-     - dist
+      - deps
+      - dist
     command: scons deploy
     volumes:
-     - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-     - PYPI_USER=$PYPI_USER
-     - PYPI_PASS=$PYPI_PASS
-     - FA_LICENSE_KEY=$FA_LICENSE_KEY
-     - FA_USER_EMAIL=$FA_USER_EMAIL
-     - DOCKER_USER=$DOCKER_USER
-     - DOCKER_PASS=$DOCKER_PASS
+      - PYPI_USER=$PYPI_USER
+      - PYPI_PASS=$PYPI_PASS
+      - FA_LICENSE_KEY=$FA_LICENSE_KEY
+      - FA_USER_EMAIL=$FA_USER_EMAIL
+      - DOCKER_USER=$DOCKER_USER
+      - DOCKER_PASS=$DOCKER_PASS
 
 networks:
   fluidasserts:

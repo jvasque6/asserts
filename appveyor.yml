@@ -1,3 +1,4 @@
+---
 environment:
 
   matrix:
@@ -13,9 +14,10 @@ install:
   - "%PYTHON%\\python.exe setup.py bdist_wheel"
   - "%PYTHON%\\python.exe setup.py bdist_egg"
   - "%PYTHON%\\python.exe setup.py sdist"
-  - FOR /F %%P IN ('dir /b /S "build\dist\*.zip"') DO %PYTHON%\\python.exe -m pip install -U %%P
+  - FOR /F %%P IN ('dir /b /S "build\dist\*.zip"') DO
+      %PYTHON%\\python.exe -m pip install -U %%P
 
-build: off
+build: false
 
 test_script:
   # Put your test command here.
@@ -27,18 +29,18 @@ test_script:
   # to put the Python evrsion you want to use on PATH.
   - "%PYTHON%\\python.exe example/full.py"
 
-#after_test:
-  # This step builds your wheels.
-  # Again, you only need build.cmd if you're building C extensions for
-  # 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
-  # interpreter
+#  after_test:
+# This step builds your wheels.
+# Again, you only need build.cmd if you're building C extensions for
+# 64-bit Python 3.3/3.4. And you need to use %PYTHON% to get the correct
+# interpreter
 #  - "build.cmd %PYTHON%\\python.exe setup.py bdist_wheel"
 
-#artifacts:
-  # bdist_wheel puts your built wheel in the dist directory
+# artifacts:
+# bdist_wheel puts your built wheel in the dist directory
 #  - path: dist\*
 
-#on_success:
+#  on_success:
 #  You can use this step to upload your artifacts to a public website.
 #  See Appveyor's documentation for more details. Or you can simply
 #  access your wheels from the Appveyor "artifacts" tab for your build.
