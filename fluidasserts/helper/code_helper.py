@@ -142,7 +142,7 @@ def uses_insecure_method(grammar, code_dest, lang_spec, method):
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
-            show_close('Code uses {} method'.format(method),
+            show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
                                     fingerprint=file_hash(code_file)))
     return result
