@@ -12,6 +12,7 @@ function functionAWithoutConsoleLog() {
     //}
     //console.log()
     //localStorage.setItem("key")
+    //eval('alert("Your query string was ' + unescape(document.location.search) + '");');
 }
 
 function functionBWithoutConsoleLog() {

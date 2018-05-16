@@ -82,6 +82,16 @@ def test_has_if_without_else_in_dir_open():
     """Search conditionals without an else option."""
     assert javascript.has_if_without_else(CODE_DIR)
 
+
+def test_uses_eval_open():
+    """Search eval function calls."""
+    assert javascript.uses_eval(INSECURE_CODE)
+
+
+def test_uses_eval_in_dir_open():
+    """Search eval function calls."""
+    assert javascript.uses_eval(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -115,3 +125,8 @@ def test_has_switch_without_default_close():
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not javascript.has_if_without_else(SECURE_CODE)
+
+
+def test_uses_eval_close():
+    """Search eval function calls."""
+    assert not javascript.uses_eval(SECURE_CODE)

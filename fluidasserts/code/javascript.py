@@ -42,7 +42,22 @@ def uses_console_log(js_dest):
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
     result = code_helper.uses_insecure_method(clog, js_dest,
                                               LANGUAGE_SPECS, method)
+    return result
 
+
+@track
+def uses_eval(js_dest):
+    """
+    Search for ``eval()`` calls in a JavaScript file or directory.
+
+    :param js_dest: Path to a JavaScript source file or directory.
+    :rtype: bool
+    """
+    method = 'eval()'
+    tk_method = CaselessKeyword('eval')
+    call_function = tk_method + Suppress(nestedExpr())
+    result = code_helper.uses_insecure_method(call_function, js_dest,
+                                              LANGUAGE_SPECS, method)
     return result
 
 
@@ -62,7 +77,6 @@ def uses_localstorage(js_dest):
 
     result = code_helper.uses_insecure_method(lsto, js_dest,
                                               LANGUAGE_SPECS, method)
-
     return result
 
 
@@ -84,7 +98,6 @@ def has_insecure_randoms(js_dest):
 
     result = code_helper.uses_insecure_method(call_function, js_dest,
                                               LANGUAGE_SPECS, method)
-
     return result
 
 
