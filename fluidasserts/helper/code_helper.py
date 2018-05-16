@@ -18,7 +18,7 @@ from fluidasserts import show_open
 
 
 def _is_empty_result(parse_result):
-    """Checks if a ParseResults is empty"""
+    """Check if a ParseResults is empty."""
     if isinstance(parse_result, ParseResults):
         if parse_result:
             return _is_empty_result(parse_result[0])

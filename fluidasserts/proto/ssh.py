@@ -21,7 +21,7 @@ PORT = 22
 
 @track
 def is_cbc_used(host, port=PORT, username=None, password=None):
-    """Function to check whether ssh has CBC algorithms enabled"""
+    """Check if ssh has CBC algorithms enabled."""
     result = True
     try:
         service = banner_helper.SSHService(port)
@@ -55,7 +55,7 @@ def is_cbc_used(host, port=PORT, username=None, password=None):
 
 @track
 def is_hmac_used(host, port=PORT, username=None, password=None):
-    """Function to check whether ssh has weak hmac algorithms enabled"""
+    """Check whether ssh has weak hmac algorithms enabled."""
     result = True
     try:
         service = banner_helper.SSHService(port)

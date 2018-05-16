@@ -193,7 +193,7 @@ def has_recursion(nameserver):
 
 @track
 def can_amplify(nameserver):
-    """Checks if nameserver allows amplification attacks."""
+    """Check if nameserver allows amplification attacks."""
     domain = 'isc.org.'
     name = dns.name.from_text(domain)
 

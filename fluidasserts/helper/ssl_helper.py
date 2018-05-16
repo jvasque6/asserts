@@ -64,7 +64,6 @@ def connect(hostname, port=PORT, check_poodle_tls=False, min_version=(3, 1),
             key_exchange_names=None,
             anon=False):
     """Establish a SSL/TLS connection."""
-
     if cipher_names is None:
         cipher_names = CIPHER_NAMES
     if key_exchange_names is None:

@@ -55,6 +55,7 @@ HDR_RGX = {
 
 class ConnError(Exception):
     """requests.ConnectionError wrapper exception."""
+
     pass
 
 

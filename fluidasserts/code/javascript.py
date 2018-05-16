@@ -68,8 +68,8 @@ def uses_localstorage(js_dest):
 
 @track
 def has_insecure_randoms(js_dest):
-    """
-    Check if code uses ``Math.Random()``
+    r"""
+    Check if code uses ``Math.Random()``\ .
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 

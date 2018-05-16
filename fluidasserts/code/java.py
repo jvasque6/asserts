@@ -169,8 +169,8 @@ def has_switch_without_default(java_dest):
 
 @track
 def has_insecure_randoms(java_dest):
-    """
-    Check if code uses ``Math.Random()``
+    r"""
+    Check if code uses ``Math.Random()``\ .
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
@@ -272,6 +272,5 @@ def uses_sha1_hash(java_dest):
     :param java_dest: Path to a Java source file or package.
     :rtype: bool
     """
-
     result = uses_insecure_hash(java_dest, 'sha-1')
     return result

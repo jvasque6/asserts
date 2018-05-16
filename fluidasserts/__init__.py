@@ -139,7 +139,7 @@ UNKNOWN_COLORS = {
 
 
 def get_os_fingerprint():
-    """Gets fingerprint of running OS."""
+    """Get fingerprint of running OS."""
     sha256 = hashlib.sha256()
     data = sys.platform + sys.version + platform.node()
     sha256.update(data.encode('utf-8'))
@@ -147,7 +147,7 @@ def get_os_fingerprint():
 
 
 def get_public_ip():
-    """Gets public IP of system."""
+    """Get public IP of system."""
     try:
         my_ip = requests.get('https://api.ipify.org').text
     except requests.exceptions.ConnectionError:

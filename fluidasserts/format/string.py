@@ -19,8 +19,9 @@ from fluidasserts.utils.decorators import track
 
 def _check_password_strength(password, length):
     """
-    Check if a user password is secure
-    according to the following criteria:
+    Check if a user password is secure.
+
+    A user password is considered secured if following criteria are met:
 
     - Password length must be at least the given parameter ``length``.
     - Password must contain at least one uppercase character,

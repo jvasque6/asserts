@@ -274,7 +274,6 @@ be vulnerable to POODLE SSLv3 attack',
 @track
 def has_breach(site, port=PORT):
     """Check whether BREACH is present."""
-
     url = 'https://{}:{}'.format(site, port)
     common_compressors = ['compress', 'exi', 'gzip',
                           'identity', 'pack200-gzip', 'br', 'bzip2',

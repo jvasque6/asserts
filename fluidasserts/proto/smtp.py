@@ -22,7 +22,7 @@ PORT = 25
 
 @track
 def has_vrfy(ip_address, port=PORT):
-    """Has VRFY command enabled."""
+    """Check if IP has VRFY command enabled."""
     server = smtplib.SMTP(ip_address, port)
     service = banner_helper.SMTPService(port)
     fingerprint = service.get_fingerprint(ip_address)

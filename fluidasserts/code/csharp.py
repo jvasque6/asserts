@@ -152,7 +152,7 @@ def has_switch_without_default(csharp_dest):
 @track
 def has_insecure_randoms(csharp_dest):
     """
-    Check if code instantiates ``Random`` class
+    Check if code instantiates ``Random`` class.
 
     See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
 
