@@ -36,14 +36,16 @@ def has_attributes(filename, tag, attrs):
     tag_s, _ = makeHTMLTags(tag)
     tag_expr = tag_s
 
+    result = False
+
     for expr in tag_expr.searchString(html_doc):
         for attr, value in attrs.items():
             try:
                 value.parseString(getattr(expr, attr))
+                result = True
             except ParseException:
-                break
-            return True
-    return False
+                continue
+    return result
 
 
 @track
@@ -94,7 +96,7 @@ def is_cacheable(filename):
     """
     tag = 'meta'
     tk_pragma = CaselessKeyword('pragma')
-    tk_nocache = CaselessKeyword('tk_nocache')
+    tk_nocache = CaselessKeyword('no-cache')
     attrs = {'http-equiv': tk_pragma,
              'content': tk_nocache}
     has_http_equiv = has_attributes(filename, tag, attrs)
