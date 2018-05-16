@@ -14,11 +14,10 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:dev
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -29,11 +28,10 @@ services:
     command: scons self
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -44,11 +42,10 @@ services:
     command: scons lint
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -59,11 +56,10 @@ services:
     command: bash -c "overcommit --sign && overcommit --run"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -74,11 +70,10 @@ services:
     command: scons dist
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -91,11 +86,10 @@ services:
       - fluidasserts
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
@@ -107,11 +101,10 @@ services:
     command: scons deploy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
-      - FA_LICENSE_KEY=$FA_LICENSE_KEY
-      - FA_USER_EMAIL=$FA_USER_EMAIL
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
 
