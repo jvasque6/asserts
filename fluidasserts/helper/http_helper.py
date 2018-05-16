@@ -276,7 +276,7 @@ def request_dataset(url, dataset_list, *args, **kwargs):
     return resp
 
 
-def options_request(url, *args, **kwargs):
+def _options_request(url, *args, **kwargs):
     """HTTP OPTIONS request."""
     try:
         return requests.options(url, verify=False, *args, **kwargs)
@@ -286,7 +286,7 @@ def options_request(url, *args, **kwargs):
 
 def has_method(url, method, *args, **kwargs):
     """Check specific HTTP method."""
-    is_method_present = options_request(url, *args, **kwargs).headers
+    is_method_present = _options_request(url, *args, **kwargs).headers
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:

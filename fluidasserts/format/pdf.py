@@ -14,7 +14,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def has_attribute(filename, metaname):
+def _has_attribute(filename, metaname):
     """Check if docinfo attribute is present."""
     input_pdf = PdfFileReader(open(filename, 'rb'))
     pdf_docinfo = input_pdf.getDocumentInfo()
@@ -33,19 +33,19 @@ def has_attribute(filename, metaname):
 @track
 def has_creator(filename):
     """Check if creator attribute is present in docinfo section."""
-    return has_attribute(filename, 'creator')
+    return _has_attribute(filename, 'creator')
 
 
 @track
 def has_producer(filename):
     """Check if producer attribute is present in docinfo section."""
-    return has_attribute(filename, 'producer')
+    return _has_attribute(filename, 'producer')
 
 
 @track
 def has_author(filename):
     """Check if author attribute is present in docinfo section."""
-    return has_attribute(filename, 'author')
+    return _has_attribute(filename, 'author')
 
 
 # def has_create_date(filename):

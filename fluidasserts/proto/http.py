@@ -93,7 +93,7 @@ SQLI_ERROR_MSG = {
 }
 
 
-def generic_http_assert(url, expected_regex, *args, **kwargs):
+def _generic_http_assert(url, expected_regex, *args, **kwargs):
     """Check if a text is present in HTTP response."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
@@ -105,7 +105,7 @@ def generic_http_assert(url, expected_regex, *args, **kwargs):
 
 
 # pylint: disable=R0913
-def multi_generic_http_assert(url, regex_list, *args, **kwargs):
+def _multi_generic_http_assert(url, regex_list, *args, **kwargs):
     """Check if a multiple text is present in HTTP response."""
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     response = http_session.response
@@ -121,7 +121,7 @@ def multi_generic_http_assert(url, regex_list, *args, **kwargs):
 def has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
     try:
-        ret = multi_generic_http_assert(url, regex_list, *args, **kwargs)
+        ret = _multi_generic_http_assert(url, regex_list, *args, **kwargs)
         if ret:
             show_open('A bad text was present: "{}"'.format(ret),
                       details=dict(url=url))
@@ -139,7 +139,7 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
 def has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
     try:
-        ret = generic_http_assert(url, expected_text, *args, **kwargs)
+        ret = _generic_http_assert(url, expected_text, *args, **kwargs)
         if ret:
             show_open('Bad text present: "{}"'.format(expected_text),
                       details=dict(url=url))
@@ -156,7 +156,7 @@ def has_text(url, expected_text, *args, **kwargs):
 def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
     try:
-        ret = generic_http_assert(url, expected_text, *args, **kwargs)
+        ret = _generic_http_assert(url, expected_text, *args, **kwargs)
         if not ret:
             show_open('Expected text not present "{}"'.
                       format(expected_text), details=dict(url=url))
@@ -439,7 +439,7 @@ def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
     try:
-        ret = generic_http_assert(url, bad_text, *args, **kwargs)
+        ret = _generic_http_assert(url, bad_text, *args, **kwargs)
         if ret:
             show_open('Directory listing enabled',
                       details=dict(url=url))

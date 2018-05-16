@@ -17,11 +17,11 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 
 
-def is_empty_result(parse_result):
+def _is_empty_result(parse_result):
     """Checks if a ParseResults is empty"""
     if isinstance(parse_result, ParseResults):
         if parse_result:
-            return is_empty_result(parse_result[0])
+            return _is_empty_result(parse_result[0])
         return True
     return not bool(parse_result)
 
@@ -62,7 +62,7 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
                         pass
             try:
                 results = grammar.searchString(line, maxMatches=1)
-                if not is_empty_result(results):
+                if not _is_empty_result(results):
                     affected_lines.append(counter)
             except ParseException:
                 pass
@@ -77,7 +77,7 @@ def block_contains_grammar(grammar, code_dest, lines):
         for line in lines:
             txt = "".join(file_lines[line - 1:])
             results = grammar.searchString(txt, maxMatches=1)
-            if not is_empty_result(results):
+            if not _is_empty_result(results):
                 vulns.append(line)
     return vulns
 
@@ -90,7 +90,7 @@ def block_contains_empty_grammar(grammar, code_dest, lines):
         for line in lines:
             txt = "".join(file_lines[line - 1:])
             results = grammar.searchString(txt, maxMatches=1)
-            if is_empty_result(results):
+            if _is_empty_result(results):
                 vulns.append(line)
     return vulns
 

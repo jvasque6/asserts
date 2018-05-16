@@ -33,6 +33,7 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
     return result
 
 
+@track
 def is_os_sudo_disabled(server, username, password, ssh_config=None):
     """Check if there's sudo or similar installed in os_linux_generic."""
     result = True
@@ -71,6 +72,7 @@ def is_os_compilers_installed(server, username, password,
     return result
 
 
+@track
 def is_os_antimalware_not_installed(server, username, password,
                                     ssh_config=None):
     """Check if there's any antimalware installed in os_linux_generic."""

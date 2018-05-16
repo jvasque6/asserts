@@ -25,7 +25,7 @@ KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
                 "ecdh_anon", "dh_anon"]
 
 
-def my_add_padding(self, data):
+def _my_add_padding(self, data):
     """Add padding to data so that it is multiple of block size."""
     current_length = len(data)
     block_length = self.blockSize
@@ -71,7 +71,7 @@ def connect(hostname, port=PORT, check_poodle_tls=False, min_version=(3, 1),
         key_exchange_names = KEY_EXCHANGE
 
     if check_poodle_tls:
-        tlslite.recordlayer.RecordLayer.addPadding = my_add_padding
+        tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding
     else:
         tlslite.recordlayer.RecordLayer.addPadding = ORIG_METHOD
 

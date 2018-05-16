@@ -24,7 +24,7 @@ from fluidasserts.utils.decorators import track
 LANGUAGE_SPECS = {}
 
 
-def generic_code_assert(code_file, expected_regex):
+def _generic_code_assert(code_file, expected_regex):
     """
     Check if a text is present in given source file.
 
@@ -40,7 +40,7 @@ def generic_code_assert(code_file, expected_regex):
         return False
 
 
-def show_has_text(is_open, code_file, expected_text):
+def _show_has_text(is_open, code_file, expected_text):
     """
     Show open or close based in is_open param.
 
@@ -61,7 +61,7 @@ def show_has_text(is_open, code_file, expected_text):
                                 expected_text=expected_text))
 
 
-def show_has_not_text(is_open, code_file, expected_text):
+def _show_has_not_text(is_open, code_file, expected_text):
     """
     Show open or close based in is_open param.
 
@@ -94,16 +94,16 @@ def has_text(code_dest, expected_text):
     :rtype: bool
     """
     if os.path.isfile(code_dest):
-        ret = generic_code_assert(code_dest, expected_text)
-        show_has_text(ret, code_dest, expected_text)
+        ret = _generic_code_assert(code_dest, expected_text)
+        _show_has_text(ret, code_dest, expected_text)
         return ret
 
     ret_fin = False
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            ret = generic_code_assert(full_path, expected_text)
-            show_has_text(ret, full_path, expected_text)
+            ret = _generic_code_assert(full_path, expected_text)
+            _show_has_text(ret, full_path, expected_text)
             ret_fin = ret_fin or ret
     return ret_fin
 
@@ -120,16 +120,16 @@ def has_not_text(code_dest, expected_text):
     :rtype: bool
     """
     if os.path.isfile(code_dest):
-        ret = generic_code_assert(code_dest, expected_text)
-        show_has_text(ret, code_dest, expected_text)
+        ret = _generic_code_assert(code_dest, expected_text)
+        _show_has_text(ret, code_dest, expected_text)
         return not ret
 
     ret_fin = False
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            ret = generic_code_assert(full_path, expected_text)
-            show_has_text(ret, full_path, expected_text)
+            ret = _generic_code_assert(full_path, expected_text)
+            _show_has_text(ret, full_path, expected_text)
             ret_fin = ret_fin or not ret
     return ret_fin
 

@@ -23,12 +23,12 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def hex2bin(arr):
+def _hex2bin(arr):
     """Hex 2 Bin."""
     return ''.join(chr(x) for x in arr)
 
 
-def rcv_tls_record(sock):
+def _rcv_tls_record(sock):
     """Receive TLS record."""
     try:
         tls_header = sock.recv(5)
@@ -47,7 +47,7 @@ def rcv_tls_record(sock):
         return None, None, None
 
 
-def build_client_hello(tls_ver):
+def _build_client_hello(tls_ver):
     """Build CLIENTHELLO TLS message."""
     ssl_version_mapping = {
         'SSLv3':   0x00,
@@ -105,7 +105,7 @@ def build_client_hello(tls_ver):
     return client_hello
 
 
-def build_heartbeat(tls_ver):
+def _build_heartbeat(tls_ver):
     """Build heartbeat message."""
     ssl_version_mapping = {
         'SSLv3':   0x00,
@@ -388,15 +388,15 @@ def has_heartbleed(site, port=PORT):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(5)
             sock.connect((site, port))
-            sock.send(hex2bin(build_client_hello(vers)))
-            typ, _, _ = rcv_tls_record(sock)
+            sock.send(_hex2bin(_build_client_hello(vers)))
+            typ, _, _ = _rcv_tls_record(sock)
             if not typ:
                 continue
             if typ == 22:
                 # Received Server Hello
-                sock.send(hex2bin(build_heartbeat(vers)))
+                sock.send(_hex2bin(_build_heartbeat(vers)))
                 while True:
-                    typ, _, pay = rcv_tls_record(sock)
+                    typ, _, pay = _rcv_tls_record(sock)
                     if typ == 21 or typ is None:
                         break
                     if typ == 24:

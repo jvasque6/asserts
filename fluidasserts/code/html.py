@@ -12,7 +12,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def has_attributes(filename, tag, attrs):
+def _has_attributes(filename, tag, attrs):
     """
     Check ``HTML`` attributes` values.
 
@@ -66,8 +66,8 @@ def has_not_autocomplete(filename):
     attr = {'autocomplete': tk_off}
     tag_i = 'input'
     tag_f = 'form'
-    has_attr_i = has_attributes(filename, tag_i, attr)
-    has_attr_f = has_attributes(filename, tag_f, attr)
+    has_attr_i = _has_attributes(filename, tag_i, attr)
+    has_attr_f = _has_attributes(filename, tag_f, attr)
 
     if (has_attr_i or has_attr_f) is False:
         result = True
@@ -99,7 +99,7 @@ def is_cacheable(filename):
     tk_nocache = CaselessKeyword('no-cache')
     attrs = {'http-equiv': tk_pragma,
              'content': tk_nocache}
-    has_http_equiv = has_attributes(filename, tag, attrs)
+    has_http_equiv = _has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
         result = True
@@ -111,7 +111,7 @@ def is_cacheable(filename):
     tk_minusone = CaselessKeyword('-1')
     attrs = {'http-equiv': tk_expires,
              'content': tk_minusone}
-    has_http_equiv = has_attributes(filename, tag, attrs)
+    has_http_equiv = _has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
         result = True
@@ -155,7 +155,7 @@ def is_header_content_type_missing(filename):
 
     attrs = {'http-equiv': prs_cont_typ,
              'content': prs_content_val}
-    has_http_equiv = has_attributes(filename, tag, attrs)
+    has_http_equiv = _has_attributes(filename, tag, attrs)
 
     if not has_http_equiv:
         result = True
