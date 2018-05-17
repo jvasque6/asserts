@@ -257,8 +257,10 @@ CLIENT_IP = get_public_ip()
 
 HEADER = """
 ---
-# FLUIDAsserts (v. {}) by FLUIDAttacks (https://fluidattacks.com)
-# All rights reserved.
+# FLUIDAsserts (v. {})
+#  ___
+# | >>|> fluid
+# |___|  attacks, we hack your software
 # Loading attack modules ...
 """.format(__version__)
 
