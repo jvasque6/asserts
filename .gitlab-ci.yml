@@ -69,9 +69,10 @@ codequality:
       -v /var/run/docker.sock:/var/run/docker.sock
       "registry.gitlab.com/gitlab-org/security-products/codequality:$SP_VERSION"
       /code
+    - cp -f $SRC/codeclimate.json .
   retry: 2
   artifacts:
-    paths: [$SRC/codeclimate.json]
+    paths: [codeclimate.json]
 
 deploy:
   stage: deploy
