@@ -1,7 +1,0 @@
-FROM registry.gitlab.com/fluidsignal/asserts:builder
-
-WORKDIR /usr/src/asserts
-
-ARG gituser
-ARG gitpass
-ARG branch
