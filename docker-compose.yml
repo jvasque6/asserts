@@ -8,13 +8,13 @@ services:
       args:
         gituser: $DOCKER_USER
         gitpass: $DOCKER_PASS
-        branch: $CI_COMMIT_REF_NAME
+        branch: $CI_COMMIT_SHA
     command: scons deps
     container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:builder
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -28,7 +28,7 @@ services:
     command: scons self
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -42,7 +42,7 @@ services:
     command: scons lint
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -56,7 +56,7 @@ services:
     command: bash -c "overcommit --sign && overcommit --run"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -70,7 +70,7 @@ services:
     command: scons dist
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -86,7 +86,7 @@ services:
       - fluidasserts
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
@@ -101,7 +101,7 @@ services:
     command: scons deploy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
+      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
     environment:
       - PYPI_USER=$PYPI_USER
       - PYPI_PASS=$PYPI_PASS
