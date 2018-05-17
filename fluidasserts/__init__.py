@@ -35,6 +35,12 @@ if sys.version_info > (3,):
 # pylint: disable=too-few-public-methods
 # pylint: disable=no-member
 
+# Remove support for py2
+if sys.version_info < (3,):
+    print('Py2 is not longer supported. Please, use a Py3 interpreter to run \
+FLUIDAsserts')
+    sys.exit(-1)
+
 OUTFILE = sys.stdout
 
 if sys.platform in ('win32', 'cygwin'):
