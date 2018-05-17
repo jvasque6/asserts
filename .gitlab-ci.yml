@@ -37,12 +37,16 @@ lint:
     - docker-compose run lint
     - docker-compose run overcommit
   retry: 2
+  except:
+    - master
 
 test:
   stage: test
   script:
     - docker-compose run test
   retry: 2
+  except:
+    - master
 
 fluidasserts:
   script:
@@ -52,6 +56,8 @@ fluidasserts:
       -e FA_STRICT="false"
       -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
       fluid-docker.jfrog.io/$ORG:$APP
+  except:
+    - master
 
 codequality:
   image: docker:latest
@@ -73,6 +79,8 @@ codequality:
   retry: 2
   artifacts:
     paths: [codeclimate.json]
+  except:
+    - master
 
 deploy:
   stage: deploy
