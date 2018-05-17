@@ -59,8 +59,8 @@ if sys.platform in ('win32', 'cygwin'):
 OPEN_COLORS = {
     Token: ('', ''),
     Whitespace: ('lightgray', 'darkgray'),
-    Comment: ('lightgray', 'darkgray'),
-    Comment.Preproc: ('teal', 'turquoise'),
+    Comment: ('darkred', 'red'),
+    Comment.Preproc: ('darkred', 'red'),
     Keyword: ('darkblue', 'blue'),
     Keyword.Type: ('teal', 'turquoise'),
     Operator.Word: ('purple', 'fuchsia'),
@@ -261,11 +261,12 @@ HEADER = """
 #  ___
 # | >>|> fluid
 # |___|  attacks, we hack your software
+#
 # Loading attack modules ...
 """.format(__version__)
 
 highlight(HEADER, PropertiesLexer(),
-          TerminalFormatter(colorscheme=CLOSE_COLORS), OUTFILE)
+          TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
