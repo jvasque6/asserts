@@ -99,7 +99,7 @@ push_container:
     - docker push registry.gitlab.com/fluidsignal/asserts:builder
     - docker push registry.gitlab.com/fluidsignal/asserts:runner
   after_script:
-    - rm -rf /tmp${CI_PROJECT_DIR}
+    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   retry: 2
   only:
     - master

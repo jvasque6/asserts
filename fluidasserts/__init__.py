@@ -257,10 +257,10 @@ CLIENT_IP = get_public_ip()
 
 HEADER = """
 ---
-# FLUIDAsserts by FLUIDAttacks (https://fluidattacks.com)
+# FLUIDAsserts (v. {}) by FLUIDAttacks (https://fluidattacks.com)
 # All rights reserved.
 # Loading attack modules ...
-"""
+""".format(__version__)
 
 highlight(HEADER, PropertiesLexer(),
           TerminalFormatter(colorscheme=CLOSE_COLORS), OUTFILE)
