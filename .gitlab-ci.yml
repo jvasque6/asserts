@@ -29,10 +29,6 @@ build:
     - docker build
       --cache-from registry.gitlab.com/fluidsignal/asserts:builder
       -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
-    - docker build --no-cache
-        --build-arg gituser=$DOCKER_USER --build-arg gitpass=$DOCKER_PASS
-        --build-arg branch=$CI_COMMIT_REF_NAME
-        -f Dockerfile.dev -t registry.gitlab.com/fluidsignal/asserts:dev .
   retry: 2
 
 lint:
@@ -53,7 +49,8 @@ fluidasserts:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker pull fluid-docker.jfrog.io/$ORG:$APP
     - docker run -e ORG=$ORG -e APP=$APP -e USER=$JFROG_USER -e PASS=$JFROG_PASS
-      -e FA_STRICT="false" -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}:/code
+      -e FA_STRICT="false"
+      -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/code
       fluid-docker.jfrog.io/$ORG:$APP
 
 codequality:
@@ -66,11 +63,11 @@ codequality:
     - export SP_VERSION=$(echo "$CI_SERVER_VERSION" |
         sed 's/^\([0-9]*\)\.\([0-9]*\).*/\1-\2-stable/')
     - docker run
-      --env SOURCE_CODE="/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}"
-      --volume "/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}":/code
-      --volume /var/run/docker.sock:/var/run/docker.sock
-      codeclimate/codeclimate analyze -e sonar-python -e pep8 -e randon -f json
-      > codeclimate.json || true
+      --env SOURCE_CODE="/tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src"
+      -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/code
+      -v /var/run/docker.sock:/var/run/docker.sock
+      codeclimate/codeclimate
+      analyze -e sonar-python -e pep8 -e randon -f json > codeclimate.json || true
   retry: 2
   artifacts:
     paths: [codeclimate.json]

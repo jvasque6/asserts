@@ -4,14 +4,14 @@ services:
   deps:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.builder
       args:
         gituser: $DOCKER_USER
         gitpass: $DOCKER_PASS
         branch: $CI_COMMIT_REF_NAME
     command: scons deps
     container_name: asserts
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_REF_NAME}/src:/usr/src/asserts
@@ -22,7 +22,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   self:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
     command: scons self
@@ -36,7 +36,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   lint:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
     command: scons lint
@@ -50,7 +50,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   overcommit:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
     command: bash -c "overcommit --sign && overcommit --run"
@@ -64,7 +64,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   dist:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
     command: scons dist
@@ -78,7 +78,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   test:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
     command: scons test
@@ -94,7 +94,7 @@ services:
       - DOCKER_PASS=$DOCKER_PASS
 
   deploy:
-    image: registry.gitlab.com/fluidsignal/asserts:dev
+    image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
       - dist
