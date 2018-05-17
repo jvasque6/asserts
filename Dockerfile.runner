@@ -3,8 +3,8 @@ FROM alpine:latest
 RUN apk update \
     && apk upgrade \
     && apk add python \
-    py2-pip \
-    python2-dev \
+    py3-pip \
+    python3-dev \
     gcc \
     libc-dev \
     libffi-dev \
@@ -13,7 +13,4 @@ RUN apk update \
     jpeg-dev \
     curl
 
-RUN mkdir -p /root/.pip/
-COPY conf/pipconf /root/.pip/pip.conf
-
-RUN pip install fluidasserts
+RUN pip3 install fluidasserts
