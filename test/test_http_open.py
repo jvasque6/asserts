@@ -443,7 +443,7 @@ def test_is_header_perm_cross_dom_pol_missing_open():
 
 
 @pytest.mark.usefixtures('mock_http')
-def test_has_encrypted_viewstate_open():
+def test_has_clear_viewstate_open():
     """ViewState cifrado?."""
-    assert http.has_encrypted_viewstate(
+    assert http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/fail' % (MOCK_SERVICE))
