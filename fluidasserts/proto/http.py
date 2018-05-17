@@ -596,7 +596,7 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
 
 
 @track
-def has_encrypted_viewstate(url, *args, **kwargs):
+def has_clear_viewstate(url, *args, **kwargs):
     """Check if url has encrypted ViewState by checking response."""
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
