@@ -90,6 +90,7 @@ html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'collapse_navigation': True,
     'navigation_depth': -1,
+    'logo_only': True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
