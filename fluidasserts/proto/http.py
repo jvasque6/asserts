@@ -9,7 +9,7 @@ This module allows to check HTTP especific vulnerabilities
 import re
 
 # 3rd party imports
-# None
+from viewstate import ViewState, ViewStateException
 
 # local imports
 from fluidasserts.helper import banner_helper
@@ -592,4 +592,37 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
                       details=dict(url=url, data_used=_datas))
             return True
     show_close('Brute forcing not possible', details=dict(url=url))
+    return False
+
+
+@track
+def has_encrypted_viewstate(url, *args, **kwargs):
+    """Check if url has encrypted ViewState by checking response."""
+    try:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        fingerprint = http_session.get_fingerprint()
+    except http_helper.ConnError:
+        show_unknown('Resource not available',
+                     details=dict(url=url, fingerprint=fingerprint))
+        return True
+
+    vsb64 = http_session.get_html_value('input', '__VIEWSTATE')
+
+    if not vsb64:
+        show_close('ViewState not found',
+                   details=dict(url=http_session.url,
+                                fingerprint=fingerprint))
+        return False
+    try:
+        vs_obj = ViewState(vsb64)
+        decoded_vs = vs_obj.decode()
+        show_open('ViewState is not encrypted',
+                  details=dict(url=http_session.url,
+                               ViewState=decoded_vs,
+                               fingerprint=fingerprint))
+        return True
+    except ViewStateException:
+        show_close('ViewState is encrypted',
+                   details=dict(url=http_session.url,
+                                fingerprint=fingerprint))
     return False

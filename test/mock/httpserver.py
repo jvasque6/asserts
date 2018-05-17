@@ -438,6 +438,29 @@ def perm_cross_dom_pol_fail():
     return resp
 
 
+@APP.route('/http/viewstate/encrypted/ok')
+def viewstate_encrypted_ok():
+    """ViewState cifrado."""
+    resp = Response('<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"' +
+                    'value="zbsXSMp8dJ5Pk8V0yeeEHHyIJyNFnYpw" />')
+    return resp
+
+
+@APP.route('/http/viewstate/encrypted/fail')
+def viewstate_encrypted_fail():
+    """ViewState no cifrado."""
+    resp = Response('<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE"' +
+                    'value="/wEPBQVhYmNkZQ9nAgE=" />')
+    return resp
+
+
+@APP.route('/http/viewstate/encrypted/not_found')
+def viewstate_encrypted_notfound():
+    """ViewState no encontrado."""
+    resp = Response('Login successful')
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()

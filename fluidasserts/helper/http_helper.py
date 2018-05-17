@@ -227,9 +227,12 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
     def get_html_value(self, field_type, field_name, field='value', enc=False):
         """Get a value from a HTML field."""
         soup = BeautifulSoup(self.response.text, 'html.parser')
-        text_to_get = soup.find(field_type,
-                                {'name': field_name})[field]
-        if enc:
+        result_tag = soup.find(field_type,
+                               {'name': field_name})
+        text_to_get = None
+        if result_tag:
+            text_to_get = result_tag[field]
+        if enc and text_to_get:
             return quote(text_to_get)
         return text_to_get
 

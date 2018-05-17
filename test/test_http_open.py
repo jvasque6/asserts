@@ -440,3 +440,10 @@ def test_is_header_perm_cross_dom_pol_missing_open():
     """Header cross-domain-policy establecido?."""
     assert http.is_header_perm_cross_dom_pol_missing(
         '%s/perm_cross_dom_pol/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_has_encrypted_viewstate_open():
+    """ViewState cifrado?."""
+    assert http.has_encrypted_viewstate(
+        '%s/http/viewstate/encrypted/fail' % (MOCK_SERVICE))
