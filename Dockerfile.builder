@@ -19,19 +19,19 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         python3 \
         python3-dev \
-#        python-dev \
+        python-dev \
         libssl-dev \
         libffi-dev \
         scons \
-        python3-virtualenv \
+        python-virtualenv \
         sed \
         grep \
         gawk \
         lsb-release \
         netcat-traditional \
-#        python-pip \
+        python-pip \
         python3-pip \
-#        python-setuptools \
+        python-setuptools \
         python3-setuptools \
         tesseract-ocr \
         ruby \
@@ -43,21 +43,21 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-    pip3 install -U pip==9.0.3 \
+	pip install -U pip==9.0.3 \
         setuptools  \
         wheel && \
-    pip3 install -U \
+    pip install -U \
         tox \
         tox-pyenv \
         pylint \
         flake8 \
         yamllint \
         pyflakes \
-        pycodestyle \
+	pycodestyle \
         pydocstyle \
         pep257 \
         twine \
-        mandrill \
+	mandrill \
         certifi && \
     gem install overcommit && \
     dpkg --clear-avail && \
