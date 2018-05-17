@@ -12,7 +12,7 @@ fluidasserts.helper.banner\_helper module
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.helper.code\_helper module
+fluidasserts.helper.lang\_helper module
 ---------------------------------------
 
 .. automodule:: fluidasserts.helper.code_helper

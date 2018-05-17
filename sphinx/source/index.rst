@@ -44,7 +44,7 @@ API Documentation
    :maxdepth: 4
    :caption: Packages:
 
-   fluidasserts.code
+   fluidasserts.lang
    fluidasserts.format
    fluidasserts.helper
    fluidasserts.proto

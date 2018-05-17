@@ -1,61 +1,61 @@
-fluidasserts.code package
+fluidasserts.lang package
 =========================
 
 Submodules
 ----------
 
-fluidasserts.code.code module
+fluidasserts.lang.core module
 -----------------------------
 
-.. automodule:: fluidasserts.code.code
+.. automodule:: fluidasserts.lang.core
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.docker module
+fluidasserts.lang.docker module
 -------------------------------
 
-.. automodule:: fluidasserts.code.docker
+.. automodule:: fluidasserts.lang.docker
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.html module
+fluidasserts.lang.html module
 -------------------------------
 
-.. automodule:: fluidasserts.code.html
+.. automodule:: fluidasserts.lang.html
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.java module
+fluidasserts.lang.java module
 -----------------------------
 
-.. automodule:: fluidasserts.code.java
+.. automodule:: fluidasserts.lang.java
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.javascript module
+fluidasserts.lang.javascript module
 -----------------------------------
 
-.. automodule:: fluidasserts.code.javascript
+.. automodule:: fluidasserts.lang.javascript
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.python module
+fluidasserts.lang.python module
 -------------------------------
 
-.. automodule:: fluidasserts.code.python
+.. automodule:: fluidasserts.lang.python
     :members:
     :undoc-members:
     :show-inheritance:
 
-fluidasserts.code.rpgle module
+fluidasserts.lang.rpgle module
 ------------------------------
 
-.. automodule:: fluidasserts.code.rpgle
+.. automodule:: fluidasserts.lang.rpgle
     :members:
     :undoc-members:
     :show-inheritance:
@@ -64,7 +64,7 @@ fluidasserts.code.rpgle module
 Module contents
 ---------------
 
-.. automodule:: fluidasserts.code
+.. automodule:: fluidasserts.lang
     :members:
     :undoc-members:
     :show-inheritance:
