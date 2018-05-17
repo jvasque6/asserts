@@ -262,8 +262,8 @@ HEADER = """
 # Loading attack modules ...
 """
 
-highlight(HEADER, PropertiesLexer(), TerminalFormatter(),
-          OUTFILE)
+highlight(HEADER, PropertiesLexer(),
+          TerminalFormatter(colorscheme=CLOSE_COLORS), OUTFILE)
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
