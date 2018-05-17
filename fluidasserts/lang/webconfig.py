@@ -13,7 +13,7 @@ This module allows to check Web.config code vulnerabilities
 from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute)
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -42,23 +42,23 @@ def is_header_x_powered_by_present(webconf_dest):
     tk_child_tag = Or([Suppress(tk_add_tag), Suppress(tk_clear_tag),
                        tk_remove_tag])
     result = False
-    custom_headers = code_helper.check_grammar(tk_tag_s, webconf_dest,
+    custom_headers = lang_helper.check_grammar(tk_tag_s, webconf_dest,
                                                LANGUAGE_SPECS)
     tk_rem = Suppress(tk_tag_s) + OneOrMore(tk_child_tag)
 
     for code_file, lines in custom_headers.items():
-        vulns = code_helper.block_contains_empty_grammar(tk_rem,
+        vulns = lang_helper.block_contains_empty_grammar(tk_rem,
                                                          code_file, lines)
         if vulns:
             show_open('Header X-Powered-By is present',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Header X-Powered-By is not present',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result

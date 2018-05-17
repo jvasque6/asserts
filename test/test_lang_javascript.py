@@ -9,12 +9,12 @@
 # None
 
 # local imports
-from fluidasserts.code import javascript
+from fluidasserts.lang import javascript
 import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CODE_DIR = 'test/static/code/javascript/'
+CODE_DIR = 'test/static/lang/javascript/'
 SECURE_CODE = CODE_DIR + 'ConsoleLogClose.js'
 INSECURE_CODE = CODE_DIR + 'ConsoleLogOpen.js'
 

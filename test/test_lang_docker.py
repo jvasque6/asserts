@@ -9,12 +9,12 @@
 # None
 
 # local imports
-from fluidasserts.code import docker
+from fluidasserts.lang import docker
 import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CODE_DIR = 'test/static/code/docker/'
+CODE_DIR = 'test/static/lang/docker/'
 SECURE_CODE = CODE_DIR + 'Dockerfile.close'
 INSECURE_CODE = CODE_DIR + 'Dockerfile.open'
 

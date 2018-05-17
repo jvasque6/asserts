@@ -5,7 +5,7 @@ from fluidasserts.system import windows_server_2008_plus
 from fluidasserts.format import string
 from fluidasserts.format import x509
 #from fluidasserts.format import cookie
-from fluidasserts.code import html
+from fluidasserts.lang import html
 from fluidasserts.format import pdf
 from fluidasserts.proto import smtp
 #from fluidasserts.proto import webservices

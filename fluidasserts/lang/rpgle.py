@@ -13,7 +13,7 @@ This module allows to check RPGLE code vulnerabilities.
 # None
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -42,20 +42,20 @@ def has_dos_dow_sqlcod(rpg_dest):
     dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + Literal('0')
 
     result = False
-    matches = code_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
+    matches = lang_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
                                         LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not have DoS for using "DoW SQLCOD = 0"',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
 
@@ -83,12 +83,12 @@ def has_unitialized_vars(rpg_dest):
         Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
 
     result = False
-    matches = code_helper.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
+    matches = lang_helper.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has unitialized variables',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])),
                       refs='rpg/inicializar-variables/')
@@ -96,7 +96,7 @@ def has_unitialized_vars(rpg_dest):
         else:
             show_close('Code has not unitialized variables',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)),
                        refs='rpg/inicializar-variables/')
     return result

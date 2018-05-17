@@ -14,7 +14,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        pythonStyleComment, Suppress)
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -40,20 +40,20 @@ def has_generic_exceptions(py_dest):
     generic_exception = tk_except + Literal(':')
 
     result = False
-    matches = code_helper.check_grammar(generic_exception, py_dest,
+    matches = lang_helper.check_grammar(generic_exception, py_dest,
                                         LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not use generic exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
 
@@ -78,20 +78,20 @@ def swallows_exceptions(py_dest):
                        tk_pass).ignore(pythonStyleComment)
 
     result = False
-    matches = code_helper.check_grammar(parser_exception, py_dest,
+    matches = lang_helper.check_grammar(parser_exception, py_dest,
                                         LANGUAGE_SPECS)
     for code_file, lines in matches.items():
-        vulns = code_helper.block_contains_grammar(empty_exception, code_file,
+        vulns = lang_helper.block_contains_grammar(empty_exception, code_file,
                                                    lines)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True

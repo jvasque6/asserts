@@ -9,12 +9,12 @@
 # None
 
 # local imports
-from fluidasserts.code import webconfig
+from fluidasserts.lang import webconfig
 import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CODE_DIR = 'test/static/code/webconfig/'
+CODE_DIR = 'test/static/lang/webconfig/'
 SECURE_CODE = CODE_DIR + 'webNotVuln.config'
 INSECURE_CODE = CODE_DIR + 'webVuln.config'
 

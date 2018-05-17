@@ -13,7 +13,7 @@ This module allows to check Docker code vulnerabilities.
 # None
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -43,18 +43,18 @@ def not_pinned(file_dest):
     pinned = tk_from + tk_image + Literal(':') + tk_version
 
     result = False
-    matches = code_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
+    matches = lang_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Dockerfile uses unpinned base image(s)',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Dockerfile has pinned base image(s)',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result

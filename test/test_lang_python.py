@@ -9,12 +9,12 @@
 # None
 
 # local imports
-from fluidasserts.code import python
+from fluidasserts.lang import python
 import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-CODE_DIR = 'test/static/code/python/'
+CODE_DIR = 'test/static/lang/python/'
 SECURE_CODE = CODE_DIR + 'exceptions_close.py'
 INSECURE_CODE = CODE_DIR + 'exceptions_open.py'
 

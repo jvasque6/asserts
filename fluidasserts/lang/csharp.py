@@ -15,7 +15,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        SkipTo)
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -47,20 +47,20 @@ def has_generic_exceptions(csharp_dest):
         tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
-    matches = code_helper.check_grammar(generic_exception, csharp_dest,
+    matches = lang_helper.check_grammar(generic_exception, csharp_dest,
                                         LANGUAGE_SPECS)
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not use generic exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
 
@@ -84,21 +84,21 @@ def swallows_exceptions(csharp_dest):
                    nestedExpr(opener='{', closer='}')).ignore(cppStyleComment)
 
     result = False
-    catches = code_helper.check_grammar(parser_catch, csharp_dest,
+    catches = lang_helper.check_grammar(parser_catch, csharp_dest,
                                         LANGUAGE_SPECS)
 
     for code_file, lines in catches.items():
-        vulns = code_helper.block_contains_empty_grammar(empty_catch,
+        vulns = lang_helper.block_contains_empty_grammar(empty_catch,
                                                          code_file, lines)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
@@ -128,21 +128,21 @@ def has_switch_without_default(csharp_dest):
                               content=def_stmt)).ignore(cppStyleComment)
 
     result = False
-    switches = code_helper.check_grammar(switch_head, csharp_dest,
+    switches = lang_helper.check_grammar(switch_head, csharp_dest,
                                          LANGUAGE_SPECS)
 
     for code_file, lines in switches.items():
-        vulns = code_helper.block_contains_empty_grammar(sw_wout_def,
+        vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
                                                          code_file, lines)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code does not has switch with default clause',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
@@ -167,21 +167,21 @@ def has_insecure_randoms(csharp_dest):
         tk_class + Suppress(tk_params)
 
     result = False
-    random_new = code_helper.check_grammar(call_function, csharp_dest,
+    random_new = lang_helper.check_grammar(call_function, csharp_dest,
                                            LANGUAGE_SPECS)
 
     for code_file, vulns in random_new.items():
         if vulns:
             show_open('Code generates insecure random numbers',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Code does not generates insecure random numbers',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
 
@@ -205,20 +205,20 @@ def has_if_without_else(csharp_dest):
     if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(cppStyleComment)
 
     result = False
-    conds = code_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
+    conds = lang_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
 
     for code_file, lines in conds.items():
-        vulns = code_helper.block_contains_empty_grammar(if_wout_else,
+        vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
                                                          code_file, lines)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code does not has if with else clause',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
@@ -248,7 +248,7 @@ def uses_md5_hash(csharp_dest):
 
     call_function = Or([fn_1, fn_2])
 
-    result = code_helper.uses_insecure_method(call_function, csharp_dest,
+    result = lang_helper.uses_insecure_method(call_function, csharp_dest,
                                               LANGUAGE_SPECS, method)
     return result
 
@@ -269,6 +269,6 @@ def uses_sha1_hash(csharp_dest):
     tk_params = nestedExpr()
     call_function = tk_new + Or([tk_sha1cry, tk_sha1man]) + tk_params
 
-    result = code_helper.uses_insecure_method(call_function, csharp_dest,
+    result = lang_helper.uses_insecure_method(call_function, csharp_dest,
                                               LANGUAGE_SPECS, method)
     return result

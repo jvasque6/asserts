@@ -11,13 +11,13 @@ HTML se encuentra adecuadamente implementado.
 # 3rd party imports
 
 # local imports
-from fluidasserts.code import html
+from fluidasserts.lang import html
 import fluidasserts.utils.decorators
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
 
-CODE_DIR = 'test/static/code/html/'
+CODE_DIR = 'test/static/lang/html/'
 SECURE_CODE = CODE_DIR + 'non-vulnerable.html'
 INSECURE_CODE = CODE_DIR + 'vulnerable.html'
 

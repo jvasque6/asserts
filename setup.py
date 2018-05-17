@@ -22,7 +22,7 @@ setup(
         'fluidasserts.helper',
         'fluidasserts.system',
         'fluidasserts.proto',
-        'fluidasserts.code',
+        'fluidasserts.lang',
         'fluidasserts.utils',
     ],
     data_files=[
@@ -63,7 +63,7 @@ setup(
         'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
         'pytesseract==0.2.0',        # fluidasserts.format.captcha
         'pillow==5.1.0',             # fluidasserts.format.captcha
-        'pyparsing==2.2.0',          # fluidasserts.code
+        'pyparsing==2.2.0',          # fluidasserts.lang
         'oyaml==0.4',                # fluidasserts
         'pygments==2.2.0',           # fluidasserts
         'viewstate==0.4.3',          # fluidasserts.proto.http

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""Code helper.
+"""Lang helper.
 
-This module has helper functions for code modules
+This module has helper functions for lang modules
 """
 
 # standard imports

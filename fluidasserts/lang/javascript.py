@@ -14,7 +14,7 @@ from pyparsing import (CaselessKeyword, Literal, Suppress, Word, alphanums,
                        nestedExpr, cppStyleComment, Optional, Or, SkipTo)
 
 # local imports
-from fluidasserts.helper import code_helper
+from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
@@ -40,7 +40,7 @@ def uses_console_log(js_dest):
     tk_method = CaselessKeyword('log')
 
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
-    result = code_helper.uses_insecure_method(clog, js_dest,
+    result = lang_helper.uses_insecure_method(clog, js_dest,
                                               LANGUAGE_SPECS, method)
     return result
 
@@ -56,7 +56,7 @@ def uses_eval(js_dest):
     method = 'eval()'
     tk_method = CaselessKeyword('eval')
     call_function = tk_method + Suppress(nestedExpr())
-    result = code_helper.uses_insecure_method(call_function, js_dest,
+    result = lang_helper.uses_insecure_method(call_function, js_dest,
                                               LANGUAGE_SPECS, method)
     return result
 
@@ -75,7 +75,7 @@ def uses_localstorage(js_dest):
 
     lsto = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
-    result = code_helper.uses_insecure_method(lsto, js_dest,
+    result = lang_helper.uses_insecure_method(lsto, js_dest,
                                               LANGUAGE_SPECS, method)
     return result
 
@@ -96,7 +96,7 @@ def has_insecure_randoms(js_dest):
     tk_params = nestedExpr()
     call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
 
-    result = code_helper.uses_insecure_method(call_function, js_dest,
+    result = lang_helper.uses_insecure_method(call_function, js_dest,
                                               LANGUAGE_SPECS, method)
     return result
 
@@ -117,21 +117,21 @@ def swallows_exceptions(js_dest):
                    nestedExpr(opener='{', closer='}')).ignore(cppStyleComment)
 
     result = False
-    catches = code_helper.check_grammar(parser_catch, js_dest,
+    catches = lang_helper.check_grammar(parser_catch, js_dest,
                                         LANGUAGE_SPECS)
 
     for code_file, lines in catches.items():
-        vulns = code_helper.block_contains_empty_grammar(empty_catch,
+        vulns = lang_helper.block_contains_empty_grammar(empty_catch,
                                                          code_file, lines)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
@@ -162,21 +162,21 @@ def has_switch_without_default(js_dest):
                               content=def_stmt)).ignore(cppStyleComment)
 
     result = False
-    switches = code_helper.check_grammar(switch_head, js_dest,
+    switches = lang_helper.check_grammar(switch_head, js_dest,
                                          LANGUAGE_SPECS)
 
     for code_file, lines in switches.items():
-        vulns = code_helper.block_contains_empty_grammar(sw_wout_def,
+        vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
                                                          code_file, lines)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code does not has switch with default clause',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
@@ -202,20 +202,20 @@ def has_if_without_else(js_dest):
     if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(cppStyleComment)
 
     result = False
-    conds = code_helper.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
+    conds = lang_helper.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
 
     for code_file, lines in conds.items():
-        vulns = code_helper.block_contains_empty_grammar(if_wout_else,
+        vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
                                                          code_file, lines)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,
-                                    fingerprint=code_helper.
+                                    fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
             show_open('Code does not has if with else clause',
                       details=dict(file=code_file,
-                                   fingerprint=code_helper.
+                                   fingerprint=lang_helper.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
