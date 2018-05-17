@@ -24,7 +24,7 @@ build:
   stage: build
   before_script:
     - mkdir -p /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
-    - cp -r $PWD /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
+    - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
     - docker build
       --cache-from registry.gitlab.com/fluidsignal/asserts:builder
