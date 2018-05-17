@@ -101,7 +101,6 @@ pages:
   image: registry.gitlab.com/fluidsignal/asserts:builder
   stage: deploy
   script:
-    - mkdir -p public/
     - scons sphinxdoc
   artifacts:
     paths: [public/]
