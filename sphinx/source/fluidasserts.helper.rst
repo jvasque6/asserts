@@ -4,54 +4,14 @@ fluidasserts.helper package
 Submodules
 ----------
 
-fluidasserts.helper.banner\_helper module
------------------------------------------
+.. toctree::
 
-.. automodule:: fluidasserts.helper.banner_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.helper.lang\_helper module
----------------------------------------
-
-.. automodule:: fluidasserts.helper.code_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.helper.http\_helper module
----------------------------------------
-
-.. automodule:: fluidasserts.helper.http_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.helper.ssh\_helper module
---------------------------------------
-
-.. automodule:: fluidasserts.helper.ssh_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.helper.ssl\_helper module
---------------------------------------
-
-.. automodule:: fluidasserts.helper.ssl_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.helper.winrm\_helper module
-----------------------------------------
-
-.. automodule:: fluidasserts.helper.winrm_helper
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   fluidasserts.helper.banner_helper
+   fluidasserts.helper.http_helper
+   fluidasserts.helper.lang_helper
+   fluidasserts.helper.ssh_helper
+   fluidasserts.helper.ssl_helper
+   fluidasserts.helper.winrm_helper
 
 Module contents
 ---------------

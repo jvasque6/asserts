@@ -4,14 +4,9 @@ fluidasserts.utils package
 Submodules
 ----------
 
-fluidasserts.utils.decorators module
-------------------------------------
+.. toctree::
 
-.. automodule:: fluidasserts.utils.decorators
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   fluidasserts.utils.decorators
 
 Module contents
 ---------------

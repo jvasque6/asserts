@@ -6,9 +6,9 @@ Subpackages
 
 .. toctree::
 
-    fluidasserts.lang
     fluidasserts.format
     fluidasserts.helper
+    fluidasserts.lang
     fluidasserts.proto
     fluidasserts.system
     fluidasserts.utils

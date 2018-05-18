@@ -4,46 +4,13 @@ fluidasserts.format package
 Submodules
 ----------
 
-fluidasserts.format.captcha module
-----------------------------------
+.. toctree::
 
-.. automodule:: fluidasserts.format.captcha
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.format.cookie module
----------------------------------
-
-.. automodule:: fluidasserts.format.cookie
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.format.pdf module
-------------------------------
-
-.. automodule:: fluidasserts.format.pdf
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.format.string module
----------------------------------
-
-.. automodule:: fluidasserts.format.string
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.format.x509 module
--------------------------------
-
-.. automodule:: fluidasserts.format.x509
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   fluidasserts.format.captcha
+   fluidasserts.format.cookie
+   fluidasserts.format.pdf
+   fluidasserts.format.string
+   fluidasserts.format.x509
 
 Module contents
 ---------------

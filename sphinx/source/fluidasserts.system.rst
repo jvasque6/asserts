@@ -4,22 +4,10 @@ fluidasserts.system package
 Submodules
 ----------
 
-fluidasserts.system.linux\_generic module
------------------------------------------
+.. toctree::
 
-.. automodule:: fluidasserts.system.linux_generic
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-fluidasserts.system.windows\_server\_2008\_plus module
-------------------------------------------------------
-
-.. automodule:: fluidasserts.system.windows_server_2008_plus
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   fluidasserts.system.linux_generic
+   fluidasserts.system.windows_server_2008_plus
 
 Module contents
 ---------------
