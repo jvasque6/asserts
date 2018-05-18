@@ -25,8 +25,7 @@ from pygments.lexers import PropertiesLexer
 from pygments.formatters import TerminalFormatter
 from pygments.token import Keyword, Name, Comment, String, Error, \
     Number, Operator, Generic, Token, Whitespace
-if sys.version_info > (3,):
-    from pygments.util import UnclosingTextIOWrapper
+from pygments.util import UnclosingTextIOWrapper
 
 # local imports
 # none
@@ -44,8 +43,7 @@ FLUIDAsserts')
 OUTFILE = sys.stdout
 
 if sys.platform in ('win32', 'cygwin'):
-    if sys.version_info > (3,):
-        OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+    OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
     try:
         import colorama.initialise
     except ImportError:
