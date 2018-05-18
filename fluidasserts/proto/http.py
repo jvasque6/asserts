@@ -117,8 +117,7 @@ def _multi_generic_http_assert(url, regex_list, *args, **kwargs):
     return False
 
 
-@track
-def has_multiple_text(url, regex_list, *args, **kwargs):
+def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
     try:
         ret = _multi_generic_http_assert(url, regex_list, *args, **kwargs)
@@ -135,8 +134,7 @@ def has_multiple_text(url, regex_list, *args, **kwargs):
         return True
 
 
-@track
-def has_text(url, expected_text, *args, **kwargs):
+def _generic_has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
     try:
         ret = _generic_http_assert(url, expected_text, *args, **kwargs)
@@ -150,6 +148,18 @@ def has_text(url, expected_text, *args, **kwargs):
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
         return True
+
+
+@track
+def has_multiple_text(url, regex_list, *args, **kwargs):
+    """Check if a bad text is present."""
+    return _generic_has_multiple_text(url, regex_list, *args, **kwargs)
+
+
+@track
+def has_text(url, expected_text, *args, **kwargs):
+    """Check if a bad text is present."""
+    return _generic_has_text(url, expected_text, *args, **kwargs)
 
 
 @track
@@ -296,68 +306,68 @@ def has_sqli(url, *args, **kwargs):
     """Check SQLi vuln by checking expected string."""
     expect = SQLI_ERROR_MSG
 
-    return has_multiple_text(url, expect, *args, **kwargs)
+    return _generic_has_multiple_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_xss(url, expect, *args, **kwargs):
     """Check XSS vuln by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_command_injection(url, expect, *args, **kwargs):
     """Check command injection vuln by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_php_command_injection(url, expect, *args, **kwargs):
     """Check PHP command injection by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_session_fixation(url, expect, *args, **kwargs):
     """Check session fixation by no passing cookies and authenticating."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_insecure_dor(url, expect, *args, **kwargs):
     """Check insecure direct object reference vuln."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_dirtraversal(url, expect, *args, **kwargs):
     """Check directory traversal vuln by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_csrf(url, expect, *args, **kwargs):
     """Check CSRF vuln by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_lfi(url, expect, *args, **kwargs):
     """Check local file inclusion vuln by checking expected string."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_hpp(url, expect, *args, **kwargs):
     """Check HTTP Parameter Pollution vuln."""
-    return has_text(url, expect, *args, **kwargs)
+    return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
 def has_insecure_upload(url, expect, file_param, file_path, *args, **kw):
     """Check insecure upload vuln."""
     exploit_file = {file_param: open(file_path)}
-    return has_text(url, expect, files=exploit_file, *args, **kw)
+    return _generic_has_text(url, expect, files=exploit_file, *args, **kw)
 
 
 # pylint: disable=keyword-arg-before-vararg
