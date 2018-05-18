@@ -21,6 +21,9 @@ from fluidasserts.helper import lang_helper
 from fluidasserts.utils.decorators import track
 
 
+LANGUAGE_SPECS = {}
+
+
 def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
     """
     Check if a text is present in given source file.
@@ -57,7 +60,7 @@ def _show_has_text(is_open: bool, code_file: str, expected_text: str) -> None:
 
 
 def _show_has_not_text(is_open: bool, code_file: str,
-                      expected_text: str) -> None:
+                       expected_text: str) -> None:
     """
     Show open or close based in is_open param.
 

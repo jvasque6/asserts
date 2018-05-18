@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-HTTP Cookie module
+HTTP Cookie module.
 
 This module allows to check Cookies vulnerabilities.
 """
@@ -22,7 +22,7 @@ from fluidasserts.utils.decorators import track
 
 
 def _has_not_http_only(cookie_name: str, url: str, cookie_jar: dict,
-                      *args, **kwargs) -> bool:
+                       *args, **kwargs) -> bool:
     r"""
     Check if a cookie has the ``httponly`` attribute.
 
@@ -74,7 +74,7 @@ def _has_not_http_only(cookie_name: str, url: str, cookie_jar: dict,
 
 
 def _has_not_secure(cookie_name: str, url: str, cookie_jar: dict,
-                   *args, **kwargs) -> bool:
+                    *args, **kwargs) -> bool:
     r"""
     Check if a cookie has the ``secure`` attribute.
 
@@ -126,8 +126,7 @@ def _has_not_secure(cookie_name: str, url: str, cookie_jar: dict,
 @track
 def has_not_httponly_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     r"""
-    Checks if the cookie ``cookie_name`` in the
-    ``url`` has the ``httponly`` attribute.
+    Check if the cookie in the ``url`` has the ``httponly`` attribute.
 
     :param cookie_name: Name of the cookie to test.
     :param url: URL to get cookies.
@@ -143,8 +142,7 @@ def has_not_httponly_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
 def has_not_httponly_in_cookiejar(cookie_name: str, cookie_jar: dict,
                                   *args, **kwargs) -> bool:
     r"""
-    Checks if the cookie ``cookie_name`` in the
-    ``cookie_jar`` has the ``httponly`` attribute.
+    Check if the cookie in the ``cookie_jar`` has the ``httponly`` attribute.
 
     :param cookie_name: Name of the cookie to test.
     :param cookie_jar: Dict-like collection of cookies
@@ -155,14 +153,13 @@ def has_not_httponly_in_cookiejar(cookie_name: str, cookie_jar: dict,
                        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
     """
     return _has_not_http_only(cookie_name, None, cookie_jar,
-                             *args, **kwargs)
+                              *args, **kwargs)
 
 
 @track
 def has_not_secure_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     r"""
-    Checks if the cookie ``cookie_name`` in the
-    ``url`` has the ``secure`` attribute.
+    Check if the cookie in the ``url`` has the ``secure`` attribute.
 
     :param cookie_name: Name of the cookie to test.
     :param url: URL to get cookies.
@@ -178,8 +175,7 @@ def has_not_secure_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
 def has_not_secure_in_cookiejar(cookie_name: str, cookie_jar: dict,
                                 *args, **kwargs) -> bool:
     r"""
-    Checks if the cookie ``cookie_name`` in the
-    ``cookie_jar`` has the ``secure`` attribute.
+    Check if the cookie in the ``cookie_jar`` has the ``secure`` attribute.
 
     :param cookie_name: Name of the cookie to test.
     :param cookie_jar: Dict-like collection of cookies
@@ -190,4 +186,4 @@ def has_not_secure_in_cookiejar(cookie_name: str, cookie_jar: dict,
                        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
     """
     return _has_not_secure(cookie_name, None, cookie_jar,
-                          *args, **kwargs)
+                           *args, **kwargs)

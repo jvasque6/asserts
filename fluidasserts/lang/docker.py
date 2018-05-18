@@ -10,14 +10,13 @@ This module allows to check Docker code vulnerabilities.
 # None
 
 # 3rd party imports
-# None
+from pyparsing import Word, Literal, alphas
 
 # local imports
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import Word, Literal, alphas
 
 LANGUAGE_SPECS = {
     'extensions': None,

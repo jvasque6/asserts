@@ -10,15 +10,14 @@ This module allows to check RPGLE code vulnerabilities.
 # None
 
 # 3rd party imports
-# None
+from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
+                       NotAny, alphas, alphanums, nums)
 
 # local imports
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
-from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
-                       NotAny, alphas, alphanums, nums)
 
 LANGUAGE_SPECS = {
     'extensions': ['rpg', 'rpgle'],
