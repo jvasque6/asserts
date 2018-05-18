@@ -204,7 +204,7 @@ PreCommit:
     enabled: true
     description: 'Analyze with pyflakes'
     required_executable: 'pyflakes'
-    install_command: 'pip install pyflakes'
+    install_command: 'pip3 install pyflakes'
     include:
       - 'fluidasserts/**/*.py'
       - 'test/**/*.py'

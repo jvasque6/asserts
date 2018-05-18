@@ -43,7 +43,7 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-	pip install -U pip==9.0.3 \
+    pip install -U pip==9.0.3 \
         setuptools  \
         wheel && \
     pip install -U \
@@ -52,13 +52,13 @@ RUN apt-get update -qq && \
         pylint \
         flake8 \
         yamllint \
-        pyflakes \
-	pycodestyle \
+        pycodestyle \
         pydocstyle \
         pep257 \
         twine \
-	mandrill \
+        mandrill \
         certifi && \
+    pip3 install pyflakes && \
     gem install overcommit && \
     dpkg --clear-avail && \
     apt-get clean
