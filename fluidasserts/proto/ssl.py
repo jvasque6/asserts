@@ -23,11 +23,6 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def _hex2bin(arr):
-    """Hex 2 Bin."""
-    return ''.join(chr(x) for x in arr)
-
-
 def _rcv_tls_record(sock):
     """Receive TLS record."""
     try:
@@ -39,7 +34,7 @@ def _rcv_tls_record(sock):
         typ, ver, length = struct.unpack('>BHH', tls_header)
         message = ''
         while len(message) != length:
-            message += sock.recv(length - len(message))
+            message += sock.recv(length - len(message)).decode('ISO-8859-1')
         if not message:
             return None, None, None
         return typ, ver, message
@@ -387,13 +382,13 @@ def has_heartbleed(site, port=PORT):
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             sock.settimeout(5)
             sock.connect((site, port))
-            sock.send(_hex2bin(_build_client_hello(vers)))
+            sock.send(bytes(_build_client_hello(vers)))
             typ, _, _ = _rcv_tls_record(sock)
             if not typ:
                 continue
             if typ == 22:
                 # Received Server Hello
-                sock.send(_hex2bin(_build_heartbeat(vers)))
+                sock.send(bytes(_build_heartbeat(vers)))
                 while True:
                     typ, _, pay = _rcv_tls_record(sock)
                     if typ == 21 or typ is None:
