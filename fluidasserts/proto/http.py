@@ -93,57 +93,40 @@ SQLI_ERROR_MSG = {
 }
 
 
-def _generic_http_assert(url, expected_regex, *args, **kwargs):
-    """Check if a text is present in HTTP response."""
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
-    response = http_session.response
-    the_page = response.text
-
-    if re.search(str(expected_regex), the_page, re.IGNORECASE):
-        return True
-    return False
-
-
-# pylint: disable=R0913
-def _multi_generic_http_assert(url, regex_list, *args, **kwargs):
-    """Check if a multiple text is present in HTTP response."""
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
-    response = http_session.response
-    the_page = response.text
-
-    for regex in regex_list:
-        if re.search(regex, the_page, re.IGNORECASE):
-            return regex
-    return False
-
-
 def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
     """Check if a bad text is present."""
     try:
-        ret = _multi_generic_http_assert(url, regex_list, *args, **kwargs)
-        if ret:
-            show_open('A bad text was present: "{}"'.format(ret),
-                      details=dict(url=url))
-            return True
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        response = http_session.response
+        fingerprint = http_session.get_fingerprint()
+        the_page = response.text
+        for regex in regex_list:
+            if re.search(regex, the_page, re.IGNORECASE):
+                show_open('A bad text was present: "{}"'.format(regex),
+                          details=dict(url=url, fingerprint=fingerprint))
+                return True
         show_close('No bad text was present',
-                   details=dict(url=url))
+                   details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError:
-        show_unknown('Could not connect',
-                     details=dict(url=url))
+        show_unknown('Could not connect', details=dict(url=url))
         return True
 
 
 def _generic_has_text(url, expected_text, *args, **kwargs):
     """Check if a bad text is present."""
     try:
-        ret = _generic_http_assert(url, expected_text, *args, **kwargs)
-        if ret:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        response = http_session.response
+        fingerprint = http_session.get_fingerprint()
+        the_page = response.text
+
+        if re.search(str(expected_text), the_page, re.IGNORECASE):
             show_open('Bad text present: "{}"'.format(expected_text),
-                      details=dict(url=url))
+                      details=dict(url=url, fingerprint=fingerprint))
             return True
         show_close('Bad text not present: "{}"'.format(expected_text),
-                   details=dict(url=url))
+                   details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
@@ -166,13 +149,17 @@ def has_text(url, expected_text, *args, **kwargs):
 def has_not_text(url, expected_text, *args, **kwargs):
     """Check if a required text is not present."""
     try:
-        ret = _generic_http_assert(url, expected_text, *args, **kwargs)
-        if not ret:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        response = http_session.response
+        fingerprint = http_session.get_fingerprint()
+        the_page = response.text
+        if not re.search(str(expected_text), the_page, re.IGNORECASE):
             show_open('Expected text not present "{}"'.
-                      format(expected_text), details=dict(url=url))
+                      format(expected_text),
+                      details=dict(url=url, fingerprint=fingerprint))
             return True
         show_close('Expected text present "{}"'.format(expected_text),
-                   details=dict(url=url))
+                   details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
@@ -449,12 +436,17 @@ def has_dirlisting(url, *args, **kwargs):
     """Check if url has directory listing enabled."""
     bad_text = 'Index of'
     try:
-        ret = _generic_http_assert(url, bad_text, *args, **kwargs)
-        if ret:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        response = http_session.response
+        fingerprint = http_session.get_fingerprint()
+        the_page = response.text
+
+        if re.search(str(bad_text), the_page, re.IGNORECASE):
             show_open('Directory listing enabled',
-                      details=dict(url=url))
+                      details=dict(url=url, fingerprint=fingerprint))
             return True
-        show_close('Directory listing not enabled', details=dict(url=url))
+        show_close('Directory listing not enabled',
+                   details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect',
@@ -568,6 +560,7 @@ def has_user_enumeration(url, user_field, user_list=None,
 
 
 # pylint: disable=keyword-arg-before-vararg
+# pylint: disable=too-many-arguments
 @track
 def can_brute_force(url, ok_regex, user_field, pass_field,
                     user_list=None, pass_list=None, *args, **kwargs):
@@ -613,7 +606,7 @@ def has_clear_viewstate(url, *args, **kwargs):
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError:
         show_unknown('Resource not available',
-                     details=dict(url=url, fingerprint=fingerprint))
+                     details=dict(url=url))
         return True
 
     vsb64 = http_session.get_html_value('input', '__VIEWSTATE')

@@ -312,6 +312,7 @@ def has_insecure_header(url, header, *args, **kwargs):  # noqa
     try:
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
+        fingerprint = http_session.get_fingerprint()
     except ConnError:
         show_unknown('HTTP error checking {}'.format(header),
                      details=dict(url=url))
@@ -329,17 +330,20 @@ def has_insecure_header(url, header, *args, **kwargs):  # noqa
             if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
                 show_open('{} HTTP header is insecure'.
                           format(header),
-                          details=dict(url=url, header=header, value=value),
+                          details=dict(url=url, header=header, value=value,
+                                       fingerprint=fingerprint),
                           refs='apache/habilitar-headers-seguridad')
                 return True
             show_close('HTTP header {} value is secure'.
                        format(header),
-                       details=dict(url=url, header=header, value=value),
+                       details=dict(url=url, header=header, value=value,
+                                    fingerprint=fingerprint),
                        refs='apache/habilitar-headers-seguridad')
             return False
         show_close('HTTP header {} not present which is secure \
 by default'.format(header),
-                   details=dict(url=url, header=header),
+                   details=dict(url=url, header=header,
+                                fingerprint=fingerprint),
                    refs='apache/habilitar-headers-seguridad')
         return False
 
@@ -350,13 +354,15 @@ by default'.format(header),
             value = headers_info[header]
             show_open('{} HTTP insecure header present'.
                       format(header),
-                      details=dict(url=url, header=header, value=value),
+                      details=dict(url=url, header=header, value=value,
+                                   fingerprint=fingerprint),
                       refs='apache/habilitar-headers-seguridad')
             result = True
         else:
             show_close('{} HTTP insecure header not present'.
                        format(header),
-                       details=dict(url=url, header=header),
+                       details=dict(url=url, header=header,
+                                    fingerprint=fingerprint),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         return result
@@ -364,19 +370,22 @@ by default'.format(header),
         value = headers_info[header]
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
             show_close('HTTP header {} is secure'.format(header),
-                       details=dict(url=url, header=header, value=value),
+                       details=dict(url=url, header=header, value=value,
+                                    fingerprint=fingerprint),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         else:
             show_open('{} HTTP header is insecure'.
                       format(header),
-                      details=dict(url=url, header=header, value=value),
+                      details=dict(url=url, header=header, value=value,
+                                   fingerprint=fingerprint),
                       refs='apache/habilitar-headers-seguridad')
             result = True
     else:
         show_open('{} HTTP header not present'.
                   format(header),
-                  details=dict(url=url, header=header),
+                  details=dict(url=url, header=header,
+                               fingerprint=fingerprint),
                   refs='apache/habilitar-headers-seguridad')
         result = True
 
