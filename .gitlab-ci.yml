@@ -45,8 +45,6 @@ test:
   script:
     - docker-compose run test
   retry: 2
-  except:
-    - master
 
 fluidasserts:
   script:
