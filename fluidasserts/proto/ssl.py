@@ -243,6 +243,7 @@ def has_poodle_tls(site, port=PORT):
 @track
 def has_poodle_sslv3(site, port=PORT):
     """Check whether POODLE SSLv3 is present."""
+    result = False
     try:
         with connect(site, port=port, min_version=(3, 0),
                      max_version=(3, 0)) as conn:
@@ -255,15 +256,17 @@ be vulnerable to POODLE SSLv3 attack',
                        details=dict(site=site, port=port))
             return False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
-        pass
+        show_close('Site not vulnerable to POODLE SSLv3 attack',
+                   details=dict(site=site, port=port))
+        result = False
     except socket.error as exception:
         if exception.errno == errno.ECONNRESET:
             show_close('Site not vulnerable to POODLE SSLv3 attack',
                        details=dict(site=site, port=port))
-            return False
+            result = False
         show_unknown('Port closed', details=dict(site=site, port=port))
-        return False
-    return False
+        result = False
+    return result
 
 
 @track
