@@ -9,6 +9,7 @@ This module allows to check HTTP especific vulnerabilities
 import re
 
 # 3rd party imports
+from typing import Optional, List
 from viewstate import ViewState, ViewStateException
 
 # local imports
@@ -508,9 +509,24 @@ def is_response_delayed(url, *args, **kwargs):
 # pylint: disable=too-many-locals
 # pylint: disable=keyword-arg-before-vararg
 @track
-def has_user_enumeration(url, user_field, user_list=None,
-                         fake_users=None, *args, **kwargs):
-    """Check if URL has user enumeration."""
+def has_user_enumeration(url: str, user_field: str,
+                         user_list: Optional[List] = None,
+                         fake_users: Optional[List] = None, *args, **kwargs):
+    r"""
+    Check if URL has user enumeration.
+
+    :param url: URL to test.
+    :param user_field: Field corresponding to the username.
+    :param user_list: List of users.
+    :param fake_users: List of fake users.
+    :param \*args: Optional arguments for
+                   :func:`~fluidasserts.helper.http_helper.request_dataset`.
+    :param \*\*kwargs: Optional arguments for
+       :func:`~fluidasserts.helper.http_helper.request_dataset`.
+
+    Either ``params`` or ``data`` must be present in ``kwargs``,
+    if the request is ``GET`` or ``POST``, respectively.
+    """
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
@@ -544,7 +560,7 @@ def has_user_enumeration(url, user_field, user_list=None,
     merged = [(x, y) for x in fake_res for y in user_res]
 
     from difflib import SequenceMatcher
-    res = 0
+    res = 0.0
     for resp_text, resp_time in merged:
         res += SequenceMatcher(None, resp_text, resp_time).ratio()
 

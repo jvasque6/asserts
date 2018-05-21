@@ -6,7 +6,7 @@
 import re
 
 # 3rd party imports
-
+from typing import List
 from urllib.parse import parse_qsl as parse_qsl
 from urllib.parse import quote as quote
 from urllib.parse import urlparse
@@ -262,8 +262,19 @@ def create_dataset(field, value_list, query_string):
     return dataset
 
 
-def request_dataset(url, dataset_list, *args, **kwargs):
-    """Request datasets and gives the results in a list."""
+def request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
+    r"""
+    Request datasets and gives the results in a list.
+
+    :param url: URL to test.
+    :param dataset_list: List of datasets. For each of these an ``HTTP``
+       session is created and the response recorded in the returned list.
+    :param \*\*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+
+    Either ``params`` or ``data`` must be present in ``kwargs``,
+    if the request is ``GET`` or ``POST``, respectively.
+    """
     kw_new = kwargs.copy()
     resp = list()
     for dataset in dataset_list:
