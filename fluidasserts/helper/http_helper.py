@@ -6,14 +6,10 @@
 import re
 
 # 3rd party imports
-try:
-    from urlparse import parse_qsl as parse_qsl
-    from urlparse import urlparse
-    from urllib import quote as quote
-except ImportError:
-    from urllib.parse import parse_qsl as parse_qsl
-    from urllib.parse import quote as quote
-    from urllib.parse import urlparse
+
+from urllib.parse import parse_qsl as parse_qsl
+from urllib.parse import quote as quote
+from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
