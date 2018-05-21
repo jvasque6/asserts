@@ -26,3 +26,6 @@ tmp/
 
 # VScode
 .vscode/
+
+# mypy cache
+.mypy_cache/
