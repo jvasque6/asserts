@@ -6,16 +6,21 @@ Este modulo define los parametros minimos requeridos para generar
 un instalador estandar de FLUIDAsserts.
 """
 import time
+import io
 from setuptools import setup
+
+with io.open('conf/README.rst', 'rt', encoding='utf8') as f:
+    README = f.read()
 
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
+    long_description=README,
     version=time.strftime('0.%Y%m%d.%H%M'),
-    url='https://fluid.la/',
+    url='https://fluidattacks.com/web/en/products/asserts',
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='FLUID Engineering Team',
-    author_email='engineering@fluid.la',
+    author_email='engineering@fluidattacks.com',
     packages=[
         'fluidasserts',
         'fluidasserts.format',
@@ -36,12 +41,12 @@ setup(
         'Topic :: Security',
         'Topic :: Software Development :: Testing',
         'Topic :: Software Development :: Quality Assurance',
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 3 - Alpha',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
+        'License :: Other/Proprietary License',
     ],
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
