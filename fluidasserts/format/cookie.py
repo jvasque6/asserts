@@ -11,7 +11,7 @@ This module allows to check Cookies vulnerabilities.
 # None
 
 # 3rd party imports
-# None
+from typing import Optional
 
 # local imports
 from fluidasserts import show_close
@@ -21,8 +21,8 @@ from fluidasserts.helper import http_helper
 from fluidasserts.utils.decorators import track
 
 
-def _has_not_http_only(cookie_name: str, url: str, cookie_jar: dict,
-                       *args, **kwargs) -> bool:
+def _has_not_http_only(cookie_name: str, url: Optional[str],
+                       cookie_jar: Optional[dict], *args, **kwargs) -> bool:
     r"""
     Check if a cookie has the ``httponly`` attribute.
 
@@ -73,8 +73,8 @@ def _has_not_http_only(cookie_name: str, url: str, cookie_jar: dict,
     return True
 
 
-def _has_not_secure(cookie_name: str, url: str, cookie_jar: dict,
-                    *args, **kwargs) -> bool:
+def _has_not_secure(cookie_name: str, url: Optional[str],
+                    cookie_jar: Optional[dict], *args, **kwargs) -> bool:
     r"""
     Check if a cookie has the ``secure`` attribute.
 
