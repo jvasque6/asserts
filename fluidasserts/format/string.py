@@ -17,7 +17,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def _check_password_strength(password: str, length: str) -> bool:
+def _check_password_strength(password: str, length: int) -> bool:
     """
     Check if a user password is secure.
 
