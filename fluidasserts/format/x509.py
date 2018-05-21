@@ -24,7 +24,7 @@ from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 PORT = 443
 
 
-def _uses_sign_alg(site: str, alg: str, port: str) -> bool:
+def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
     """
     Check if cert uses a hash method in their signature.
 
