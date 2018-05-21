@@ -231,6 +231,17 @@ PreCommit:
     install_command: 'pip install flake8'
     include: '**/*.py'
 
+  MyPy:
+    enabled: true
+    description: 'Type linting with mypy'
+    required_executable: 'mypy'
+    flags:
+      - '--ignore-missing-imports'
+      - '--follow-imports=skip'
+      - 'fluidasserts'
+    on_fail: warn
+    on_warn: pass
+
   TrailingWhitespace:
     enabled: true
     on_warn: fail

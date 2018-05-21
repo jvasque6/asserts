@@ -58,7 +58,8 @@ RUN apt-get update -qq && \
         twine \
         mandrill \
         certifi && \
-    pip3 install pyflakes && \
+    pip3 install pyflakes \
+        mypy && \
     gem install overcommit && \
     dpkg --clear-avail && \
     apt-get clean

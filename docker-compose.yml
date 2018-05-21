@@ -53,7 +53,7 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
-    command: bash -c "overcommit --sign && overcommit --run"
+    command: bash -c "overcommit --sign && overcommit --sign pre-commit && overcommit --run"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
