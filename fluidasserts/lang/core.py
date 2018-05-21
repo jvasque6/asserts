@@ -21,7 +21,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts.utils.decorators import track
 
 
-LANGUAGE_SPECS = {}
+LANGUAGE_SPECS = {}  # type: dict
 
 
 def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
