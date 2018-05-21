@@ -23,7 +23,7 @@ LANGUAGE_SPECS = {
     'extensions': ['config'],
     'block_comment_start': '<!--',
     'block_comment_end': '-->',
-}
+}  # type: dict
 
 
 @track

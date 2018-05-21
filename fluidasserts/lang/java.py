@@ -26,7 +26,7 @@ LANGUAGE_SPECS = {
     'block_comment_start': '/*',
     'block_comment_end': '*/',
     'line_comment': ['//'],
-}
+}  # type: dict
 
 
 @track

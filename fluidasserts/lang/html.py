@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""HTML check module."""
+"""
+HTML check module.
+
+This module allows to check HTML vulnerabilities.
+"""
 
 # 3rd party imports
 from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException,
@@ -12,7 +16,7 @@ from fluidasserts import show_open
 from fluidasserts.utils.decorators import track
 
 
-def _has_attributes(filename, tag, attrs):
+def _has_attributes(filename: str, tag: str, attrs: dict) -> bool:
     """
     Check ``HTML`` attributes` values.
 
@@ -21,12 +25,8 @@ def _has_attributes(filename, tag, attrs):
     has an attribute (``attr``) with the specific value (``value``).
 
     :param filename: Path to the ``HTML`` source.
-    :type filename: string
     :param tag: ``HTML`` tag to search.
-    :type tag: string.
-    :param attr: Attributes with values to search.
-    :type attr: dictionary
-    :rtype: bool
+    :param attrs: Attributes with values to search.
     :returns: True if attribute set as specified, False otherwise.
     """
     handle = open(filename, 'r')
@@ -52,7 +52,7 @@ def _has_attributes(filename, tag, attrs):
 
 
 @track
-def has_not_autocomplete(filename):
+def has_not_autocomplete(filename: str) -> bool:
     """
     Check the autocomplete attribute.
 
@@ -60,8 +60,6 @@ def has_not_autocomplete(filename):
     attribute set to ``off``.
 
     :param filename: Path to the ``HTML`` source.
-    :type filename: string
-    :rtype: bool
     :returns: True if tags ``form`` and ``input`` have attribute
               ``autocomplete`` set as specified, False otherwise.
     """
@@ -84,7 +82,7 @@ def has_not_autocomplete(filename):
 
 
 @track
-def is_cacheable(filename):
+def is_cacheable(filename: str) -> bool:
     """Check if cache is posible.
 
     Verifies if the file has the tags::
@@ -92,8 +90,6 @@ def is_cacheable(filename):
        <META HTTP-EQUIV="Expires" CONTENT="-1">
 
     :param filename: Path to the ``HTML`` source.
-    :type filename: string
-    :rtype: bool
     :returns: True if tag ``meta`` have attributes ``http-equiv``
               and ``content`` set as specified, False otherwise.
     """
@@ -122,15 +118,13 @@ def is_cacheable(filename):
 
 
 @track
-def is_header_content_type_missing(filename):
+def is_header_content_type_missing(filename: str) -> bool:
     """Check if Content-Type header is missing.
 
     Verifies if the file has the tags::
        <META HTTP-EQUIV="Content-Type" CONTENT="no-cache">
 
     :param filename: Path to the ``HTML`` source.
-    :type filename: string
-    :rtype: bool
     :returns: True if tag ``meta`` have attributes ``http-equiv``
               and ``content`` set as specified, False otherwise.
     """

@@ -24,7 +24,7 @@ LANGUAGE_SPECS = {
     'block_comment_start': '/*',
     'block_comment_end': '*/',
     'line_comment': ['//'],
-}
+}  # type: dict
 
 
 @track
@@ -45,12 +45,11 @@ def uses_console_log(js_dest: str) -> bool:
 
 
 @track
-def uses_eval(js_dest):
+def uses_eval(js_dest: str) -> bool:
     """
     Search for ``eval()`` calls in a JavaScript file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
-    :rtype: bool
     """
     method = 'eval()'
     tk_method = CaselessKeyword('eval')

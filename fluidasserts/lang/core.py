@@ -149,7 +149,7 @@ def file_exists(code_file: str) -> bool:
 
 
 @track
-def has_weak_cipher(code_dest, expected_text):
+def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
     """
     Check if code uses base 64 to cipher confidential data.
 
@@ -157,7 +157,6 @@ def has_weak_cipher(code_dest, expected_text):
 
     :param code_dest: Path to a code source file or package.
     :param expected_text: Text that might be in source file or package
-    :rtype: bool
     """
     enc_text = base64.b64encode(expected_text.encode('utf-8'))
     prs_base64 = Literal(enc_text.decode('utf-8'))

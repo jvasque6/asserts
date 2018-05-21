@@ -26,7 +26,7 @@ LANGUAGE_SPECS = {
     'block_comment_start': '/*',
     'block_comment_end': '*/',
     'line_comment': ['//'],
-}
+}  # type: dict
 
 
 @track
@@ -247,14 +247,13 @@ def uses_md5_hash(csharp_dest: str) -> bool:
     return result
 
 
-def uses_sha1_hash(csharp_dest):
+def uses_sha1_hash(csharp_dest: str) -> bool:
     """
     Check if code uses SHA1 as hashing algorithm.
 
     See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
-    :rtype: bool
     """
     method = "new SHA1CryptoServiceProvider(), new SHA1Managed()"
     tk_new = CaselessKeyword('new')

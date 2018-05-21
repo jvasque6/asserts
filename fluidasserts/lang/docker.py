@@ -23,7 +23,7 @@ LANGUAGE_SPECS = {
     'block_comment_start': None,
     'block_comment_end': None,
     'line_comment': ['#'],
-}
+}  # type: dict
 
 
 @track
