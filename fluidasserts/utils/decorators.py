@@ -3,7 +3,7 @@
 
 import atexit
 import functools
-from typing import Callable
+from typing import Callable, Any
 import mixpanel
 from fluidasserts import MP, CLIENT_ID
 
@@ -17,7 +17,7 @@ def track(func: Callable) -> Callable:
     Logs and registers function usage.
     """
     @functools.wraps(func)
-    def decorated(*args, **kwargs) -> Callable:  # noqa
+    def decorated(*args, **kwargs) -> Any:  # noqa
         """
         Decorate function.
 
