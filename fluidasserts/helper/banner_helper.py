@@ -61,7 +61,7 @@ class Service(object):
                 sent_bytes = sock.send(self.payload)
                 if sent_bytes < len(self.payload):
                     raise socket.error
-            banner = sock.recv(5096)
+            banner = sock.recv(5096).decode('ISO-8859-1')
         except socket.error:
             raw_socket = False
             banner = ''
@@ -108,7 +108,7 @@ class FTPService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        regex_match = re.search(b'220.(.*)', banner)
+        regex_match = re.search(r'220.(.*)', banner)
         version = regex_match.group(1)
         if len(version) < 3:
             return None
@@ -133,7 +133,7 @@ class SMTPService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        regex_match = re.search(b'220.*ESMTP (.*)', banner)
+        regex_match = re.search(r'220.*ESMTP (.*)', banner)
         if regex_match:
             return regex_match.group(1)
         return None
@@ -157,7 +157,7 @@ class HTTPService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
+        regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
         if regex_match:
             return regex_match.group(1)
@@ -182,7 +182,7 @@ class HTTPSService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        regex_match = re.search(b'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
+        regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
         if regex_match:
             return regex_match.group(1)
@@ -207,7 +207,7 @@ class SSHService(Service):
     def get_version(self, server):
         """Get version."""
         banner = self.get_banner(server)
-        regex_match = re.search(b'(.*)', banner)
+        regex_match = re.search(r'(.*)', banner)
         version = regex_match.group(1)
         if len(version) < 3:
             return None
