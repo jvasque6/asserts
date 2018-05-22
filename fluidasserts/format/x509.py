@@ -205,13 +205,16 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     cert_validity = \
         cert_obj.not_valid_after - cert_obj.not_valid_before
 
+    cert_validity_days = max_validity_days - cert_validity.days
     if cert_validity.days <= max_validity_days:
         show_close('Certificate has a secure lifespan',
                    details=dict(site=site, port=port,
                                 not_valid_before=cert_obj.not_valid_before.
                                 isoformat(),
                                 not_valid_after=cert_obj.not_valid_after.
-                                isoformat()))
+                                isoformat(),
+                                max_validity_days=max_validity_days,
+                                cert_validity_days=cert_validity_days))
         result = False
     else:
         show_open('Certificate has an insecure lifespan',
@@ -219,7 +222,9 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
                                not_valid_before=cert_obj.not_valid_before.
                                isoformat(),
                                not_valid_after=cert_obj.not_valid_after.
-                               isoformat()))
+                               isoformat(),
+                               max_validity_days=max_validity_days,
+                               cert_validity_days=cert_validity_days))
         result = True
     return result
 
