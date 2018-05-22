@@ -178,7 +178,7 @@ class Message(object):
     def __init__(self, status, message, details, references):
         """Constructor method."""
         self.__ref_base = 'https://fluidattacks.com/web/es/defends/'
-        self.__status_codes = ['OPEN', 'CLOSE', 'UNKNOWN', 'ERROR']
+        self.__status_codes = ['OPEN', 'CLOSED', 'UNKNOWN', 'ERROR']
         self.date = datetime.datetime.now()
         self.status = status
         self.message = message
@@ -274,7 +274,7 @@ except mixpanel.MixpanelException:
 
 def show_close(message, details=None, refs=None):
     """Show close message."""
-    message = Message('CLOSE', message, details, refs)
+    message = Message('CLOSED', message, details, refs)
     message.as_yaml()
 
 
