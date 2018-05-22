@@ -3,7 +3,8 @@
 """Test methods of fluidasserts.code.java."""
 
 # standard imports
-# None
+import io
+import sys
 
 # 3rd party imports
 # None
@@ -25,6 +26,7 @@ SECURE_RANDOM = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_RANDOM = CODE_DIR + 'EmptyCatchOpen.java'
 SECURE_HASH = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
+LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
 #
 # Open tests
@@ -53,7 +55,12 @@ def test_uses_print_stack_trace_in_dir_open():
 
 def test_swallows_exceptions_open():
     """Search empty catches."""
+    capt_out = io.StringIO()
+    fluidasserts.OUTFILE = capt_out
+    expected = LINES_FORMAT + '12, 15'
     assert java.swallows_exceptions(INSECURE_EMPTY_CATCH)
+    fluidasserts.OUTFILE = sys.stdout
+    assert expected in capt_out.getvalue()
 
 
 def test_has_empty_catches_in_dir_open():

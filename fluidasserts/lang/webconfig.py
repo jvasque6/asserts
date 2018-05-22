@@ -26,6 +26,16 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
+def _get_block(file_lines, line) -> str:
+    """
+    Return a WebConfig block of code beginning in line.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    return "".join(file_lines[line - 1:])
+
+
 @track
 def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     """
@@ -47,7 +57,8 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
 
     for code_file, lines in custom_headers.items():
         vulns = lang_helper.block_contains_empty_grammar(tk_rem,
-                                                         code_file, lines)
+                                                         code_file, lines,
+                                                         _get_block)
         if vulns:
             show_open('Header X-Powered-By is present',
                       details=dict(file=code_file,
