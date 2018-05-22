@@ -3,11 +3,16 @@
 
 import atexit
 import functools
+import sys
 from typing import Callable, Any
+
 import mixpanel
 from fluidasserts import MP, CLIENT_ID
 
 UNITTEST = False
+
+if bool(getattr(sys, 'ps1', sys.flags.interactive)):
+    UNITTEST = True
 
 
 def track(func: Callable) -> Callable:
