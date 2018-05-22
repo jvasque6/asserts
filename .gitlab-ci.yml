@@ -86,6 +86,8 @@ deploy:
     - docker-compose run deploy
     - docker build --no-cache -f Dockerfile.runner
       -t registry.gitlab.com/fluidsignal/asserts:runner .
+    - docker build --no-cache
+      -t fluid-docker.jfrog.io/$ORG:$APP deploy/container
   retry: 2
   only:
     - master
@@ -93,9 +95,11 @@ deploy:
 push_container:
   stage: postdeploy
   script:
+    - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker push registry.gitlab.com/fluidsignal/asserts:base
     - docker push registry.gitlab.com/fluidsignal/asserts:builder
     - docker push registry.gitlab.com/fluidsignal/asserts:runner
+    - docker push fluid-docker.jfrog.io/$ORG:$APP
   after_script:
     - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   retry: 2

@@ -217,7 +217,7 @@ class Message(object):
                             explicit_start=True)
         if self.status == 'OPEN':
             style = OPEN_COLORS
-        elif self.status == 'CLOSE':
+        elif self.status == 'CLOSED':
             style = CLOSE_COLORS
         elif self.status == 'UNKNOWN':
             style = UNKNOWN_COLORS
