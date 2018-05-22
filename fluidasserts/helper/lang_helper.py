@@ -10,7 +10,7 @@ import hashlib
 import os
 
 # 3rd party imports
-from pyparsing import Or, ParseException, Literal, SkipTo, ParseResults
+from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults)
 
 # local imports
 from fluidasserts import show_close
@@ -26,7 +26,7 @@ def _is_empty_result(parse_result):
     return not bool(parse_result)
 
 
-def get_match_lines(grammar, code_file, lang_spec):  # noqa
+def _get_match_lines(grammar, code_file, lang_spec):  # noqa
     """Check grammar in file."""
     with open(code_file) as file_fd:
         affected_lines = []
@@ -69,26 +69,36 @@ def get_match_lines(grammar, code_file, lang_spec):  # noqa
     return affected_lines
 
 
-def block_contains_grammar(grammar, code_dest, lines):
+def lists_as_string(lists, result, level):
+    """Return a string formatted from a ParseResults list."""
+    for lst in lists:
+        if isinstance(lst, list):
+            result = lists_as_string(lst, result, level + 1)
+        else:
+            result += "\t" * int(level / 2) + lst + "\n"
+    return result
+
+
+def block_contains_grammar(grammar, code_dest, lines, get_block_fn):
     """Check block grammar."""
     vulns = []
     with open(code_dest) as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
-            txt = "".join(file_lines[line - 1:])
+            txt = get_block_fn(file_lines, line)
             results = grammar.searchString(txt, maxMatches=1)
             if not _is_empty_result(results):
                 vulns.append(line)
     return vulns
 
 
-def block_contains_empty_grammar(grammar, code_dest, lines):
+def block_contains_empty_grammar(grammar, code_dest, lines, get_block_fn):
     """Check empty block grammar."""
     vulns = []
     with open(code_dest) as code_f:
         file_lines = code_f.readlines()
         for line in lines:
-            txt = "".join(file_lines[line - 1:])
+            txt = get_block_fn(file_lines, line)
             results = grammar.searchString(txt, maxMatches=1)
             if _is_empty_result(results):
                 vulns.append(line)
@@ -112,7 +122,7 @@ def check_grammar(grammar, code_dest, lang_spec):
     assert os.path.exists(code_dest)
     vulns = {}
     if os.path.isfile(code_dest):
-        vulns[code_dest] = get_match_lines(grammar, code_dest, lang_spec)
+        vulns[code_dest] = _get_match_lines(grammar, code_dest, lang_spec)
         return vulns
 
     for root, _, files in os.walk(code_dest):
@@ -121,11 +131,11 @@ def check_grammar(grammar, code_dest, lang_spec):
             if lang_spec.get('extensions'):
                 if '.' in full_path:
                     if full_path.split('.')[1] in lang_spec.get('extensions'):
-                        vulns[full_path] = get_match_lines(grammar, full_path,
-                                                           lang_spec)
+                        vulns[full_path] = _get_match_lines(grammar, full_path,
+                                                            lang_spec)
             else:
-                vulns[full_path] = get_match_lines(grammar, full_path,
-                                                   lang_spec)
+                vulns[full_path] = _get_match_lines(grammar, full_path,
+                                                    lang_spec)
     return vulns
 
 

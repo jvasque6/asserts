@@ -7,10 +7,18 @@ This is a test module to check exceptions.
 try:
     print('Hello world')
 except:
+    print('a')
+try:
+    print('Hello world')
+except:
     pass
 try:
     print('Hello world')
 except IndexError:
+    pass
+try:
+    print('Hello world')
+except (IndexError, AttributeError):
     pass
 try:
     print('Hello world')

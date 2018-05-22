@@ -23,8 +23,18 @@ LANGUAGE_SPECS = {
     'extensions': ['js', 'ts'],
     'block_comment_start': '/*',
     'block_comment_end': '*/',
-    'line_comment': ['//'],
+    'line_comment': ['//']
 }  # type: dict
+
+
+def _get_block(file_lines, line) -> str:
+    """
+    Return a JavaScript block of code beginning in line.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    return "".join(file_lines[line - 1:])
 
 
 @track
@@ -117,7 +127,8 @@ def swallows_exceptions(js_dest: str) -> bool:
 
     for code_file, lines in catches.items():
         vulns = lang_helper.block_contains_empty_grammar(empty_catch,
-                                                         code_file, lines)
+                                                         code_file, lines,
+                                                         _get_block)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,
@@ -161,7 +172,8 @@ def has_switch_without_default(js_dest: str) -> bool:
 
     for code_file, lines in switches.items():
         vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
-                                                         code_file, lines)
+                                                         code_file, lines,
+                                                         _get_block)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
@@ -199,7 +211,8 @@ def has_if_without_else(js_dest: str) -> bool:
 
     for code_file, lines in conds.items():
         vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
-                                                         code_file, lines)
+                                                         code_file, lines,
+                                                         _get_block)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,

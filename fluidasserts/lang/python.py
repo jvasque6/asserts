@@ -11,7 +11,8 @@ This module allows to check Python code vulnerabilities.
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
-                       pythonStyleComment, Suppress)
+                       pythonStyleComment, Suppress, delimitedList, Forward,
+                       SkipTo, LineEnd, indentedBlock, Group)
 
 # local imports
 from fluidasserts.helper import lang_helper
@@ -24,8 +25,30 @@ LANGUAGE_SPECS = {
     'extensions': ['py'],
     'block_comment_start': None,
     'block_comment_end': None,
-    'line_comment': ['#'],
+    'line_comment': ['#']
 }  # type: dict
+
+
+def _get_block(file_lines, line) -> str:
+    """
+    Return a Python block of code beginning in line.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    frst_ln = file_lines[line - 1]
+    file_lines = file_lines[line - 1:]
+    rem_file = "\n".join(file_lines)
+    indent_stack = [len(frst_ln) - len(frst_ln.lstrip(' ')) + 1]
+    prs_block = Forward()
+    block_line = SkipTo(LineEnd())
+    block_header = SkipTo(LineEnd())
+    block_body = indentedBlock(prs_block, indent_stack)
+    block_def = Group(block_header + block_body)
+    prs_block << (block_def | block_line)       # pylint: disable=W0104
+    block_list = prs_block.parseString(rem_file).asList()
+    block_str = (lang_helper.lists_as_string(block_list, '', 0))
+    return block_str.rstrip()
 
 
 @track
@@ -70,8 +93,11 @@ def swallows_exceptions(py_dest: str) -> bool:
     tk_except = CaselessKeyword('except')
     tk_word = Word(alphas) + Optional('.')
     tk_pass = Literal('pass')
+    tk_exc_obj = tk_word + Optional(Literal('as') + tk_word)
     parser_exception = tk_except + \
-        Optional(tk_word + Optional(Literal('as') + tk_word)) + Literal(':')
+        Optional('(') + \
+        Optional(delimitedList(tk_exc_obj)) + \
+        Optional(')') + Literal(':')
     empty_exception = (Suppress(parser_exception) +
                        tk_pass).ignore(pythonStyleComment)
 
@@ -80,7 +106,7 @@ def swallows_exceptions(py_dest: str) -> bool:
                                         LANGUAGE_SPECS)
     for code_file, lines in matches.items():
         vulns = lang_helper.block_contains_grammar(empty_exception, code_file,
-                                                   lines)
+                                                   lines, _get_block)
         if not vulns:
             show_close('Code does not has empty catches',
                        details=dict(file=code_file,

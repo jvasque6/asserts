@@ -7,7 +7,7 @@ class GenericExceptionsClose{
          System.out.println("First print statement in try block");
      }
      catch(ArithmeticException e){
-
+        System.out.println("Warning: ArithmeticException");
      }
      catch(ArrayIndexOutOfBoundsException e){
         // Oneline comment
@@ -17,6 +17,9 @@ class GenericExceptionsClose{
         Multiline comment
         Test
         */
+     }
+     catch(ArithmeticException e){
+        System.out.println("Warning: ArithmeticException");
      }
 /*
      try {
