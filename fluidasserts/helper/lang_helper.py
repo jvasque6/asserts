@@ -1,24 +1,31 @@
 # -*- coding: utf-8 -*-
 
-"""Lang helper.
+"""
+Lang helper.
 
-This module has helper functions for lang modules
+This module has helper functions for lang modules.
 """
 
 # standard imports
 import hashlib
 import os
+from typing import Callable, Dict, List
 
 # 3rd party imports
-from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults)
+from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults,
+                       ParserElement)
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 
 
-def _is_empty_result(parse_result):
-    """Check if a ParseResults is empty."""
+def _is_empty_result(parse_result: ParseResults) -> bool:
+    """
+    Check if a ParseResults is empty.
+
+    :param parse_result: ParseResults from pyparsing.
+    """
     if isinstance(parse_result, ParseResults):
         if parse_result:
             return _is_empty_result(parse_result[0])
@@ -26,8 +33,17 @@ def _is_empty_result(parse_result):
     return not bool(parse_result)
 
 
-def _get_match_lines(grammar, code_file, lang_spec):  # noqa
-    """Check grammar in file."""
+def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
+                     lang_spec: dict) -> List:  # noqa
+    """
+    Check grammar in file.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_file: Source code file to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :return: List of lines that contain grammar matches.
+    """
     with open(code_file) as file_fd:
         affected_lines = []
         counter = 0
@@ -69,8 +85,15 @@ def _get_match_lines(grammar, code_file, lang_spec):  # noqa
     return affected_lines
 
 
-def lists_as_string(lists, result, level):
-    """Return a string formatted from a ParseResults list."""
+def lists_as_string(lists: List[List], result: ParseResults,
+                    level: int) -> str:
+    """
+    Format ParseResults as string.
+
+    :param lists: Nested Lists from ParseResults.
+    :param result: Results from parsing.
+    :param level: Depth level to control recursion.
+    """
     for lst in lists:
         if isinstance(lst, list):
             result = lists_as_string(lst, result, level + 1)
@@ -79,8 +102,17 @@ def lists_as_string(lists, result, level):
     return result
 
 
-def block_contains_grammar(grammar, code_dest, lines, get_block_fn):
-    """Check block grammar."""
+def block_contains_grammar(grammar: ParserElement, code_dest: str,
+                           lines: List[str],
+                           get_block_fn: Callable) -> List[str]:
+    """
+    Check block grammar.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: Source code file to check.
+    :param lines: List of starting lines.
+    :param get_block_fn: Function that gives block code starting at line.
+    """
     vulns = []
     with open(code_dest) as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
@@ -92,8 +124,17 @@ def block_contains_grammar(grammar, code_dest, lines, get_block_fn):
     return vulns
 
 
-def block_contains_empty_grammar(grammar, code_dest, lines, get_block_fn):
-    """Check empty block grammar."""
+def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
+                                 lines: List[str],
+                                 get_block_fn: Callable) -> List[str]:
+    """
+    Check empty block grammar.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: Source code file to check.
+    :param lines: List of starting lines.
+    :param get_block_fn: Function that gives block code starting at line.
+    """
     vulns = []
     with open(code_dest) as code_f:
         file_lines = code_f.readlines()
@@ -105,8 +146,12 @@ def block_contains_empty_grammar(grammar, code_dest, lines, get_block_fn):
     return vulns
 
 
-def file_hash(filename):
-    """Get SHA256 hash from file."""
+def file_hash(filename: str) -> dict:
+    """
+    Get SHA256 hash from file as a dict.
+
+    :param filename: Path to the file to digest.
+    """
     sha256 = hashlib.sha256()
     try:
         with open(filename, 'rb', buffering=0) as code_fd:
@@ -117,8 +162,17 @@ def file_hash(filename):
     return dict(sha256=sha256.hexdigest())
 
 
-def check_grammar(grammar, code_dest, lang_spec):
-    """Check grammar in location."""
+def check_grammar(grammar: ParserElement, code_dest: str,
+                  lang_spec: dict) -> Dict[str, List[str]]:
+    """
+    Check grammar in location.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: File or directory to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :return: Maps files to their found vulnerabilites.
+    """
     assert os.path.exists(code_dest)
     vulns = {}
     if os.path.isfile(code_dest):
@@ -139,8 +193,17 @@ def check_grammar(grammar, code_dest, lang_spec):
     return vulns
 
 
-def uses_insecure_method(grammar, code_dest, lang_spec, method):
-    """Check if code destination uses an insecure method."""
+def uses_insecure_method(grammar: ParserElement, code_dest: str,
+                         lang_spec: dict, method: str) -> bool:
+    """
+    Check if code destination uses an insecure method.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: File or directory to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :param method: Insecure method to find in code.
+    """
     result = False
     matches = check_grammar(grammar, code_dest, lang_spec)
 
