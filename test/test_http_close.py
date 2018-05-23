@@ -405,3 +405,4 @@ def test_has_clear_viewstate_close():
 
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/not_found' % (MOCK_SERVICE))
+

@@ -73,6 +73,8 @@ setup(
         'oyaml==0.4',                # fluidasserts
         'pygments==2.2.0',           # fluidasserts
         'viewstate==0.4.3',          # fluidasserts.proto.http
+        'ntplib==0.3.3',             # fluidasserts.proto.http
+        'pytz==2018.4',              # fluidasserts.proto.http
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )

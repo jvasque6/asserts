@@ -447,3 +447,10 @@ def test_has_clear_viewstate_open():
     """ViewState cifrado?."""
     assert http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/fail' % (MOCK_SERVICE))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_date_unsyncd_open():
+    """Hora desincronizada?."""
+    assert http.is_date_unsyncd(
+        '%s/date/fail' % (MOCK_SERVICE))

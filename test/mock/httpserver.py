@@ -461,6 +461,14 @@ def viewstate_encrypted_notfound():
     return resp
 
 
+@APP.route('/http/headers/date/fail')
+def date_fail():
+    """Date desactualizada."""
+    resp = Response()
+    resp.headers['Date'] = 'Wed, 23 May 1970 00:00:00 GMT'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
