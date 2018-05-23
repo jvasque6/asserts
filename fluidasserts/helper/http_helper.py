@@ -6,7 +6,7 @@
 import re
 
 # 3rd party imports
-from typing import List
+from typing import List, Optional, Tuple, Union
 from urllib.parse import parse_qsl as parse_qsl
 from urllib.parse import quote as quote
 from urllib.parse import urlparse
@@ -46,11 +46,15 @@ HDR_RGX = {
     'x-xss-protection': '^1(\\s*;\\s*mode=block)?$',
     'www-authenticate': '^((?!Basic).)*$',
     'x-powered-by': '^ASP.NET'
-}
+}  # type: dict
 
 
 class ConnError(Exception):
-    """requests.ConnectionError wrapper exception."""
+    """
+    A connection error occurred.
+
+    :py:exc:`requests.ConnectionError` wrapper exception.
+    """
 
     pass
 
@@ -58,9 +62,29 @@ class ConnError(Exception):
 class HTTPSession(object):
     """Class of HTTP request objects."""
 
-    def __init__(self, url, params=None, headers=None, method=None,
-                 cookies=None, data='', files=None, auth=None, stream=False):
-        """Construct method."""
+    def __init__(self, url: str, params: Optional[str] = None,
+                 headers: Optional[dict] = None, method: Optional[str] = None,
+                 cookies: requests.cookies.RequestsCookieJar = None,
+                 data: Optional[str] = '',
+                 files: Optional[dict] = None,
+                 auth: Optional[Tuple[str, str]] = None,
+                 stream: Optional[bool] = False) -> None:
+        """
+        Construct method.
+
+        :param method: Must be either `PUT` or `DELETE`.
+        :param url: URL for the new :class:`HTTPSession` object.
+        :param params: Parameters to be sent with the :class:`Request`.
+        :param data: Dictionary to be sent in the :class:`Request` body.
+        :param headers: Dictionary of HTTP Headers to sent with the Request.
+        :param cookies: Dict or CookieJar object to send with the Request.
+        :param files: Dictionary of ``'name': file-like-objects``
+                      for multipart encoding upload.
+        :param auth: Auth tuple to enable Basic/Digest/Custom HTTP Auth.
+        :param stream: If ``False``, the response content
+                       will be immediately downloaded.
+        :return: :class:`HTTPSession` object
+        """
         self.url = url
         self.params = params
         self.headers = headers
@@ -71,7 +95,7 @@ class HTTPSession(object):
         self.method = method
         if self.method:
             assert self.method in ['PUT', 'DELETE']
-        self.response = None
+        self.response = None  # type: requests.Response
         self.is_auth = False
         self.stream = stream
         if self.headers is None:
@@ -86,8 +110,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
 
         self.do_request()
 
-    def do_request(self):  # noqa
+    def do_request(self) -> Optional[requests.Response]:  # noqa
         """Do HTTP request."""
+        ret = None  # type: ignore
         if self.method in ['PUT', 'DELETE']:
             try:
                 if self.method == 'PUT':
@@ -145,8 +170,12 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 raise ConnError
         return ret
 
-    def formauth_by_statuscode(self, code):
-        """Authenticate using status code as verification."""
+    def formauth_by_statuscode(self, code: int) -> requests.Response:
+        """
+        Authenticate using status code as verification.
+
+        :param code: Integer code of responded HTTP status, e.g. 404 or 500.
+        """
         self.headers['Content-Type'] = \
             'application/x-www-form-urlencoded'
         self.headers['Accept'] = '*/*'
@@ -165,8 +194,12 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         self.data = ''
         return http_req
 
-    def formauth_by_response(self, text):
-        """Authenticate using regex as verification."""
+    def formauth_by_response(self, text: str) -> requests.Response:
+        """
+        Authenticate using regex as verification.
+
+        :param text: Regex to look for in request response.
+        """
         self.headers['Content-Type'] = \
             'application/x-www-form-urlencoded'
 
@@ -186,20 +219,40 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         del self.headers['Content-Type']
         return http_req
 
-    def basic_auth(self, user, passw):
-        """Authenticate using BASIC."""
+    def basic_auth(self, user: str, passw: str) -> None:
+        """
+        Authenticate using BASIC.
+
+        :param user: Username for authentication.
+        :param passw: Password for authentication.
+        """
         self.__do_auth('BASIC', user, passw)
 
-    def ntlm_auth(self, user, passw):
-        """Authenticate using NTLM."""
+    def ntlm_auth(self, user: str, passw: str) -> None:
+        """
+        Authenticate using NTLM.
+
+        :param user: Username for authentication.
+        :param passw: Password for authentication.
+        """
         self.__do_auth('NTLM', user, passw)
 
-    def oauth_auth(self, user, passw):
-        """Authenticate using OAUTH."""
+    def oauth_auth(self, user: str, passw: str) -> None:
+        """
+        Authenticate using OAUTH.
+
+        :param user: Username for authentication.
+        :param passw: Password for authentication.
+        """
         self.__do_auth('OAUTH', user, passw)
 
-    def __do_auth(self, method, user, passw):
-        """Authenticate using HTTP."""
+    def __do_auth(self, method: str, user: str, passw: str) -> None:
+        """
+        Authenticate using HTTP.
+
+        :param user: Username for authentication.
+        :param passw: Password for authentication.
+        """
         if method == 'BASIC':
             self.auth = (user, passw)
         elif method == 'NTLM':
@@ -220,8 +273,16 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         else:
             self.is_auth = False
 
-    def get_html_value(self, field_type, field_name, field='value', enc=False):
-        """Get a value from a HTML field."""
+    def get_html_value(self, field_type: str, field_name: str,
+                       field: Optional[str] = 'value',
+                       enc: Optional[bool] = False) -> str:
+        """
+        Get a value from an HTML field.
+
+        :param field_type: Name of HTML tag type to look for, e.g. ``script``.
+        :param field: Name of field, e.g. ``type``.
+        :param enc: Whether to URL-encode the results.
+        """
         soup = BeautifulSoup(self.response.text, 'html.parser')
         result_tag = soup.find(field_type,
                                {'name': field_name})
@@ -232,8 +293,13 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             return quote(text_to_get)
         return text_to_get
 
-    def get_fingerprint(self):
-        """Get HTTP fingerprint."""
+    def get_fingerprint(self) -> dict:
+        """
+        Get HTTP fingerprint.
+
+        :return: A dict containing the SHA and banner of the host,
+                 as per :meth:`Service.get_fingerprint()`.
+        """
         parsed = urlparse(self.url)
         host = parsed.netloc.split(':')[0]
         if parsed.scheme == 'http':
@@ -249,8 +315,17 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         return service.get_fingerprint(host)
 
 
-def create_dataset(field, value_list, query_string):
-    """Create dataset from values on list."""
+def create_dataset(field: str, value_list: List[str],
+                   query_string: Union[str, dict]) -> List:
+    """
+    Create dataset from values on list.
+
+    :param query_string: String or dict with query parameters.
+    :param field: Field to be taken from each of the values.
+    :param value_list: List of values from which fields are to be extracted.
+    :return: A List containing incremental versions of a dict, which contains
+             the data in the specified field from value_list.
+    """
     dataset = []
     if isinstance(query_string, str):
         data_dict = dict(parse_qsl(query_string))
@@ -269,7 +344,7 @@ def request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
     :param url: URL to test.
     :param dataset_list: List of datasets. For each of these an ``HTTP``
        session is created and the response recorded in the returned list.
-    :param \*\*args: Optional arguments for :class:`HTTPSession`.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
 
     Either ``params`` or ``data`` must be present in ``kwargs``,
@@ -287,16 +362,31 @@ def request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
     return resp
 
 
-def _options_request(url, *args, **kwargs):
-    """HTTP OPTIONS request."""
+def _options_request(url: str, *args, **kwargs) -> Optional[requests.Response]:
+    r"""
+    Send an``HTTP OPTIONS`` request.
+
+    Tests what kind of ``HTTP`` methods are supported on the given ``url``.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :py:func:`requests.options`.
+    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
+    """
     try:
         return requests.options(url, verify=False, *args, **kwargs)
     except requests.ConnectionError:
         raise ConnError
 
 
-def has_method(url, method, *args, **kwargs):
-    """Check specific HTTP method."""
+def has_method(url: str, method: str, *args, **kwargs) -> bool:
+    r"""
+    Check if specific HTTP method is allowed in URL.
+
+    :param url: URL to test.
+    :param method: HTTP method to test.
+    :param \*args: Optional arguments for :py:func:`requests.options`.
+    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
+    """
     is_method_present = _options_request(url, *args, **kwargs).headers
     result = True
     if 'allow' in is_method_present:
@@ -318,8 +408,15 @@ def has_method(url, method, *args, **kwargs):
 
 
 # pylint: disable=too-many-branches
-def has_insecure_header(url, header, *args, **kwargs):  # noqa
-    """Check if header is present."""
+def has_insecure_header(url: str, header: str, *args, **kwargs) -> bool:  # noqa
+    r"""
+    Check if an insecure header is present.
+
+    :param url: URL to test.
+    :param header: Header to test if present.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
