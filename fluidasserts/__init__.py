@@ -169,7 +169,12 @@ def get_caller_module():
 
 def get_caller_function():
     """Get caller function."""
-    return sys._getframe(3).f_code.co_name  # noqa
+    deep = 3
+    function = sys._getframe(deep).f_code.co_name  # noqa
+    while function.startswith('_'):
+        function = sys._getframe(deep).f_code.co_name  # noqa
+        deep += 1
+    return function
 
 
 class Message(object):
