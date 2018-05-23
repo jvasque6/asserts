@@ -19,6 +19,7 @@ stages:
   - test
   - deploy
   - postdeploy
+  - cleanup
 
 build:
   stage: build
@@ -115,3 +116,9 @@ pages:
     paths: [public/]
   only:
     - master
+
+cleanup_job:
+  stage: cleanup
+  script:
+    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
+  when: always
