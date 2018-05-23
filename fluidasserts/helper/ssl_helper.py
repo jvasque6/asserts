@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
-"""SSL module."""
+"""
+SSL module.
+
+This module enables connections via SSL.
+"""
 
 # standard imports
 from __future__ import absolute_import
 from contextlib import contextmanager
+from typing import Generator, Tuple, List
 import copy
 import socket
 import ssl
@@ -25,8 +30,12 @@ KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
                 "ecdh_anon", "dh_anon"]
 
 
-def _my_add_padding(self, data):
-    """Add padding to data so that it is multiple of block size."""
+def _my_add_padding(self, data: bytes) -> bytes:
+    """
+    Add padding to data so that it is multiple of block size.
+
+    :param data: Original bytestring to pad.
+    """
     current_length = len(data)
     block_length = self.blockSize
     padding_length = block_length - 1 - (current_length % block_length)
@@ -38,8 +47,16 @@ def _my_add_padding(self, data):
 
 
 @contextmanager
-def connect_legacy(hostname, port=PORT, ciphers=None):
-    """Establish a legacy SSL/TLS connection."""
+def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
+        -> Generator[ssl.SSLSocket, None, None]:
+    """
+    Establish a legacy SSL/TLS connection.
+
+    :param hostname: Host name to connect to.
+    :param port: Port to connect. Defaults to 443.
+    :param ciphers: Encryption algorithms. Defaults to (as per Python's SSL)
+                    ``'DEFAULT:!aNULL:!eNULL:!LOW:!EXPORT:!SSLv2'``.
+    """
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(5)
@@ -58,12 +75,25 @@ def connect_legacy(hostname, port=PORT, ciphers=None):
 
 # pylint: disable=too-many-arguments
 @contextmanager
-def connect(hostname, port=PORT, check_poodle_tls=False, min_version=(3, 1),
-            max_version=(3, 3),
-            cipher_names=None,
-            key_exchange_names=None,
-            anon=False):
-    """Establish a SSL/TLS connection."""
+def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
+            min_version: Tuple[int, int] = (3, 1),
+            max_version: Tuple[int, int] = (3, 3),
+            cipher_names: List[str] = None,
+            key_exchange_names: List[str] = None,
+            anon: bool = False)\
+        -> Generator[tlslite.TLSConnection, None, None]:
+    """
+    Establish a SSL/TLS connection.
+
+    :param hostname: Host name to connect to.
+    :param port: Port to connect. Defaults to 443.
+    :param check_poodle_tls: Depending on this, choose padding method.
+    :param min_version: Minimum SSL/TLS version acceptable. (Default TLS 1.0)
+    :param max_version: Minimum SSL/TLS version acceptable. (Default TLS 1.2)
+    :param cipher_names: List of allowed ciphers.
+    :param key_exchange_names: List of exchange names.
+    :param anon: Whether to make the handshake anonymously.
+    """
     if cipher_names is None:
         cipher_names = CIPHER_NAMES
     if key_exchange_names is None:
