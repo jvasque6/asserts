@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 
-"""SSH helper."""
+"""
+SSH helper.
+
+This module enables connections via SSH.
+"""
 
 # standard imports
 import os
+from typing import Tuple
 
 # 3rd party imports
 import paramiko
@@ -12,8 +17,8 @@ import paramiko
 # none
 
 
-def build_ssh_object():
-    """Build SSH object."""
+def build_ssh_object() -> paramiko.client.SSHClient:
+    """Build a Paramiko SSHClient object."""
     ssh = paramiko.SSHClient()
     ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -21,8 +26,16 @@ def build_ssh_object():
 
 
 # pylint: disable=R0914
-def ssh_user_pass(server, username, password, command):
-    """Connect using SSH user and pass and exec specific command."""
+def ssh_user_pass(server: str, username: str, password: str,
+                  command: str) -> Tuple[bool, bool]:
+    """
+    Connect using SSH username and password and execute given command.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param command: Command to execute in SSH Session.
+    """
     ssh = build_ssh_object()
 
     out = False
@@ -40,8 +53,16 @@ def ssh_user_pass(server, username, password, command):
     return out, err
 
 
-def ssh_with_config(server, username, config_file, command):
-    """Connect using SSH config and exec specific command."""
+def ssh_with_config(server: str, username: str, config_file: str,
+                    command: str) -> Tuple[bool, bool]:
+    """
+    Connect using SSH configuration file and execute given command.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param config_file: Path to SSH connection config file.
+    :param command: Command to execute in SSH Session.
+    """
     ssh = build_ssh_object()
 
     out = False
@@ -77,13 +98,19 @@ def ssh_with_config(server, username, config_file, command):
     return out, err
 
 
-def ssh_exec_command(server, username, password, command,
-                     config_file=None):
-    """Connect using SSH and exec specific command."""
+def ssh_exec_command(server: str, username: str, password: str, command: str,
+                     config_file: str = None) -> Tuple[bool, bool]:
+    """
+    Connect using SSH and execute specific command.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param command: Command to execute in SSH Session.
+    :param config_file: Path to SSH connection config file.
+    """
     if config_file is None:
         out, err = ssh_user_pass(server, username, password, command)
     else:
-        out, err = ssh_with_config(server, username,
-                                   config_file,
-                                   command)
+        out, err = ssh_with_config(server, username, config_file, command)
     return out, err
