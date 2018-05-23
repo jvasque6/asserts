@@ -53,7 +53,8 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
     tk_object = Word(alphas)
     generic_exception = Optional(Literal('}')) + tk_catch + Literal('(') + \
         tk_generic_exc + Optional(Literal('(') + tk_type + Literal(')')) + \
-        tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
+        Optional(tk_object_name) + \
+        Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
     matches = lang_helper.check_grammar(generic_exception, csharp_dest,
