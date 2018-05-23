@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-"""WinRM helper.
+"""
+WinRM helper.
 
 This must be run on the target server:
 winrm qc
@@ -20,8 +21,16 @@ import winrm
 # none
 
 
-def winrm_exec_command(server, username, password, command):
-    """Connect using WinRM user and pass and exec specific command."""
+def winrm_exec_command(server: str, username: str, password: str,
+                       command: str) -> str:
+    """
+    Connect to WinRM execute a specific command.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to WinRM.
+    :param password: Password for given user.
+    :param command: Command to execute in WinRM Session.
+    """
     try:
         session = winrm.Session(server, auth=(username, password))
         result = session.run_cmd(command)
