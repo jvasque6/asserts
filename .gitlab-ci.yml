@@ -97,9 +97,13 @@ push_container:
   stage: postdeploy
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
+    - docker login -u $HUB_USER -p $HUB_PASS
     - docker push registry.gitlab.com/fluidsignal/asserts:base
     - docker push registry.gitlab.com/fluidsignal/asserts:builder
     - docker push registry.gitlab.com/fluidsignal/asserts:runner
+    - docker tag registry.gitlab.com/fluidsignal/asserts:runner
+      fluidattacks/asserts
+    - docker push fluidattacks/asserts
     - docker push fluid-docker.jfrog.io/$ORG:$APP
   after_script:
     - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
