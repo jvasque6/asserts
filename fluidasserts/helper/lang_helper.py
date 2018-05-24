@@ -211,7 +211,8 @@ def uses_insecure_method(grammar: ParserElement, code_dest: str,
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Code does not use {} method'.format(method),

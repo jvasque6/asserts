@@ -48,7 +48,8 @@ def not_pinned(file_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Dockerfile has pinned base image(s)',

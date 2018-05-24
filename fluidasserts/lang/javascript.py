@@ -139,7 +139,8 @@ def swallows_exceptions(js_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result
 
@@ -184,7 +185,8 @@ def has_switch_without_default(js_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result
 
@@ -223,6 +225,7 @@ def has_if_without_else(js_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result

@@ -65,7 +65,8 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Code does not use generic exceptions',
@@ -110,7 +111,8 @@ def swallows_exceptions(csharp_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result
 
@@ -154,7 +156,8 @@ def has_switch_without_default(csharp_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result
 
@@ -185,7 +188,8 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Code does not generates insecure random numbers',
@@ -229,7 +233,8 @@ def has_if_without_else(csharp_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
     return result
 

@@ -172,8 +172,8 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
                                    file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".
-                                   join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Code does not has confidential data encoded in base64',

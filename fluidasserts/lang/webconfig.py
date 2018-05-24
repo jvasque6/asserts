@@ -64,7 +64,8 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
             result = True
         else:
             show_close('Header X-Powered-By is not present',
