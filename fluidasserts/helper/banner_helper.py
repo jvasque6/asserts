@@ -24,6 +24,7 @@ import hashlib
 import re
 import socket
 import ssl
+from typing import Optional
 
 # 3rd party imports
 import certifi
@@ -37,15 +38,26 @@ class Service(object):
 
     __metaclass__ = ABCMeta
 
-    def __init__(self, port, is_active, is_ssl, payload=None):
-        """Return a new Service object."""
+    def __init__(self, port: int, is_active: bool,
+                 is_ssl: bool, payload=None) -> None:
+        """
+        Build a new Service object.
+
+        :param port: Port to connect to.
+        :param is_active: Whether server is active.
+        :param is_ssl: Whether connection is to be made via SSL.
+        """
         self.port = port
         self.is_active = is_active
         self.is_ssl = is_ssl
         self.payload = payload
 
-    def get_banner(self, server):
-        """Get the banner of the service on a given port of an IP address."""
+    def get_banner(self, server: str) -> str:
+        """
+        Get the banner of the service on a given port of an IP address.
+
+        :param server: Server to connect to.
+        """
         banner = ''
         try:
             raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -71,15 +83,19 @@ class Service(object):
 
         return banner.rstrip()
 
-    def get_fingerprint(self, server):
-        """Get fingerprint of the banner."""
+    def get_fingerprint(self, server: str) -> dict:
+        """
+        Get fingerprint of the banner.
+
+        :param server:
+        """
         sha256 = hashlib.sha256()
         banner = self.get_banner(server)
         sha256.update(banner.encode('utf-8'))
         return dict(sha256=sha256.hexdigest(), banner=banner)
 
     @abstractmethod
-    def get_version(self, server):
+    def get_version(self, server: str) -> None:
         """Parse the banner.
 
         Return the product and version of the service.
@@ -90,9 +106,9 @@ class Service(object):
 class FTPService(Service):
     """FTP Service definition."""
 
-    def __init__(self, port=21, is_active=False, is_ssl=False,
-                 payload=None):
-        """Return a new Service object."""
+    def __init__(self, port: int = 21, is_active: bool = False,
+                 is_ssl: bool = False, payload: str = None) -> None:
+        """Build a new FTPService object."""
         try:
             super(FTPService, self).__init__(port=port,
                                              is_active=is_active,
@@ -102,8 +118,12 @@ class FTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, server):
-        """Get version."""
+    def get_version(self, server: str) -> Optional[str]:
+        """
+        Get version.
+
+        :param server: Server to connect to.
+        """
         banner = self.get_banner(server)
         regex_match = re.search(r'220.(.*)', banner)
         version = regex_match.group(1)
@@ -115,9 +135,9 @@ class FTPService(Service):
 class SMTPService(Service):
     """SMTP Service definition."""
 
-    def __init__(self, port=25, is_active=False, is_ssl=False,
-                 payload=None):
-        """Return a new Service object."""
+    def __init__(self, port: int = 25, is_active: bool = False,
+                 is_ssl: bool = False, payload: str = None) -> None:
+        """Build a new Service object."""
         try:
             super(SMTPService, self).__init__(port=port,
                                               is_active=is_active,
@@ -127,8 +147,12 @@ class SMTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, server):
-        """Get version."""
+    def get_version(self, server: str) -> Optional[str]:
+        """
+        Get version.
+
+        :param server: Server to connect to.
+        """
         banner = self.get_banner(server)
         regex_match = re.search(r'220.*ESMTP (.*)', banner)
         if regex_match:
@@ -139,9 +163,10 @@ class SMTPService(Service):
 class HTTPService(Service):
     """HTTP Service definition."""
 
-    def __init__(self, port=80, is_active=True, is_ssl=False,
-                 payload=b'HEAD / HTTP/1.0\r\n\r\n'):
-        """Return a new Service object."""
+    def __init__(self, port: int = 80, is_active: bool = True,
+                 is_ssl: bool = False,
+                 payload: str = b'HEAD / HTTP/1.0\r\n\r\n') -> None:
+        """Build a new Service object."""
         try:
             super(HTTPService, self).__init__(port=port,
                                               is_active=is_active,
@@ -151,8 +176,12 @@ class HTTPService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, server):
-        """Get version."""
+    def get_version(self, server: str) -> Optional[str]:
+        """
+        Get version.
+
+        :param server: Server to connect to.
+        """
         banner = self.get_banner(server)
         regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
@@ -164,9 +193,10 @@ class HTTPService(Service):
 class HTTPSService(Service):
     """HTTPS Service definition."""
 
-    def __init__(self, port=443, is_active=True, is_ssl=True,
-                 payload=b'HEAD / HTTP/1.0\r\n\r\n'):
-        """Return a new Service object."""
+    def __init__(self, port: int = 443,
+                 is_active: bool = True, is_ssl: bool = True,
+                 payload: str = b'HEAD / HTTP/1.0\r\n\r\n') -> None:
+        """Build a new HTTPService object."""
         try:
             super(HTTPSService, self).__init__(port=port,
                                                is_active=is_active,
@@ -176,8 +206,12 @@ class HTTPSService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, server):
-        """Get version."""
+    def get_version(self, server: str) -> Optional[str]:
+        """
+        Get version.
+
+        :param server: Server to connect to.
+        """
         banner = self.get_banner(server)
         regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
@@ -189,9 +223,9 @@ class HTTPSService(Service):
 class SSHService(Service):
     """SSH Service definition."""
 
-    def __init__(self, port=22, is_active=False, is_ssl=False,
-                 payload=None):
-        """Return a new Service object."""
+    def __init__(self, port: int = 22, is_active: bool = False,
+                 is_ssl: bool = False, payload=None) -> None:
+        """Build a new SSHService object."""
         try:
             super(SSHService, self).__init__(port=port,
                                              is_active=is_active,
@@ -201,8 +235,12 @@ class SSHService(Service):
             super().__init__(port=port, is_active=is_active,
                              is_ssl=is_ssl, payload=payload)
 
-    def get_version(self, server):
-        """Get version."""
+    def get_version(self, server: str) -> Optional[str]:
+        """
+        Get version.
+
+        :param server: Server to connect to.
+        """
         banner = self.get_banner(server)
         regex_match = re.search(r'(.*)', banner)
         version = regex_match.group(1)
