@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""LDAP module."""
+"""
+LDAP module.
+
+This module allows to check LDAP vulnerabilities.
+"""
 
 # standard imports
 # None
@@ -19,8 +23,13 @@ SSL_PORT = 636
 
 
 @track
-def is_anonymous_bind_allowed(ldap_server, port=PORT):
-    """Check whether anonymous binding is allowed on LDAP server."""
+def is_anonymous_bind_allowed(ldap_server: str, port: int = PORT) -> bool:
+    """
+    Check whether anonymous binding is allowed on LDAP server.
+
+    :param ldap_server: LDAP server address to test.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
 
     try:
