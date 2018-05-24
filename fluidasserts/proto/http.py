@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+HTTP module.
 
-"""HTTP module.
-
-This module allows to check HTTP especific vulnerabilities
+This module allows to check HTTP-specific vulnerabilities.
 """
 
 # standard imports
@@ -24,6 +24,8 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
+
+# pylint: disable=C0302
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
@@ -119,7 +121,7 @@ SQLI_ERROR_MSG = {
 def _create_dataset(field: str, value_list: List[str],
                     query_string: Union[str, dict]) -> List:
     """
-    Create dataset from values on list.
+    Create dataset from values in list.
 
     :param query_string: String or dict with query parameters.
     :param field: Field to be taken from each of the values.
@@ -213,7 +215,8 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
 
 
 # pylint: disable=too-many-branches
-def _has_insecure_header(url: str, header: str, *args, **kwargs) -> bool:  # noqa
+def _has_insecure_header(url: str, header: str,     # noqa
+                         *args, **kwargs) -> bool:  # noqa
     r"""
     Check if an insecure header is present.
 
@@ -305,8 +308,16 @@ by default'.format(header),
     return result
 
 
-def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
-    """Check if a bad text is present."""
+def _generic_has_multiple_text(url: str, regex_list: List[str],
+                               *args, **kwargs) -> bool:
+    r"""
+    Check if one of a list of bad texts is present.
+
+    :param url: URL to test.
+    :param regex_list: List of regexes to search.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response = http_session.response
@@ -325,8 +336,15 @@ def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
         return False
 
 
-def _generic_has_text(url, expected_text, *args, **kwargs):
-    """Check if a bad text is present."""
+def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
+    r"""
+    Check if a bad text is present.
+
+    :param url: URL to test.
+    :param expected_text: Text to search. Can be regex.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response = http_session.response
@@ -346,20 +364,42 @@ def _generic_has_text(url, expected_text, *args, **kwargs):
 
 
 @track
-def has_multiple_text(url, regex_list, *args, **kwargs):
-    """Check if a bad text is present."""
+def has_multiple_text(url: str, regex_list: List[str],
+                      *args, **kwargs) -> bool:
+    r"""
+    Check if one of a list of bad texts is present.
+
+    :param url: URL to test.
+    :param regex_list: List of regexes to search.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_multiple_text(url, regex_list, *args, **kwargs)
 
 
 @track
-def has_text(url, expected_text, *args, **kwargs):
-    """Check if a bad text is present."""
+def has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
+    r"""
+    Check if a bad text is present.
+
+    :param url: URL to test.
+    :param expected_text: Text to search. Can be regex.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expected_text, *args, **kwargs)
 
 
 @track
-def has_not_text(url, expected_text, *args, **kwargs):
-    """Check if a required text is not present."""
+def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
+    r"""
+    Check if a required text is not present.
+
+    :param url: URL to test.
+    :param expected_text: Text to search. Can be regex.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response = http_session.response
@@ -379,185 +419,376 @@ def has_not_text(url, expected_text, *args, **kwargs):
 
 
 @track
-def is_header_x_asp_net_version_present(url, *args, **kwargs):
-    """Check if x-aspnet-version header is missing."""
+def is_header_x_asp_net_version_present(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if X-AspNet-Version header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'X-AspNet-Version', *args, **kwargs)
 
 
 @track
-def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
-    """Check if access-control-allow-origin header is missing."""
+def is_header_access_control_allow_origin_missing(url: str,
+                                                  *args, **kwargs) -> bool:
+    r"""
+    Check if access-control-allow-origin header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Access-Control-Allow-Origin',
                                 *args, **kwargs)
 
 
 @track
-def is_header_cache_control_missing(url, *args, **kwargs):
-    """Check if cache-control header is missing."""
+def is_header_cache_control_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if cache-control header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Cache-Control', *args, **kwargs)
 
 
 @track
-def is_header_content_security_policy_missing(url, *args, **kwargs):
-    """Check if content-security-policy header is missing."""
+def is_header_content_security_policy_missing(url: str,
+                                              *args, **kwargs) -> bool:
+    r"""
+    Check if content-security-policy header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Content-Security-Policy',
                                 *args, **kwargs)
 
 
 @track
-def is_header_content_type_missing(url, *args, **kwargs):
-    """Check if content-type header is missing."""
+def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if content-type header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Content-Type', *args, **kwargs)
 
 
 @track
-def is_header_expires_missing(url, *args, **kwargs):
-    """Check if expires header is missing."""
+def is_header_expires_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if expires header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Expires', *args, **kwargs)
 
 
 @track
-def is_header_pragma_missing(url, *args, **kwargs):
-    """Check if pragma header is missing."""
+def is_header_pragma_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if pragma header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Pragma', *args, **kwargs)
 
 
 @track
-def is_header_server_present(url, *args, **kwargs):
-    """Check if server header is insecure."""
+def is_header_server_present(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if server header is insecure.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Server', *args, **kwargs)
 
 
 @track
-def is_header_x_content_type_options_missing(url, *args, **kwargs):
-    """Check if x-content-type-options header is missing."""
+def is_header_x_content_type_options_missing(url: str, *args,
+                                             **kwargs) -> bool:
+    r"""
+    Check if x-content-type-options header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'X-Content-Type-Options',
                                 *args, **kwargs)
 
 
 @track
-def is_header_x_frame_options_missing(url, *args, **kwargs):
-    """Check if x-frame-options header is missing."""
+def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if x-frame-options header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'X-Frame-Options', *args, **kwargs)
 
 
 @track
-def is_header_perm_cross_dom_pol_missing(url, *args, **kwargs):
-    """Check if permitted-cross-domain-policies header is missing."""
+def is_header_perm_cross_dom_pol_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if permitted-cross-domain-policies header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'X-Permitted-Cross-Domain-Policies',
                                 *args, **kwargs)
 
 
 @track
-def is_header_x_xxs_protection_missing(url, *args, **kwargs):
-    """Check if x-xss-protection header is missing."""
+def is_header_x_xxs_protection_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if x-xss-protection header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'X-XSS-Protection', *args, **kwargs)
 
 
 @track
-def is_header_hsts_missing(url, *args, **kwargs):
-    """Check if strict-transport-security header is missing."""
+def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if strict-transport-security header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'Strict-Transport-Security',
                                 *args, **kwargs)
 
 
 @track
-def is_basic_auth_enabled(url, *args, **kwargs):
-    """Check if BASIC authentication is enabled."""
+def is_basic_auth_enabled(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if BASIC authentication is enabled.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_insecure_header(url, 'WWW-Authenticate', *args, **kwargs)
 
 
 @track
-def has_trace_method(url, *args, **kwargs):
-    """Check HTTP TRACE."""
+def has_trace_method(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check HTTP TRACE.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_method(url, 'TRACE', *args, **kwargs)
 
 
 @track
-def has_delete_method(url, *args, **kwargs):
-    """Check HTTP DELETE."""
+def has_delete_method(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check HTTP DELETE.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_method(url, 'DELETE', *args, **kwargs)
 
 
 @track
-def has_put_method(url, *args, **kwargs):
-    """Check HTTP PUT."""
+def has_put_method(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check HTTP PUT.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _has_method(url, 'PUT', *args, **kwargs)
 
 
 @track
-def has_sqli(url, *args, **kwargs):
-    """Check SQLi vuln by checking expected string."""
+def has_sqli(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check SQLi vuln by checking expected string.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     expect = SQLI_ERROR_MSG
 
     return _generic_has_multiple_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_xss(url, expect, *args, **kwargs):
-    """Check XSS vuln by checking expected string."""
+def has_xss(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check XSS vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_command_injection(url, expect, *args, **kwargs):
-    """Check command injection vuln by checking expected string."""
+def has_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check command injection vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_php_command_injection(url, expect, *args, **kwargs):
-    """Check PHP command injection by checking expected string."""
+def has_php_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check PHP command injection vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_session_fixation(url, expect, *args, **kwargs):
-    """Check session fixation by no passing cookies and authenticating."""
+def has_session_fixation(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check session fixation by no passing cookies and authenticating.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_insecure_dor(url, expect, *args, **kwargs):
-    """Check insecure direct object reference vuln."""
+def has_insecure_dor(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check insecure direct object reference vuln.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_dirtraversal(url, expect, *args, **kwargs):
-    """Check directory traversal vuln by checking expected string."""
+def has_dirtraversal(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check directory traversal vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_csrf(url, expect, *args, **kwargs):
-    """Check CSRF vuln by checking expected string."""
+def has_csrf(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check CSRF vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_lfi(url, expect, *args, **kwargs):
-    """Check local file inclusion vuln by checking expected string."""
+def has_lfi(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check local file inclusion vuln by checking expected string.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_hpp(url, expect, *args, **kwargs):
-    """Check HTTP Parameter Pollution vuln."""
+def has_hpp(url: str, expect: str, *args, **kwargs) -> bool:
+    r"""
+    Check HTTP Parameter Pollution vuln.
+
+    :param url: URL to test.
+    :param expect: Text to search in potential vulnerabilty .
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
 @track
-def has_insecure_upload(url, expect, file_param, file_path, *args, **kw):
-    """Check insecure upload vuln."""
+def has_insecure_upload(url: str, expect: str, file_param: str,
+                        file_path: str, *args, **kwargs) -> bool:
+    r"""
+    Check insecure upload vuln.
+
+    :param url: URL to test.
+    :param file_param: Name of a file to try to upload.
+    :param file_path: Path to the actual file.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     exploit_file = {file_param: open(file_path)}
-    return _generic_has_text(url, expect, files=exploit_file, *args, **kw)
+    return _generic_has_text(url, expect, files=exploit_file, *args, **kwargs)
 
 
 # pylint: disable=keyword-arg-before-vararg
 @track
-def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
-    """Check if resulting URL has a session ID exposed."""
+def is_sessionid_exposed(url: str, argument: str = 'sessionid',
+                         *args, **kwargs) -> bool:
+    r"""
+    Check if resulting URL has an exposed session ID.
+
+    :param url: URL to test.
+    :argument: Name of argument to search. Defaults to ``sessionid``.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response_url = http_session.response.url
@@ -584,8 +815,15 @@ def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
 
 
 @track
-def is_version_visible(ip_address, ssl=False, port=80):
-    """Check if banner is visible."""
+def is_version_visible(ip_address: str, ssl: bool = False,
+                       port: int = 80) -> bool:
+    """
+    Check if banner is visible.
+
+    :param ip_address: IP address to test.
+    :param ssl: Whether to use HTTP or HTTPS.
+    :param port: If necessary, specify port to connect to.
+    """
     if ssl:
         service = banner_helper.HTTPSService(port)
     else:
@@ -610,8 +848,12 @@ def is_version_visible(ip_address, ssl=False, port=80):
 
 
 @track
-def is_not_https_required(url):
-    """Check if HTTPS is always forced on a given url."""
+def is_not_https_required(url: str) -> bool:
+    r"""
+    Check if HTTPS is always forced on a given url.
+
+    :param url: URL to test.
+    """
     assert url.startswith('http://')
     try:
         http_session = http_helper.HTTPSession(url)
@@ -633,8 +875,14 @@ def is_not_https_required(url):
 
 
 @track
-def has_dirlisting(url, *args, **kwargs):
-    """Check if url has directory listing enabled."""
+def has_dirlisting(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if url has directory listing enabled.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     bad_text = 'Index of'
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
@@ -656,8 +904,14 @@ def has_dirlisting(url, *args, **kwargs):
 
 
 @track
-def is_resource_accessible(url, *args, **kwargs):
-    """Check if url is available by checking response code."""
+def is_resource_accessible(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if url is available by checking response code.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
@@ -679,12 +933,16 @@ def is_resource_accessible(url, *args, **kwargs):
 
 
 @track
-def is_response_delayed(url, *args, **kwargs):
-    """
+def is_response_delayed(url: str, *args, **kwargs) -> bool:
+    r"""
     Check if the response time is acceptable.
 
     Values taken from:
     https://www.nngroup.com/articles/response-times-3-important-limits/
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
     """
     max_response_time = 1
     try:
@@ -715,7 +973,8 @@ def is_response_delayed(url, *args, **kwargs):
 @track
 def has_user_enumeration(url: str, user_field: str,
                          user_list: Optional[List] = None,
-                         fake_users: Optional[List] = None, *args, **kwargs):
+                         fake_users: Optional[List] = None,
+                         *args, **kwargs) -> bool:
     r"""
     Check if URL has user enumeration.
 
@@ -723,10 +982,8 @@ def has_user_enumeration(url: str, user_field: str,
     :param user_field: Field corresponding to the username.
     :param user_list: List of users.
     :param fake_users: List of fake users.
-    :param \*args: Optional arguments for
-                   :func:`~_request_dataset`.
-    :param \*\*kwargs: Optional arguments for
-       :func:`~_request_dataset`.
+    :param \*args: Optional arguments for :func:`~_request_dataset`.
+    :param \*\*kwargs: Optional arguments for :func:`~_request_dataset`.
 
     Either ``params`` or ``data`` must be present in ``kwargs``,
     if the request is ``GET`` or ``POST``, respectively.
@@ -778,9 +1035,24 @@ def has_user_enumeration(url: str, user_field: str,
 # pylint: disable=keyword-arg-before-vararg
 # pylint: disable=too-many-arguments
 @track
-def can_brute_force(url, ok_regex, user_field, pass_field,
-                    user_list=None, pass_list=None, *args, **kwargs):
-    """Check if URL allows brute forcing."""
+def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
+                    user_list: List[str] = None, pass_list: List[str] = None,
+                    *args, **kwargs) -> bool:
+    r"""
+    Check if URL allows brute forcing.
+
+    :param url: URL to test.
+    :param ok_regex: Regex to search in response text.
+    :param user_field: Name of the field for username.
+    :param pass_field: Name of the field for password.
+    :param user_list: List of users to create dataset.
+    :param pass_list: List of passwords.
+    :param \*args: Optional arguments for :func:`~_request_dataset`.
+    :param \*\*kwargs: Optional arguments for :func:`~_request_dataset`.
+
+    Either ``params`` or ``data`` must be present in ``kwargs``,
+    if the request is ``GET`` or ``POST``, respectively.
+    """
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
@@ -813,8 +1085,14 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
 
 
 @track
-def has_clear_viewstate(url, *args, **kwargs):
-    """Check if url has encrypted ViewState by checking response."""
+def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if url has encrypted ViewState by checking response.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
@@ -846,8 +1124,14 @@ def has_clear_viewstate(url, *args, **kwargs):
 
 
 @track
-def is_date_unsyncd(url, *args, **kwargs):
-    """Check if server's date is not syncronized with NTP servers."""
+def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if server's date is not syncronized with NTP servers.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     try:
         sess = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = sess.get_fingerprint()
