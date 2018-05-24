@@ -2,7 +2,7 @@
 
 """FTP module.
 
-This module allows to check FTP especific vulnerabilities
+This module allows to check FTP-specific vulnerabilities.
 """
 
 # standard imports
@@ -26,8 +26,16 @@ ANONYMOUS_PASS = 'anonymous'
 
 
 @track
-def is_a_valid_user(ip_address, username, password, port=PORT):
-    """Check if given credencials are valid in FTP service."""
+def is_a_valid_user(ip_address: str, username: str,
+                    password: str, port: int = PORT) -> bool:
+    """
+    Check if given credentials are valid in FTP service.
+
+    :param ip_address: IP address to connect to.
+    :param username: Username to check.
+    :param password: Password to check.
+    :param port: If necessary, specifiy port to connect to.
+    """
     service = banner_helper.FTPService(port)
     fingerprint = service.get_fingerprint(ip_address)
     result = False
@@ -49,26 +57,47 @@ def is_a_valid_user(ip_address, username, password, port=PORT):
 
 
 @track
-def user_without_password(ip_address, username):
-    """Check if a user can login without password."""
+def user_without_password(ip_address: str, username: str) -> bool:
+    """
+    Check if a user can login without password.
+
+    :param ip_address: IP address to connect to.
+    :param username: Username to check.
+    """
     return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
 @track
-def is_anonymous_enabled(ip_address):
-    """Check if FTP service allows anonymous login."""
+def is_anonymous_enabled(ip_address: str) -> bool:
+    """
+    Check if FTP service allows anonymous login.
+
+    :param ip_address: IP address to connect to.
+    """
     return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASS)
 
 
 @track
-def is_admin_enabled(ip_address, password, username=ADMIN_USERNAME):
-    """Check if FTP service allows admin login."""
+def is_admin_enabled(ip_address: str, password: str,
+                     username: str = ADMIN_USERNAME) -> bool:
+    """
+    Check if FTP service allows admin login.
+
+    :param ip_address: IP address to connect to.
+    :param username: Username to check.
+    :param password: Password to check.
+    """
     return is_a_valid_user(ip_address, username, password)
 
 
 @track
-def is_version_visible(ip_address, port=PORT):
-    """Check if banner is visible."""
+def is_version_visible(ip_address: str, port: int = PORT) -> bool:
+    """
+    Check if banner is visible.
+
+    :param ip_address: IP address to connect to.
+    :param port: If necessary, specifiy port to connect to.
+    """
     service = banner_helper.FTPService(port)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
