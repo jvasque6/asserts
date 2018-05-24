@@ -653,9 +653,10 @@ def has_clear_viewstate(url, *args, **kwargs):
 @track
 def is_date_unsyncd(url, *args, **kwargs):
     """Check if server's date is not syncronized with NTP servers."""
-    sess = http_helper.HTTPSession(url, *args, **kwargs)
-    fingerprint = sess.get_fingerprint()
     try:
+        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        fingerprint = sess.get_fingerprint()
+
         server_date = datetime.strptime(sess.response.headers['Date'],
                                         '%a, %d %b %Y %H:%M:%S GMT')
         server_ts = server_date.timestamp()
@@ -663,9 +664,9 @@ def is_date_unsyncd(url, *args, **kwargs):
         response = ntpclient.request('pool.ntp.org', port=123, version=3)
         ntp_date = datetime.fromtimestamp(response.tx_time, tz=timezone('GMT'))
         ntp_ts = datetime.utcfromtimestamp(ntp_date.timestamp()).timestamp()
-    except KeyError:
+    except (KeyError, http_helper.ConnError):
         show_unknown('Could not get date from server',
-                     details=dict(url=url, fingerprint=fingerprint))
+                     details=dict(url=url))
         return False
     diff = ntp_ts - server_ts
 
