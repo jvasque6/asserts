@@ -11,7 +11,6 @@ from __future__ import absolute_import
 # 3rd party imports
 import socket
 import dns.dnssec
-from dns.exception import DNSException
 import dns.query
 import dns.rdatatype
 import dns.resolver
@@ -50,11 +49,11 @@ def is_xfr_enabled(domain: str, nameserver: str) -> bool:
         result = True
         show_open('Zone transfer enabled on server',
                   details=dict(domain=domain, nameserver=nameserver))
-    except (NoSOA, NoNS, BadZone, dns.query.BadResponse, DNSException):
+    except (NoSOA, NoNS, BadZone, dns.query.BadResponse):
         show_close('Zone transfer not enabled on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except socket.error:
+    except (socket.error, dns.exception.Timeout, dns.exception.FormError):
         show_unknown('Port closed for zone transfer',
                      details=dict(domain=domain, nameserver=nameserver))
         result = False
@@ -75,7 +74,7 @@ def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
     try:
         update = dns.update.Update(domain)
         update.add(newrecord, 3600, dns.rdatatype.A, '10.10.10.10')
-        response = dns.query.tcp(update, nameserver)
+        response = dns.query.tcp(update, nameserver, timeout=5)
 
         result = True
 
@@ -91,7 +90,7 @@ def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
         show_close('Zone update not enabled on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except socket.error:
+    except (socket.error, dns.exception.Timeout):
         show_unknown('Port closed for DNS update',
                      details=dict(domain=domain, nameserver=nameserver))
         result = False
@@ -116,11 +115,14 @@ def has_cache_poison(domain: str, nameserver: str) -> bool:
     result = True
     try:
         response = myresolver.query(name, 'DNSKEY')
-    except DNSException:
-        show_open('Cache poisoning is possible on server',
+    except dns.exception.Timeout:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver))
+        return False
+    except dns.resolver.NoAnswer:
+        show_open('Cache poisoning possible on server',
                   details=dict(domain=domain, nameserver=nameserver))
         return True
-
     if response.response.rcode() != 0:
         show_open('Cache poisoning is possible on server',
                   details=dict(domain=domain, nameserver=nameserver))
@@ -155,14 +157,14 @@ def has_cache_snooping(nameserver: str) -> bool:
         request = dns.message.make_query(name, dns.rdatatype.A,
                                          dns.rdataclass.IN)
 
-        response = dns.query.udp(request, nameserver)
+        response = dns.query.udp(request, nameserver, timeout=5)
 
         # Make a non-recursive request
         request = dns.message.make_query(name, dns.rdatatype.A,
                                          dns.rdataclass.IN)
         request.flags ^= dns.flags.RD
 
-        response = dns.query.udp(request, nameserver)
+        response = dns.query.udp(request, nameserver, timeout=5)
 
         result = True
         if response.rcode() == 0:
@@ -177,7 +179,10 @@ def has_cache_snooping(nameserver: str) -> bool:
         show_close('Cache snooping not possible on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-
+    except (socket.error, dns.exception.Timeout):
+        show_unknown('Port closed for DNS update',
+                     details=dict(domain=domain, nameserver=nameserver))
+        result = False
     return result
 
 
@@ -196,8 +201,7 @@ def has_recursion(nameserver: str) -> bool:
         request = dns.message.make_query(name, dns.rdatatype.A,
                                          dns.rdataclass.IN)
 
-        response = dns.query.udp(request, nameserver)
-
+        response = dns.query.udp(request, nameserver, timeout=5)
         result = True
         if response.rcode() == 0:
             show_open('Recursion possible on server',
@@ -211,7 +215,10 @@ def has_recursion(nameserver: str) -> bool:
         show_close('Recursion not possible on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-
+    except (socket.error, dns.exception.Timeout):
+        show_unknown('Port closed for DNS update',
+                     details=dict(domain=domain, nameserver=nameserver))
+        result = False
     return result
 
 
@@ -229,14 +236,14 @@ def can_amplify(nameserver: str) -> bool:
         # Make a recursive request
         request = dns.message.make_query(name, dns.rdatatype.A,
                                          dns.rdataclass.IN)
-        response = dns.query.udp(request, nameserver)
+        response = dns.query.udp(request, nameserver, timeout=5)
         if response.rcode() == 0:
             request = dns.message.make_query(name, dns.rdatatype.ANY)
             request.flags |= dns.flags.AD
             request.find_rrset(request.additional, dns.name.root, 65535,
                                dns.rdatatype.OPT, create=True,
                                force_unique=True)
-            response = dns.query.udp(request, nameserver)
+            response = dns.query.udp(request, nameserver, timeout=5)
             resp_len = sum([len(x.to_text()) for x in response.answer])
             req_len = len(request.to_text())
             if req_len < resp_len:
@@ -251,4 +258,8 @@ def can_amplify(nameserver: str) -> bool:
     except dns.exception.SyntaxError:
         show_close('Amplification attack is not possible on server',
                    details=dict(nameserver=nameserver))
+        return False
+    except (socket.error, dns.exception.Timeout):
+        show_unknown('Port closed for DNS update',
+                     details=dict(domain=domain, nameserver=nameserver))
         return False
