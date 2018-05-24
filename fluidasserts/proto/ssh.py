@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""SSH module."""
+"""
+SSH module.
+
+This module allows to check SSH vulnerabilities.
+"""
 
 # standard imports
 from __future__ import absolute_import
@@ -20,8 +24,16 @@ PORT = 22
 
 
 @track
-def is_cbc_used(host, port=PORT, username=None, password=None):
-    """Check if ssh has CBC algorithms enabled."""
+def is_cbc_used(host: str, port: int = PORT, username: str = None,
+                password: str = None) -> bool:
+    """
+    Check if SSH has CBC algorithms enabled.
+
+    :param host: Address to test.
+    :param port: If necessary, specify port to connect to.
+    :param username: Username.
+    :param password: Password.
+    """
     result = True
     try:
         service = banner_helper.SSHService(port)
@@ -54,8 +66,16 @@ def is_cbc_used(host, port=PORT, username=None, password=None):
 
 
 @track
-def is_hmac_used(host, port=PORT, username=None, password=None):
-    """Check whether ssh has weak hmac algorithms enabled."""
+def is_hmac_used(host: str, port: int = PORT, username: str = None,
+                 password: str = None) -> bool:
+    """
+    Check if SSH has weak HMAC algorithms enabled.
+
+    :param host: Address to test.
+    :param port: If necessary, specify port to connect to.
+    :param username: Username.
+    :param password: Password.
+    """
     result = True
     try:
         service = banner_helper.SSHService(port)
