@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-"""TCP module.
+"""
+TCP module.
 
-This module allows to check TCP especific vulnerabilities
+This module allows to check TCP-specific vulnerabilities.
 """
 
 # standard imports
-from __future__ import absolute_import
 import socket
 import ssl
 
@@ -20,8 +20,13 @@ from fluidasserts.utils.decorators import track
 
 
 @track
-def is_port_open(ipaddress, port):
-    """Check if a given port on an IP address is open."""
+def is_port_open(ipaddress: str, port: int) -> bool:
+    """
+    Check if a given port on an IP address is open.
+
+    :param ipaddress: IP address to test.
+    :param port: Port to connect to.
+    """
     assert 1 <= port <= 65535
     result = True
     try:
@@ -41,8 +46,13 @@ def is_port_open(ipaddress, port):
 
 
 @track
-def is_port_insecure(ipaddress, port):
-    """Check if a given port on an IP address is insecure."""
+def is_port_insecure(ipaddress: str, port: int) -> bool:
+    """
+    Check if a given port on an IP address is insecure.
+
+    :param ipaddress: IP address to test.
+    :param port: Port to connect to.
+    """
     assert 1 <= port <= 65535
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
