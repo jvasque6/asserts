@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""SSL module."""
+"""
+SSL module.
+
+This modulle allows to check SSL vulnerabilities.
+"""
 
 # standard imports
 from __future__ import absolute_import
@@ -7,6 +11,7 @@ import errno
 import socket
 import ssl
 import struct
+from typing import Tuple, Optional, List
 
 # 3rd party imports
 import tlslite
@@ -21,10 +26,17 @@ from fluidasserts.helper.ssl_helper import connect as connect
 from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 
 PORT = 443
+TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
 
 
-def _rcv_tls_record(sock):
-    """Receive TLS record."""
+def _rcv_tls_record(sock: socket.socket) -> TYPRECEIVE:
+    """
+    Receive TLS record.
+
+    :param sock: Socket to connect to.
+    :return: A triplet containing type, version and received message,
+             or (None, None, None) if something went wrong during connection.
+    """
     try:
         tls_header = sock.recv(5)
         if not tls_header:
@@ -42,8 +54,13 @@ def _rcv_tls_record(sock):
         return None, None, None
 
 
-def _build_client_hello(tls_ver):
-    """Build CLIENTHELLO TLS message."""
+def _build_client_hello(tls_ver: str) -> List:
+    """
+    Build CLIENTHELLO TLS message.
+
+    :param tls_ver: TLS version.
+    :return: A List with the corresponding hex codes.
+    """
     ssl_version_mapping = {
         'SSLv3':   0x00,
         'TLSv1.0': 0x01,
@@ -100,8 +117,13 @@ def _build_client_hello(tls_ver):
     return client_hello
 
 
-def _build_heartbeat(tls_ver):
-    """Build heartbeat message."""
+def _build_heartbeat(tls_ver: str) -> List:
+    """
+    Build heartbeat message according to TLS version.
+
+    :param tls_ver: TLS version.
+    :return: A List with the corresponding hex codes.
+    """
     ssl_version_mapping = {
         'SSLv3':   0x00,
         'TLSv1.0': 0x01,
@@ -121,8 +143,13 @@ def _build_heartbeat(tls_ver):
 
 
 @track
-def is_pfs_disabled(site, port=PORT):
-    """Check whether PFS is enabled."""
+def is_pfs_disabled(site: str, port: int = PORT) -> bool:
+    """
+    Check whether PFS is enabled.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:\
                ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:\
                ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:\
@@ -165,8 +192,13 @@ def is_pfs_disabled(site, port=PORT):
 
 
 @track
-def is_sslv3_enabled(site, port=PORT):
-    """Check whether SSLv3 suites are enabled."""
+def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
+    """
+    Check whether SSLv3 suites are enabled.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port, min_version=(3, 0), max_version=(3, 0)):
@@ -190,8 +222,13 @@ def is_sslv3_enabled(site, port=PORT):
 
 
 @track
-def is_tlsv1_enabled(site, port=PORT):
-    """Check whether TLSv1 suites are enabled."""
+def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
+    """
+    Check whether TLSv1 suites are enabled.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port, min_version=(3, 1), max_version=(3, 1)):
@@ -215,8 +252,13 @@ def is_tlsv1_enabled(site, port=PORT):
 
 
 @track
-def has_poodle_tls(site, port=PORT):
-    """Check whether POODLE TLS is present."""
+def has_poodle_tls(site: str, port: int = PORT) -> bool:
+    """
+    Check whether POODLE TLS is present.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = False
     try:
         with connect(site, port=port, check_poodle_tls=True,
@@ -241,8 +283,13 @@ def has_poodle_tls(site, port=PORT):
 
 
 @track
-def has_poodle_sslv3(site, port=PORT):
-    """Check whether POODLE SSLv3 is present."""
+def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
+    """
+    Check whether POODLE SSLv3 is present.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = False
     try:
         with connect(site, port=port, min_version=(3, 0),
@@ -270,8 +317,13 @@ be vulnerable to POODLE SSLv3 attack',
 
 
 @track
-def has_breach(site, port=PORT):
-    """Check whether BREACH is present."""
+def has_breach(site: str, port: int = PORT) -> bool:
+    """
+    Check whether BREACH is present.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     url = 'https://{}:{}'.format(site, port)
     common_compressors = ['compress', 'exi', 'gzip',
                           'identity', 'pack200-gzip', 'br', 'bzip2',
@@ -299,8 +351,13 @@ def has_breach(site, port=PORT):
 
 
 @track
-def allows_anon_ciphers(site, port=PORT):
-    """Check whether site accepts anonymous cipher suites."""
+def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
+    """
+    Check whether site accepts anonymous cipher suites.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port, anon=True):
@@ -324,8 +381,13 @@ def allows_anon_ciphers(site, port=PORT):
 
 
 @track
-def allows_weak_ciphers(site, port=PORT):
-    """Check whether site accepts weak cipher suites."""
+def allows_weak_ciphers(site: str, port: int = PORT) -> bool:
+    """
+    Check whether site accepts weak cipher suites.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port,
@@ -350,8 +412,13 @@ suites', details=dict(site=site, port=port))
 
 
 @track
-def has_beast(site, port=PORT):
-    """Check whether site allows BEAST attack."""
+def has_beast(site: str, port: int = PORT) -> bool:
+    """
+    Check whether site allows BEAST attack.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     result = True
     try:
         with connect(site, port=port, min_version=(3, 1),
@@ -376,8 +443,13 @@ to be not an enabler to BEAST attack', details=dict(site=site, port=port))
 
 
 @track
-def has_heartbleed(site, port=PORT):
-    """Check whether site allows HEARTBLEED attack."""
+def has_heartbleed(site: str, port: int = PORT) -> bool:
+    """
+    Check whether site allows HEARTBLEED attack.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
     # pylint: disable=too-many-nested-blocks
     try:
         versions = ['TLSv1.2', 'TLSv1.1', 'TLSv1.0', 'SSLv3']
