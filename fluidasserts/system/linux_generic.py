@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""Linux OS module."""
+"""
+Linux OS module.
+
+This module allows to check Linux vulnerabilities.
+"""
 
 # standard imports
 # None
@@ -15,8 +19,16 @@ from fluidasserts.utils.decorators import track
 
 
 @track
-def is_os_min_priv_disabled(server, username, password, ssh_config=None):
-    """Check if umask or similar is secure in os_linux_generic."""
+def is_os_min_priv_disabled(server: str, username: str, password: str,
+                            ssh_config: str = None) -> bool:
+    """
+    Check if ``umask`` or similar is secure in ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'umask'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -27,15 +39,23 @@ def is_os_min_priv_disabled(server, username, password, ssh_config=None):
                    format(server), details=dict(umask=out))
         result = False
     else:
-        show_open('{} server has too open default privileges'.
+        show_open('{} server has insecure default privileges'.
                   format(server), details=dict(umask=out))
         result = True
     return result
 
 
 @track
-def is_os_sudo_disabled(server, username, password, ssh_config=None):
-    """Check if there's sudo or similar installed in os_linux_generic."""
+def is_os_sudo_disabled(server: str, username: str, password: str,
+                        ssh_config: str = None) -> bool:
+    """
+    Check if there's ``sudo`` or similar installed in ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'which sudo'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -53,9 +73,16 @@ def is_os_sudo_disabled(server, username, password, ssh_config=None):
 
 
 @track
-def is_os_compilers_installed(server, username, password,
-                              ssh_config=None):
-    """Check if there's any compiler installed in os_linux_generic."""
+def is_os_compilers_installed(server: str, username: str, password: str,
+                              ssh_config: str = None) -> bool:
+    """
+    Check if there is any compiler installed in ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'which cc gcc c++ g++ javac ld as nasm'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -73,9 +100,16 @@ def is_os_compilers_installed(server, username, password,
 
 
 @track
-def is_os_antimalware_not_installed(server, username, password,
-                                    ssh_config=None):
-    """Check if there's any antimalware installed in os_linux_generic."""
+def is_os_antimalware_not_installed(server: str, username: str, password: str,
+                                    ssh_config: str = None) -> bool:
+    """
+    Check if there is any antimalware installed in ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'which clamscan avgscan'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -93,9 +127,16 @@ def is_os_antimalware_not_installed(server, username, password,
 
 
 @track
-def is_os_remote_admin_enabled(server, username, password,
-                               ssh_config=None):
-    """Check if admins can remotely login in os_linux_generic."""
+def is_os_remote_admin_enabled(server: str, username: str, password: str,
+                               ssh_config: str = None) -> bool:
+    """
+    Check if admins can remotely log into ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'grep -i "^PermitRootLogin.*yes" /etc/ssh/sshd_config'
     out, _ = ssh_exec_command(server, username, password, cmd,
@@ -113,9 +154,16 @@ def is_os_remote_admin_enabled(server, username, password,
 
 
 @track
-def is_os_syncookies_disabled(server, username, password,
-                              ssh_config=None):
-    """Check if SynCookies or similar is enabled in os_linux_generic."""
+def is_os_syncookies_disabled(server: str, username: str, password: str,
+                              ssh_config: str = None) -> bool:
+    """
+    Check if ``SynCookies`` or similar is enabled in ``os_linux_generic``.
+
+    :param server: URL or IP of host to test.
+    :param username: User to connect to server.
+    :param password: Password for given user.
+    :param ssh_config: Path to SSH connection config file.
+    """
     result = True
     cmd = 'sysctl -q -n net.ipv4.tcp_syncookies'
     out, _ = ssh_exec_command(server, username, password, cmd,
