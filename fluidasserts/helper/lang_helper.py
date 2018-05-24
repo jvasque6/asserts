@@ -44,7 +44,7 @@ def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
                        acceptable file extensions and comment delimiters.
     :return: List of lines that contain grammar matches.
     """
-    with open(code_file) as file_fd:
+    with open(code_file, encoding='latin-1') as file_fd:
         affected_lines = []
         counter = 0
         in_block_comment = False
@@ -183,10 +183,9 @@ def check_grammar(grammar: ParserElement, code_dest: str,
         for code_file in files:
             full_path = os.path.join(root, code_file)
             if lang_spec.get('extensions'):
-                if '.' in full_path:
-                    if full_path.split('.')[1] in lang_spec.get('extensions'):
-                        vulns[full_path] = _get_match_lines(grammar, full_path,
-                                                            lang_spec)
+                if code_file.split('.')[-1] in lang_spec.get('extensions'):
+                    vulns[full_path] = _get_match_lines(grammar, full_path,
+                                                        lang_spec)
             else:
                 vulns[full_path] = _get_match_lines(grammar, full_path,
                                                     lang_spec)
