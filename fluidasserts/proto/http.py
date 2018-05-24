@@ -660,7 +660,7 @@ def is_date_unsyncd(url, *args, **kwargs):
                                         '%a, %d %b %Y %H:%M:%S GMT')
         server_ts = server_date.timestamp()
         ntpclient = ntplib.NTPClient()
-        response = ntpclient.request('time.nist.gov', port=123, version=3)
+        response = ntpclient.request('pool.ntp.org', port=123, version=3)
         ntp_date = datetime.fromtimestamp(response.tx_time, tz=timezone('GMT'))
         ntp_ts = datetime.utcfromtimestamp(ntp_date.timestamp()).timestamp()
     except KeyError:
@@ -669,7 +669,7 @@ def is_date_unsyncd(url, *args, **kwargs):
         return False
     diff = ntp_ts - server_ts
 
-    if diff < -1 or diff > 1:
+    if diff < -3 or diff > 3:
         show_open("Server's clock is not syncronized with NTP",
                   details=dict(url=url,
                                server_date=server_date,
