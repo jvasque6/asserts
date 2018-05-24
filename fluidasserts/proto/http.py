@@ -8,12 +8,14 @@ This module allows to check HTTP especific vulnerabilities
 # standard imports
 import re
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, Union
 
 # 3rd party imports
-import ntplib
-from pytz import timezone
+from urllib.parse import parse_qsl as parse_qsl
 from viewstate import ViewState, ViewStateException
+from pytz import timezone
+import ntplib
+import requests
 
 # local imports
 from fluidasserts.helper import banner_helper
@@ -22,6 +24,23 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
+
+HDR_RGX = {
+    'access-control-allow-origin': '^https?:\\/\\/.*$',
+    'cache-control': '(?=.*must-revalidate)(?=.*no-cache)(?=.*no-store)',
+    'content-security-policy': '^([a-zA-Z]+\\-[a-zA-Z]+|sandbox).*$',
+    'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
+    'expires': '^\\s*0\\s*$',
+    'pragma': '^\\s*no-cache\\s*$',
+    'strict-transport-security': '^\\s*max-age=\\s*\\d+',
+    'x-content-type-options': '^\\s*nosniff\\s*$',
+    'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
+    'server': '^[^0-9]*$',
+    'x-permitted-cross-domain-policies': '^((?!all).)*$',
+    'x-xss-protection': '^1(\\s*;\\s*mode=block)?$',
+    'www-authenticate': '^((?!Basic).)*$',
+    'x-powered-by': '^ASP.NET'
+}  # type: dict
 
 # Regex taken from SQLmap project
 SQLI_ERROR_MSG = {
@@ -95,6 +114,195 @@ SQLI_ERROR_MSG = {
     r'Unexpected end of command in statement \[',  # HSQLDB
     r'Unexpected token.*in statement \[',  # HSQLDB
 }
+
+
+def _create_dataset(field: str, value_list: List[str],
+                    query_string: Union[str, dict]) -> List:
+    """
+    Create dataset from values on list.
+
+    :param query_string: String or dict with query parameters.
+    :param field: Field to be taken from each of the values.
+    :param value_list: List of values from which fields are to be extracted.
+    :return: A List containing incremental versions of a dict, which contains
+             the data in the specified field from value_list.
+    """
+    dataset = []
+    if isinstance(query_string, str):
+        data_dict = dict(parse_qsl(query_string))
+    else:
+        data_dict = query_string.copy()
+    for value in value_list:
+        data_dict[field] = value
+        dataset.append(data_dict.copy())
+    return dataset
+
+
+def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
+    r"""
+    Request datasets and gives the results in a list.
+
+    :param url: URL to test.
+    :param dataset_list: List of datasets. For each of these an ``HTTP``
+       session is created and the response recorded in the returned list.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+
+    Either ``params`` or ``data`` must be present in ``kwargs``,
+    if the request is ``GET`` or ``POST``, respectively.
+    """
+    kw_new = kwargs.copy()
+    resp = list()
+    for dataset in dataset_list:
+        if 'data' in kw_new:
+            kw_new['data'] = dataset
+        elif 'params' in kw_new:
+            kw_new['params'] = dataset
+        sess = http_helper.HTTPSession(url, *args, **kw_new)
+        resp.append((len(sess.response.text), sess.response.status_code))
+    return resp
+
+
+def _options_request(url: str, *args, **kwargs) -> Optional[requests.Response]:
+    r"""
+    Send an``HTTP OPTIONS`` request.
+
+    Tests what kind of ``HTTP`` methods are supported on the given ``url``.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :py:func:`requests.options`.
+    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
+    """
+    try:
+        return requests.options(url, verify=False, *args, **kwargs)
+    except requests.ConnectionError:
+        raise http_helper.ConnError
+
+
+def _has_method(url: str, method: str, *args, **kwargs) -> bool:
+    r"""
+    Check if specific HTTP method is allowed in URL.
+
+    :param url: URL to test.
+    :param method: HTTP method to test.
+    :param \*args: Optional arguments for :py:func:`requests.options`.
+    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
+    """
+    try:
+        is_method_present = _options_request(url, *args, **kwargs).headers
+    except http_helper.ConnError:
+        show_unknown('Could not connnect', details=dict(url=url))
+        return False
+    result = True
+    if 'allow' in is_method_present:
+        if method in is_method_present['allow']:
+            show_open('HTTP Method {} enabled'.format(method),
+                      details=dict(url=url),
+                      refs='apache/restringir-metodo-http')
+        else:
+            show_close('HTTP Method {} disabled'.format(method),
+                       details=dict(url=url),
+                       refs='apache/restringir-metodo-http')
+            result = False
+    else:
+        show_close('HTTP Method {} disabled'.format(method),
+                   details=dict(url=url),
+                   refs='apache/restringir-metodo-http')
+        result = False
+    return result
+
+
+# pylint: disable=too-many-branches
+def _has_insecure_header(url: str, header: str, *args, **kwargs) -> bool:  # noqa
+    r"""
+    Check if an insecure header is present.
+
+    :param url: URL to test.
+    :param header: Header to test if present.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
+    try:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        headers_info = http_session.response.headers
+        fingerprint = http_session.get_fingerprint()
+    except http_helper.ConnError:
+        show_unknown('HTTP error checking {}'.format(header),
+                     details=dict(url=url))
+        return False
+
+    if header == 'Access-Control-Allow-Origin':
+        if 'headers' in kwargs:
+            kwargs['headers'].update({'Origin':
+                                      'https://www.malicious.com'})
+        else:
+            kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
+
+        if header in headers_info:
+            value = headers_info[header]
+            if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+                show_open('{} HTTP header is insecure'.
+                          format(header),
+                          details=dict(url=url, header=header, value=value,
+                                       fingerprint=fingerprint),
+                          refs='apache/habilitar-headers-seguridad')
+                return True
+            show_close('HTTP header {} value is secure'.
+                       format(header),
+                       details=dict(url=url, header=header, value=value,
+                                    fingerprint=fingerprint),
+                       refs='apache/habilitar-headers-seguridad')
+            return False
+        show_close('HTTP header {} not present which is secure \
+by default'.format(header),
+                   details=dict(url=url, header=header,
+                                fingerprint=fingerprint),
+                   refs='apache/habilitar-headers-seguridad')
+        return False
+
+    result = True
+
+    if header == 'X-AspNet-Version' or header == 'Server':
+        if header in headers_info:
+            value = headers_info[header]
+            show_open('{} HTTP insecure header present'.
+                      format(header),
+                      details=dict(url=url, header=header, value=value,
+                                   fingerprint=fingerprint),
+                      refs='apache/habilitar-headers-seguridad')
+            result = True
+        else:
+            show_close('{} HTTP insecure header not present'.
+                       format(header),
+                       details=dict(url=url, header=header,
+                                    fingerprint=fingerprint),
+                       refs='apache/habilitar-headers-seguridad')
+            result = False
+        return result
+    if header in headers_info:
+        value = headers_info[header]
+        if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+            show_close('HTTP header {} is secure'.format(header),
+                       details=dict(url=url, header=header, value=value,
+                                    fingerprint=fingerprint),
+                       refs='apache/habilitar-headers-seguridad')
+            result = False
+        else:
+            show_open('{} HTTP header is insecure'.
+                      format(header),
+                      details=dict(url=url, header=header, value=value,
+                                   fingerprint=fingerprint),
+                      refs='apache/habilitar-headers-seguridad')
+            result = True
+    else:
+        show_open('{} HTTP header not present'.
+                  format(header),
+                  details=dict(url=url, header=header,
+                               fingerprint=fingerprint),
+                  refs='apache/habilitar-headers-seguridad')
+        result = True
+
+    return result
 
 
 def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
@@ -173,123 +381,108 @@ def has_not_text(url, expected_text, *args, **kwargs):
 @track
 def is_header_x_asp_net_version_present(url, *args, **kwargs):
     """Check if x-aspnet-version header is missing."""
-    return http_helper.has_insecure_header(url, 'X-AspNet-Version',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'X-AspNet-Version', *args, **kwargs)
 
 
 @track
 def is_header_access_control_allow_origin_missing(url, *args, **kwargs):
     """Check if access-control-allow-origin header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'Access-Control-Allow-Origin',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Access-Control-Allow-Origin',
+                                *args, **kwargs)
 
 
 @track
 def is_header_cache_control_missing(url, *args, **kwargs):
     """Check if cache-control header is missing."""
-    return http_helper.has_insecure_header(url, 'Cache-Control',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Cache-Control', *args, **kwargs)
 
 
 @track
 def is_header_content_security_policy_missing(url, *args, **kwargs):
     """Check if content-security-policy header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'Content-Security-Policy',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Content-Security-Policy',
+                                *args, **kwargs)
 
 
 @track
 def is_header_content_type_missing(url, *args, **kwargs):
     """Check if content-type header is missing."""
-    return http_helper.has_insecure_header(url, 'Content-Type',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Content-Type', *args, **kwargs)
 
 
 @track
 def is_header_expires_missing(url, *args, **kwargs):
     """Check if expires header is missing."""
-    return http_helper.has_insecure_header(url, 'Expires',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Expires', *args, **kwargs)
 
 
 @track
 def is_header_pragma_missing(url, *args, **kwargs):
     """Check if pragma header is missing."""
-    return http_helper.has_insecure_header(url, 'Pragma',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Pragma', *args, **kwargs)
 
 
 @track
 def is_header_server_present(url, *args, **kwargs):
     """Check if server header is insecure."""
-    return http_helper.has_insecure_header(url, 'Server',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Server', *args, **kwargs)
 
 
 @track
 def is_header_x_content_type_options_missing(url, *args, **kwargs):
     """Check if x-content-type-options header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'X-Content-Type-Options',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'X-Content-Type-Options',
+                                *args, **kwargs)
 
 
 @track
 def is_header_x_frame_options_missing(url, *args, **kwargs):
     """Check if x-frame-options header is missing."""
-    return http_helper.has_insecure_header(url, 'X-Frame-Options',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'X-Frame-Options', *args, **kwargs)
 
 
 @track
 def is_header_perm_cross_dom_pol_missing(url, *args, **kwargs):
     """Check if permitted-cross-domain-policies header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'X-Permitted-Cross-Domain-Policies',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'X-Permitted-Cross-Domain-Policies',
+                                *args, **kwargs)
 
 
 @track
 def is_header_x_xxs_protection_missing(url, *args, **kwargs):
     """Check if x-xss-protection header is missing."""
-    return http_helper.has_insecure_header(url, 'X-XSS-Protection',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'X-XSS-Protection', *args, **kwargs)
 
 
 @track
 def is_header_hsts_missing(url, *args, **kwargs):
     """Check if strict-transport-security header is missing."""
-    return http_helper.has_insecure_header(url,
-                                           'Strict-Transport-Security',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'Strict-Transport-Security',
+                                *args, **kwargs)
 
 
 @track
 def is_basic_auth_enabled(url, *args, **kwargs):
     """Check if BASIC authentication is enabled."""
-    return http_helper.has_insecure_header(url,
-                                           'WWW-Authenticate',
-                                           *args, **kwargs)
+    return _has_insecure_header(url, 'WWW-Authenticate', *args, **kwargs)
 
 
 @track
 def has_trace_method(url, *args, **kwargs):
     """Check HTTP TRACE."""
-    return http_helper.has_method(url, 'TRACE', *args, **kwargs)
+    return _has_method(url, 'TRACE', *args, **kwargs)
 
 
 @track
 def has_delete_method(url, *args, **kwargs):
     """Check HTTP DELETE."""
-    return http_helper.has_method(url, 'DELETE', *args, **kwargs)
+    return _has_method(url, 'DELETE', *args, **kwargs)
 
 
 @track
 def has_put_method(url, *args, **kwargs):
     """Check HTTP PUT."""
-    return http_helper.has_method(url, 'PUT', *args, **kwargs)
+    return _has_method(url, 'PUT', *args, **kwargs)
 
 
 @track
@@ -531,9 +724,9 @@ def has_user_enumeration(url: str, user_field: str,
     :param user_list: List of users.
     :param fake_users: List of fake users.
     :param \*args: Optional arguments for
-                   :func:`~fluidasserts.helper.http_helper.request_dataset`.
+                   :func:`~_request_dataset`.
     :param \*\*kwargs: Optional arguments for
-       :func:`~fluidasserts.helper.http_helper.request_dataset`.
+       :func:`~_request_dataset`.
 
     Either ``params`` or ``data`` must be present in ``kwargs``,
     if the request is ``GET`` or ``POST``, respectively.
@@ -554,17 +747,13 @@ def has_user_enumeration(url: str, user_field: str,
                       'something@example.com', '12312314511231']
 
     # Evaluate the response with non-existant users
-    fake_datasets = http_helper.create_dataset(user_field, fake_users,
-                                               query_string)
+    fake_datasets = _create_dataset(user_field, fake_users, query_string)
 
-    fake_res = http_helper.request_dataset(url, fake_datasets,
-                                           *args, **kwargs)
+    fake_res = _request_dataset(url, fake_datasets, *args, **kwargs)
 
-    true_datasets = http_helper.create_dataset(user_field, user_list,
-                                               query_string)
+    true_datasets = _create_dataset(user_field, user_list, query_string)
 
-    user_res = http_helper.request_dataset(url, true_datasets,
-                                           *args, **kwargs)
+    user_res = _request_dataset(url, true_datasets, *args, **kwargs)
 
     num_comp = len(fake_res) * len(user_res)
 
@@ -601,14 +790,12 @@ def can_brute_force(url, ok_regex, user_field, pass_field,
     assert isinstance(user_list, list)
     assert isinstance(pass_list, list)
 
-    users_dataset = http_helper.create_dataset(user_field, user_list,
-                                               query_string)
+    users_dataset = _create_dataset(user_field, user_list, query_string)
 
     dataset = []
     for password in pass_list:
         for user_ds in users_dataset:
-            _datas = http_helper.create_dataset(pass_field, [password],
-                                                user_ds)
+            _datas = _create_dataset(pass_field, [password], user_ds)
             dataset.append(_datas[0])
 
     for _datas in dataset:

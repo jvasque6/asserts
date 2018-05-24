@@ -3,13 +3,12 @@
 """HTTP helper."""
 
 # standard imports
-import re
+from typing import Optional, Tuple
 
 # 3rd party imports
-from typing import List, Optional, Tuple, Union
-from urllib.parse import parse_qsl as parse_qsl
 from urllib.parse import quote as quote
 from urllib.parse import urlparse
+
 
 from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
@@ -19,9 +18,6 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
-from fluidasserts import show_close
-from fluidasserts import show_open
-from fluidasserts import show_unknown
 from fluidasserts.helper import banner_helper
 
 # pylint: disable=W0212
@@ -30,23 +26,6 @@ from fluidasserts.helper import banner_helper
 
 # pylint: disable=no-member
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
-
-HDR_RGX = {
-    'access-control-allow-origin': '^https?:\\/\\/.*$',
-    'cache-control': '(?=.*must-revalidate)(?=.*no-cache)(?=.*no-store)',
-    'content-security-policy': '^([a-zA-Z]+\\-[a-zA-Z]+|sandbox).*$',
-    'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
-    'expires': '^\\s*0\\s*$',
-    'pragma': '^\\s*no-cache\\s*$',
-    'strict-transport-security': '^\\s*max-age=\\s*\\d+',
-    'x-content-type-options': '^\\s*nosniff\\s*$',
-    'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
-    'server': '^[^0-9]*$',
-    'x-permitted-cross-domain-policies': '^((?!all).)*$',
-    'x-xss-protection': '^1(\\s*;\\s*mode=block)?$',
-    'www-authenticate': '^((?!Basic).)*$',
-    'x-powered-by': '^ASP.NET'
-}  # type: dict
 
 
 class ConnError(Exception):
@@ -313,192 +292,3 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             else:
                 service = banner_helper.HTTPSService()
         return service.get_fingerprint(host)
-
-
-def create_dataset(field: str, value_list: List[str],
-                   query_string: Union[str, dict]) -> List:
-    """
-    Create dataset from values on list.
-
-    :param query_string: String or dict with query parameters.
-    :param field: Field to be taken from each of the values.
-    :param value_list: List of values from which fields are to be extracted.
-    :return: A List containing incremental versions of a dict, which contains
-             the data in the specified field from value_list.
-    """
-    dataset = []
-    if isinstance(query_string, str):
-        data_dict = dict(parse_qsl(query_string))
-    else:
-        data_dict = query_string.copy()
-    for value in value_list:
-        data_dict[field] = value
-        dataset.append(data_dict.copy())
-    return dataset
-
-
-def request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
-    r"""
-    Request datasets and gives the results in a list.
-
-    :param url: URL to test.
-    :param dataset_list: List of datasets. For each of these an ``HTTP``
-       session is created and the response recorded in the returned list.
-    :param \*args: Optional arguments for :class:`HTTPSession`.
-    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
-
-    Either ``params`` or ``data`` must be present in ``kwargs``,
-    if the request is ``GET`` or ``POST``, respectively.
-    """
-    kw_new = kwargs.copy()
-    resp = list()
-    for dataset in dataset_list:
-        if 'data' in kw_new:
-            kw_new['data'] = dataset
-        elif 'params' in kw_new:
-            kw_new['params'] = dataset
-        sess = HTTPSession(url, *args, **kw_new)
-        resp.append((len(sess.response.text), sess.response.status_code))
-    return resp
-
-
-def _options_request(url: str, *args, **kwargs) -> Optional[requests.Response]:
-    r"""
-    Send an``HTTP OPTIONS`` request.
-
-    Tests what kind of ``HTTP`` methods are supported on the given ``url``.
-
-    :param url: URL to test.
-    :param \*args: Optional arguments for :py:func:`requests.options`.
-    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
-    """
-    try:
-        return requests.options(url, verify=False, *args, **kwargs)
-    except requests.ConnectionError:
-        raise ConnError
-
-
-def has_method(url: str, method: str, *args, **kwargs) -> bool:
-    r"""
-    Check if specific HTTP method is allowed in URL.
-
-    :param url: URL to test.
-    :param method: HTTP method to test.
-    :param \*args: Optional arguments for :py:func:`requests.options`.
-    :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
-    """
-    try:
-        is_method_present = _options_request(url, *args, **kwargs).headers
-    except ConnError:
-        show_unknown('Could not connnect', details=dict(url=url))
-        return False
-    result = True
-    if 'allow' in is_method_present:
-        if method in is_method_present['allow']:
-            show_open('HTTP Method {} enabled'.format(method),
-                      details=dict(url=url),
-                      refs='apache/restringir-metodo-http')
-        else:
-            show_close('HTTP Method {} disabled'.format(method),
-                       details=dict(url=url),
-                       refs='apache/restringir-metodo-http')
-            result = False
-    else:
-        show_close('HTTP Method {} disabled'.format(method),
-                   details=dict(url=url),
-                   refs='apache/restringir-metodo-http')
-        result = False
-    return result
-
-
-# pylint: disable=too-many-branches
-def has_insecure_header(url: str, header: str, *args, **kwargs) -> bool:  # noqa
-    r"""
-    Check if an insecure header is present.
-
-    :param url: URL to test.
-    :param header: Header to test if present.
-    :param \*args: Optional arguments for :class:`HTTPSession`.
-    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
-    """
-    try:
-        http_session = HTTPSession(url, *args, **kwargs)
-        headers_info = http_session.response.headers
-        fingerprint = http_session.get_fingerprint()
-    except ConnError:
-        show_unknown('HTTP error checking {}'.format(header),
-                     details=dict(url=url))
-        return False
-
-    if header == 'Access-Control-Allow-Origin':
-        if 'headers' in kwargs:
-            kwargs['headers'].update({'Origin':
-                                      'https://www.malicious.com'})
-        else:
-            kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
-
-        if header in headers_info:
-            value = headers_info[header]
-            if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
-                show_open('{} HTTP header is insecure'.
-                          format(header),
-                          details=dict(url=url, header=header, value=value,
-                                       fingerprint=fingerprint),
-                          refs='apache/habilitar-headers-seguridad')
-                return True
-            show_close('HTTP header {} value is secure'.
-                       format(header),
-                       details=dict(url=url, header=header, value=value,
-                                    fingerprint=fingerprint),
-                       refs='apache/habilitar-headers-seguridad')
-            return False
-        show_close('HTTP header {} not present which is secure \
-by default'.format(header),
-                   details=dict(url=url, header=header,
-                                fingerprint=fingerprint),
-                   refs='apache/habilitar-headers-seguridad')
-        return False
-
-    result = True
-
-    if header == 'X-AspNet-Version' or header == 'Server':
-        if header in headers_info:
-            value = headers_info[header]
-            show_open('{} HTTP insecure header present'.
-                      format(header),
-                      details=dict(url=url, header=header, value=value,
-                                   fingerprint=fingerprint),
-                      refs='apache/habilitar-headers-seguridad')
-            result = True
-        else:
-            show_close('{} HTTP insecure header not present'.
-                       format(header),
-                       details=dict(url=url, header=header,
-                                    fingerprint=fingerprint),
-                       refs='apache/habilitar-headers-seguridad')
-            result = False
-        return result
-    if header in headers_info:
-        value = headers_info[header]
-        if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
-            show_close('HTTP header {} is secure'.format(header),
-                       details=dict(url=url, header=header, value=value,
-                                    fingerprint=fingerprint),
-                       refs='apache/habilitar-headers-seguridad')
-            result = False
-        else:
-            show_open('{} HTTP header is insecure'.
-                      format(header),
-                      details=dict(url=url, header=header, value=value,
-                                   fingerprint=fingerprint),
-                      refs='apache/habilitar-headers-seguridad')
-            result = True
-    else:
-        show_open('{} HTTP header not present'.
-                  format(header),
-                  details=dict(url=url, header=header,
-                               fingerprint=fingerprint),
-                  refs='apache/habilitar-headers-seguridad')
-        result = True
-
-    return result
