@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-"""SMTP module.
+"""
+SMTP module.
 
-This module allows to check SMTP especific vulnerabilities
+This module allows to check SMTP-specific vulnerabilities.
 """
 
 # standard imports
@@ -21,8 +22,13 @@ PORT = 25
 
 
 @track
-def has_vrfy(ip_address, port=PORT):
-    """Check if IP has VRFY command enabled."""
+def has_vrfy(ip_address: str, port: int = PORT) -> bool:
+    """
+    Check if IP has VRFY command enabled.
+
+    :param ip_address: IP address to test.
+    :param port: If necessary, specify port to connect to (default: 25).
+    """
     server = smtplib.SMTP(ip_address, port)
     service = banner_helper.SMTPService(port)
     fingerprint = service.get_fingerprint(ip_address)
@@ -45,8 +51,13 @@ def has_vrfy(ip_address, port=PORT):
 
 
 @track
-def is_version_visible(ip_address, port=PORT):
-    """Check if banner is visible."""
+def is_version_visible(ip_address: str, port: int = PORT) -> bool:
+    """
+    Check if banner is visible.
+
+    :param ip_address: IP address to test.
+    :param port: If necessary, specify port to connect to (default: 25).
+    """
     service = banner_helper.SMTPService(port)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
