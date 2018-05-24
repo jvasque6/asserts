@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-"""DNS check module."""
+"""
+DNS check module.
+
+This module allows to check vulnerabilities in DNS systems.
+"""
 
 # standard imports
 from __future__ import absolute_import
@@ -26,8 +30,13 @@ from fluidasserts.utils.decorators import track
 
 
 @track
-def is_xfr_enabled(domain, nameserver):
-    """Check if zone transfer is enabled."""
+def is_xfr_enabled(domain: str, nameserver: str) -> bool:
+    """
+    Check if zone transfer is enabled.
+
+    :param domain: Name of the zone to transfer.
+    :param nameserver: IPv4 or 6 to test.
+    """
     axfr_query = dns.query.xfr(nameserver, domain, timeout=5,
                                relativize=False, lifetime=10)
 
@@ -54,8 +63,13 @@ def is_xfr_enabled(domain, nameserver):
 
 
 @track
-def is_dynupdate_enabled(domain, nameserver):
-    """Check if zone updating is enabled."""
+def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
+    """
+    Check if zone updating is enabled.
+
+    :param domain: Name of the zone to transfer.
+    :param nameserver: IPv4 or 6 to test.
+    """
     newrecord = 'newrecord'
 
     try:
@@ -85,10 +99,14 @@ def is_dynupdate_enabled(domain, nameserver):
 
 
 @track
-def has_cache_poison(domain, nameserver):
-    """Check if cache poisoning is possible.
+def has_cache_poison(domain: str, nameserver: str) -> bool:
+    """
+    Check if cache poisoning is possible.
 
-    The check is made by looking DNSSEC records
+    The check is made by looking DNSSEC records.
+
+    :param domain: Name of the zone to transfer.
+    :param nameserver: IPv4 or 6 to test.
     """
     myresolver = dns.resolver.Resolver()
     myresolver.nameservers = [nameserver]
@@ -122,10 +140,12 @@ def has_cache_poison(domain, nameserver):
 
 
 @track
-def has_cache_snooping(nameserver):
-    """Check if nameserver has cache snooping.
+def has_cache_snooping(nameserver: str) -> bool:
+    """
+    Check if nameserver has cache snooping.
 
     (supports non recursive queries)
+    :param nameserver: IPv4 or 6 to test.
     """
     domain = 'isc.org.'
     name = dns.name.from_text(domain)
@@ -162,8 +182,12 @@ def has_cache_snooping(nameserver):
 
 
 @track
-def has_recursion(nameserver):
-    """Check if nameserver has recursion enabled."""
+def has_recursion(nameserver: str) -> bool:
+    """
+    Check if nameserver has recursion enabled.
+
+    :param nameserver: IPv4 or 6 to test.
+    """
     domain = 'isc.org.'
     name = dns.name.from_text(domain)
 
@@ -192,8 +216,12 @@ def has_recursion(nameserver):
 
 
 @track
-def can_amplify(nameserver):
-    """Check if nameserver allows amplification attacks."""
+def can_amplify(nameserver: str) -> bool:
+    """
+    Check if nameserver allows amplification attacks.
+
+    :param nameserver: IPv4 or 6 to test.
+    """
     domain = 'isc.org.'
     name = dns.name.from_text(domain)
 
