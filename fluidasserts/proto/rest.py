@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""REST module."""
+"""
+REST module.
+
+This module allows to check REST vulnerabilities."
+"""
 
 # standard imports
 # None
@@ -17,8 +21,14 @@ from fluidasserts.helper import http_helper
 
 
 @track
-def has_access(url, *args, **kwargs):
-    """Check if a bad text is present."""
+def has_access(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if HTTP access to given URL is possible (i.e. response 200 OK).
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     http_session = http_helper.HTTPSession(url, *args, **kwargs)
     ok_access_list = [200]
     if http_session.response.status_code in ok_access_list:
@@ -29,8 +39,14 @@ def has_access(url, *args, **kwargs):
 
 
 @track
-def accepts_empty_content_type(url, *args, **kwargs):
-    """Check if given URL accepts empty Content-Type requests."""
+def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if given URL accepts empty Content-Type requests.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     if 'headers' in kwargs:
         assert 'Content-Type' not in kwargs['headers']
     expected_codes = [406, 415]
@@ -51,8 +67,14 @@ def accepts_empty_content_type(url, *args, **kwargs):
 
 
 @track
-def accepts_insecure_accept_header(url, *args, **kwargs):
-    """Check if given URL accepts insecure Accept request header value."""
+def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if given URL accepts insecure Accept request header value.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
+    """
     expected_codes = [406, 415]
     error_codes = [400, 401, 403, 404, 500]
     if 'headers' in kwargs:
