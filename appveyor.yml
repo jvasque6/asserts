@@ -7,6 +7,7 @@ environment:
 
 install:
   # We need wheel installed to build wheels
+  - systeminfo | findstr /B /C:"OS Name" /C:"OS Version"
   - "mkdir build"
   - "%PYTHON%\\python.exe -m pip install -U pip setuptools"
   - "%PYTHON%\\python.exe -m pip install wheel"
