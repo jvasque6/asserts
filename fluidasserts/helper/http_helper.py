@@ -3,11 +3,11 @@
 """HTTP helper."""
 
 # standard imports
+import hashlib
 from typing import Optional, Tuple
 
 # 3rd party imports
 from urllib.parse import quote as quote
-from urllib.parse import urlparse
 
 
 from bs4 import BeautifulSoup
@@ -18,7 +18,7 @@ import requests
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 # local imports
-from fluidasserts.helper import banner_helper
+# None
 
 # pylint: disable=W0212
 # pylint: disable=R0902
@@ -279,16 +279,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         :return: A dict containing the SHA and banner of the host,
                  as per :meth:`Service.get_fingerprint()`.
         """
-        parsed = urlparse(self.url)
-        host = parsed.netloc.split(':')[0]
-        if parsed.scheme == 'http':
-            if parsed.port:
-                service = banner_helper.HTTPService(parsed.port)
-            else:
-                service = banner_helper.HTTPService()
-        else:
-            if parsed.port:
-                service = banner_helper.HTTPSService(parsed.port)
-            else:
-                service = banner_helper.HTTPSService()
-        return service.get_fingerprint(host)
+        sha256 = hashlib.sha256()
+        banner = '\r\n'.join(['{}: {}'.format(x, y)
+                              for x, y in self.response.headers.items()])
+        sha256.update(banner.encode('utf-8'))
+        return dict(sha256=sha256.hexdigest(), banner=banner)
