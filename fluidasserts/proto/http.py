@@ -114,7 +114,7 @@ def _generic_has_multiple_text(url, regex_list, *args, **kwargs):
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
-        return True
+        return False
 
 
 def _generic_has_text(url, expected_text, *args, **kwargs):
@@ -134,7 +134,7 @@ def _generic_has_text(url, expected_text, *args, **kwargs):
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
-        return True
+        return False
 
 
 @track
@@ -167,7 +167,7 @@ def has_not_text(url, expected_text, *args, **kwargs):
         return False
     except http_helper.ConnError:
         show_unknown('Could not connect', details=dict(url=url))
-        return True
+        return False
 
 
 @track
@@ -365,9 +365,13 @@ def has_insecure_upload(url, expect, file_param, file_path, *args, **kw):
 @track
 def is_sessionid_exposed(url, argument='sessionid', *args, **kwargs):
     """Check if resulting URL has a session ID exposed."""
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
-    response_url = http_session.response.url
-    fingerprint = http_session.get_fingerprint()
+    try:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        response_url = http_session.response.url
+        fingerprint = http_session.get_fingerprint()
+    except http_helper.ConnError:
+        show_unknown('Could not connect', details=dict(url=url))
+        return False
 
     regex = r'\b(' + argument + r')\b=([a-zA-Z0-9_-]+)'
 
@@ -455,7 +459,7 @@ def has_dirlisting(url, *args, **kwargs):
     except http_helper.ConnError:
         show_unknown('Could not connect',
                      details=dict(url=url))
-        return True
+        return False
 
 
 @track
@@ -466,7 +470,7 @@ def is_resource_accessible(url, *args, **kwargs):
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError:
         show_close('Resource not available',
-                   details=dict(url=url, fingerprint=fingerprint))
+                   details=dict(url=url))
         return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
@@ -490,8 +494,12 @@ def is_response_delayed(url, *args, **kwargs):
     https://www.nngroup.com/articles/response-times-3-important-limits/
     """
     max_response_time = 1
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
-    fingerprint = http_session.get_fingerprint()
+    try:
+        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        fingerprint = http_session.get_fingerprint()
+    except http_helper.ConnError:
+        show_unknown('Could not connect', details=dict(url=url))
+        return False
 
     response_time = http_session.response.elapsed.total_seconds()
     delta = max_response_time - response_time
@@ -626,7 +634,7 @@ def has_clear_viewstate(url, *args, **kwargs):
     except http_helper.ConnError:
         show_unknown('Resource not available',
                      details=dict(url=url))
-        return True
+        return False
 
     vsb64 = http_session.get_html_value('input', '__VIEWSTATE')
 

@@ -374,33 +374,6 @@ def test_http_response_open():
         '%s/reponse/fail' % (MOCK_SERVICE))
 
 
-def test_found_string_unknown():
-    """Could not connect."""
-    url = 'http://0.0.0.0/'
-    expected = 'Expected string'
-    assert http.has_text(url, expected)
-
-
-def test_notfound_string_unknown():
-    """Could not connect."""
-    url = 'http://0.0.0.0/'
-    expected = 'Expected string'
-    assert http.has_not_text(url, expected)
-
-
-def test_has_multiple_text_unknown():
-    """Could not connect."""
-    url = 'http://0.0.0.0/'
-    expected = 'Expected string'
-    assert http.has_multiple_text(url, expected)
-
-
-def test_has_dirlisting_unknown():
-    """Could not connect."""
-    url = 'http://0.0.0.0/'
-    assert http.has_dirlisting(url)
-
-
 @pytest.mark.usefixtures('mock_http')
 def test_is_header_x_asp_net_version_present_open():
     """Header X-AspNet-Version establecido?."""
@@ -453,4 +426,4 @@ def test_has_clear_viewstate_open():
 def test_is_date_unsyncd_open():
     """Hora desincronizada?."""
     assert http.is_date_unsyncd(
-        '%s/date/fail' % (MOCK_SERVICE))
+        '%s/date/fail' % (BASE_URL))

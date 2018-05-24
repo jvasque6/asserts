@@ -387,7 +387,11 @@ def has_method(url: str, method: str, *args, **kwargs) -> bool:
     :param \*args: Optional arguments for :py:func:`requests.options`.
     :param \*\*kwargs: Optional arguments for :py:func:`requests.options`.
     """
-    is_method_present = _options_request(url, *args, **kwargs).headers
+    try:
+        is_method_present = _options_request(url, *args, **kwargs).headers
+    except ConnError:
+        show_unknown('Could not connnect', details=dict(url=url))
+        return False
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
@@ -424,7 +428,7 @@ def has_insecure_header(url: str, header: str, *args, **kwargs) -> bool:  # noqa
     except ConnError:
         show_unknown('HTTP error checking {}'.format(header),
                      details=dict(url=url))
-        return True
+        return False
 
     if header == 'Access-Control-Allow-Origin':
         if 'headers' in kwargs:
