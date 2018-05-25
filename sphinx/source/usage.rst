@@ -1,5 +1,5 @@
-Welcome to FLUIDAsserts's documentation!
-========================================
+Usage
+=====
 
 ``FLUIDAsserts`` is an engine
 to automate the closing of security findings
@@ -49,7 +49,7 @@ or has been closed: ::
      url: http://testphp.vulnweb.com/AJAX/infoartist.php?id=3%27
    when: 2018-05-25 15:54:56.455875
 
-See more use cases and examples in our :doc:`usage` page.
+See more use cases and examples in our :doc:`Usage` page.
 
 
 API Documentation
