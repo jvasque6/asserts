@@ -16,6 +16,7 @@ from pyparsing import Word, Literal, alphas
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 LANGUAGE_SPECS = {
@@ -41,7 +42,11 @@ def not_pinned(file_dest: str) -> bool:
     pinned = tk_from + tk_image + Literal(':') + tk_version
 
     result = False
-    matches = lang_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=file_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Dockerfile uses unpinned base image(s)',

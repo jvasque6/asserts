@@ -17,6 +17,7 @@ from pyparsing import Literal
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper import lang_helper
 from fluidasserts.utils.decorators import track
 
@@ -90,6 +91,9 @@ def has_text(code_dest: str, expected_text: str) -> bool:
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not os.path.exists(code_dest):
+        show_unknown('File does not exist', details=dict(code_dest=code_dest))
+        return False
     if os.path.isfile(code_dest):
         ret = _generic_lang_assert(code_dest, expected_text)
         _show_has_text(ret, code_dest, expected_text)
@@ -115,9 +119,12 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not os.path.exists(code_dest):
+        show_unknown('File does not exist', details=dict(code_dest=code_dest))
+        return False
     if os.path.isfile(code_dest):
         ret = _generic_lang_assert(code_dest, expected_text)
-        _show_has_text(ret, code_dest, expected_text)
+        _show_has_not_text(ret, code_dest, expected_text)
         return not ret
 
     ret_fin = False
@@ -125,7 +132,7 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
         for code_file in files:
             full_path = os.path.join(root, code_file)
             ret = _generic_lang_assert(full_path, expected_text)
-            _show_has_text(ret, full_path, expected_text)
+            _show_has_not_text(ret, full_path, expected_text)
             ret_fin = ret_fin or not ret
     return ret_fin
 

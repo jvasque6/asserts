@@ -18,6 +18,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
@@ -57,8 +58,13 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
         Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
-    matches = lang_helper.check_grammar(generic_exception, csharp_dest,
-                                        LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(generic_exception, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
@@ -94,9 +100,13 @@ def swallows_exceptions(csharp_dest: str) -> bool:
                    nestedExpr(opener='{', closer='}')).ignore(cppStyleComment)
 
     result = False
-    catches = lang_helper.check_grammar(parser_catch, csharp_dest,
-                                        LANGUAGE_SPECS)
-
+    try:
+        catches = lang_helper.check_grammar(parser_catch, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
     for code_file, lines in catches.items():
         vulns = lang_helper.block_contains_empty_grammar(empty_catch,
                                                          code_file, lines,
@@ -139,9 +149,13 @@ def has_switch_without_default(csharp_dest: str) -> bool:
                               content=def_stmt)).ignore(cppStyleComment)
 
     result = False
-    switches = lang_helper.check_grammar(switch_head, csharp_dest,
-                                         LANGUAGE_SPECS)
-
+    try:
+        switches = lang_helper.check_grammar(switch_head, csharp_dest,
+                                             LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
     for code_file, lines in switches.items():
         vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
                                                          code_file, lines,
@@ -179,9 +193,13 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
         tk_class + Suppress(tk_params)
 
     result = False
-    random_new = lang_helper.check_grammar(call_function, csharp_dest,
-                                           LANGUAGE_SPECS)
-
+    try:
+        random_new = lang_helper.check_grammar(call_function, csharp_dest,
+                                               LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
     for code_file, vulns in random_new.items():
         if vulns:
             show_open('Code generates insecure random numbers',
@@ -217,8 +235,12 @@ def has_if_without_else(csharp_dest: str) -> bool:
     if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(cppStyleComment)
 
     result = False
-    conds = lang_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
-
+    try:
+        conds = lang_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
     for code_file, lines in conds.items():
         vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
                                                          code_file, lines,

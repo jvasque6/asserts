@@ -18,6 +18,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
@@ -56,8 +57,12 @@ def has_generic_exceptions(java_dest: str) -> bool:
         tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
 
     result = False
-    matches = lang_helper.check_grammar(generic_exception, java_dest,
-                                        LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(generic_exception, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
@@ -110,9 +115,12 @@ def swallows_exceptions(java_dest: str) -> bool:
                    nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
 
     result = False
-    catches = lang_helper.check_grammar(parser_catch, java_dest,
-                                        LANGUAGE_SPECS)
-
+    try:
+        catches = lang_helper.check_grammar(parser_catch, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
     for code_file, lines in catches.items():
         vulns = lang_helper.block_contains_empty_grammar(empty_catch,
                                                          code_file, lines,
@@ -155,9 +163,12 @@ def has_switch_without_default(java_dest: str) -> bool:
                               content=def_stmt)).ignore(javaStyleComment)
 
     result = False
-    switches = lang_helper.check_grammar(switch_head, java_dest,
-                                         LANGUAGE_SPECS)
-
+    try:
+        switches = lang_helper.check_grammar(switch_head, java_dest,
+                                             LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
     for code_file, lines in switches.items():
         vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
                                                          code_file, lines,
@@ -216,8 +227,11 @@ def has_if_without_else(java_dest: str) -> bool:
     if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(javaStyleComment)
 
     result = False
-    conds = lang_helper.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
-
+    try:
+        conds = lang_helper.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
     for code_file, lines in conds.items():
         vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
                                                          code_file, lines,

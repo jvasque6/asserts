@@ -16,6 +16,7 @@ from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute)
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
@@ -51,8 +52,13 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     tk_child_tag = Or([Suppress(tk_add_tag), Suppress(tk_clear_tag),
                        tk_remove_tag])
     result = False
-    custom_headers = lang_helper.check_grammar(tk_tag_s, webconf_dest,
-                                               LANGUAGE_SPECS)
+    try:
+        custom_headers = lang_helper.check_grammar(tk_tag_s, webconf_dest,
+                                                   LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=webconf_dest))
+        return False
     tk_rem = Suppress(tk_tag_s) + OneOrMore(tk_child_tag)
 
     for code_file, lines in custom_headers.items():

@@ -18,6 +18,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 
@@ -62,8 +63,12 @@ def has_generic_exceptions(py_dest: str) -> bool:
     generic_exception = tk_except + Literal(':')
 
     result = False
-    matches = lang_helper.check_grammar(generic_exception, py_dest,
-                                        LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(generic_exception, py_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=py_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code uses generic exceptions',
@@ -103,8 +108,12 @@ def swallows_exceptions(py_dest: str) -> bool:
                        tk_pass).ignore(pythonStyleComment)
 
     result = False
-    matches = lang_helper.check_grammar(parser_exception, py_dest,
-                                        LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(parser_exception, py_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=py_dest))
+        return False
     for code_file, lines in matches.items():
         vulns = lang_helper.block_contains_grammar(empty_exception, code_file,
                                                    lines, _get_block)

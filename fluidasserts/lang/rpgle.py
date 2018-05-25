@@ -17,6 +17,7 @@ from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 
 LANGUAGE_SPECS = {
@@ -40,8 +41,12 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + Literal('0')
 
     result = False
-    matches = lang_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
-                                        LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
@@ -81,7 +86,12 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
         Optional(tk_varlen) + Optional(Word(nums)) + NotAny(tk_inz)
 
     result = False
-    matches = lang_helper.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
+    try:
+        matches = lang_helper.check_grammar(unitialized, rpg_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
             show_open('Code has unitialized variables',
