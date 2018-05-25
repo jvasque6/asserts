@@ -7,10 +7,11 @@ This module allows to check Web.config code vulnerabilities
 """
 
 # standard imports
-# None
+from copy import copy
 
 # 3rd party imports
-from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute)
+from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute,
+                       htmlComment)
 
 # local imports
 from fluidasserts.helper import lang_helper
@@ -29,11 +30,12 @@ LANGUAGE_SPECS = {
 
 def _get_block(file_lines, line) -> str:
     """
-    Return a WebConfig block of code beginning in line.
+    Return a DotNetConfig block of code beginning in line.
 
     :param file_lines: Lines of code
     :param line: First line of block
     """
+
     return "".join(file_lines[line - 1:])
 
 
@@ -59,6 +61,7 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
         return False
+
     tk_rem = Suppress(tk_tag_s) + OneOrMore(tk_child_tag)
 
     for code_file, lines in custom_headers.items():
@@ -70,11 +73,58 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
-                                   total_vulns=len(vulns)))
+                                   lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Header X-Powered-By is not present',
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
+
+
+@track
+def has_ssl_disabled(apphostconf_dest: str) -> bool:
+    """
+    Search for access tag in security section in an ApplicationHost.config
+    source file or package.
+
+    :param apphostconf_dest: Path to a ApplicationHost.config source file or
+    package.
+    """
+    tk_tag_s, _ = makeXMLTags('security')
+    tk_access, _ = makeXMLTags('access')
+    tag_no_comm = tk_access.ignore(htmlComment)
+    tk_access_none = copy(tag_no_comm)
+    tk_access_none.setParseAction(withAttribute(sslFlags='None'))
+    result = False
+    try:
+        sec_tag = lang_helper.check_grammar(tk_tag_s, apphostconf_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=apphostconf_dest))
+        return False
+
+    for code_file, lines in sec_tag.items():
+        access_tags = lang_helper.block_contains_grammar(tk_access,
+                                                         code_file,
+                                                         lines,
+                                                         _get_block)
+
+        none_sslflags = lang_helper.block_contains_grammar(tk_access_none,
+                                                           code_file,
+                                                           lines,
+                                                           _get_block)
+        if not access_tags or none_sslflags:
+            show_open('SSL is disabled',
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in lines])))
+            result = True
+        else:
+            show_close('SSL is enabled',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
