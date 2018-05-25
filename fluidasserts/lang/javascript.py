@@ -50,8 +50,27 @@ def uses_console_log(js_dest: str) -> bool:
     tk_method = CaselessKeyword('log')
 
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
-    result = lang_helper.uses_insecure_method(clog, js_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(clog, js_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=js_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -65,8 +84,27 @@ def uses_eval(js_dest: str) -> bool:
     method = 'eval()'
     tk_method = CaselessKeyword('eval')
     call_function = tk_method + Suppress(nestedExpr())
-    result = lang_helper.uses_insecure_method(call_function, js_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, js_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=js_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -83,8 +121,27 @@ def uses_localstorage(js_dest: str) -> bool:
 
     lsto = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
 
-    result = lang_helper.uses_insecure_method(lsto, js_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(lsto, js_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=js_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -103,8 +160,27 @@ def has_insecure_randoms(js_dest: str) -> bool:
     tk_params = nestedExpr()
     call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
 
-    result = lang_helper.uses_insecure_method(call_function, js_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, js_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=js_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 

@@ -16,9 +16,6 @@ from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults,
                        ParserElement)
 
 # local imports
-from fluidasserts import show_close
-from fluidasserts import show_open
-from fluidasserts import show_unknown
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -191,35 +188,3 @@ def check_grammar(grammar: ParserElement, code_dest: str,
                 vulns[full_path] = _get_match_lines(grammar, full_path,
                                                     lang_spec)
     return vulns
-
-
-def uses_insecure_method(grammar: ParserElement, code_dest: str,
-                         lang_spec: dict, method: str) -> bool:
-    """
-    Check if code destination uses an insecure method.
-
-    :param grammar: Pyparsing grammar against which file will be checked.
-    :param code_dest: File or directory to check.
-    :param lang_spec: Contains language-specific syntax elements, such as
-                       acceptable file extensions and comment delimiters.
-    :param method: Insecure method to find in code.
-    """
-    result = False
-    try:
-        matches = check_grammar(grammar, code_dest, lang_spec)
-    except AssertionError:
-        show_unknown('File does not exist', details=dict(code_dest=code_dest))
-        return False
-    for code_file, vulns in matches.items():
-        if vulns:
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=file_hash(code_file)))
-    return result

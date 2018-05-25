@@ -92,8 +92,27 @@ def uses_print_stack_trace(java_dest: str) -> bool:
     tk_pst = CaselessKeyword('printstacktrace')
     pst = tk_object + Literal('.') + tk_pst + Literal('(') + Literal(')')
 
-    result = lang_helper.uses_insecure_method(pst, java_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(pst, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -204,8 +223,27 @@ def has_insecure_randoms(java_dest: str) -> bool:
     tk_params = nestedExpr()
     call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
 
-    result = lang_helper.uses_insecure_method(call_function, java_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -268,8 +306,27 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     tk_params = Literal('(') + tk_alg + Literal(')')
     instance_md5 = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
 
-    result = lang_helper.uses_insecure_method(instance_md5, java_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(instance_md5, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 

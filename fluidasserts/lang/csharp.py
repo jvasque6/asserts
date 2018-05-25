@@ -283,8 +283,28 @@ def uses_md5_hash(csharp_dest: str) -> bool:
 
     call_function = Or([fn_1, fn_2])
 
-    result = lang_helper.uses_insecure_method(call_function, csharp_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result
 
 
@@ -303,6 +323,26 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
     tk_params = nestedExpr()
     call_function = tk_new + Or([tk_sha1cry, tk_sha1man]) + tk_params
 
-    result = lang_helper.uses_insecure_method(call_function, csharp_dest,
-                                              LANGUAGE_SPECS, method)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
     return result

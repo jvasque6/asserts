@@ -85,7 +85,7 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
 @track
 def has_ssl_disabled(apphostconf_dest: str) -> bool:
     """
-    Check is SSL is disabled in ApplicationHost.config.
+    Check if SSL is disabled in ApplicationHost.config.
 
     Search for access tag in security section in an ApplicationHost.config
     source file or package.
