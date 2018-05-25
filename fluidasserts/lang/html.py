@@ -20,9 +20,8 @@ def _has_attributes(filename: str, tag: str, attrs: dict) -> bool:
     """
     Check ``HTML`` attributes` values.
 
-    This method checks whether the code retrieved by the selector
-    (``selector``) inside the file (``filename``)
-    has an attribute (``attr``) with the specific value (``value``).
+    This method checks whether the tag (``tag``) inside the code file
+    (``filename``) has attributes (``attr``) with the specific values.
 
     :param filename: Path to the ``HTML`` source.
     :param tag: ``HTML`` tag to search.
