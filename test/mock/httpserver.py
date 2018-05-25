@@ -469,6 +469,54 @@ def date_fail():
     return resp
 
 
+@APP.route('/rest/access/fail')
+def rest_access_fail():
+    """Recurso rest accesible."""
+    resp = Response()
+    resp.status_code = 200
+    return resp
+
+
+@APP.route('/rest/access/ok')
+def rest_access_ok():
+    """Recurso rest no accesible."""
+    resp = Response()
+    resp.status_code = 403
+    return resp
+
+
+@APP.route('/rest/content_type/fail')
+def rest_content_type_fail():
+    """Recurso rest accesible."""
+    resp = Response()
+    resp.status_code = 400
+    return resp
+
+
+@APP.route('/rest/content_type/ok')
+def rest_content_type_ok():
+    """Recurso rest no accesible."""
+    resp = Response()
+    resp.status_code = 406
+    return resp
+
+
+@APP.route('/rest/insecure_accept/fail')
+def rest_insecure_accept_fail():
+    """Recurso rest accesible."""
+    resp = Response()
+    resp.status_code = 400
+    return resp
+
+
+@APP.route('/rest/insecure_accept/ok')
+def rest_insecure_accept_ok():
+    """Recurso rest no accesible."""
+    resp = Response()
+    resp.status_code = 406
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     APP.run()
