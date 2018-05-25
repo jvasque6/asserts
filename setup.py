@@ -12,11 +12,15 @@ from setuptools import setup
 with io.open('conf/README.rst', 'rt', encoding='utf8') as f:
     README = f.read()
 
+CUR_TIME = time.localtime()
+MIN_MONTH = (CUR_TIME.tm_mday - 1) * 1440 + \
+    CUR_TIME.tm_hour * 60 + CUR_TIME.tm_min
+
 setup(
     name='FLUIDAsserts',
     description='Assertion Library for Security Assumptions',
     long_description=README,
-    version=time.strftime('0.%Y%m%d.%H%M'),
+    version=time.strftime('%y.%m.{}').format(MIN_MONTH),
     url='https://fluidattacks.com/web/en/products/asserts',
     project_urls={'Documentation': 'https://fluidsignal.gitlab.io/asserts/'},
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
