@@ -20,6 +20,7 @@ import fluidasserts.utils.decorators
 fluidasserts.utils.decorators.UNITTEST = True
 HARD_PORT = 443
 WEAK_PORT = 21
+NON_EXISTANT = '0.0.0.0'
 
 #
 # Open tests
@@ -32,8 +33,10 @@ WEAK_PORT = 21
 def test_port_open_close(run_mock):
     """Check open port."""
     assert not tcp.is_port_open(run_mock, WEAK_PORT)
+    assert not tcp.is_port_open(NON_EXISTANT, WEAK_PORT)
 
 
 def test_port_insecure_close(run_mock):
     """Check secure port."""
     assert not tcp.is_port_insecure(run_mock, HARD_PORT)
+    assert not tcp.is_port_insecure(NON_EXISTANT, HARD_PORT)

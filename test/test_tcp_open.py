@@ -37,11 +37,6 @@ def test_port_open_error(run_mock):
     """Check open port with error."""
     with pytest.raises(AssertionError):
         tcp.is_port_open(run_mock, -1)
-# El caso de prueba deberia generar AssertionError
-# se deja comentado mientras se realizan los cambios
-# necesarios en el codigo.
-#    with pytest.raises(AssertionError):
-#        tcp.is_port_open(CONTAINER_IP+'.1', 1)
 
 
 def test_port_insecure_open(run_mock):
