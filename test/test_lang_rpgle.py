@@ -17,6 +17,7 @@ fluidasserts.utils.decorators.UNITTEST = True
 CODE_DIR = 'test/static/lang/rpgle/'
 SECURE_CODE = CODE_DIR + 'dos_close.rpg'
 INSECURE_CODE = CODE_DIR + 'dos_open.rpg'
+NON_EXISTANT_CODE = CODE_DIR + 'not_exists.rpg'
 
 
 #
@@ -52,8 +53,10 @@ def test_has_unitialized_in_dir_open():
 def test_has_dos_dow_sqlcod_close():
     """Code has DoS for using DoW SQLCOD = 0."""
     assert not rpgle.has_dos_dow_sqlcod(SECURE_CODE)
+    assert not rpgle.has_dos_dow_sqlcod(NON_EXISTANT_CODE)
 
 
 def test_has_unitialized_close():
     """Code has unitialized variables."""
     assert not rpgle.has_unitialized_vars(SECURE_CODE)
+    assert not rpgle.has_unitialized_vars(NON_EXISTANT_CODE)

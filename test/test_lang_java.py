@@ -26,6 +26,7 @@ SECURE_RANDOM = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_RANDOM = CODE_DIR + 'EmptyCatchOpen.java'
 SECURE_HASH = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
+NON_EXISTANT_CODE = CODE_DIR + 'NotExists.java'
 LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
 #
@@ -125,33 +126,40 @@ def test_uses_sha1_hash_open_in_dir():
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not java.has_generic_exceptions(SECURE_CODE)
+    assert not java.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_uses_print_stack_trace_close():
     """Search printStackTrace calls."""
     assert not java.uses_print_stack_trace(SECURE_CODE)
+    assert not java.uses_print_stack_trace(NON_EXISTANT_CODE)
 
 
 def test_has_empty_catches_close():
     """Search empty catches."""
     assert not java.swallows_exceptions(SECURE_EMPTY_CATCH)
+    assert not java.swallows_exceptions(NON_EXISTANT_CODE)
 
 
 def test_has_switch_without_default_close():
     """Search switch without default clause."""
     assert not java.has_switch_without_default(SECURE_SWITCH)
+    assert not java.has_switch_without_default(NON_EXISTANT_CODE)
 
 
 def test_has_insecure_randoms_close():
     """Search conditionals without an else option."""
     assert not java.has_insecure_randoms(SECURE_CODE)
+    assert not java.has_insecure_randoms(NON_EXISTANT_CODE)
 
 
 def test_uses_md5_hash_close():
     """Search MD5 hash algorithm."""
     assert not java.uses_md5_hash(SECURE_HASH)
+    assert not java.uses_md5_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_sha1_hash_close():
     """Search SHA-1 hash algorithm."""
     assert not java.uses_sha1_hash(SECURE_HASH)
+    assert not java.uses_sha1_hash(NON_EXISTANT_CODE)

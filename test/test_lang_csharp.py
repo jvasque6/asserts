@@ -24,6 +24,7 @@ INSECURE_SWITCH = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_SWITCH = CODE_DIR + 'SwitchDefaultClose.cs'
 INSECURE_RANDOM = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_RANDOM = CODE_DIR + 'SwitchDefaultClose.cs'
+NON_EXISTANT_CODE = CODE_DIR + 'NonExistant.cs'
 LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
 #
@@ -114,33 +115,40 @@ def test_uses_sha1_hash_in_dir_open():
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not csharp.has_generic_exceptions(SECURE_CODE)
+    assert not csharp.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_swallows_exceptions_close():
     """Search empty catches."""
     assert not csharp.swallows_exceptions(SECURE_EMPTY_CATCH)
+    assert not csharp.swallows_exceptions(NON_EXISTANT_CODE)
 
 
 def test_has_switch_without_default_close():
     """Search switch without default clause."""
     assert not csharp.has_switch_without_default(SECURE_SWITCH)
+    assert not csharp.has_switch_without_default(NON_EXISTANT_CODE)
 
 
 def test_has_insecure_randoms_close():
     """Search class Random instantiation."""
     assert not csharp.has_insecure_randoms(SECURE_RANDOM)
+    assert not csharp.has_insecure_randoms(NON_EXISTANT_CODE)
 
 
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not csharp.has_if_without_else(SECURE_CODE)
+    assert not csharp.has_if_without_else(NON_EXISTANT_CODE)
 
 
 def test_uses_md5_hash_close():
     """Search MD5 hash calls."""
     assert not csharp.uses_md5_hash(SECURE_CODE)
+    assert not csharp.uses_md5_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_sha1_hash_close():
     """Search MD5 hash calls."""
     assert not csharp.uses_sha1_hash(SECURE_CODE)
+    assert not csharp.uses_sha1_hash(NON_EXISTANT_CODE)

@@ -19,6 +19,7 @@ fluidasserts.utils.decorators.UNITTEST = True
 CODE_DIR = 'test/static/lang/python/'
 SECURE_CODE = CODE_DIR + 'exceptions_close.py'
 INSECURE_CODE = CODE_DIR + 'exceptions_open.py'
+NON_EXISTANT_CODE = CODE_DIR + 'not_exists.py'
 LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
 
@@ -59,8 +60,10 @@ def test_swallows_exceptions_in_dir_open():
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not python.has_generic_exceptions(SECURE_CODE)
+    assert not python.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_swallows_exceptions_close():
     """Code swallows exceptions."""
     assert not python.swallows_exceptions(SECURE_CODE)
+    assert not python.swallows_exceptions(NON_EXISTANT_CODE)

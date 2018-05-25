@@ -169,9 +169,12 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
     prs_base64 = Literal(enc_text.decode('utf-8'))
 
     result = False
-    b64_matches = lang_helper.check_grammar(prs_base64, code_dest,
-                                            LANGUAGE_SPECS)
-
+    try:
+        b64_matches = lang_helper.check_grammar(prs_base64, code_dest,
+                                                LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=code_dest))
+        return False
     for code_file, vulns in b64_matches.items():
         if vulns:
             show_open('Code has confidential data encoded in base64',

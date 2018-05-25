@@ -17,6 +17,7 @@ fluidasserts.utils.decorators.UNITTEST = True
 CODE_DIR = 'test/static/lang/docker/'
 SECURE_CODE = CODE_DIR + 'Dockerfile.close'
 INSECURE_CODE = CODE_DIR + 'Dockerfile.open'
+NOT_EXISTANT_CODE = CODE_DIR + 'NotExistant.open'
 
 
 #
@@ -36,3 +37,4 @@ def test_not_pinned_open():
 def test_not_pinned_close():
     """Search for pinned dockerfile."""
     assert not docker.not_pinned(SECURE_CODE)
+    assert not docker.not_pinned(NOT_EXISTANT_CODE)

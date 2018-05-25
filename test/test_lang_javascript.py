@@ -17,6 +17,7 @@ fluidasserts.utils.decorators.UNITTEST = True
 CODE_DIR = 'test/static/lang/javascript/'
 SECURE_CODE = CODE_DIR + 'ConsoleLogClose.js'
 INSECURE_CODE = CODE_DIR + 'ConsoleLogOpen.js'
+NOT_EXISTANT_CODE = CODE_DIR + 'NotExists.js'
 
 
 #
@@ -100,33 +101,40 @@ def test_uses_eval_in_dir_open():
 def test_uses_console_log_close():
     """Search console.log calls."""
     assert not javascript.uses_console_log(SECURE_CODE)
+    assert not javascript.uses_console_log(NOT_EXISTANT_CODE)
 
 
 def test_uses_localstorage_close():
     """Search localStorage calls."""
     assert not javascript.uses_localstorage(SECURE_CODE)
+    assert not javascript.uses_localstorage(NOT_EXISTANT_CODE)
 
 
 def test_has_insecure_randoms_close():
     """Search Math.random() calls."""
     assert not javascript.has_insecure_randoms(SECURE_CODE)
+    assert not javascript.has_insecure_randoms(NOT_EXISTANT_CODE)
 
 
 def test_swallows_exceptions_close():
     """Search empty catches."""
     assert not javascript.swallows_exceptions(SECURE_CODE)
+    assert not javascript.swallows_exceptions(NOT_EXISTANT_CODE)
 
 
 def test_has_switch_without_default_close():
     """Search switches without default clause."""
     assert not javascript.has_switch_without_default(SECURE_CODE)
+    assert not javascript.has_switch_without_default(NOT_EXISTANT_CODE)
 
 
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not javascript.has_if_without_else(SECURE_CODE)
+    assert not javascript.has_if_without_else(NOT_EXISTANT_CODE)
 
 
 def test_uses_eval_close():
     """Search eval function calls."""
     assert not javascript.uses_eval(SECURE_CODE)
+    assert not javascript.uses_eval(NOT_EXISTANT_CODE)
