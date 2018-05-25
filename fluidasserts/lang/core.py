@@ -52,12 +52,12 @@ def _show_has_text(is_open: bool, code_file: str, expected_text: str) -> None:
         show_open('Bad text present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
-                               expected_text=expected_text))
+                               bad_text=expected_text))
     else:
         show_close('Bad text not present in code',
                    details=dict(code_file=code_file,
                                 fingerprint=lang_helper.file_hash(code_file),
-                                expected_text=expected_text))
+                                bad_text=expected_text))
 
 
 def _show_has_not_text(is_open: bool, code_file: str,
@@ -69,7 +69,7 @@ def _show_has_not_text(is_open: bool, code_file: str,
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
     """
-    if is_open:
+    if not is_open:
         show_open('Expected text not present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
