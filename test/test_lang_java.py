@@ -26,6 +26,8 @@ SECURE_RANDOM = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_RANDOM = CODE_DIR + 'EmptyCatchOpen.java'
 SECURE_HASH = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
+SECURE_CIPHER = CODE_DIR + 'GenericExceptionsClose.java'
+INSECURE_CIPHER = CODE_DIR + 'GenericExceptionsOpen.java'
 NON_EXISTANT_CODE = CODE_DIR + 'NotExists.java'
 LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
@@ -118,6 +120,16 @@ def test_uses_sha1_hash_open_in_dir():
     """Search SHA-1 hash algorithm."""
     assert java.uses_sha1_hash(CODE_DIR)
 
+
+def test_uses_des_algorithm_open():
+    """Search DES hash algorithm."""
+    assert java.uses_des_algorithm(INSECURE_CIPHER)
+
+
+def test_uses_des_algorithm_open_in_dir():
+    """Search DES hash algorithm."""
+    assert java.uses_des_algorithm(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -163,3 +175,9 @@ def test_uses_sha1_hash_close():
     """Search SHA-1 hash algorithm."""
     assert not java.uses_sha1_hash(SECURE_HASH)
     assert not java.uses_sha1_hash(NON_EXISTANT_CODE)
+
+
+def test_uses_des_algorithm_close():
+    """Search DES hash algorithm."""
+    assert not java.uses_des_algorithm(SECURE_CIPHER)
+    assert not java.uses_des_algorithm(NON_EXISTANT_CODE)

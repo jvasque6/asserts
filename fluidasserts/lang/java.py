@@ -354,3 +354,43 @@ def uses_sha1_hash(java_dest: str) -> bool:
     """
     result = uses_insecure_hash(java_dest, 'sha-1')
     return result
+
+
+@track
+def uses_des_algorithm(java_dest: str) -> bool:
+    """
+    Check if code uses DES as encryption algorithm.
+
+    See `REQ.150 <https://fluidattacks.com/web/es/rules/149/>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    """
+    method = 'Cipher.getInstance("DES")'
+    tk_mess_dig = CaselessKeyword('cipher')
+    tk_get_inst = CaselessKeyword('getinstance')
+    tk_alg = Literal('"') + CaselessKeyword('des') + Literal('"')
+    tk_params = Literal('(') + tk_alg + Literal(')')
+    instance_des = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
+
+    result = False
+    try:
+        matches = lang_helper.check_grammar(instance_des, java_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result

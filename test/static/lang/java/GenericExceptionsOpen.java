@@ -22,6 +22,10 @@ class GenericExceptionsOpen{
       messageDigest2.update(data.getBytes());
       byte[] messageDigestSHA1 = messageDigest2.digest();
 
+      Cipher des = Cipher.getInstance("DES");
+      des.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+      byte[] encrypted = des.doFinal(input.getBytes("UTF-8"));
+
       catch(ArithmeticException e){
          System.out.println("Warning: ArithmeticException");
       }
