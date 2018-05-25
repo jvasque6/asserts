@@ -34,7 +34,7 @@ def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
     :param code_file: Path to the file to be tested.
     :param expected_text: Bad text to look for in the file.
     """
-    with open(code_file) as code_fd:
+    with open(code_file, encoding='latin-1') as code_fd:
         if re.search(str(expected_regex), code_fd.read(), re.IGNORECASE):
             return True
         return False

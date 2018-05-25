@@ -112,7 +112,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     :param get_block_fn: Function that gives block code starting at line.
     """
     vulns = []
-    with open(code_dest) as code_f:
+    with open(code_dest, encoding='latin-1') as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
             txt = get_block_fn(file_lines, line)
@@ -134,7 +134,7 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     :param get_block_fn: Function that gives block code starting at line.
     """
     vulns = []
-    with open(code_dest) as code_f:
+    with open(code_dest, encoding='latin-1') as code_f:
         file_lines = code_f.readlines()
         for line in lines:
             txt = get_block_fn(file_lines, line)

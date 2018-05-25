@@ -28,26 +28,25 @@ def _has_attributes(filename: str, tag: str, attrs: dict) -> bool:
     :param attrs: Attributes with values to search.
     :returns: True if attribute set as specified, False otherwise.
     """
-    handle = open(filename, 'r')
-    html_doc = handle.read()
-    handle.close()
+    with open(filename, 'r', encoding='latin-1') as handle:
+        html_doc = handle.read()
 
-    tag_s, _ = makeHTMLTags(tag)
-    tag_expr = tag_s
+        tag_s, _ = makeHTMLTags(tag)
+        tag_expr = tag_s
 
-    result = False
+        result = False
 
-    for expr in tag_expr.searchString(html_doc):
-        for attr, value in attrs.items():
-            try:
-                value.parseString(getattr(expr, attr))
-                result = True
-            except ParseException:
-                result = False
+        for expr in tag_expr.searchString(html_doc):
+            for attr, value in attrs.items():
+                try:
+                    value.parseString(getattr(expr, attr))
+                    result = True
+                except ParseException:
+                    result = False
+                    break
+            if result:
                 break
-        if result:
-            break
-    return result
+        return result
 
 
 @track
