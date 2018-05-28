@@ -19,6 +19,7 @@ import fluidasserts.utils.decorators
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
 SMB_PORT = 445
+NON_EXISTANT = '0.0.0.0'
 
 
 @pytest.mark.parametrize('run_mock',
@@ -27,13 +28,19 @@ SMB_PORT = 445
 def test_is_anonymous_enabled_close(run_mock):
     """Conexion anonima habilitada?."""
     assert not smb.is_anonymous_enabled(run_mock)
+
     assert not smb.is_anonymous_enabled(run_mock+':446')
 
 
 def test_has_dirlisting_close(run_mock):
     """Conexion anonima habilitada?."""
-    assert not smb.has_dirlisting('/public',
+    assert not smb.has_dirlisting('public',
                                   server=run_mock,
+                                  user="root",
+                                  password='Puef8poh2tei9AeB',
+                                  domain='WORKGROUP')
+    assert not smb.has_dirlisting('public',
+                                  server=NON_EXISTANT,
                                   user="root",
                                   password='Puef8poh2tei9AeB',
                                   domain='WORKGROUP')

@@ -31,3 +31,12 @@ SMB_PORT = 445
 def test_is_anonymous_enabled_open(run_mock):
     """Conexion anonima habilitada?."""
     assert smb.is_anonymous_enabled(run_mock)
+
+
+def test_has_dirlisting_open(run_mock):
+    """Conexion anonima habilitada?."""
+    assert smb.has_dirlisting('public',
+                              server=run_mock,
+                              user="root",
+                              password='Puef8poh2tei9AeB',
+                              domain='WORKGROUP')
