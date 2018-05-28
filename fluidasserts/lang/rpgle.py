@@ -109,3 +109,41 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
                                     file_hash(code_file)),
                        refs='rpg/inicializar-variables/')
     return result
+
+
+@track
+def has_generic_exceptions(rpg_dest: str) -> bool:
+    """
+    Search for on-error empty.
+
+    See `FLUIDDefends
+    <https://fluidattacks.com/web/es/rules/161/>`_.
+
+    :param rpg_dest: Path to a RPG source or directory.
+    """
+    tk_on = Keyword('on')
+    tk_error = Keyword('error')
+    tk_monitor = tk_on + Literal('-') + tk_error + Literal(';')
+
+    result = False
+    try:
+        matches = lang_helper.check_grammar(tk_monitor, rpg_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code has empty monitors',
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code has not empty monitors',
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result

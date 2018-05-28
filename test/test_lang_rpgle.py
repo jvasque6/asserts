@@ -45,6 +45,15 @@ def test_has_unitialized_in_dir_open():
     assert rpgle.has_unitialized_vars(CODE_DIR)
 
 
+def test_has_generic_exceptions_open():
+    """Code has empty monitors."""
+    assert rpgle.has_generic_exceptions(INSECURE_CODE)
+
+
+def test_has_generic_exceptions_in_dir_open():
+    """Code has empty monitors."""
+    assert rpgle.has_generic_exceptions(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -60,3 +69,9 @@ def test_has_unitialized_close():
     """Code has unitialized variables."""
     assert not rpgle.has_unitialized_vars(SECURE_CODE)
     assert not rpgle.has_unitialized_vars(NON_EXISTANT_CODE)
+
+
+def test_has_generic_exceptions_close():
+    """Code has empty monitors."""
+    assert not rpgle.has_generic_exceptions(SECURE_CODE)
+    assert not rpgle.has_generic_exceptions(NON_EXISTANT_CODE)
