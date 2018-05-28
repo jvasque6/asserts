@@ -8,10 +8,7 @@ This module allows to check ``CAPTCHA`` vulnerabilities.
 
 
 # standard imports
-try:
-    import Image
-except ImportError:
-    from PIL import Image
+from PIL import Image
 
 # 3rd party imports
 import pytesseract
