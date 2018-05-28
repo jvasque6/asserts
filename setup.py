@@ -46,7 +46,7 @@ setup(
         'Topic :: Security',
         'Topic :: Software Development :: Testing',
         'Topic :: Software Development :: Quality Assurance',
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Operating System :: OS Independent',
         'Programming Language :: Python :: 3',
         'Intended Audience :: Developers',
