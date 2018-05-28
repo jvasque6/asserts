@@ -169,7 +169,7 @@ def is_os_syncookies_disabled(server: str, username: str, password: str,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if int(out) == 1:
+    if out == b'1':
         show_close('{} server has syncookies enabled'.
                    format(server), details=dict(result=out.decode('utf-8')))
         result = False
