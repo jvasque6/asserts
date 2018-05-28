@@ -45,6 +45,16 @@ def test_has_ssl_disabled_in_dir_open():
     """Config file has SSL disabled."""
     assert dotnetconfig.has_ssl_disabled(CODE_DIR)
 
+
+def test_has_debug_enabled_open():
+    """Config file has debug enabled."""
+    assert dotnetconfig.has_debug_enabled(INSECURE_WEBCONF)
+
+
+def test_has_debug_enabled_in_dir_open():
+    """Config file has debug enabled."""
+    assert dotnetconfig.has_debug_enabled(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -60,3 +70,9 @@ def test_has_ssl_disabled_close():
     """Config file has SSL disabled."""
     assert not dotnetconfig.has_ssl_disabled(SECURE_APPHOSTCONF)
     assert not dotnetconfig.has_ssl_disabled(NON_EXISTANT_CODE)
+
+
+def test_has_debug_enabled_close():
+    """Config file has debug enabled."""
+    assert not dotnetconfig.has_debug_enabled(SECURE_WEBCONF)
+    assert not dotnetconfig.has_debug_enabled(NON_EXISTANT_CODE)

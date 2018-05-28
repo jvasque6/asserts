@@ -130,3 +130,48 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
+
+
+@track
+def has_debug_enabled(webconf_dest: str) -> bool:
+    """
+    Check if debug flag is enabled in Web.config.
+
+    Search for debug tag in compilation section in an Web.config source file
+    or package.
+
+    :param webconf_dest: Path to a Web.config source file or
+    package.
+    """
+    tk_tag_s, _ = makeXMLTags('system.web')
+    tk_compilation, _ = makeXMLTags('compilation')
+    tag_no_comm = tk_compilation.ignore(htmlComment)
+    tk_comp_debug = copy(tag_no_comm)
+    tk_comp_debug.setParseAction(withAttribute(debug='true'))
+    result = False
+    try:
+        sysweb_tag = lang_helper.check_grammar(tk_tag_s, webconf_dest,
+                                               LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=webconf_dest))
+        return False
+
+    for code_file, lines in sysweb_tag.items():
+        debug_tags = lang_helper.block_contains_grammar(tk_comp_debug,
+                                                        code_file,
+                                                        lines,
+                                                        _get_block)
+        if debug_tags:
+            show_open('Debug is enabled',
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in lines])))
+            result = True
+        else:
+            show_close('Debug is disabled',
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
