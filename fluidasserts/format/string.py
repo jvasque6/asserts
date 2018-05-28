@@ -6,7 +6,7 @@ This module allows to check Password and other text vulnerabilities.
 """
 
 # standard imports
-# None
+import pkg_resources
 
 # 3rd party imports
 # None
@@ -33,7 +33,8 @@ def _check_password_strength(password: str, length: int) -> bool:
     :returns: False if all conditions are met (secure),
     True otherwise (insecure).
     """
-    dictionary = 'static/wordlists/password.lst'
+    static_path = pkg_resources.resource_filename('fluidasserts', 'static/')
+    dictionary = static_path + 'wordlists/password.lst'
 
     caps = sum(1 for c in password if c.isupper())
     lower = sum(1 for c in password if c.islower())
@@ -135,7 +136,8 @@ def is_ssid_insecure(ssid: str) -> bool:
     :param ssid: SSID to be tested.
     :returns: True if insecure, False if secure.
     """
-    dictionary = 'static/wordlists/password.lst'
+    static_path = pkg_resources.resource_filename('fluidasserts', 'static/')
+    dictionary = static_path + 'wordlists/password.lst'
 
     with open(dictionary) as dict_fd:
         words = [x.rstrip() for x in dict_fd.readlines()]
