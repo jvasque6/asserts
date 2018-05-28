@@ -14,6 +14,7 @@ This module allows to check Linux vulnerabilities.
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper.ssh_helper import ssh_exec_command
 from fluidasserts.utils.decorators import track
 
@@ -166,9 +167,12 @@ def is_os_syncookies_disabled(server: str, username: str, password: str,
     """
     result = True
     cmd = 'sysctl -q -n net.ipv4.tcp_syncookies'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
+    out, err = ssh_exec_command(server, username, password, cmd,
+                                ssh_config)
 
+    if err:
+        show_unknown('Error checking', details=dict(error=err.decode('utf-8')))
+        return False
     if out == b'1':
         show_close('{} server has syncookies enabled'.
                    format(server), details=dict(result=out.decode('utf-8')))
