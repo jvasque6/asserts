@@ -14,6 +14,8 @@ Simply ::
 
    pip3 install -U fluidasserts
 
+Note that ``Asserts`` runs only with ``Python`` 3.
+
 Usage
 =====
 
