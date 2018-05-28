@@ -34,6 +34,14 @@ OS_PORT = 22
 @pytest.mark.parametrize('run_mock',
                          [('os:hard', {'22/tcp': OS_PORT})],
                          indirect=True)
+
+def test_min_priv_enabled_close(run_mock):
+    """Secure umask?."""
+    assert not linux_generic.is_os_min_priv_disabled(run_mock,
+                                                     NONPRIV_USER,
+                                                     NONPRIV_PASS)
+
+
 def test_os_sudo_enabled_close(run_mock):
     """Sudo enabled?."""
     assert not linux_generic.is_os_sudo_disabled(run_mock,

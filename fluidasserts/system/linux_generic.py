@@ -34,13 +34,13 @@ def is_os_min_priv_disabled(server: str, username: str, password: str,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if out == '0027':
+    if out == b'0027':
         show_close('{} server has secure default privileges'.
-                   format(server), details=dict(umask=out))
+                   format(server), details=dict(umask=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has insecure default privileges'.
-                  format(server), details=dict(umask=out))
+                  format(server), details=dict(umask=out.decode('utf-8')))
         result = True
     return result
 
@@ -63,11 +63,11 @@ def is_os_sudo_disabled(server: str, username: str, password: str,
 
     if out:
         show_close('{} server has sudo (or like) installed'.
-                   format(server), details=dict(paths=out))
+                   format(server), details=dict(paths=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has not sudo (or like) installed'.
-                  format(server), details=dict(paths=out))
+                  format(server), details=dict(paths=out.decode('utf-8')))
         result = True
     return result
 
@@ -90,11 +90,11 @@ def is_os_compilers_installed(server: str, username: str, password: str,
 
     if not out:
         show_close('{} server has not compilers installed'.
-                   format(server), details=dict(paths=out))
+                   format(server), details=dict(paths=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has compilers installed'.format(server),
-                  details=dict(paths=out))
+                  details=dict(paths=out.decode('utf-8')))
         result = True
     return result
 
@@ -117,11 +117,11 @@ def is_os_antimalware_not_installed(server: str, username: str, password: str,
 
     if out:
         show_close('{} server has an antivirus installed'.format(server),
-                   details=dict(paths=out))
+                   details=dict(paths=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has not an antivirus installed'.
-                  format(server), details=dict(paths=out))
+                  format(server), details=dict(paths=out.decode('utf-8')))
         result = True
     return result
 
@@ -144,11 +144,11 @@ def is_os_remote_admin_enabled(server: str, username: str, password: str,
 
     if not out:
         show_close('{} server has not remote admin login enabled'.
-                   format(server), details=dict(result=out))
+                   format(server), details=dict(result=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has remote admin login enabled'.
-                  format(server), details=dict(result=out))
+                  format(server), details=dict(result=out.decode('utf-8')))
         result = True
     return result
 
@@ -169,17 +169,12 @@ def is_os_syncookies_disabled(server: str, username: str, password: str,
     out, _ = ssh_exec_command(server, username, password, cmd,
                               ssh_config)
 
-    if not out:
-        show_close('{} server has syncookies enabled'.
-                   format(server), details=dict(result=out))
-        return False
-
     if int(out) == 1:
         show_close('{} server has syncookies enabled'.
-                   format(server), details=dict(result=out))
+                   format(server), details=dict(result=out.decode('utf-8')))
         result = False
     else:
         show_open('{} server has syncookies disabled'.
-                  format(server), details=dict(result=out))
+                  format(server), details=dict(result=out.decode('utf-8')))
         result = True
     return result
