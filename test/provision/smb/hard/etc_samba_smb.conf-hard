@@ -12,6 +12,7 @@
  map to guest = never
  dns proxy = no
  restrict anonymous = 2
+ server signing = mandatory
 #============================ Share Definitions ==============================
 
 #### Public Share ####

@@ -40,3 +40,11 @@ def test_has_dirlisting_open(run_mock):
                               user="root",
                               password='Puef8poh2tei9AeB',
                               domain='WORKGROUP')
+
+
+def test_is_signing_disabled_open(run_mock):
+    """SMB connection signed?."""
+    assert smb.is_signing_disabled(server=run_mock,
+                                   user="root",
+                                   password='Puef8poh2tei9AeB',
+                                   domain='WORKGROUP')

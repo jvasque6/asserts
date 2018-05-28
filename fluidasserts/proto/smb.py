@@ -108,3 +108,29 @@ def is_anonymous_enabled(server: str = None,
     show_open('Anonymous login enabled',
               details=dict(domain=domain, user=user, server=server))
     return True
+
+
+@track
+def is_signing_disabled(server, user, password, domain='WORKGROUP'):
+    """
+    Check if SMB connection uses signing.
+
+    :param server: The NetBIOS machine name of the remote server.
+    :param user: Username to authenticate SMB connection.
+    :param password: Password for given user.
+    :param domain: The network domain/workgroup. Defaults to 'WORKGROUP'
+    """
+    conn = _smb_connect(server, user, password, domain)
+
+    if not conn:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, user=user, server=server))
+
+        return False
+    if conn.is_signing_active:
+        show_close('SMB has signing active',
+                   details=dict(domain=domain, server=server, user=user))
+        return False
+    show_open('SMB has signing disabled',
+              details=dict(domain=domain, server=server, user=user))
+    return True
