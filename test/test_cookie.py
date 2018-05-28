@@ -23,6 +23,7 @@ from fluidasserts.helper import http_helper
 # Constants
 #
 MOCK_SERVICE = 'http://localhost:5000'
+NON_EXISTANT = 'https://nonexistant.fluidattacks.com'
 
 
 @pytest.fixture(scope='module')
@@ -57,6 +58,7 @@ def test_has_not_secure_set_close():
     url = '%s/http/cookies/secure/ok' % (MOCK_SERVICE)
     cookie_name = 'JSESSID'
     assert not cookie.has_not_secure_set(cookie_name, url)
+    assert not cookie.has_not_secure_set(cookie_name, NON_EXISTANT)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -73,6 +75,7 @@ def test_has_not_httponly_set_close():
     url = '%s/http/cookies/http_only/ok' % (MOCK_SERVICE)
     cookie_name = 'JSESSID'
     assert not cookie.has_not_httponly_set(cookie_name, url)
+    assert not cookie.has_not_httponly_set(cookie_name, NON_EXISTANT)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -82,8 +85,7 @@ def test_has_not_httponly_in_cookiejar_open():
     cookie_name = 'JSESSID'
     sess = http_helper.HTTPSession(url)
     assert cookie.has_not_httponly_in_cookiejar(cookie_name, sess.cookies)
-    assert cookie.has_not_httponly_in_cookiejar(cookie_name, None)
-    assert cookie.has_not_httponly_in_cookiejar(None, sess.cookies)
+
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -93,6 +95,8 @@ def test_has_not_httponly_in_cookiejar_close():
     cookie_name = 'JSESSID'
     sess = http_helper.HTTPSession(url)
     assert not cookie.has_not_httponly_in_cookiejar(cookie_name, sess.cookies)
+    assert not cookie.has_not_httponly_in_cookiejar(cookie_name, None)
+    assert not cookie.has_not_httponly_in_cookiejar(None, sess.cookies)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -102,8 +106,6 @@ def test_has_not_secure_in_cookiejar_open():
     cookie_name = 'JSESSID'
     sess = http_helper.HTTPSession(url)
     assert cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
-    assert cookie.has_not_secure_in_cookiejar(cookie_name, None)
-    assert cookie.has_not_secure_in_cookiejar(None, sess.cookies)
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -113,3 +115,5 @@ def test_has_not_secure_in_cookiejar_close():
     cookie_name = 'JSESSID'
     sess = http_helper.HTTPSession(url)
     assert not cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
+    assert not cookie.has_not_secure_in_cookiejar(cookie_name, None)
+    assert not  cookie.has_not_secure_in_cookiejar(None, sess.cookies)
