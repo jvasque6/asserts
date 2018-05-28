@@ -16,6 +16,8 @@ Simply ::
 
 Note that ``Asserts`` runs only with ``Python`` 3.
 
+See more details in the :doc:`setup` page.
+
 Usage
 =====
 
@@ -31,6 +33,7 @@ whether the vulnerability
 :func:`.has_sqli`
 is still open
 or has been closed: ::
+
    ---
    # FLUIDAsserts (v. 0.20180525.1529)
    #  ___

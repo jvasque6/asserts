@@ -14,7 +14,7 @@ Submodules
    fluidasserts.lang.javascript
    fluidasserts.lang.python
    fluidasserts.lang.rpgle
-   fluidasserts.lang.webconfig
+   fluidasserts.lang.dotnetconfig
 
 Module contents
 ---------------
