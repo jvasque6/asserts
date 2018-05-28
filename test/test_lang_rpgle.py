@@ -46,13 +46,23 @@ def test_has_unitialized_in_dir_open():
 
 
 def test_has_generic_exceptions_open():
-    """Code has empty monitors."""
+    """Code has empty on-error."""
     assert rpgle.has_generic_exceptions(INSECURE_CODE)
 
 
 def test_has_generic_exceptions_in_dir_open():
-    """Code has empty monitors."""
+    """Code has empty on-error."""
     assert rpgle.has_generic_exceptions(CODE_DIR)
+
+
+def test_swallows_exceptions_open():
+    """Code swallows exceptions."""
+    assert rpgle.swallows_exceptions(INSECURE_CODE)
+
+
+def test_swallows_exceptions_in_dir_open():
+    """Code swallows exceptions."""
+    assert rpgle.swallows_exceptions(CODE_DIR)
 
 #
 # Closing tests
@@ -72,6 +82,12 @@ def test_has_unitialized_close():
 
 
 def test_has_generic_exceptions_close():
-    """Code has empty monitors."""
+    """Code has empty on-error."""
     assert not rpgle.has_generic_exceptions(SECURE_CODE)
     assert not rpgle.has_generic_exceptions(NON_EXISTANT_CODE)
+
+
+def test_swallows_exceptions_close():
+    """Code swallows exceptions."""
+    assert not rpgle.swallows_exceptions(SECURE_CODE)
+    assert not rpgle.swallows_exceptions(NON_EXISTANT_CODE)

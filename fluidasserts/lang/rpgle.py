@@ -11,7 +11,7 @@ This module allows to check RPGLE code vulnerabilities.
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
-                       NotAny, alphas, alphanums, nums)
+                       NotAny, alphas, alphanums, nums, cppStyleComment)
 
 # local imports
 from fluidasserts.helper import lang_helper
@@ -26,6 +26,16 @@ LANGUAGE_SPECS = {
     'block_comment_end': None,
     'line_comment': ['//', '*'],
 }  # type: dict
+
+
+def _get_block(file_lines, line) -> str:
+    """
+    Return a C# block of code beginning in line.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    return "\n".join(file_lines[line - 1:])
 
 
 @track
@@ -116,13 +126,13 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
     """
     Search for on-error empty.
 
-    See `FLUIDDefends
+    See `FLUIDRules
     <https://fluidattacks.com/web/es/rules/161/>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
     """
-    tk_on = Keyword('on')
-    tk_error = Keyword('error')
+    tk_on = CaselessKeyword('on')
+    tk_error = CaselessKeyword('error')
     tk_monitor = tk_on + Literal('-') + tk_error + Literal(';')
 
     result = False
@@ -143,6 +153,50 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
             result = True
         else:
             show_close('Code has not empty monitors',
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
+
+
+@track
+def swallows_exceptions(rpg_dest: str) -> bool:
+    """
+    Search for on-error without code.
+
+    See `FLUIDRules
+    <https://fluidattacks.com/web/es/rules/075>`_.
+
+    :param rpg_dest: Path to a RPG source or directory.
+    """
+    tk_on = CaselessKeyword('on')
+    tk_error = CaselessKeyword('error')
+    tk_code = Word(nums)
+    tk_monitor = tk_on + Literal('-') + tk_error + Optional(tk_code) + \
+        Literal(';')
+    tk_end_mon = CaselessKeyword('endmon') + Literal(';')
+    prs_sw = (tk_monitor + tk_end_mon).ignore(cppStyleComment)
+    result = False
+    try:
+        matches = lang_helper.check_grammar(tk_monitor, rpg_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
+        return False
+    for code_file, lines in matches.items():
+        vulns = lang_helper.block_contains_grammar(prs_sw,
+                                                   code_file, lines,
+                                                   _get_block)
+        if vulns:
+            show_open('Code swallows exceptions',
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not swallows exceptions',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
