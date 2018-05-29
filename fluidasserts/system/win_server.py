@@ -9,18 +9,19 @@ This module allows to check Windows Server vulnerabilities.
 import re
 
 # 3rd party imports
-# None
+import requests
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper.winrm_helper import winrm_exec_command
 from fluidasserts.utils.decorators import track
 
 
 @track
-def is_os_compilers_installed(server: str, username: str,
-                              password: str) -> bool:
+def are_compilers_installed(server: str, username: str,
+                            password: str) -> bool:
     """
     Check if there is any compiler installed in Windows Server.
 
@@ -32,7 +33,13 @@ def is_os_compilers_installed(server: str, username: str,
     cmd = b'reg query \
 "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s'
 
-    installed_software = winrm_exec_command(server, username, password, cmd)
+    try:
+        installed_software = winrm_exec_command(server, username, password,
+                                                cmd)
+    except requests.exceptions.ConnectionError:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username))
+        return False
     installed_compilers = 0
 
     for compiler in common_compilers:
@@ -52,8 +59,8 @@ def is_os_compilers_installed(server: str, username: str,
 
 
 @track
-def is_os_antimalware_not_installed(server: str, username: str,
-                                    password: str) -> bool:
+def is_antimalware_not_installed(server: str, username: str,
+                                 password: str) -> bool:
     """
     Check if there is any antimalware installed in Windows Server.
 
@@ -65,7 +72,14 @@ def is_os_antimalware_not_installed(server: str, username: str,
                  'Panda', 'Sophos', 'McAfee', 'Eset']
     cmd = b'reg query \
 "HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall" /s'
-    installed_software = winrm_exec_command(server, username, password, cmd)
+
+    try:
+        installed_software = winrm_exec_command(server, username, password,
+                                                cmd)
+    except requests.exceptions.ConnectionError:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username))
+        return False
     installed_av = 0
 
     for antivirus in common_av:
@@ -85,7 +99,7 @@ def is_os_antimalware_not_installed(server: str, username: str,
 
 
 @track
-def is_os_syncookies_disabled(server: str) -> bool:
+def are_syncookies_disabled(server: str) -> bool:
     """
     Check if SynCookies or similar is enabled in Windows Server.
 
@@ -100,8 +114,8 @@ def is_os_syncookies_disabled(server: str) -> bool:
 
 
 @track
-def is_protected_users_disabled(server: str, username: str,
-                                password: str) -> bool:
+def are_protected_users_disabled(server: str, username: str,
+                                 password: str) -> bool:
     """
     Check if protected users is enabled on system.
 
@@ -116,7 +130,13 @@ def is_protected_users_disabled(server: str, username: str,
 "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Component\
 Based Servicing\\Packages" /s'
 
-    installed_software = winrm_exec_command(server, username, password, cmd)
+    try:
+        installed_software = winrm_exec_command(server, username, password,
+                                                cmd)
+    except requests.exceptions.ConnectionError:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username))
+        return False
     installed_patches = 0
 
     for patch in security_patches:

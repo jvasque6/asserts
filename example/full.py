@@ -1,7 +1,7 @@
 #/usr/bin/python
 
 from fluidasserts.system import linux_generic
-from fluidasserts.system import windows_server_2008_plus
+from fluidasserts.system import win_server
 from fluidasserts.format import string
 from fluidasserts.format import x509
 #from fluidasserts.format import cookie
@@ -24,10 +24,10 @@ from fluidasserts.proto import ftp
 #linux_generic.is_os_remote_admin_enabled(server, username, password,
 #linux_generic.is_os_syncookies_disabled(server, username, password,
 
-#windows_server_2008_plus.is_os_compilers_installed(server, username, password)
-#windows_server_2008_plus.is_os_antimalware_not_installed(server, username, password)
-#windows_server_2008_plus.is_os_syncookies_disabled(server)
-#windows_server_2008_plus.is_protected_users_disabled(server, username, password)
+#win_server.is_os_compilers_installed(server, username, password)
+#win_server.is_os_antimalware_not_installed(server, username, password)
+#win_server.is_os_syncookies_disabled(server)
+#win_server.is_protected_users_disabled(server, username, password)
 
 #password = 'uso4Suzi'
 #string.is_user_password_insecure(password)

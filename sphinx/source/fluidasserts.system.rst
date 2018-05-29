@@ -7,7 +7,7 @@ Submodules
 .. toctree::
 
    fluidasserts.system.linux_generic
-   fluidasserts.system.windows_server_2008_plus
+   fluidasserts.system.win_server
 
 Module contents
 ---------------
