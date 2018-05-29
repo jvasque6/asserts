@@ -12,6 +12,12 @@ public class SwitchDefaultOpen{
       rnd1.NextBytes(bytes1);
       rnd2.NextBytes(bytes2);
 
+      RijndaelManaged rjndl = new RijndaelManaged();
+      rjndl.KeySize = 64;
+      rjndl.BlockSize = 256;
+      rjndl.Mode = CipherMode.ECB;
+      ICryptoTransform transform = rjndl.CreateEncryptor();
+
       string monthString;
       switch (month)
       {

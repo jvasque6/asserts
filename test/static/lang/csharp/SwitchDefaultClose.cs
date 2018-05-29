@@ -15,6 +15,12 @@ class SwitchDefaultClose
 
       var randomDouble = BitConverter.ToDouble(byteArray2, 0);
 
+      RijndaelManaged rjndl = new RijndaelManaged();
+      rjndl.KeySize = 256;
+      rjndl.BlockSize = 256;
+      rjndl.Mode = CipherMode.CBC;
+      ICryptoTransform transform = rjndl.CreateEncryptor();
+
       string monthString;
       switch (month)
       {

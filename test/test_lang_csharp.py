@@ -107,6 +107,16 @@ def test_uses_sha1_hash_in_dir_open():
     assert csharp.uses_sha1_hash(CODE_DIR)
 
 
+def test_uses_ecb_encryption_mode_open():
+    """Search ECB Encryption Mode usage."""
+    assert csharp.uses_ecb_encryption_mode(INSECURE_RANDOM)
+
+
+def test_uses_ecb_encryption_mode_in_dir_open():
+    """Search ECB Encryption Mode usage."""
+    assert csharp.uses_ecb_encryption_mode(CODE_DIR)
+
+
 #
 # Closing tests
 #
@@ -152,3 +162,9 @@ def test_uses_sha1_hash_close():
     """Search MD5 hash calls."""
     assert not csharp.uses_sha1_hash(SECURE_CODE)
     assert not csharp.uses_sha1_hash(NON_EXISTANT_CODE)
+
+
+def test_uses_ecb_encryption_mode_close():
+    """Search ECB Encryption Mode usage."""
+    assert not csharp.uses_ecb_encryption_mode(SECURE_CODE)
+    assert not csharp.uses_ecb_encryption_mode(NON_EXISTANT_CODE)

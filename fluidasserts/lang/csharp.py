@@ -346,3 +346,41 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
+
+
+def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
+    """
+    Check if code uses ECB as encryption mode.
+
+    :param csharp_dest: Path to a C# source file or package.
+    """
+    method = "Mode = CipherMode.ECB"
+    tk_eq = Literal('=')
+    tk_obj = SkipTo(tk_eq)
+    tk_cm = CaselessKeyword('ciphermode')
+    tk_ecb = CaselessKeyword('ecb')
+    call_function = tk_obj + tk_eq + tk_cm + Literal('.') + tk_ecb
+
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
