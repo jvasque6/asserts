@@ -1,4 +1,5 @@
 ---
+
 environment:
 
   matrix:
@@ -15,7 +16,8 @@ install:
   - "%PYTHON%\\python.exe setup.py bdist_egg"
   - "%PYTHON%\\python.exe setup.py sdist"
   - FOR /F %%P IN ('dir /b /S "build\dist\*.zip"') DO
-      %PYTHON%\\python.exe -m pip install -U %%P
+      %PYTHON%\\python.exe -m pip install -U %%P & SET _VER=%%~NXP
+  - appveyor UpdateBuild -Version "%_VER:~13,-4%"
 
 build: false
 
