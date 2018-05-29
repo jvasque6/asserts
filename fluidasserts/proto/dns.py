@@ -115,7 +115,7 @@ def has_cache_poison(domain: str, nameserver: str) -> bool:
     result = True
     try:
         response = myresolver.query(name, 'DNSKEY')
-    except dns.exception.Timeout:
+    except (dns.exception.Timeout, dns.exception.SyntaxError):
         show_unknown('Could not connect',
                      details=dict(domain=domain, nameserver=nameserver))
         return False

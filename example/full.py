@@ -53,18 +53,18 @@ smtp.has_vrfy(server, port=25)
 
 #webservices.soap_is_enable(wsdl)
 
-domain = 'fluid.la'
-nameserver = 'ns-79.awsdns-09.com.'
+domain = 'fluidattacks.com'
+nameserver = '205.251.192.79'
 dns.is_xfr_enabled(domain, nameserver)
 dns.is_dynupdate_enabled(domain, nameserver)
 dns.has_cache_poison(domain, nameserver)
 dns.has_cache_snooping(nameserver)
 dns.has_recursion(nameserver)
 
-server = 'fluid.la'
+server = 'fluidattacks.com'
 tcp.is_port_open(server, port=3389)
 
-host = 'fluid.la'
+host = 'fluidattacks.com'
 ssl.allows_anon_ciphers(host,port=443)
 ssl.allows_weak_ciphers(host,port=443)
 ssl.has_beast(host,port=443)
@@ -89,7 +89,7 @@ x509.is_cert_validity_lifespan_unsafe(host,port=443)
 #ftp.is_admin_enabled(ip_address, password, username=ADMIN_USERNAME)
 #ftp.is_version_visible(ip_address, port=PORT)
 
-url = 'https://fluid.la'
+url = 'https://fluidattacks.com'
 http.is_header_x_asp_net_version_present(url)
 http.is_header_access_control_allow_origin_missing(url)
 http.is_header_cache_control_missing(url)
@@ -107,7 +107,7 @@ http.is_basic_auth_enabled(url)
 http.has_trace_method(url)
 http.has_delete_method(url)
 http.has_put_method(url)
-http.has_dirlisting('https://fluid.la/icons')
+http.has_dirlisting('https://fluidattacks.com/icons')
 #http.has_sqli(url, expect=None, params=None, data='', cookies=None)
 #http.has_xss(url, expect, params=None, data='', cookies=None)
 #http.has_command_injection(url, expect, params=None, data='', cookies=None)
@@ -120,15 +120,10 @@ http.has_dirlisting('https://fluid.la/icons')
 #http.has_hpp(url, expect, params=None, data='', cookies=None)
 #http.has_insecure_upload(url, expect, file_param, file_path, params=None,
 http.is_sessionid_exposed(url)
-server = 'fluid.la'
+server = 'fluidattacks.com'
 http.is_version_visible(server, port=80)
 http.is_version_visible(server, ssl=True, port=443)
-text = 'in customers and users of the applications'
-http.has_not_text('https://fluid.la', text)
-text = 'Blog de FLUID | Expertos en Ethical Hacking - Pentesting'
-http.has_not_text('https://fluid.la/blog', text)
-text = 'Sus datos han sido registrados y pronto nos comunicaremos con usted.'
-http.has_not_text('https://fluid.la/es/servicios/confirmacion/', text)
+text = 'Continuous Hacking'
+http.has_not_text('https://fluidattacks.com', text)
 
-
-http.is_not_https_required('http://fluid.la')
+http.is_not_https_required('http://fluidattacks.com')
