@@ -112,3 +112,37 @@ which provides means to specify, in particular,
 optional and multiple return types.
 Type consistency will be checked by MyPy in CI time,
 but not strictly.
+
+References
+----------
+
+The following pages contain some ideas
+to keep in mind when developing ``FLUIDAsserts``:
+
+* http://haacked.com/archive/2007/09/21/unit-testing-security-example.aspx/
+* https://www.owasp.org/index.php/OWASP_Secure_TDD_Project
+* https://dadario.com.br/security-unit-tests-are-important/
+* http://owasp.blogspot.com.co/2012/08/owasp-xelenium-security-unit-tests.html
+* https://www.owasp.org/images/9/99/AutomatedSecurityTestingofWebApplications-StephendeVries.pdf
+* https://www.owasp.org/images/6/62/OWASPAppSecEU2006_SecurityTestingthruAutomatedSWTests.ppt
+* https://spring.io/blog/2014/05/07/preview-spring-security-test-method-security
+* http://www.agiletestingframework.com/atf/testing/security-testing/
+* http://blogs.adobe.com/security/2014/07/overview-of-behavior-driven-development.html
+* http://www.hugeinc.com/ideas/perspective/continuous-security
+* https://wiki.mozilla.org/Security/Projects/Minion
+* http://devops.com/2015/04/06/automated-security-testing-continuous-delivery-pipeline/
+* https://www.continuumsecurity.net/bdd-intro.html
+* http://blog.joda.org/2004/11/testing-security-permission_5894.html
+* http://www.ibm.com/developerworks/java/library/j-fuzztest/index.html
+* http://howtodoinjava.com/junit/how-to-unit-test-spring-security-authentication-with-junit/
+* https://blog.box.com/blog/a-baseline-approach-to-security-testing/
+* http://morelia.readthedocs.io/en/latest/gherkin.html#gherkin
+* https://dzone.com/articles/making-web-secure-one-unit
+* https://www.linkedin.com/in/stephen-de-vries-4185a8
+* http://www.slideshare.net/StephendeVries2/automating-security-tests-for-continuous-integration
+* http://www.slideshare.net/StephendeVries2/continuous-security-testing-with-devops
+* http://lettuce.it/tutorial/simple.html
+* https://java.awsblog.com/post/TxDPKO4T5U0QIH/DevOps-Meets-Security-Security-Testing-Your-AWS-Application-Part-I-Unit-Testing
+* https://github.com/OWASP/OWASP-Testing-Guide/blob/master/2-Introduction/2.5%20Security%20Tests%20Integrated%20in%20Development%20and%20Testing%20Workflows.md
+* https://docs.hiptest.net/writing-scenarios-with-gherkin-syntax/
+* http://www.arachni-scanner.com/screenshots/web-user-interface/
