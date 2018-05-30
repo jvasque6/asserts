@@ -112,8 +112,10 @@ env.Alias('docst', docst_results)
 sphinx_results = ['#build/sphinxdoc/index.html']
 env.Command(
     source=[source_files],
-    action=['mkdir -p public/ && tox -c conf/tox.ini -- \
-                 - sphinx-build -a sphinx/source/ public/'],
+    action=['mkdir -p public/ \
+             && tox -c conf/tox.ini -- \
+                sphinx-apidoc -efM fluidasserts -o sphinx/source && \
+                sphinx-build -a sphinx/source/ public/'],
     target=sphinx_results,
 )
 env.Alias('sphinxdoc', sphinx_results)
