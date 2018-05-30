@@ -1,5 +1,10 @@
 fluidasserts.syst package
-===========================
+=========================
+
+.. automodule:: fluidasserts.syst
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 Submodules
 ----------
@@ -9,10 +14,3 @@ Submodules
    fluidasserts.syst.linux
    fluidasserts.syst.win
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.syst
-    :members:
-    :undoc-members:
-    :show-inheritance:

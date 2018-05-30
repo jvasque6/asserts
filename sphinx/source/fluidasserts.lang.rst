@@ -1,6 +1,11 @@
 fluidasserts.lang package
 =========================
 
+.. automodule:: fluidasserts.lang
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -9,17 +14,10 @@ Submodules
    fluidasserts.lang.core
    fluidasserts.lang.csharp
    fluidasserts.lang.docker
+   fluidasserts.lang.dotnetconfig
    fluidasserts.lang.html
    fluidasserts.lang.java
    fluidasserts.lang.javascript
    fluidasserts.lang.python
    fluidasserts.lang.rpgle
-   fluidasserts.lang.dotnetconfig
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.lang
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,5 +1,5 @@
 fluidasserts.syst.win module
-======================================================
+============================
 
 .. automodule:: fluidasserts.syst.win
     :members:

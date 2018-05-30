@@ -1,6 +1,11 @@
 fluidasserts.proto package
 ==========================
 
+.. automodule:: fluidasserts.proto
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -17,10 +22,3 @@ Submodules
    fluidasserts.proto.ssl
    fluidasserts.proto.tcp
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.proto
-    :members:
-    :undoc-members:
-    :show-inheritance:

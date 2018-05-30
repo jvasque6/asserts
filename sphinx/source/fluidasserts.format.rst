@@ -1,6 +1,11 @@
 fluidasserts.format package
 ===========================
 
+.. automodule:: fluidasserts.format
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -12,10 +17,3 @@ Submodules
    fluidasserts.format.string
    fluidasserts.format.x509
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.format
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,6 +1,11 @@
 fluidasserts.utils package
 ==========================
 
+.. automodule:: fluidasserts.utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -8,10 +13,3 @@ Submodules
 
    fluidasserts.utils.decorators
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
