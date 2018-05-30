@@ -10,7 +10,7 @@ Subpackages
     fluidasserts.helper
     fluidasserts.lang
     fluidasserts.proto
-    fluidasserts.system
+    fluidasserts.syst
     fluidasserts.utils
 
 Module contents

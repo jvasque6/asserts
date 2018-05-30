@@ -1,7 +1,7 @@
-fluidasserts.system.linux\_generic module
+fluidasserts.syst.linux\_generic module
 =========================================
 
-.. automodule:: fluidasserts.system.linux_generic
+.. automodule:: fluidasserts.syst.linux
     :members:
     :undoc-members:
     :show-inheritance:

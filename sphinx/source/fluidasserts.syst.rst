@@ -1,4 +1,4 @@
-fluidasserts.system package
+fluidasserts.syst package
 ===========================
 
 Submodules
@@ -6,13 +6,13 @@ Submodules
 
 .. toctree::
 
-   fluidasserts.system.linux_generic
-   fluidasserts.system.win_server
+   fluidasserts.syst.linux
+   fluidasserts.syst.win
 
 Module contents
 ---------------
 
-.. automodule:: fluidasserts.system
+.. automodule:: fluidasserts.syst
     :members:
     :undoc-members:
     :show-inheritance:

@@ -13,7 +13,7 @@ from __future__ import print_function
 import pytest
 
 # local imports
-from fluidasserts.system import linux_generic
+from fluidasserts.syst import linux
 import fluidasserts.utils.decorators
 
 
@@ -35,34 +35,27 @@ OS_PORT = 22
                          indirect=True)
 def test_min_priv_enabled_open(run_mock):
     """Secure umask?."""
-    assert linux_generic.is_os_min_priv_disabled(run_mock,
-                                                 NONPRIV_USER,
-                                                 NONPRIV_PASS)
+    assert linux.is_os_min_priv_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
 
 
 def test_os_sudo_enabled_open(run_mock):
     """Sudo enabled?."""
-    assert linux_generic.is_os_sudo_disabled(run_mock,
-                                             NONPRIV_USER,
-                                             NONPRIV_PASS)
+    assert linux.is_os_sudo_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
 
 
 def test_compilers_installed_open(run_mock):
     """Compiler installed?."""
-    assert linux_generic.is_os_compilers_installed(run_mock,
-                                                   NONPRIV_USER,
-                                                   NONPRIV_PASS)
+    assert linux.is_os_compilers_installed(run_mock, NONPRIV_USER,
+                                           NONPRIV_PASS)
 
 
 def test_antimalware_installed_open(run_mock):
     """Antimalware installed?."""
-    assert linux_generic.is_os_antimalware_not_installed(run_mock,
-                                                         NONPRIV_USER,
-                                                         NONPRIV_PASS)
+    assert linux.is_os_antimalware_not_installed(run_mock, NONPRIV_USER,
+                                                 NONPRIV_PASS)
 
 
 def test_remote_admin_enabled_open(run_mock):
     """Remote admin enabled?."""
-    assert linux_generic.is_os_remote_admin_enabled(run_mock,
-                                                    NONPRIV_USER,
-                                                    NONPRIV_PASS)
+    assert linux.is_os_remote_admin_enabled(run_mock, NONPRIV_USER,
+                                            NONPRIV_PASS)

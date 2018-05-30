@@ -10,8 +10,8 @@ in the appropriate package:
   such as :doc:`LDAP<fluidasserts.proto.ldap>`
 * :doc:`format<fluidasserts.format>` for formats
   such as :doc:`Cookies<fluidasserts.format.cookie>`
-* :doc:`system<fluidasserts.system>` for global OS checks
-  v.g. in :doc:`Linux<fluidasserts.system.linux_generic>`
+* :doc:`systfluidasserts.syst>` for global OS checks
+  v.g. in :doc:`Linux<fluidasserts.syst.linux>`
 
 
 New functions must be predicates i.e.

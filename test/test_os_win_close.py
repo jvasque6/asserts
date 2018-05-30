@@ -12,14 +12,12 @@ from __future__ import print_function
 # 3rd party imports
 
 # local imports
-from fluidasserts.system import win_server
+from fluidasserts.syst import win
 import fluidasserts.utils.decorators
 
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
-ADMIN_USER = 'root'
-ADMIN_PASS = 'Puef8poh2tei9AeB'
 NONPRIV_USER = 'nonpriv'
 NONPRIV_PASS = 'ahgh7xee9eewaeGh'
 OS_PORT = 22
@@ -34,24 +32,22 @@ NON_EXISTANT = '0.0.0.0'
 
 def test_compilers_installed_close():
     """Compiler installed?."""
-    assert not win_server.are_compilers_installed(NON_EXISTANT, NONPRIV_USER,
-                                                  NONPRIV_PASS)
+    assert not win.are_compilers_installed(NON_EXISTANT, NONPRIV_USER,
+                                           NONPRIV_PASS)
 
 
 def test_antimalware_installed_close():
     """Antimalware installed?."""
-    assert not win_server.is_antimalware_not_installed(NON_EXISTANT,
-                                                       NONPRIV_USER,
-                                                       NONPRIV_PASS)
+    assert not win.is_antimalware_not_installed(NON_EXISTANT, NONPRIV_USER,
+                                                NONPRIV_PASS)
 
 
 def test_protected_users_close():
     """Protected users disabled?."""
-    assert not win_server.are_protected_users_disabled(NON_EXISTANT,
-                                                       NONPRIV_USER,
-                                                       NONPRIV_PASS)
+    assert not win.are_protected_users_disabled(NON_EXISTANT, NONPRIV_USER,
+                                                NONPRIV_PASS)
 
 
 def test_syncookies_enabled_close():
     """SYN Cookies enabled?."""
-    assert not win_server.are_syncookies_disabled(NON_EXISTANT)
+    assert not win.are_syncookies_disabled(NON_EXISTANT)

@@ -30,7 +30,7 @@ setup(
         'fluidasserts',
         'fluidasserts.format',
         'fluidasserts.helper',
-        'fluidasserts.system',
+        'fluidasserts.syst',
         'fluidasserts.proto',
         'fluidasserts.lang',
         'fluidasserts.utils',

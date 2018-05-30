@@ -68,7 +68,7 @@ API Documentation
    fluidasserts.format
    fluidasserts.helper
    fluidasserts.proto
-   fluidasserts.system
+   fluidasserts.syst
    fluidasserts.utils
    fluidasserts
    modules
