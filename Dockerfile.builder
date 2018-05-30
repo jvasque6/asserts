@@ -57,7 +57,10 @@ RUN apt-get update -qq && \
         pep257 \
         twine \
         mandrill \
-        certifi && \
+        certifi \
+        gitdb2 \
+        smmap2 \
+        gitpython && \
     pip3 install pyflakes \
         mypy && \
     gem install overcommit && \

@@ -1,9 +1,18 @@
 # -*- coding: utf-8 -*-
 """Send notification email."""
 
+import os
+from git import Repo
 import mandrill
 
 API_KEY = '***REMOVED***'
+
+
+def get_changelog():
+    """Get message of last commit."""
+    repo = Repo(os.getcwd())
+    changelog = repo.git.log('-1', '--pretty=%s')
+    return changelog.rstrip()
 
 
 def send_mail(template_name, email_to, context):
@@ -24,4 +33,4 @@ def send_mail(template_name, email_to, context):
 
 
 send_mail('assertsnewversionr', ["engineering@fluidattacks.com"],
-          context={'Name': "Bob Marley"})
+          context={'changelog': get_changelog()})
