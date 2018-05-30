@@ -20,8 +20,8 @@ from fluidasserts.utils.decorators import track
 
 
 @track
-def is_os_min_priv_disabled(server: str, username: str, password: str,
-                            ssh_config: str = None) -> bool:
+def is_min_priv_disabled(server: str, username: str, password: str,
+                         ssh_config: str = None) -> bool:
     """
     Check if ``umask`` or similar is secure in ``os_linux``.
 
@@ -47,8 +47,8 @@ def is_os_min_priv_disabled(server: str, username: str, password: str,
 
 
 @track
-def is_os_sudo_disabled(server: str, username: str, password: str,
-                        ssh_config: str = None) -> bool:
+def is_sudo_disabled(server: str, username: str, password: str,
+                     ssh_config: str = None) -> bool:
     """
     Check if there's ``sudo`` or similar installed in ``os_linux``.
 
@@ -74,8 +74,8 @@ def is_os_sudo_disabled(server: str, username: str, password: str,
 
 
 @track
-def is_os_compilers_installed(server: str, username: str, password: str,
-                              ssh_config: str = None) -> bool:
+def are_compilers_installed(server: str, username: str, password: str,
+                            ssh_config: str = None) -> bool:
     """
     Check if there is any compiler installed in ``os_linux``.
 
@@ -101,8 +101,8 @@ def is_os_compilers_installed(server: str, username: str, password: str,
 
 
 @track
-def is_os_antimalware_not_installed(server: str, username: str, password: str,
-                                    ssh_config: str = None) -> bool:
+def is_antimalware_not_installed(server: str, username: str, password: str,
+                                 ssh_config: str = None) -> bool:
     """
     Check if there is any antimalware installed in ``os_linux``.
 
@@ -128,8 +128,8 @@ def is_os_antimalware_not_installed(server: str, username: str, password: str,
 
 
 @track
-def is_os_remote_admin_enabled(server: str, username: str, password: str,
-                               ssh_config: str = None) -> bool:
+def is_remote_admin_enabled(server: str, username: str, password: str,
+                            ssh_config: str = None) -> bool:
     """
     Check if admins can remotely log into ``os_linux``.
 
@@ -155,8 +155,8 @@ def is_os_remote_admin_enabled(server: str, username: str, password: str,
 
 
 @track
-def is_os_syncookies_disabled(server: str, username: str, password: str,
-                              ssh_config: str = None) -> bool:
+def are_syncookies_disabled(server: str, username: str, password: str,
+                            ssh_config: str = None) -> bool:
     """
     Check if ``SynCookies`` or similar is enabled in ``os_linux``.
 

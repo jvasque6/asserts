@@ -17,18 +17,6 @@ from fluidasserts.proto import ldap
 from fluidasserts.proto import ftp
 
 
-#linux.is_os_min_priv_disabled(server, username, password, ssh_config=None)
-#linux.is_os_sudo_disabled(server, username, password, ssh_config=None)
-#linux.is_os_compilers_installed(server, username, password,
-#linux.is_os_antimalware_not_installed(server, username, password,
-#linux.is_os_remote_admin_enabled(server, username, password,
-#linux.is_os_syncookies_disabled(server, username, password,
-
-#win.is_os_compilers_installed(server, username, password)
-#win.is_os_antimalware_not_installed(server, username, password)
-#win.is_os_syncookies_disabled(server)
-#win.is_protected_users_disabled(server, username, password)
-
 #password = 'uso4Suzi'
 #string.is_user_password_insecure(password)
 #string.is_system_password_insecure(password)

@@ -35,27 +35,25 @@ OS_PORT = 22
                          indirect=True)
 def test_min_priv_enabled_open(run_mock):
     """Secure umask?."""
-    assert linux.is_os_min_priv_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
+    assert linux.is_min_priv_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
 
 
 def test_os_sudo_enabled_open(run_mock):
     """Sudo enabled?."""
-    assert linux.is_os_sudo_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
+    assert linux.is_sudo_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
 
 
 def test_compilers_installed_open(run_mock):
     """Compiler installed?."""
-    assert linux.is_os_compilers_installed(run_mock, NONPRIV_USER,
-                                           NONPRIV_PASS)
+    assert linux.are_compilers_installed(run_mock, NONPRIV_USER, NONPRIV_PASS)
 
 
 def test_antimalware_installed_open(run_mock):
     """Antimalware installed?."""
-    assert linux.is_os_antimalware_not_installed(run_mock, NONPRIV_USER,
-                                                 NONPRIV_PASS)
+    assert linux.is_antimalware_not_installed(run_mock, NONPRIV_USER,
+                                              NONPRIV_PASS)
 
 
 def test_remote_admin_enabled_open(run_mock):
     """Remote admin enabled?."""
-    assert linux.is_os_remote_admin_enabled(run_mock, NONPRIV_USER,
-                                            NONPRIV_PASS)
+    assert linux.is_remote_admin_enabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
