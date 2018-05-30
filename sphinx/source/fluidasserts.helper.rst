@@ -1,6 +1,11 @@
 fluidasserts.helper package
 ===========================
 
+.. automodule:: fluidasserts.helper
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -13,10 +18,3 @@ Submodules
    fluidasserts.helper.ssl_helper
    fluidasserts.helper.winrm_helper
 
-Module contents
----------------
-
-.. automodule:: fluidasserts.helper
-    :members:
-    :undoc-members:
-    :show-inheritance:

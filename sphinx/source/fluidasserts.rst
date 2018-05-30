@@ -1,6 +1,11 @@
 fluidasserts package
 ====================
 
+.. automodule:: fluidasserts
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -13,10 +18,3 @@ Subpackages
     fluidasserts.syst
     fluidasserts.utils
 
-Module contents
----------------
-
-.. automodule:: fluidasserts
-    :members:
-    :undoc-members:
-    :show-inheritance:
