@@ -185,8 +185,9 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
             show_open('Forward Secrecy not enabled on site',
                       details=dict(site=site, port=port))
             return True
-    except socket.error:
-        show_unknown('Port closed', details=dict(site=site, port=port))
+    except socket.error as exc:
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
         result = False
     return result
 
@@ -210,14 +211,14 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
         show_close('SSLv3 not enabled on site',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('SSLv3 not enabled on site',
                        details=dict(site=site, port=port))
-            result = False
         else:
-            show_unknown('Port closed', details=dict(site=site, port=port))
-            result = False
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -240,14 +241,14 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
         show_close('TLSv1 not enabled on site',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('TLSv1 not enabled on site',
                        details=dict(site=site, port=port))
-            result = False
         else:
-            show_unknown('Port closed', details=dict(site=site, port=port))
-            result = False
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -271,14 +272,14 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
         show_close('Site not vulnerable to POODLE TLS attack',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('Site not vulnerable to POODLE TLS attack',
                        details=dict(site=site, port=port))
-            result = False
         else:
-            show_unknown('Port closed', details=dict(site=site, port=port))
-            result = False
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -306,13 +307,14 @@ be vulnerable to POODLE SSLv3 attack',
         show_close('Site not vulnerable to POODLE SSLv3 attack',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('Site not vulnerable to POODLE SSLv3 attack',
                        details=dict(site=site, port=port))
-            result = False
-        show_unknown('Port closed', details=dict(site=site, port=port))
-        result = False
+        else:
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -341,9 +343,9 @@ def has_breach(site: str, port: int = PORT) -> bool:
                                            compression=compression,
                                            fingerprint=fingerprint))
                     return True
-        except http_helper.ConnError:
-            show_unknown('Could not connect', details=dict(site=site,
-                                                           port=port))
+        except http_helper.ConnError as exc:
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
             return False
     show_close('Site not vulnerable to BREACH attack',
                details=dict(site=site, port=port))
@@ -369,14 +371,14 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
         show_close('Site not allows anonymous cipher suites',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('Site not allows anonymous cipher suites',
                        details=dict(site=site, port=port))
-            result = False
         else:
-            show_unknown('Port closed', details=dict(site=site, port=port))
-            result = False
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -400,14 +402,14 @@ suites', details=dict(site=site, port=port))
         show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
 suites', details=dict(site=site, port=port))
         result = False
-    except socket.error as exception:
-        if exception.errno == errno.ECONNRESET:
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
             show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
 suites', details=dict(site=site, port=port))
-            result = False
         else:
-            show_unknown('Port closed', details=dict(site=site, port=port))
-            result = False
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=exc))
     return result
 
 
@@ -436,8 +438,9 @@ to be not an enabler to BEAST attack', details=dict(site=site, port=port))
         show_close('Site not enables to BEAST attack to clients',
                    details=dict(site=site, port=port))
         result = False
-    except socket.error:
-        show_unknown('Port closed', details=dict(site=site, port=port))
+    except socket.error as exc:
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
         result = False
     return result
 
@@ -483,7 +486,8 @@ but it\'s not vulnerable to Heartbleed.',
         show_close("Site doesn't support SSL/TLS heartbeats",
                    details=dict(site=site, port=port))
         return False
-    except socket.error:
-        show_unknown('Port closed', details=dict(site=site, port=port))
+    except socket.error as exc:
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
         result = False
     return result

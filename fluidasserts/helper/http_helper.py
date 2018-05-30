@@ -112,8 +112,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           timeout=10)
                 self.response = ret
             except (requests.ConnectionError,
-                    requests.exceptions.TooManyRedirects):
-                raise ConnError
+                    requests.exceptions.TooManyRedirects) as exc:
+                raise ConnError(exc)
         else:
             try:
                 if self.data == '':
@@ -145,8 +145,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                 else:
                     self.cookies = ret.cookies
             except (requests.ConnectionError,
-                    requests.exceptions.TooManyRedirects):
-                raise ConnError
+                    requests.exceptions.TooManyRedirects) as exc:
+                raise ConnError(exc)
         return ret
 
     def formauth_by_statuscode(self, code: int) -> requests.Response:

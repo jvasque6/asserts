@@ -57,7 +57,7 @@ def ssh_user_pass(server: str, username: str, password: str,
         out = ssh_stdout.read()[:-1]
         err = ssh_stderr.read()[:-1]
     except (paramiko.ssh_exception.NoValidConnectionsError,
-            paramiko.ssh_exception.AuthenticationException)  as exc:
+            paramiko.ssh_exception.AuthenticationException) as exc:
         raise ConnError(exc)
     finally:
         ssh.close()
