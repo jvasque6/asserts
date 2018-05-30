@@ -73,6 +73,12 @@ API Documentation
    fluidasserts
    modules
 
+For developers
+==============
+
+See our :doc:`dev` section.
+
+
 Indices and tables
 ==================
 

@@ -10,7 +10,7 @@ in the appropriate package:
   such as :doc:`LDAP<fluidasserts.proto.ldap>`
 * :doc:`format<fluidasserts.format>` for formats
   such as :doc:`Cookies<fluidasserts.format.cookie>`
-* :doc:`systfluidasserts.syst>` for global OS checks
+* :doc:`syst<fluidasserts.syst>` for global OS checks
   v.g. in :doc:`Linux<fluidasserts.syst.linux>`
 
 
