@@ -9,13 +9,13 @@ This module allows to check Windows Server vulnerabilities.
 import re
 
 # 3rd party imports
-import requests
+# None
 
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper.winrm_helper import winrm_exec_command
+from fluidasserts.helper.winrm_helper import winrm_exec_command, ConnError
 from fluidasserts.utils.decorators import track
 
 
@@ -36,9 +36,10 @@ def are_compilers_installed(server: str, username: str,
     try:
         installed_software = winrm_exec_command(server, username, password,
                                                 cmd)
-    except requests.exceptions.ConnectionError:
+    except ConnError as exc:
         show_unknown('Could not connect',
-                     details=dict(server=server, username=username))
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
         return False
     installed_compilers = 0
 
@@ -76,9 +77,10 @@ def is_antimalware_not_installed(server: str, username: str,
     try:
         installed_software = winrm_exec_command(server, username, password,
                                                 cmd)
-    except requests.exceptions.ConnectionError:
+    except ConnError as exc:
         show_unknown('Could not connect',
-                     details=dict(server=server, username=username))
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
         return False
     installed_av = 0
 
@@ -109,7 +111,7 @@ def are_syncookies_disabled(server: str) -> bool:
     """
     # On Windows, SYN Cookies are enabled by default and there's no
     # way to disable it.
-    show_close('{} server has SYN Cookies enabled.'.format(server))
+    show_close('Server has SYN Cookies enabled.', details=dict(server=server))
     return False
 
 
@@ -133,9 +135,10 @@ Based Servicing\\Packages" /s'
     try:
         installed_software = winrm_exec_command(server, username, password,
                                                 cmd)
-    except requests.exceptions.ConnectionError:
+    except ConnError as exc:
         show_unknown('Could not connect',
-                     details=dict(server=server, username=username))
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
         return False
     installed_patches = 0
 

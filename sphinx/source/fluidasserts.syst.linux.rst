@@ -1,4 +1,4 @@
-fluidasserts.syst.linux\_generic module
+fluidasserts.syst.linux module
 =========================================
 
 .. automodule:: fluidasserts.syst.linux

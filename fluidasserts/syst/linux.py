@@ -15,7 +15,7 @@ This module allows to check Linux vulnerabilities.
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper.ssh_helper import ssh_exec_command
+from fluidasserts.helper.ssh_helper import ssh_exec_command, ConnError
 from fluidasserts.utils.decorators import track
 
 
@@ -32,9 +32,13 @@ def is_min_priv_disabled(server: str, username: str, password: str,
     """
     result = True
     cmd = 'umask'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
-
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd, ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if out == b'0027':
         show_close('{} server has secure default privileges'.
                    format(server), details=dict(umask=out.decode('utf-8')))
@@ -59,9 +63,13 @@ def is_sudo_disabled(server: str, username: str, password: str,
     """
     result = True
     cmd = 'which sudo'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
-
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd, ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if out:
         show_close('{} server has sudo (or like) installed'.
                    format(server), details=dict(paths=out.decode('utf-8')))
@@ -86,9 +94,13 @@ def are_compilers_installed(server: str, username: str, password: str,
     """
     result = True
     cmd = 'which cc gcc c++ g++ javac ld as nasm'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
-
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd, ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if not out:
         show_close('{} server has not compilers installed'.
                    format(server), details=dict(paths=out.decode('utf-8')))
@@ -113,9 +125,13 @@ def is_antimalware_not_installed(server: str, username: str, password: str,
     """
     result = True
     cmd = 'which clamscan avgscan'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
-
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd, ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if out:
         show_close('{} server has an antivirus installed'.format(server),
                    details=dict(paths=out.decode('utf-8')))
@@ -140,9 +156,13 @@ def is_remote_admin_enabled(server: str, username: str, password: str,
     """
     result = True
     cmd = 'grep -i "^PermitRootLogin.*yes" /etc/ssh/sshd_config'
-    out, _ = ssh_exec_command(server, username, password, cmd,
-                              ssh_config)
-
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd, ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if not out:
         show_close('{} server has not remote admin login enabled'.
                    format(server), details=dict(result=out.decode('utf-8')))
@@ -167,9 +187,14 @@ def are_syncookies_disabled(server: str, username: str, password: str,
     """
     result = True
     cmd = 'sysctl -q -n net.ipv4.tcp_syncookies'
-    out, err = ssh_exec_command(server, username, password, cmd,
-                                ssh_config)
-
+    try:
+        out, err = ssh_exec_command(server, username, password, cmd,
+                                    ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
     if err:
         show_unknown('Error checking', details=dict(error=err.decode('utf-8')))
         return False

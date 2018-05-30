@@ -17,6 +17,16 @@ import paramiko
 # none
 
 
+class ConnError(Exception):
+    """
+    A connection error occurred.
+
+    :py:exc:`paramiko.ssh_exception.AuthenticationException` wrapper exception.
+    """
+
+    pass
+
+
 def build_ssh_object() -> paramiko.client.SSHClient:
     """Build a Paramiko SSHClient object."""
     ssh = paramiko.SSHClient()
@@ -46,8 +56,9 @@ def ssh_user_pass(server: str, username: str, password: str,
         ssh_stdin.close()
         out = ssh_stdout.read()[:-1]
         err = ssh_stderr.read()[:-1]
-    except paramiko.SSHException:
-        raise
+    except (paramiko.ssh_exception.NoValidConnectionsError,
+            paramiko.ssh_exception.AuthenticationException)  as exc:
+        raise ConnError(exc)
     finally:
         ssh.close()
     return out, err
@@ -91,8 +102,8 @@ def ssh_with_config(server: str, username: str, config_file: str,
         ssh_stdin.close()
         out = ssh_stdout.read()[:-1]
         err = ssh_stderr.read()[:-1]
-    except paramiko.SSHException:
-        raise
+    except paramiko.SSHException as exc:
+        raise ConnError(exc)
     finally:
         ssh.close()
     return out, err

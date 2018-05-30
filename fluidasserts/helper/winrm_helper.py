@@ -15,10 +15,21 @@ winrm set winrm/config/client/auth @{Basic="true"}
 # None
 
 # 3rd party imports
+import requests
 import winrm
 
 # local imports
 # none
+
+
+class ConnError(Exception):
+    """
+    A connection error occurred.
+
+    :py:exc:`requests.exceptions.ConnectionError` wrapper exception.
+    """
+
+    pass
 
 
 def winrm_exec_command(server: str, username: str, password: str,
@@ -34,7 +45,8 @@ def winrm_exec_command(server: str, username: str, password: str,
     try:
         session = winrm.Session(server, auth=(username, password))
         result = session.run_cmd(command)
-    except winrm.exceptions.WinRMTransportError:
-        raise
+    except (winrm.exceptions.WinRMTransportError,
+            requests.exceptions.ConnectionError) as exc:
+        raise ConnError(exc)
 
     return result.std_out

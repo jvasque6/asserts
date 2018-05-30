@@ -1,7 +1,7 @@
-fluidasserts.syst.windows\_server\_2008\_plus module
+fluidasserts.syst.win module
 ======================================================
 
-.. automodule:: fluidasserts.syst.win_server
+.. automodule:: fluidasserts.syst.win
     :members:
     :undoc-members:
     :show-inheritance:
