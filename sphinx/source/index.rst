@@ -79,6 +79,12 @@ For developers
 See our :doc:`dev` section.
 
 
+Credits
+=======
+
+See our :doc:`credits` section for information
+about authorship, ownership and licensing.
+
 Indices and tables
 ==================
 
