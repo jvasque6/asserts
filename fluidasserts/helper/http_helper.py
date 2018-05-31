@@ -9,7 +9,6 @@ from typing import Optional, Tuple
 # 3rd party imports
 from urllib.parse import quote as quote
 
-
 from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
 from requests_ntlm import HttpNtlmAuth
@@ -148,30 +147,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                     requests.exceptions.TooManyRedirects) as exc:
                 raise ConnError(exc)
         return ret
-
-    def formauth_by_statuscode(self, code: int) -> requests.Response:
-        """
-        Authenticate using status code as verification.
-
-        :param code: Integer code of responded HTTP status, e.g. 404 or 500.
-        """
-        self.headers['Content-Type'] = \
-            'application/x-www-form-urlencoded'
-        self.headers['Accept'] = '*/*'
-
-        http_req = self.do_request()
-
-        self.is_auth = bool(http_req.status_code == code)
-
-        if http_req.cookies == {}:
-            if http_req.request._cookies != {} and \
-               self.cookies != http_req.request._cookies:
-                self.cookies = http_req.request._cookies
-        else:
-            self.cookies = http_req.cookies
-        self.response = http_req
-        self.data = ''
-        return http_req
 
     def formauth_by_response(self, text: str) -> requests.Response:
         """
