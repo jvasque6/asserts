@@ -193,8 +193,9 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
     try:
         is_method_present = _options_request(url, *args, **kwargs).headers
     except http_helper.ConnError as exc:
-        show_unknown('Could not connnect', details=dict(url=url,
-                                                        error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
     result = True
     if 'allow' in is_method_present:
@@ -231,8 +232,9 @@ def _has_insecure_header(url: str, header: str,     # noqa
         headers_info = http_session.response.headers
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError as exc:
-        show_unknown('HTTP error checking {}'.format(header),
-                     details=dict(url=url, error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
     if header == 'Access-Control-Allow-Origin':
@@ -335,8 +337,9 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
                    details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
 
@@ -367,8 +370,9 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
                                 fingerprint=fingerprint))
         return False
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
 
@@ -426,8 +430,9 @@ def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
                                 fingerprint=fingerprint))
         return False
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
 
@@ -807,8 +812,9 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
         response_url = http_session.response.url
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
     regex = r'\b(' + argument + r')\b=([a-zA-Z0-9_-]+)'
@@ -883,9 +889,9 @@ def is_not_https_required(url: str) -> bool:
                   refs='apache/configurar-soporte-https')
         return True
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)),
-                     refs='apache/configurar-soporte-https')
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
 
@@ -913,8 +919,9 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
                    details=dict(url=url, fingerprint=fingerprint))
         return False
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect',
-                     details=dict(url=url, error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
 
@@ -931,8 +938,9 @@ def is_resource_accessible(url: str, *args, **kwargs) -> bool:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError as exc:
-        show_close('Resource not available',
-                   details=dict(url=url, error=str(exc)))
+        show_close('Could not connnect to resource',
+                   details=dict(url=url,
+                                message=str(exc).replace(':', ',')))
         return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
@@ -964,8 +972,9 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError as exc:
-        show_unknown('Could not connect', details=dict(url=url,
-                                                       error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
     response_time = http_session.response.elapsed.total_seconds()
@@ -1113,8 +1122,9 @@ def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
     except http_helper.ConnError as exc:
-        show_unknown('Resource not available',
-                     details=dict(url=url, error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
 
     vsb64 = http_session.get_html_value('input', '__VIEWSTATE')
@@ -1160,8 +1170,9 @@ def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
         ntp_date = datetime.fromtimestamp(response.tx_time, tz=timezone('GMT'))
         ntp_ts = datetime.utcfromtimestamp(ntp_date.timestamp()).timestamp()
     except (KeyError, http_helper.ConnError) as exc:
-        show_unknown('Could not get date from server',
-                     details=dict(url=url, error=str(exc)))
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
     diff = ntp_ts - server_ts
 

@@ -53,9 +53,11 @@ def is_xfr_enabled(domain: str, nameserver: str) -> bool:
         show_close('Zone transfer not enabled on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except (socket.error, dns.exception.Timeout, dns.exception.FormError):
-        show_unknown('Port closed for zone transfer',
-                     details=dict(domain=domain, nameserver=nameserver))
+    except (socket.error, dns.exception.Timeout,
+            dns.exception.FormError) as exc:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         result = False
 
     return result
@@ -90,9 +92,10 @@ def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
         show_close('Zone update not enabled on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except (socket.error, dns.exception.Timeout):
-        show_unknown('Port closed for DNS update',
-                     details=dict(domain=domain, nameserver=nameserver))
+    except (socket.error, dns.exception.Timeout) as exc:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         result = False
     return result
 
@@ -116,9 +119,10 @@ def has_cache_poison(domain: str, nameserver: str) -> bool:
     try:
         response = myresolver.query(name, 'DNSKEY')
     except (dns.exception.Timeout, dns.exception.SyntaxError,
-            dns.resolver.NoNameservers):
+            dns.resolver.NoNameservers) as exc:
         show_unknown('Could not connect',
-                     details=dict(domain=domain, nameserver=nameserver))
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         return False
     except dns.resolver.NoAnswer:
         show_open('Cache poisoning possible on server',
@@ -180,9 +184,10 @@ def has_cache_snooping(nameserver: str) -> bool:
         show_close('Cache snooping not possible on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except (socket.error, dns.exception.Timeout):
-        show_unknown('Port closed for DNS update',
-                     details=dict(domain=domain, nameserver=nameserver))
+    except (socket.error, dns.exception.Timeout) as exc:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         result = False
     return result
 
@@ -216,9 +221,10 @@ def has_recursion(nameserver: str) -> bool:
         show_close('Recursion not possible on server',
                    details=dict(domain=domain, nameserver=nameserver))
         result = False
-    except (socket.error, dns.exception.Timeout):
-        show_unknown('Port closed for DNS update',
-                     details=dict(domain=domain, nameserver=nameserver))
+    except (socket.error, dns.exception.Timeout) as exc:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         result = False
     return result
 
@@ -260,7 +266,8 @@ def can_amplify(nameserver: str) -> bool:
         show_close('Amplification attack is not possible on server',
                    details=dict(nameserver=nameserver))
         return False
-    except (socket.error, dns.exception.Timeout):
-        show_unknown('Port closed for DNS update',
-                     details=dict(domain=domain, nameserver=nameserver))
+    except (socket.error, dns.exception.Timeout) as exc:
+        show_unknown('Could not connect',
+                     details=dict(domain=domain, nameserver=nameserver,
+                                  error=str(exc).replace(':', ',')))
         return False
