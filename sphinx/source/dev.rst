@@ -1,3 +1,4 @@
+======================
 Developing ``Asserts``
 ======================
 
@@ -12,7 +13,6 @@ in the appropriate package:
   such as :doc:`Cookies<fluidasserts.format.cookie>`
 * :doc:`syst<fluidasserts.syst>` for global OS checks
   v.g. in :doc:`Linux<fluidasserts.syst.linux>`
-
 
 New functions must be predicates i.e.
 they must return
@@ -84,7 +84,154 @@ It is recommended to install and
 use `overcommit <https://github.com/brigade/overcommit>`_
 locally before committing.
 
+--------------
+Required tools
+--------------
 
+Besides the runtime dependencies
+(see ...),
+you will need some dependencies
+which you can install with this command
+on a ``Debian``-based OS: ::
+
+   $ sudo apt install python3-dev python3-pip python3.5-venv git cloc scons rubygems
+
+And then some python packages via ``pip``: ::
+
+   $ pip3 install invoke configobj tox sphinx mypy
+
+Finally install the pre-commit hooks ::
+
+  $ gem install overcommit
+  $ overcommit --sign pre-commit
+
+This last step should be done after cloning the repository
+since it needs the ``overcommit.yml`` configuration file in it.
+
+You also need to install ``Docker-CE``.
+Follow the steps in `this guide <https://docs.docker.com/install/linux/docker-ce/debian/>`_.
+
+------------------------
+Version control workflow
+------------------------
+
+After receiving developer access and cloning the repository,
+setup your credentials if you haven't done so already.
+In Gitlab (from the website) and
+your local git installation (with ``git config``),
+your username must be ``loginatfluid`` v.g. ``dknuthatfluid``
+and your email must be your corporate email, v.g. ``dknuth@fluidattacks.com``.
+The name should be your real name, v.g. ``Donald Knuth``.
+
+The branching workflow is with
+``topic branches``
+but with one caveat:
+the name of the branch you work on
+must be your ``login``.
+Following the example above,
+Don should name his branch ``dknuth``.
+
+The merge strategy is by
+fast-forwards only.
+When ready to make a merge request,
+ensure that your branch is ahead of master.
+This means that
+you must integrate the latest changes
+in the ``master`` branch before your own commits, i.e.
+you should `rebase` the ``master`` branch onto your own branch.
+Don can keep up to date easily using these commands
+after finishing his commits
+without ever leaving his branch: ::
+
+   $ git fetch
+   $ git rebase origin/master
+
+If Don followed these steps,
+checking their effect with ``git log``,
+he would see this: ::
+
+   [dknuth@tex asserts]$ git commit -m "My last commit"
+   [dknuth bc53277] My last commit
+   1 file changed, 44 insertions(+)
+   [dknuth@tex asserts]$ git log --pretty=oneline --abbrev-commit
+   a201834 (HEAD -> dknuth) My last commit
+   f3dec2a (origin/master) Feature: Add cool new feature
+   ...
+   [dknuth@tex asserts]$ git fetch
+   remote: Counting objects: 4, done.
+   remote: Compressing objects: 100% (4/4), done.
+   remote: Total 4 (delta 0), reused 0 (delta 0)
+   Unpacking objects: 100% (4/4), done.
+   From gitlab.com:fluidsignal/asserts
+   20b4133..347d774  master     -> origin/master
+   + f56e548...e11188e ltorvalds    -> origin/ltorvalds  (forced update)
+   + f56e548...347d774 rstallman    -> origin/rstallman  (forced update)
+   [dknuth@tex asserts]$ git rebase origin/master
+   First, rewinding head to replay your work on top of it...
+   Applying: My last commit
+   [dknuth@tex asserts]$ git log --pretty=oneline --abbrev-commit
+   a201834 (HEAD -> dknuth) My last commit
+   347d774 (origin/rstallman, origin/master, origin/HEAD) Add emacs support
+   e11188e (origin/ltorvalds) Update to kernel 4.14
+   f3dec2a Add cool new feature
+   ...
+   [dknuth@tex asserts]
+
+Now Don is ready to make his merge request,
+that is, if his pipeline passes...
+
+----------------------
+Continuous Integration
+----------------------
+
+``Asserts`` uses Gitlab CI to
+make sure that a change in a commit
+does not break anything in the master branch.
+Among other things, the CI pipeline:
+
+#. Builds environments for development and runtime
+#. Lints the entire codebase
+#. Runs the whole test suite
+#. Deploys the project for release
+#. Updates this documentation site
+
+You can run this pipeline locally before pushing using the
+`Nix <https://nixos.wiki/wiki/Nix_Installation_Guide>`_ shell
+and the
+`local-integration.nix <https://gitlab.com/fluidsignal/asserts/blob/master/local-integration.nix>`_
+script in the repo.
+
+As a developer,
+you should be specially concerned about:
+
+* Not pushing simple mistakes like trailing
+  whitespace or typos. ::
+
+     $ overcommit --run
+
+  Can help avoid these.
+
+* Not pushing functional but ugly code
+  by linter standards. Run ::
+
+     $ scons lint
+
+  You can use each linter individually as well.
+
+* Your code passing every test. Run ::
+
+     $ scons test
+
+Finally, keep your commits small and
+logically atomic, that is, there should
+be a one-to-one mapping between
+functional changes to the codebase and commits.
+If you're adding a function in the HTTP module,
+don't commit every line you add independently,
+but also don't include your changes to another module
+in that same commit.
+
+-------------
 Documentation
 -------------
 
@@ -113,6 +260,11 @@ optional and multiple return types.
 Type consistency will be checked by MyPy in CI time,
 but not strictly.
 
+Whenever possible,
+docstrings should link to the appropriate entry
+in FLUIDRules and FLUIDDefends.
+
+----------
 References
 ----------
 
