@@ -182,3 +182,4 @@ todo_include_todos = True
 
 html_logo = '_static/logo.png'
 html_favicon = '_static/favicon-32x32.png'
+autoclass_content = 'both'

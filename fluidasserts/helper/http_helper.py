@@ -51,18 +51,18 @@ class HTTPSession(object):
         """
         Construct method.
 
-        :param method: Must be either `PUT` or `DELETE`.
-        :param url: URL for the new :class:`HTTPSession` object.
-        :param params: Parameters to be sent with the :class:`Request`.
-        :param data: Dictionary to be sent in the :class:`Request` body.
-        :param headers: Dictionary of HTTP Headers to sent with the Request.
+        :param method: Must be either ``PUT`` or ``DELETE``.
+        :param url: URL for the new :class:`.HTTPSession` object.
+        :param params: Parameters to send with the :class:`requests.Request`.
+        :param data: Dictionary to be sent in
+                     the :class:`~requests.Request` body.
+        :param headers: Dict of HTTP headers to send with the Request.
         :param cookies: Dict or CookieJar object to send with the Request.
         :param files: Dictionary of ``'name': file-like-objects``
                       for multipart encoding upload.
         :param auth: Auth tuple to enable Basic/Digest/Custom HTTP Auth.
         :param stream: If ``False``, the response content
                        will be immediately downloaded.
-        :return: :class:`HTTPSession` object
         """
         self.url = url
         self.params = params
