@@ -2,17 +2,25 @@
 """Send notification email."""
 
 import os
+import ntpath
+from glob import glob
 from git import Repo
 import mandrill
 
 API_KEY = '***REMOVED***'
 
 
-def get_changelog():
+def _get_changelog():
     """Get message of last commit."""
     repo = Repo(os.getcwd())
-    changelog = repo.git.log('-1', '--pretty=%s')
-    return changelog.rstrip()
+    changelog = repo.git.log('-1', '--pretty=<b>%s</b>\n%b')
+    return changelog.replace("\n", "<br />\n")
+
+
+def _get_version():
+    """Get version of last deploy."""
+    path_zip = glob('build/dist/*.zip')[0]
+    return ntpath.basename(path_zip)[13:-4]
 
 
 def send_mail(template_name, email_to, context):
@@ -33,4 +41,5 @@ def send_mail(template_name, email_to, context):
 
 
 send_mail('assertsnewversionr', ["engineering@fluidattacks.com"],
-          context={'changelog': get_changelog()})
+          context={'version': _get_version(),
+                   'changelog': _get_changelog()})
