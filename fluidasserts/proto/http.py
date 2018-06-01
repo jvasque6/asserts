@@ -150,7 +150,7 @@ def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
     :param \*args: Optional arguments for :class:`HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
 
-    Either ``params`` or ``data`` must be present in ``kwargs``,
+    Either ``params``, ``json`` or ``data`` must be present in ``kwargs``,
     if the request is ``GET`` or ``POST``, respectively.
     """
     kw_new = kwargs.copy()
@@ -160,6 +160,8 @@ def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
             kw_new['data'] = dataset
         elif 'params' in kw_new:
             kw_new['params'] = dataset
+        elif 'json' in kw_new:
+            kw_new['json'] = dataset
         sess = http_helper.HTTPSession(url, *args, **kw_new)
         resp.append((len(sess.response.text), sess.response.status_code))
     return resp
@@ -1013,11 +1015,13 @@ def has_user_enumeration(url: str, user_field: str,
     Either ``params`` or ``data`` must be present in ``kwargs``,
     if the request is ``GET`` or ``POST``, respectively.
     """
-    assert 'params' in kwargs or 'data' in kwargs
+    assert 'params' in kwargs or 'data' in kwargs or 'json' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
     elif 'data' in kwargs:
         query_string = kwargs['data']
+    elif 'json' in kwargs:
+        query_string = kwargs['json']
     assert user_field in query_string
 
     if not user_list:

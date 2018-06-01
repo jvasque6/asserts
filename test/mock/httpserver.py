@@ -103,6 +103,20 @@ def user_enumeration_post_ok():
     return 'Login incorrect'
 
 
+@APP.route('/userenum_post/json/fail', methods=['POST'])
+def user_enumeration_post_json_fail():
+    """Form vuln a user enumeration."""
+    if request.get_json()['username'] == 'admin':
+        return 'Login incorrect'
+    return 'User not found'
+
+
+@APP.route('/userenum_post/json/ok', methods=['POST'])
+def user_enumeration_post_json_ok():
+    """Form segura a user enumeration."""
+    return 'Login incorrect'
+
+
 @APP.route('/userenum_get/fail', methods=['GET'])
 def user_enumeration_get_fail():
     """Form vuln a user enumeration."""

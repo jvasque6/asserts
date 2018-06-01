@@ -44,6 +44,7 @@ class HTTPSession(object):
                  headers: Optional[dict] = None, method: Optional[str] = None,
                  cookies: requests.cookies.RequestsCookieJar = None,
                  data: Optional[str] = '',
+                 json: Optional[dict] = None,
                  files: Optional[dict] = None,
                  auth: Optional[Tuple[str, str]] = None,
                  stream: Optional[bool] = False) -> None:
@@ -68,6 +69,7 @@ class HTTPSession(object):
         self.headers = headers
         self.cookies = cookies
         self.data = data
+        self.json = json
         self.auth = auth
         self.files = files
         self.method = method
@@ -99,6 +101,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                        params=self.params,
                                        cookies=self.cookies,
                                        data=self.data,
+                                       json=self.json,
                                        headers=self.headers,
                                        timeout=10)
                 if self.method == 'DELETE':
@@ -107,6 +110,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           params=self.params,
                                           cookies=self.cookies,
                                           data=self.data,
+                                          json=self.json,
                                           headers=self.headers,
                                           timeout=10)
                 self.response = ret
@@ -116,13 +120,22 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         else:
             try:
                 if self.data == '':
-                    ret = requests.get(self.url, verify=False,
-                                       auth=self.auth,
-                                       params=self.params,
-                                       cookies=self.cookies,
-                                       headers=self.headers,
-                                       stream=self.stream,
-                                       timeout=10)
+                    if self.json:
+                        ret = requests.post(self.url, verify=False,
+                                            auth=self.auth,
+                                            json=self.json,
+                                            cookies=self.cookies,
+                                            headers=self.headers,
+                                            stream=self.stream,
+                                            timeout=10)
+                    else:
+                        ret = requests.get(self.url, verify=False,
+                                           auth=self.auth,
+                                           params=self.params,
+                                           cookies=self.cookies,
+                                           headers=self.headers,
+                                           stream=self.stream,
+                                           timeout=10)
                 else:
                     ret = requests.post(self.url, verify=False,
                                         data=self.data,
