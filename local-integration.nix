@@ -1,10 +1,6 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i bash -p docker git gitlab-runner
 
-FA_LICENSE_KEY="set"
-FA_USER_EMAIL="set"
-PYPI_USER="set"
-PYPI_PASS="set"
 DOCKER_PASS="set"
 DOCKER_USER="set"
 

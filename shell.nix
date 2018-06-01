@@ -14,11 +14,6 @@ stdenv.mkDerivation rec {
    gitlab-runner
  ];
 
- FA_USER_EMAIL = "set";
- FA_LICENSE_KEY  = "set";
  DOCKER_PASS = "set";
  DOCKER_USER = "set";
- PYPI_USER="set";
- PYPI_PASS="set";
-
 }
