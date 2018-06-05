@@ -1,5 +1,18 @@
+========================================
 Welcome to FLUIDAsserts's documentation!
 ========================================
+
+.. toctree::
+   :hidden:
+   :maxdepth: 1
+   :caption: Navigation
+
+   Home <self>
+   setup
+   usage
+   dev
+   credits
+   fluidasserts
 
 ``FLUIDAsserts`` is an engine
 to automate the closing of security findings
@@ -22,6 +35,7 @@ Thus any changes to the ``ToE``
 can be tested continuously against
 the closing of confirmed vulnerabilities.
 
+=====
 Setup
 =====
 
@@ -33,6 +47,7 @@ Note that ``Asserts`` runs only with ``Python`` 3.
 
 See more details in the :doc:`setup` page.
 
+=====
 Usage
 =====
 
@@ -72,12 +87,18 @@ or has been closed: ::
 See more use cases and examples in our :doc:`usage` page.
 
 
+=================
 API Documentation
 =================
 
+See our :doc:`ref` page
+for the API-level documentation.
+
 .. toctree::
+   :hidden:
    :maxdepth: 4
    :caption: Packages:
+   :name: api-toc
 
    fluidasserts.lang
    fluidasserts.format
@@ -86,20 +107,23 @@ API Documentation
    fluidasserts.syst
    fluidasserts.utils
    fluidasserts
-   modules
 
+==============
 For developers
 ==============
 
 See our :doc:`dev` section.
 
 
+=======
 Credits
 =======
 
 See our :doc:`credits` section for information
 about authorship, ownership and licensing.
 
+
+==================
 Indices and tables
 ==================
 

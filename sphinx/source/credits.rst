@@ -19,12 +19,14 @@ as stated in their work contracts,
 but retain moral rights.
 
 
+---------
 Copyright
-=========
+---------
 
 © 2001-2018 Fluidsignal Group
 
+-------
 License
-=======
+-------
 
 TBA
