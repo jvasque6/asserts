@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""X509 certificates module."""
+"""This module allows to check X509 certificates vulnerabilities."""
 
 # standard imports
 from __future__ import absolute_import

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Java module.
-
-This module allows to check Java code vulnerabilities
-"""
+"""This module allows to check Java code vulnerabilities."""
 
 # standard imports
 # None

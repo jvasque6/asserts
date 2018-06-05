@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-HTML check module.
-
-This module allows to check HTML vulnerabilities.
-"""
+"""This module allows to check HTML vulnerabilities."""
 
 # 3rd party imports
 from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException,

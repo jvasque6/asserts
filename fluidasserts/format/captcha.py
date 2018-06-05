@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-CAPTCHA module.
-
-This module allows to check ``CAPTCHA`` vulnerabilities.
-"""
+"""This module allows to check ``CAPTCHA`` vulnerabilities."""
 
 
 # standard imports

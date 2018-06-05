@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""HTTP helper."""
+"""This module provide support for HTTP connections."""
 
 # standard imports
 import hashlib

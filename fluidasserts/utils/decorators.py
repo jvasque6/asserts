@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-"""FLUIDAsserts decorators."""
+
+"""This module enables decorators for registry and usage tracking purposes."""
 
 import atexit
 import functools

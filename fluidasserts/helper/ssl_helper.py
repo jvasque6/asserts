@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-SSL module.
-
-This module enables connections via SSL.
-"""
+"""This module enables connections via SSL."""
 
 # standard imports
 from __future__ import absolute_import

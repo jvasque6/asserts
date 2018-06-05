@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-DNS check module.
 
-This module allows to check vulnerabilities in DNS systems.
-"""
+"""This module allows to check vulnerabilities in DNS systems."""
 
 # standard imports
 from __future__ import absolute_import

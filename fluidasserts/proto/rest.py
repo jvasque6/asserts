@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-REST module.
-
-This module allows to check REST vulnerabilities."
-"""
+"""This module allows to check REST vulnerabilities."""
 
 # standard imports
 # None

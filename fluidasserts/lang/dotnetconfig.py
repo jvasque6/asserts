@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Web.config module.
-
-This module allows to check Web.config code vulnerabilities
-"""
+"""This module allows to check Web.config code vulnerabilities."""
 
 # standard imports
 from copy import copy

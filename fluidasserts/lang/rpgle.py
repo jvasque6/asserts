@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-RPGLE module.
-
-This module allows to check RPGLE code vulnerabilities.
-"""
+"""This module allows to check RPGLE code vulnerabilities."""
 
 # standard imports
 # None

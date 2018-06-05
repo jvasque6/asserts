@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-JavaScript module.
-
-This module allows to check JavaScript code vulnerabilities.
-"""
+"""This module allows to check JavaScript code vulnerabilities."""
 
 # standard imports
 # None

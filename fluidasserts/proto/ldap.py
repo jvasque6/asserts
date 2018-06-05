@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-LDAP module.
 
-This module allows to check LDAP vulnerabilities.
-"""
+"""This module allows to check LDAP vulnerabilities."""
 
 # standard imports
 # None

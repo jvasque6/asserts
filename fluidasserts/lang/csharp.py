@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-C# module.
-
-This module allows to check C# code vulnerabilities
-"""
+"""This module allows to check ``C#`` code vulnerabilities."""
 
 # standard imports
 # None

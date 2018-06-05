@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Windows Server OS module.
 
-This module allows to check Windows Server vulnerabilities.
-"""
+"""This module allows to check Windows Server vulnerabilities."""
 
 # standard imports
 import re

@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Python module.
-
-This module allows to check Python code vulnerabilities.
-"""
+"""This module allows to check Python code vulnerabilities."""
 
 # standard imports
 # None

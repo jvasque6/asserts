@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Core module.
-
-This module allows to check Code vulnerabilities.
-"""
+"""This module allows to check generic Code vulnerabilities."""
 
 # standard imports
 import os

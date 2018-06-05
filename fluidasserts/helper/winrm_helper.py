@@ -3,12 +3,12 @@
 """
 WinRM helper.
 
-This must be run on the target server:
-winrm qc
-winrm get winrm/config/service
-winrm set winrm/config/service @{AllowUnencrypted="true"}
-winrm set winrm/config/service/auth @{Basic="true"}
-winrm set winrm/config/client/auth @{Basic="true"}
+These commands must be run on the target server: ::
+   winrm qc
+   winrm get winrm/config/service
+   winrm set winrm/config/service @{AllowUnencrypted="true"}
+   winrm set winrm/config/service/auth @{Basic="true"}
+   winrm set winrm/config/client/auth @{Basic="true"}
 """
 
 # standard imports

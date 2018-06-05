@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-SSL module.
 
-This modulle allows to check SSL vulnerabilities.
-"""
+"""This modulle allows to check SSL vulnerabilities."""
 
 # standard imports
 from __future__ import absolute_import

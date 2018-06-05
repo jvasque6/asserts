@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""PDF module."""
+"""This module allows to check PDF vulnerabilities."""
 
 # standard imports
 # None

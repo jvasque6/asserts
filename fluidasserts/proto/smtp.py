@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-SMTP module.
-
-This module allows to check SMTP-specific vulnerabilities.
-"""
+"""This module allows to check SMTP-specific vulnerabilities."""
 
 # standard imports
 import smtplib

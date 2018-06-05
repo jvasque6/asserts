@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Strings check module.
-
-This module allows to check Password and other text vulnerabilities.
-"""
+"""This module allows to check Password and other text vulnerabilities."""
 
 # standard imports
 import pkg_resources

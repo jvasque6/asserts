@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Docker module.
-
-This module allows to check Docker code vulnerabilities.
-"""
+"""This module allows to check vulnerabilities in Dockerfiles."""
 
 # standard imports
 # None

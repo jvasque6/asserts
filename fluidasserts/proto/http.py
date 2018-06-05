@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-HTTP module.
 
-This module allows to check HTTP-specific vulnerabilities.
-"""
+"""This module allows to check HTTP-specific vulnerabilities."""
 
 # standard imports
 import re

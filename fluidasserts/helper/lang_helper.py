@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-Lang helper.
-
-This module has helper functions for lang modules.
-"""
+"""This module has helper functions for code analysis modules."""
 
 # standard imports
 import hashlib

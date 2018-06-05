@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-TCP module.
-
-This module allows to check TCP-specific vulnerabilities.
-"""
+"""This module allows to check TCP-specific vulnerabilities."""
 
 # standard imports
 import socket

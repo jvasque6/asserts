@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-HTTP Cookie module.
-
-This module allows to check Cookies vulnerabilities.
-"""
+"""This module allows to check Cookies vulnerabilities."""
 
 
 # standard imports

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-SSH module.
 
-This module allows to check SSH vulnerabilities.
-"""
+"""This module allows to check SSH vulnerabilities."""
 
 # standard imports
 from __future__ import absolute_import

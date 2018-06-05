@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-Linux OS module.
 
-This module allows to check Linux vulnerabilities.
-"""
+"""This module allows to check generic Linux vulnerabilities."""
 
 # standard imports
 # None

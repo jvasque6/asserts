@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-"""
-SMB check module.
 
-This module allows to check SMB vulnerabilites.
-"""
+"""This module allows to check SMB vulnerabilites."""
 
 # standard imports
 from __future__ import absolute_import
