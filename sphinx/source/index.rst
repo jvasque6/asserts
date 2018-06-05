@@ -3,9 +3,24 @@ Welcome to FLUIDAsserts's documentation!
 
 ``FLUIDAsserts`` is an engine
 to automate the closing of security findings
-over execution environments (``DAST``).
+over execution environments.
+``Asserts`` performs Dynamic and Static
+Application Security Testing
+(`DAST <https://www.techopedia.com/definition/30958/dynamic-application-security-testing-dast>`_ and
+`SAST <https://www.owasp.org/index.php/Source_Code_Analysis_Tools>`_) and
+dynamic testing of many protocols (DXST).
 
 .. image:: _static/fluidassertses.png
+
+``Asserts`` reuses previously handcrafted
+attack vectors in order to
+automate the closing of vulnerabilities.
+This makes it particularly useful
+since this testing can be performed by end users as-is
+or as part of a continuous integration pipeline.
+Thus any changes to the ``ToE``
+can be tested continuously against
+the closing of confirmed vulnerabilities.
 
 Setup
 =====
