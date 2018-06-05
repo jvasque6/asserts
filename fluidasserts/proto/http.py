@@ -7,6 +7,8 @@ This module allows to check HTTP-specific vulnerabilities.
 
 # standard imports
 import re
+import json
+from copy import deepcopy
 from datetime import datetime
 from typing import Optional, List, Union
 
@@ -118,6 +120,21 @@ SQLI_ERROR_MSG = {
 }
 
 
+def _replace_dict_value(adict: dict, key: str, value: str) -> None:
+    """
+    Replace a `value` given a `key` in a complex dict.
+
+    :param adict: Complex dict.
+    :param key: Key of the value that is going to be replaced.
+    :param value: Value to replace in dict where is the given key.
+    """
+    for rkey in adict.keys():
+        if rkey == key:
+            adict[rkey] = value
+        elif isinstance(adict[rkey], dict):
+            _replace_dict_value(adict[rkey], key, value)
+
+
 def _create_dataset(field: str, value_list: List[str],
                     query_string: Union[str, dict]) -> List:
     """
@@ -133,10 +150,10 @@ def _create_dataset(field: str, value_list: List[str],
     if isinstance(query_string, str):
         data_dict = dict(parse_qsl(query_string))
     else:
-        data_dict = query_string.copy()
+        data_dict = deepcopy(query_string)
     for value in value_list:
-        data_dict[field] = value
-        dataset.append(data_dict.copy())
+        _replace_dict_value(data_dict, field, value)
+        dataset.append(deepcopy(data_dict))
     return dataset
 
 
@@ -1019,11 +1036,13 @@ def has_user_enumeration(url: str, user_field: str,
     assert 'params' in kwargs or 'data' in kwargs or 'json' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
+        assert user_field in query_string
     elif 'data' in kwargs:
         query_string = kwargs['data']
+        assert user_field in query_string
     elif 'json' in kwargs:
         query_string = kwargs['json']
-    assert user_field in query_string
+        assert user_field in json.dumps(query_string)
 
     if not user_list:
         user_list = ['admin', 'administrator', 'guest', 'test']
@@ -1087,7 +1106,7 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     assert 'params' in kwargs or 'data' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
-    elif 'data' in kwargs:
+    if 'data' in kwargs:
         query_string = kwargs['data']
 
     assert isinstance(user_list, list)

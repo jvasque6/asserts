@@ -111,6 +111,14 @@ def user_enumeration_post_json_fail():
     return 'User not found'
 
 
+@APP.route('/userenum_post/nested_json/fail', methods=['POST'])
+def user_enumeration_post_nested_json_fail():
+    """Form vuln a user enumeration."""
+    if request.get_json()['login']['username'] == 'admin':
+        return 'Login incorrect'
+    return 'User not found'
+
+
 @APP.route('/userenum_post/json/ok', methods=['POST'])
 def user_enumeration_post_json_ok():
     """Form segura a user enumeration."""
