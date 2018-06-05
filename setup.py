@@ -3,24 +3,33 @@
 """Archivo estandar para generacion de instalador.
 
 Este modulo define los parametros minimos requeridos para generar
-un instalador estandar de FLUIDAsserts.
+un instalador estandar de fluidasserts.
 """
 import time
 import io
 from setuptools import setup
 
-with io.open('conf/README.rst', 'rt', encoding='utf8') as f:
-    README = f.read()
 
-CUR_TIME = time.localtime()
-MIN_MONTH = (CUR_TIME.tm_mday - 1) * 1440 + \
-    CUR_TIME.tm_hour * 60 + CUR_TIME.tm_min
+def _get_readme():
+    """Returns fluidasserts readme."""
+    readme_path = 'conf/README.rst'
+    with io.open(readme_path, 'rt', encoding='utf8') as readme_f:
+        return readme_f.read()
+
+
+def _get_version():
+    """Returns fluidasserts version."""
+    cur_time = time.localtime()
+    min_month = (cur_time.tm_mday - 1) * 1440 + cur_time.tm_hour * 60 + \
+        cur_time.tm_min
+    return time.strftime('%y.%m.{}').format(min_month)
+
 
 setup(
-    name='FLUIDAsserts',
+    name='fluidasserts',
     description='Assertion Library for Security Assumptions',
-    long_description=README,
-    version=time.strftime('%y.%m.{}').format(MIN_MONTH),
+    long_description=_get_readme(),
+    version=_get_version(),
     url='https://fluidattacks.com/web/en/products/asserts',
     project_urls={'Documentation': 'https://fluidsignal.gitlab.io/asserts/'},
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
