@@ -3,15 +3,16 @@ Credits
 
 We thank and acknowledge contributions from:
 
-* Alexander Botero <abotero@fluid.la>
+* Alexander Botero
 * Andrés Roldán <aroldan@fluidattacks.com>
 * Camilo Cardona <ccardona@fluidattacks.com>
 * Germán López <glopez@fluidattacks.com>
 * Henry Valencia <hvalencia@fluidattacks.com>
 * Mateo Noreña <mnorena@fluidattacks.com>
-* Juan Escobar <jescobar@fluid.la>
-* Juan Pablo Tamayo <jtamayo@fluidattacks.com>
+* Juan Escobar
+* Pablo Tamayo <jtamayo@fluidattacks.com>
 * Rafael Álvarez <ralvarez@fluidattacks.com>
+* Rafael Ballestas <rballestas@fluidattacks.com>
 
 Authors grant patrimonial and ownership rights
 to Fluidsignal Group S.A.
