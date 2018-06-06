@@ -15,7 +15,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-
+from fluidasserts import __version__
 
 # -- Project information -----------------------------------------------------
 
@@ -24,9 +24,9 @@ copyright = '2018, FLUID Engineering Team'
 author = 'FLUID Engineering Team'
 
 # The short X.Y version
-version = ''
+version = __version__
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = version
 
 
 # -- General configuration ---------------------------------------------------
