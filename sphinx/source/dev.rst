@@ -1,6 +1,6 @@
-======================
-Developing ``Asserts``
-======================
+==========
+Developing
+==========
 
 A new support module must be placed
 in the appropriate package:
