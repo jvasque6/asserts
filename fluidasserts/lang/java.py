@@ -290,8 +290,8 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     """
     Check if code uses an insecure hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
-
+    See `REQ.150`_.
+    .. _REQ. 150: https://fluidattacks.com/web/es/rules/150/
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
     """
@@ -331,7 +331,7 @@ def uses_md5_hash(java_dest: str) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+    See `REQ.150`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -344,7 +344,7 @@ def uses_sha1_hash(java_dest: str) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+    See `REQ.150`_.
 
     :param java_dest: Path to a Java source file or package.
     """

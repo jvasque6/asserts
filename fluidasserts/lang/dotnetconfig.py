@@ -81,13 +81,13 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
 @track
 def has_ssl_disabled(apphostconf_dest: str) -> bool:
     """
-    Check if SSL is disabled in ApplicationHost.config.
+    Check if SSL is disabled in ``ApplicationHost.config``.
 
-    Search for access tag in security section in an ApplicationHost.config
+    Search for access tag in security section in an ``ApplicationHost.config``
     source file or package.
 
-    :param apphostconf_dest: Path to a ApplicationHost.config source file or
-    package.
+    :param apphostconf_dest: Path to an ``ApplicationHost.config``
+                             source file or package.
     """
     tk_tag_s, _ = makeXMLTags('security')
     tk_access, _ = makeXMLTags('access')
@@ -133,11 +133,10 @@ def has_debug_enabled(webconf_dest: str) -> bool:
     """
     Check if debug flag is enabled in Web.config.
 
-    Search for debug tag in compilation section in an Web.config source file
+    Search for debug tag in compilation section in a Web.config source file
     or package.
 
-    :param webconf_dest: Path to a Web.config source file or
-    package.
+    :param webconf_dest: Path to a Web.config source file or package.
     """
     tk_tag_s, _ = makeXMLTags('system.web')
     tk_compilation, _ = makeXMLTags('compilation')
