@@ -8,3 +8,4 @@ echo $VER
 sphinx-build -D version="v.$VER" -D release="v.$VER" \
              -a sphinx/source/ public/
 sphinx-build -b linkcheck sphinx/source public/review/
+sphinx-build -b coverage sphinx/source public/review/
