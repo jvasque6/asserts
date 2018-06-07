@@ -15,8 +15,5 @@ RUN apk update \
 # Expone los puertos LDAP
 EXPOSE 389 636
 
-# Copia los archivos de configuracion del mock en la imagen
-COPY entry.sh /
-
 # Primer comando que se ejecutara por completo
-ENTRYPOINT ["/entry.sh"]
+CMD /usr/sbin/slapd -d 256
