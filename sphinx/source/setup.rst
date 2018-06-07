@@ -1,11 +1,12 @@
-Setup
-=====
+==========
+Installing
+==========
 
 ``FLUIDAsserts`` is hosted on PyPI,
 so you can install it easily using ``pip``
 on a system with ``Python 3``: ::
 
-   pip3 install --upgrade fluidasserts
+   $ pip3 install -U fluidasserts
 
 For normal/interactive usage,
 you should set the environment variable ``FA_STRICT`` to false
@@ -13,12 +14,15 @@ you should set the environment variable ``FA_STRICT`` to false
 
    $ export FA_STRICT="false"
 
-In Windows: ::
+In Windows:
+
+.. code-block:: yaml
 
    > set FA_STRICT="false"
 
 Now you're ready to begin :doc:`testing<usage>` vulnerabilities' closure.
 
+-----------------------------------------------
 Usage in a CI (Continuous Integration) pipeline
 -----------------------------------------------
 
@@ -62,9 +66,11 @@ To achieve this, follow these steps:
    but still run the tests,
    set the ``FA_STRICT`` variable above to ``"false"``.
 
+------------
 Requirements
 ------------
 
+~~~~~~~~~~~~~
 In a computer
 ~~~~~~~~~~~~~
 
@@ -76,11 +82,13 @@ make sure you have
 and the libraries
 ``libc``, ``libffi``, ``openssl``, and ``jpeg``.
 
+~~~~~~~~~~~~~~~~~~~
 In a CI environment
 ~~~~~~~~~~~~~~~~~~~
 
 All you need is support for Docker CE 17 or higher.
 
+~~~~~~~~
 Hardware
 ~~~~~~~~
 

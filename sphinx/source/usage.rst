@@ -1,3 +1,4 @@
+=====
 Usage
 =====
 
@@ -18,6 +19,7 @@ where it is found,
 when it was tested,
 and the `fingerprint` (the gory details of the transaction).
 
+-------------
 SQL Injection
 -------------
 
@@ -85,11 +87,14 @@ use the same function:
      url: http://testphp.vulnweb.com/AJAX/infoartist.php?id=3
    when: 2018-05-28 11:09:04.574114
 
+------------------------------
 Cross-Site Scripting (``XSS``)
-----------------------------
+------------------------------
 
 The function :func:`.has_xss` requires
-a few more parameters: ::
+a few more parameters:
+
+.. code-block:: python
 
    from fluidasserts.proto import http
 
@@ -127,7 +132,9 @@ a few more parameters: ::
    when: 2018-05-28 15:22:11.782679
 
 To test if
-an ``XSS`` vulnerability has been closed: ::
+an ``XSS`` vulnerability has been closed:
+
+.. code-block:: python
 
    from fluidasserts.proto import http
 

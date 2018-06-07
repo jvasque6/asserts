@@ -19,7 +19,9 @@ they must return
 true if the vulnerability is open
 or false if it is closed,
 and show the appropriate message
-from the main package: ::
+from the main package:
+
+.. code-block:: python
 
    from fluidasserts import show_close, show_open
 
@@ -43,12 +45,16 @@ Function names must be written in english
 and conform to :pep:`8`
 (in particular they must be written in ``snake_case``)
 so that they can be used like this
-from a project exploit: ::
+from a project exploit:
+
+.. code-block:: python
 
    from fluidasserts.lang import javascript
-   javascript.uses_eval('my-script.js') //check
+   javascript.uses_eval('my-script.js')
 
-Other good function name ideas: ::
+Other good function name ideas:
+
+.. code-block:: python
 
    is_code_not_obfuscated
    is_disk_not_encrypted
@@ -59,7 +65,9 @@ Other good function name ideas: ::
 Notice that if the answer to any of these questions is true,
 then we have an open vulnerability.
 
-Bad function names: ::
+Bad function names:
+
+.. code-block:: python
 
    is_secure         # Too general
    has_antimalware   # Logic inverted
@@ -148,7 +156,9 @@ without ever leaving his branch: ::
 
 If Don followed these steps,
 checking their effect with ``git log``,
-he would see this: ::
+he would see this:
+
+.. code-block:: console
 
    [dknuth@tex asserts]$ git commit -m "My last commit"
    [dknuth bc53277] My last commit
@@ -242,8 +252,9 @@ plain `Sphinx <http://www.sphinx-doc.org/en/master/>`_
 `ReStructured Text
 <https://pythonhosted.org/an_example_pypi_project/sphinx.html#function-definitions>`_ style, while
 parameter and return types must be specified using
-Type Hints according to :pep:`484`: ::
+Type Hints according to :pep:`484`:
 
+.. code-block:: python
 
    def is_long_line(line: str) -> bool
    """

@@ -1,7 +1,3 @@
-========================================
-Welcome to FLUIDAsserts's documentation!
-========================================
-
 .. toctree::
    :hidden:
    :maxdepth: 1
@@ -13,6 +9,10 @@ Welcome to FLUIDAsserts's documentation!
    ref
    dev
    credits
+
+========================================
+Welcome to FLUIDAsserts's documentation!
+========================================
 
 ``FLUIDAsserts`` is an engine
 to automate the closing of security findings
@@ -85,9 +85,11 @@ or just dive into the :doc:`ref`.
 Setup
 =====
 
-Simply ::
+Simply
 
-   pip3 install -U fluidasserts
+.. code-block:: shell-session
+
+   $ pip3 install -U fluidasserts
 
 Note that ``Asserts`` runs only with ``Python`` 3.
 
@@ -97,7 +99,9 @@ See more details in the :doc:`setup` page.
 Usage
 =====
 
-Import the required ``FLUIDAsserts`` modules into your exploit: ::
+Import the required ``FLUIDAsserts`` modules into your exploit:
+
+.. code-block:: python
 
    from fluidasserts.proto import http
 
@@ -108,7 +112,9 @@ And run your exploit.
 whether the vulnerability
 :func:`.has_sqli`
 is still open
-or has been closed: ::
+or has been closed:
+
+.. code-block:: yaml
 
    ---
    # FLUIDAsserts (v. 0.20180525.1529)

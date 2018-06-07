@@ -15,7 +15,35 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
-from fluidasserts import __version__
+
+from pygments.style import Style
+from pygments.token import (Keyword, Name, Comment, String, Error,
+                            Number, Operator, Generic)
+
+class Fluidattacks(Style):
+    default_style = ""
+    background_color = '#f1f1f1'
+    styles = {
+        Comment:                'bold #fd3435',
+        Keyword:                '#2b2b2b',
+        Name:                   'bold #fd3435',
+        Name.Function:          '#fd3435',
+        Name.Class:             '#fd3435',
+        String:                 '#2b2b2b'
+    }
+
+def pygments_monkeypatch_style(mod_name, cls):
+    import sys
+    import pygments.styles
+    cls_name = cls.__name__
+    mod = type(__import__("os"))(mod_name)
+    setattr(mod, cls_name, cls)
+    setattr(pygments.styles, mod_name, mod)
+    sys.modules["pygments.styles." + mod_name] = mod
+    from pygments.styles import STYLE_MAP
+    STYLE_MAP[mod_name] = mod_name + "::" + cls_name
+
+pygments_monkeypatch_style("Fluidattacks", Fluidattacks)
 
 # -- Project information -----------------------------------------------------
 
@@ -24,9 +52,9 @@ copyright = '2018, FLUID Engineering Team'
 author = 'FLUID Engineering Team'
 
 # The short X.Y version
-version = __version__
+version = '18.6.8385'
 # The full version, including alpha/beta/rc tags
-release = version
+release = '18.6.8385'
 
 
 # -- General configuration ---------------------------------------------------
@@ -74,7 +102,7 @@ language = None
 exclude_patterns = []
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = 'Fluidattacks'
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -159,7 +187,7 @@ man_pages = [
 
 # Grouping the document tree into Texinfo files. List of tuples
 # (source start file, target name, title, author,
-#  dir menu entry, description, category)
+#  dir menu entry, desrciption, category)
 texinfo_documents = [
     (master_doc, 'FLUIDAsserts', 'FLUIDAsserts Documentation',
      author, 'FLUIDAsserts', 'One line description of project.',
