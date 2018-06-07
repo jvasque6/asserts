@@ -25,11 +25,11 @@ class Fluidattacks(Style):
     background_color = '#f1f1f1'
     styles = {
         Comment:                'bold #fd3435',
-        Keyword:                '#2b2b2b',
+        Keyword:                '#272727',
         Name:                   'bold #fd3435',
         Name.Function:          '#fd3435',
         Name.Class:             '#fd3435',
-        String:                 '#2b2b2b'
+        String:                 '#272727'
     }
 
 def pygments_monkeypatch_style(mod_name, cls):
