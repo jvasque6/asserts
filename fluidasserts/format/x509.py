@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This module allows to check X509 certificates vulnerabilities."""
+"""This module allows to check ``X509`` certificates' vulnerabilities."""
 
 # standard imports
 from __future__ import absolute_import
@@ -26,10 +26,10 @@ PORT = 443
 
 def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
     """
-    Check if cert uses a hash method in their signature.
+    Check if the given hashing method was used in signing the site certificate.
 
     :param site: Address to connect to.
-    :param alg: Hashing method to check.
+    :param alg: Hashing method to test.
     :param port: Port to connect to.
     """
     result = True
@@ -71,7 +71,10 @@ def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
 @track
 def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     """
-    Check if cert cn is equal to site.
+    Check if certificate Common Name (CN) is different from given sitename.
+
+    Name in certificate should be coherent with organization name, see
+    `REQ. 093 <https://fluidattacks.com/web/es/rules/093/>`_
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -128,7 +131,10 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
 @track
 def is_cert_inactive(site: str, port: int = PORT) -> bool:
     """
-    Check whether cert is still valid.
+    Check if certificate is no longer valid.
+
+    Fails if end of validity date obtained from certificate
+    is beyond the time of execution.
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -175,7 +181,7 @@ def is_cert_inactive(site: str, port: int = PORT) -> bool:
 @track
 def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     """
-    Check whether cert lifespan is safe.
+    Check if certificate lifespan is larger than two years which is insecure.
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -231,7 +237,12 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
 @track
 def is_sha1_used(site: str, port: int = PORT) -> bool:
     """
-    Check if cert uses SHA1 in their signature algorithm.
+    Check if certificate was signed using the ``SHA1`` algorithm.
+
+    Use of this algorithm is not recommended.
+    See `Storing passwords safely`__.
+
+    __ https://fluidattacks.com/web/en/blog/storing-password-safely/
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -242,7 +253,12 @@ def is_sha1_used(site: str, port: int = PORT) -> bool:
 @track
 def is_md5_used(site: str, port: int = PORT) -> bool:
     """
-    Check if cert use MD5 in their signature algorithm.
+    Check if certificate was signed using the ``MD5`` algorithm.
+
+    Use of this algorithm is not recommended.
+    See `Storing passwords safely`__.
+
+    __ https://fluidattacks.com/web/en/blog/storing-password-safely/
 
     :param site: Site address.
     :param port: Port to connect to.

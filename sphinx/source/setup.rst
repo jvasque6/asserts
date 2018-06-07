@@ -16,7 +16,7 @@ you should set the environment variable ``FA_STRICT`` to false
 
 In Windows:
 
-.. code-block:: yaml
+.. code-block:: console
 
    > set FA_STRICT="false"
 
