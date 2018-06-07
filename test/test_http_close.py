@@ -396,6 +396,14 @@ def test_bruteforce_close():
         pass_list=['pass', 'password'],
         data=data,
         params='')
+    assert not http.can_brute_force(
+        '%s/bruteforce/ok' % (NONEXISTANT_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data)
 
 
 @pytest.mark.usefixtures('mock_http')

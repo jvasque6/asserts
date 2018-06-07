@@ -1080,7 +1080,7 @@ def has_user_enumeration(url: str, user_field: str,
 
 # pylint: disable=keyword-arg-before-vararg
 # pylint: disable=too-many-arguments
-@track
+@track  # noqa
 def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
                     user_list: List[str] = None, pass_list: List[str] = None,
                     *args, **kwargs) -> bool:
@@ -1122,12 +1122,21 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
             kwargs['params'] = _datas
         elif 'data' in kwargs:
             kwargs['data'] = _datas
-        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        try:
+            sess = http_helper.HTTPSession(url, *args, **kwargs)
+            fingerprint = sess.get_fingerprint()
+        except http_helper.ConnError as exc:
+            show_unknown('Could not connect',
+                         details=dict(url=url, data_used=_datas,
+                                      error=str(exc).replace(':', ',')))
+            return False
         if ok_regex in sess.response.text:
             show_open('Brute forcing possible',
-                      details=dict(url=url, data_used=_datas))
+                      details=dict(url=url, data_used=_datas,
+                                   fingerprint=fingerprint))
             return True
-    show_close('Brute forcing not possible', details=dict(url=url))
+    show_close('Brute forcing not possible',
+               details=dict(url=url, fingerprint=fingerprint))
     return False
 
 
