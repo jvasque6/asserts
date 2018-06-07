@@ -146,20 +146,6 @@ API Documentation
 See our :doc:`ref` page
 for the API-level documentation.
 
-.. toctree::
-   :hidden:
-   :maxdepth: 4
-   :caption: Packages:
-   :name: api-toc
-
-   fluidasserts.lang
-   fluidasserts.format
-   fluidasserts.helper
-   fluidasserts.proto
-   fluidasserts.syst
-   fluidasserts.utils
-   fluidasserts
-
 ==============
 For developers
 ==============
