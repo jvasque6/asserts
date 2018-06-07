@@ -26,10 +26,17 @@ Now you're ready to begin :doc:`testing<usage>` vulnerabilities' closure.
 Usage in a CI (Continuous Integration) pipeline
 -----------------------------------------------
 
-You can use ``FLUIDAsserts`` in
+If you have an application subscribed to our
+Continuous Hacking Service
+which includes the use of ``Asserts``,
+you can integrate it into
 your ``CI`` pipeline to
 ensure that your software builds and ships
 with no open vulnerabilities.
+We will provide a custom ``Dcoker`` container
+with the specific tests you need
+and maintain the build-breaking exploit.
+
 To achieve this, follow these steps:
 
 #. Add the required environment variables
