@@ -142,7 +142,7 @@ def _build_heartbeat(tls_ver: str) -> List:
 @track
 def is_pfs_disabled(site: str, port: int = PORT) -> bool:
     """
-    Check whether PFS is enabled.
+    Check if PFS is enabled.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -192,7 +192,7 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
 @track
 def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
     """
-    Check whether SSLv3 suites are enabled.
+    Check if SSLv3 suites are enabled.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -222,7 +222,7 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
 @track
 def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
     """
-    Check whether TLSv1 suites are enabled.
+    Check if TLSv1 suites are enabled.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -252,7 +252,10 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
 @track
 def has_poodle_tls(site: str, port: int = PORT) -> bool:
     """
-    Check whether POODLE TLS is present.
+    Check if POODLE TLS is present.
+
+    See our `blog entry on POODLE
+    <https://fluidattacks.com/web/en/blog/treacherous-poodle/>`_.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -283,7 +286,10 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
 @track
 def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
     """
-    Check whether POODLE SSLv3 is present.
+    Check if POODLE SSLv3 is present.
+
+    See our `blog entry on POODLE
+    <https://fluidattacks.com/web/en/blog/treacherous-poodle/>`_.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -318,7 +324,7 @@ be vulnerable to POODLE SSLv3 attack',
 @track
 def has_breach(site: str, port: int = PORT) -> bool:
     """
-    Check whether BREACH is present.
+    Check if BREACH is present.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -352,7 +358,7 @@ def has_breach(site: str, port: int = PORT) -> bool:
 @track
 def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
     """
-    Check whether site accepts anonymous cipher suites.
+    Check if site accepts anonymous cipher suites.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -382,7 +388,7 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
 @track
 def allows_weak_ciphers(site: str, port: int = PORT) -> bool:
     """
-    Check whether site accepts weak cipher suites.
+    Check if site accepts weak cipher suites.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -413,7 +419,10 @@ suites', details=dict(site=site, port=port))
 @track
 def has_beast(site: str, port: int = PORT) -> bool:
     """
-    Check whether site allows BEAST attack.
+    Check if site allows BEAST attack.
+
+    See our `blog entry on BEAST
+    <https://fluidattacks.com/web/en/blog/release-the-beast/>`_.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
@@ -445,7 +454,10 @@ to be not an enabler to BEAST attack', details=dict(site=site, port=port))
 @track
 def has_heartbleed(site: str, port: int = PORT) -> bool:
     """
-    Check whether site allows HEARTBLEED attack.
+    Check if site allows Heartbleed attack.
+
+    See our `blog entry on Heartbleed
+    <https://fluidattacks.com/web/en/blog/my-heart-bleeds/>`_.
 
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.

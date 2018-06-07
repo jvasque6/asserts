@@ -19,7 +19,12 @@ from fluidasserts.utils.decorators import track
 @track
 def is_insecure_in_image(image: str, expected_text: str) -> bool:
     """
-    Check if the image is an insecure CAPTCHA.
+    Check if the given image is an insecure CAPTCHA.
+
+    The check is performed by converting the image to text and
+    comparing with the given expected text.
+    See `our blog entry on the topic
+    <https://fluidattacks.com/web/es/blog/captcha-misteriosa/>`_.
 
     :param image: Path to the image to be tested.
     :param expected_text: Text the image might contain.
@@ -38,7 +43,12 @@ def is_insecure_in_image(image: str, expected_text: str) -> bool:
 def is_insecure_in_url(image_url: str, expected_text: str,
                        *args, **kwargs) -> bool:
     r"""
-    Check if the URL is an insecure CAPTCHA.
+    Check if the image in the URL is an insecure CAPTCHA.
+
+    The check is performed by converting the image to text and
+    comparing with the given expected text.
+    See `our blog entry on the topic
+    <https://fluidattacks.com/web/es/blog/captcha-misteriosa/>`_.
 
     :param image_url: Path to the image to be tested.
     :param expected_text: Text the image might contain.
