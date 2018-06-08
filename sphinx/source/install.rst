@@ -16,7 +16,7 @@ you should set the environment variable ``FA_STRICT`` to false
 
 In Windows:
 
-.. code-block:: console
+.. code-block:: none
 
    > set FA_STRICT="false"
 
