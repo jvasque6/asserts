@@ -2,8 +2,8 @@
 Installing
 ==========
 
-``FLUIDAsserts`` is hosted on PyPI,
-so you can install it easily using ``pip``
+``FLUIDAsserts`` is hosted on `PyPI <https://pypi.org/project/FLUIDAsserts/>`_,
+so you can install it easily using ``pip3``
 on a system with ``Python 3``: ::
 
    $ pip3 install -U fluidasserts
@@ -72,33 +72,3 @@ To achieve this, follow these steps:
    In order to not break the build,
    but still run the tests,
    set the ``FA_STRICT`` variable above to ``"false"``.
-
-------------
-Requirements
-------------
-
-~~~~~~~~~~~~~
-In a computer
-~~~~~~~~~~~~~
-
-On a modern operating system, all you need is Python 3.6.
-
-If installing on a very barebones operating system,
-make sure you have
-``curl``, ``make``, ``gcc``
-and the libraries
-``libc``, ``libffi``, ``openssl``, and ``jpeg``.
-
-~~~~~~~~~~~~~~~~~~~
-In a CI environment
-~~~~~~~~~~~~~~~~~~~
-
-All you need is support for Docker CE 17 or higher.
-
-~~~~~~~~
-Hardware
-~~~~~~~~
-
-CPU: 4 cores @1.8GHz
-RAM: 4GiB DDR3 @1.6Ghz
-Disk space: 10GiB

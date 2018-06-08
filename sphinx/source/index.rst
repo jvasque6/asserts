@@ -5,6 +5,7 @@
 
    Home <self>
    qstart
+   reqs
    install
    usage
    ref
