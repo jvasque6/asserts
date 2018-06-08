@@ -72,7 +72,7 @@ def get_bwapp_cookies(cont_ip):
 # Close tests
 #
 
-
+@pytest.mark.usefixtures('mock_http')
 @pytest.mark.parametrize('run_mock',
                          [('bwapp', {'80/tcp': BWAPP_PORT})],
                          indirect=True)
@@ -86,6 +86,8 @@ def test_a1_sqli_close(run_mock):
 
     assert not http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
     assert not http.has_sqli(NONEXISTANT_SERVICE, params, cookies=bwapp_cookie)
+    assert not http.has_sqli('%s/response/fail' % (MOCK_SERVICE),
+                             params, cookies=bwapp_cookie)
 
 
 def test_a1_os_injection_close(run_mock):
@@ -428,9 +430,9 @@ def test_dirlisting_close():
 def test_http_response_close():
     """Respuesta 403 FORBIDDEN?."""
     assert not http.is_resource_accessible(
-        '%s/reponse/ok' % (MOCK_SERVICE))
+        '%s/response/ok' % (MOCK_SERVICE))
     assert not http.is_resource_accessible(
-        '%s/reponse/ok' % (NONEXISTANT_SERVICE))
+        '%s/response/ok' % (NONEXISTANT_SERVICE))
 
 
 @pytest.mark.usefixtures('mock_http')

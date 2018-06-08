@@ -395,7 +395,7 @@ def test_dirlisting_open():
 def test_http_response_open():
     """Respuesta 201 CREATED?."""
     assert http.is_resource_accessible(
-        '%s/reponse/fail' % (MOCK_SERVICE))
+        '%s/response/fail' % (MOCK_SERVICE))
 
 
 @pytest.mark.usefixtures('mock_http')

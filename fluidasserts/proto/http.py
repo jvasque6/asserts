@@ -341,6 +341,11 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
+        if response.status_code != 200:
+            show_unknown('There was an error',
+                         details=dict(url=url, status=response.status_code,
+                                      fingerprint=fingerprint))
+            return False
         the_page = response.text
         for regex in regex_list:
             if re.search(regex, the_page, re.IGNORECASE):
@@ -373,7 +378,11 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         the_page = response.text
-
+        if response.status_code != 200:
+            show_unknown('There was an error',
+                         details=dict(url, status=response.status_code,
+                                      fingerprint=fingerprint))
+            return False
         if re.search(str(expected_text), the_page, re.IGNORECASE):
             show_open('Bad text present',
                       details=dict(url=url,

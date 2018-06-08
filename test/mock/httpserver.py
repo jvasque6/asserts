@@ -73,7 +73,7 @@ def dirlisting_fail():
     return 'Index of'
 
 
-@APP.route('/reponse/fail')
+@APP.route('/response/fail')
 def response_fail():
     """Respuesta 201 CREATED."""
     resp = Response()
@@ -81,7 +81,7 @@ def response_fail():
     return resp
 
 
-@APP.route('/reponse/ok')
+@APP.route('/response/ok')
 def response_ok():
     """Respuesta 403 FORBIDDEN."""
     resp = Response()
