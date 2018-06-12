@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Software Composition Analysis for Python packages."""
+"""Software Composition Analysis helper."""
 
 # standard imports
 # None

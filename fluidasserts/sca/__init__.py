@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-"""FLUIDAsserts lang package."""
+"""FLUIDAsserts sca package."""

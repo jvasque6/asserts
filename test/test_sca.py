@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Test methods of fluidasserts.sca.pypi."""
+"""Test methods of fluidasserts.sca packages"""
 
 # standard imports
 import io
