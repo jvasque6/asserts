@@ -58,22 +58,40 @@ What kind of vulnerabilities can ``Asserts`` test?
 * :mod:`Code vulnerabilities <.lang>`:
   nine languages supported
   including proprietary (:mod:`C# <.csharp>`),
-  open source (:mod:`Python <.python>`),
+  open source (:mod:`Python <.python>`, :mod:`Java <.java>`,
+  :mod:`Javascript<.javascript>`),
+  markup (:mod:`HTML <.html>`),
   legacy (:mod:`RPG <.rpgle>`),
+  :mod:`web configuration files <.dotnetconfig>`
   and even the :mod:`Dockerfile <.docker>` syntax!
 * :mod:`Formats <.format>`:
   ``Asserts`` test formats ranging
   from regular :mod:`text <.string>`
   to :mod:`CAPTCHAs <.captcha>`
-  and :mod:`Cookies <.cookie>`.
+  and :mod:`Cookies <.cookie>`,
+  as well as :mod:`PDF files <.pdf>` and
+  :mod:`X.509 <.x509>` certificates.
 * :mod:`Protocols <fluidasserts.proto>`:
   The heart of ``Asserts``,
   since most vulnerabilities are network-borne.
-  The main network protocols like
-  :mod:`SSL <.ssl>` (think `Heartbleed <http://heartbleed.com/>`_) ,
-  :mod:`HTTP <.http>` (`Cross-site scripting <https://www.owasp.org/index.php/Cross-site_Scripting_(XSS)>`_),
-  :mod:`TCP <.tcp>` (open ports),
-  and seven others.
+  The main network protocols are covered:
+
+  * :mod:`SSL <.ssl>` (think :func:`Heartbleed <.has_heartbleed>`)
+  * :mod:`HTTP <.http>` (:func:`Cross-site scripting <.has_xss>`,
+    :func:`Parameter Pollution <.has_hpp>`,
+    :func:`User enumeration <.has_user_enumeration>`,
+    :func:`Cross-site scripting <.has_xss>`,
+    :func:`Brute forcing <.can_brute_force>`,
+    :func:`Command injection <.has_command_injection>`)
+  * :mod:`TCP <.tcp>` (:func:`Open ports <.is_port_open>`)
+  * :mod:`LDAP <.ldap>` (:func:`Anonymous bind <.is_anonymous_bind_allowed>`)
+  * :mod:`SSH <.ssh>` (:func:`CBC check <.is_cbc_used>`)
+  * :mod:`DNS <.dns>` (:func:`Amplification attacks <.can_amplify>`)
+  * :mod:`FTP <.ftp>` (:func:`Passwordless login <.user_without_password>`)
+  * :mod:`REST <.rest>` (:func:`Empty requests <.accepts_empty_content_type>`)
+  * :mod:`SMB <.smb>` (:func:`Directory listing <.smb.has_dirlisting>`)
+  * :mod:`SMTP <.smtp>` (:func:`Visible banner <.smtp.is_version_visible>`)
+
 
 As of June 5, 2018,
 ``Asserts`` provides 142 checks
