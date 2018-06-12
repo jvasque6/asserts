@@ -6,11 +6,13 @@
 # None
 
 # 3rd party imports
+import json
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        pythonStyleComment, Suppress, delimitedList, Forward,
                        SkipTo, LineEnd, indentedBlock, Group)
 
 # local imports
+from fluidasserts.helper import http_helper
 from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
@@ -127,3 +129,37 @@ def swallows_exceptions(py_dest: str) -> bool:
                                    total_vulns=len(vulns)))
             result = True
     return result
+
+
+@track
+def has_vulnerabilities(package: str, version: str = None) -> bool:
+    """
+    Search vulnerabilities on given package/version.
+
+    :param package: Package name.
+    :param version: Package version.
+    """
+    base_url = 'https://ossindex.net/v2.0/package/pypi'
+    if version:
+        url = base_url + '/' + package + '/' + version
+    else:
+        url = base_url + '/' + package
+
+    sess = http_helper.HTTPSession(url)
+
+    resp = json.loads(sess.response.text)[0]
+    if resp['id'] == 0:
+        show_unknown('Sofware couldn\'t be found in package manager',
+                     details=dict(package=package, version=version))
+        return False
+    v_matches = resp['vulnerability-matches']
+    if int(v_matches) > 0:
+        vulns = resp['vulnerabilities']
+        vuln_titles = [x['title'] for x in vulns]
+        show_open('Software has vulnerabilities',
+                  details=dict(package=package, version=version,
+                               vuln_num=v_matches, vulns=vuln_titles))
+        return True
+    show_close('Software doesn\'t have vulnerabilities',
+               details=dict(package=package, version=version))
+    return False

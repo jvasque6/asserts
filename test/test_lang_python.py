@@ -52,6 +52,11 @@ def test_swallows_exceptions_in_dir_open():
     assert python.swallows_exceptions(CODE_DIR)
 
 
+def test_has_vulnerabilities_open():
+    """Search vulnerabilities."""
+    assert python.has_vulnerabilities('pip')
+
+
 #
 # Closing tests
 #
@@ -67,3 +72,9 @@ def test_swallows_exceptions_close():
     """Code swallows exceptions."""
     assert not python.swallows_exceptions(SECURE_CODE)
     assert not python.swallows_exceptions(NON_EXISTANT_CODE)
+
+
+def test_has_vulnerabilities_close():
+    """Search vulnerabilities."""
+    assert not python.has_vulnerabilities('pips')
+    assert not python.has_vulnerabilities('pipasdiahsds')
