@@ -100,8 +100,8 @@ What kind of vulnerabilities can ``Asserts`` test?
   * :mod:`SMTP <.smtp>` (:func:`Visible banner <.smtp.is_version_visible>`)
 
 
-As of June 5, 2018,
-``Asserts`` provides 142 checks
+As of |today|
+``Asserts`` provides <CHECKS> checks
 in the scenarios above.
 Use the search box in the sidebar,
 peruse the :ref:`genindex`
