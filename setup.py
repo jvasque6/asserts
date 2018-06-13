@@ -43,6 +43,7 @@ setup(
         'fluidasserts.proto',
         'fluidasserts.lang',
         'fluidasserts.utils',
+        'fluidasserts.sca',
     ],
     data_files=[
         ('', ['conf/conf.cfg', 'conf/conf.spec']),
