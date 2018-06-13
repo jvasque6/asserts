@@ -7,3 +7,5 @@ DATA = {
     'submit': 'add message',
     'text': '<script>alert("Hacked by FLUIDAttacks");</script>'
 }
+
+http.has_xss(URL, BAD_TEXT, data=DATA)
