@@ -3,9 +3,7 @@
 """Test methods of fluidasserts.sca packages."""
 
 # standard imports
-import io
 import os
-import sys
 
 # 3rd party imports
 # None
@@ -22,20 +20,24 @@ import fluidasserts
 
 # Constants
 fluidasserts.utils.decorators.UNITTEST = True
+PROJECT_OPEN = 'test/static/sca/pypi/open'
+PROJECT_CLOSE = 'test/static/sca/pypi/close'
+PROJECT_NOT_FOUND = 'test/static/sca/pypi/not_found'
 
 #
 # Open tests
 #
 
 
-def test_has_vulnerabilities_open():
+def test_package_has_vulnerabilities_open():
     """Search vulnerabilities."""
-    assert bower.has_vulnerabilities('jquery')
-    assert chocolatey.has_vulnerabilities('python')
-    assert maven.has_vulnerabilities('maven')
-    assert npm.has_vulnerabilities('npm')
-    assert nuget.has_vulnerabilities('jquery')
-    assert pypi.has_vulnerabilities('pip')
+    assert bower.package_has_vulnerabilities('jquery')
+    assert chocolatey.package_has_vulnerabilities('python')
+    assert maven.package_has_vulnerabilities('maven')
+    assert npm.package_has_vulnerabilities('npm')
+    assert nuget.package_has_vulnerabilities('jquery')
+    assert pypi.package_has_vulnerabilities('pip')
+    assert pypi.project_has_vulnerabilities(PROJECT_OPEN)
 
 
 
@@ -43,26 +45,29 @@ def test_has_vulnerabilities_open():
 # Closing tests
 #
 
-def test_has_vulnerabilities_close():
+def test_package_has_vulnerabilities_close():
     """Search vulnerabilities."""
-    assert not bower.has_vulnerabilities('jquery', version='3.0.0')
-    assert not bower.has_vulnerabilities('jqueryasudhaiusd', version='3.0.0')
-    assert not chocolatey.has_vulnerabilities('python', version='3.7.0')
-    assert not chocolatey.has_vulnerabilities('jqueryasudhai', version='3.7')
-    assert not maven.has_vulnerabilities('maven', version='5.0.0')
-    assert not maven.has_vulnerabilities('mavenasdasda', version='5.0.0')
-    assert not npm.has_vulnerabilities('npm', version='10.0.0')
-    assert not npm.has_vulnerabilities('npasdasdasm', version='10.0.0')
-    assert not nuget.has_vulnerabilities('jquery', version='10.0.0')
-    assert not nuget.has_vulnerabilities('jqueryasdasd', version='10.0.0')
-    assert not pypi.has_vulnerabilities('pips')
-    assert not pypi.has_vulnerabilities('pipasdiahsds')
+    assert not bower.package_has_vulnerabilities('jquery', '3.0.0')
+    assert not bower.package_has_vulnerabilities('jqueryasudhaiusd', '3.0.0')
+    assert not chocolatey.package_has_vulnerabilities('python', '3.7.0')
+    assert not chocolatey.package_has_vulnerabilities('jqueryasudhai', '3.7')
+    assert not maven.package_has_vulnerabilities('maven', '5.0.0')
+    assert not maven.package_has_vulnerabilities('mavenasdasda', '5.0.0')
+    assert not npm.package_has_vulnerabilities('npm', '10.0.0')
+    assert not npm.package_has_vulnerabilities('npasdasdasm', '10.0.0')
+    assert not nuget.package_has_vulnerabilities('jquery', '10.0.0')
+    assert not nuget.package_has_vulnerabilities('jqueryasdasd', '10.0.0')
+    assert not pypi.package_has_vulnerabilities('pips')
+    assert not pypi.package_has_vulnerabilities('pipasdiahsds')
+    assert not pypi.project_has_vulnerabilities(PROJECT_CLOSE)
+    assert not pypi.project_has_vulnerabilities(PROJECT_NOT_FOUND)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
-    assert not bower.has_vulnerabilities('jquery')
-    assert not chocolatey.has_vulnerabilities('python')
-    assert not maven.has_vulnerabilities('maven')
-    assert not npm.has_vulnerabilities('npm')
-    assert not nuget.has_vulnerabilities('jquery')
-    assert not pypi.has_vulnerabilities('pip')
+    assert not bower.package_has_vulnerabilities('jquery')
+    assert not chocolatey.package_has_vulnerabilities('python')
+    assert not maven.package_has_vulnerabilities('maven')
+    assert not npm.package_has_vulnerabilities('npm')
+    assert not nuget.package_has_vulnerabilities('jquery')
+    assert not pypi.package_has_vulnerabilities('pip')
+    assert not pypi.project_has_vulnerabilities(PROJECT_CLOSE)

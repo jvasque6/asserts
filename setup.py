@@ -88,6 +88,7 @@ setup(
         'viewstate==0.4.3',          # fluidasserts.proto.http
         'ntplib==0.3.3',             # fluidasserts.proto.http
         'pytz==2018.4',              # fluidasserts.proto.http
+        'requirements-detector==0.5.2',  #  fluidasserts.sca
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
 )
