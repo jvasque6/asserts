@@ -75,7 +75,7 @@ def project_has_vulnerabilities(path: str) -> bool:
     result = False
     try:
         reqs = _get_requirements(path)
-        response = sca_helper.scan_directory(reqs, PACKAGE_MANAGER)
+        response = sca_helper.scan_requirements(reqs, PACKAGE_MANAGER)
     except sca_helper.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))

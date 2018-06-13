@@ -61,7 +61,7 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
         raise ConnError
 
 
-def scan_directory(requirements: list, package_manager: str) -> list:
+def scan_requirements(requirements: list, package_manager: str) -> list:
     """
     Search vulnerabilities on given project directory.
 
@@ -73,7 +73,7 @@ def scan_directory(requirements: list, package_manager: str) -> list:
         try:
             vulns = get_vulns(package_manager, req[0], req[1])
         except PackageNotFoundException:
-            result.append(dict(package=req[0], version=-1, vulns=vulns))
+            result.append(dict(package=req[0], version=-1, vulns=[]))
         except http_helper.ConnError:
             raise ConnError
         result.append(dict(package=req[0], version=req[1], vulns=vulns))
