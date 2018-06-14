@@ -5,7 +5,7 @@ build_dir = string(default='build')
 venv_dir = string(default='build/venv')
 path_dir = string(default='build/venv/bin')
 dist_dir = string(default='dist')
-print_pre = string(default='**** FLUIDAsserts: ')
+print_pre = string(default='**** Fluid Asserts: ')
 print_pos = string(default='.')
 
 [logging]

@@ -1,4 +1,4 @@
-= FLUIDAsserts
+= Fluid Asserts
 :lang:                   en
 :author:                 Enginering Team
 :email:		         engineering@fluidattacks.com
@@ -12,7 +12,7 @@ image:https://gitlab.com/fluidsignal/asserts/badges/master/pipeline.svg[link="ht
 image:https://gitlab.com/fluidsignal/asserts/badges/master/coverage.svg[link="https://gitlab.com/fluidsignal/asserts/commits/master",title="coverage report"]
 
 Please refer to
-link:https://fluidsignal.gitlab.io/asserts/[FLUIDAsserts documentation].
+link:https://fluidsignal.gitlab.io/asserts/[Fluid Asserts documentation].
 
 As an internal user or developer, you might find
 

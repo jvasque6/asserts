@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-"""FLUIDAsserts format package."""
+"""Fluid Asserts format package."""

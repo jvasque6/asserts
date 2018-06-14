@@ -47,7 +47,7 @@ pygments_monkeypatch_style("Fluidattacks", Fluidattacks)
 
 # -- Project information -----------------------------------------------------
 
-project = 'FLUIDAsserts'
+project = 'Fluid Asserts'
 copyright = '2018, FLUID Engineering Team'
 author = 'FLUID Engineering Team'
 
@@ -141,7 +141,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'FLUIDAssertsdoc'
+htmlhelp_basename = 'Fluid Assertsdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -168,7 +168,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'FLUIDAsserts.tex', 'FLUIDAsserts Documentation',
+    (master_doc, 'Fluid Asserts.tex', 'Fluid Asserts Documentation',
      'FLUID Engineering Team', 'manual'),
 ]
 
@@ -178,7 +178,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'fluidasserts', 'FLUIDAsserts Documentation',
+    (master_doc, 'fluidasserts', 'Fluid Asserts Documentation',
      [author], 1)
 ]
 
@@ -189,8 +189,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, desrciption, category)
 texinfo_documents = [
-    (master_doc, 'FLUIDAsserts', 'FLUIDAsserts Documentation',
-     author, 'FLUIDAsserts', 'One line description of project.',
+    (master_doc, 'Fluid Asserts', 'Fluid Asserts Documentation',
+     author, 'Fluid Asserts', 'One line description of project.',
      'Miscellaneous'),
 ]
 

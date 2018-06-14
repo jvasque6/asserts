@@ -2,7 +2,7 @@
 Installing
 ==========
 
-``FLUIDAsserts`` is hosted on `PyPI <https://pypi.org/project/FLUIDAsserts/>`_,
+``Fluid Asserts`` is hosted on `PyPI <https://pypi.org/project/Fluid Asserts/>`_,
 so you can install it easily using ``pip3``
 on a system with ``Python 3``: ::
 
@@ -80,7 +80,7 @@ To achieve this, follow these steps:
 
    .. image:: _static/vars.png
 
-#. Add a job to run ``FLUIDAsserts``.
+#. Add a job to run ``Fluid Asserts``.
    For example, in Gitlab,
    you would add these three lines to
    your ``.gitlab-ci.yml``:

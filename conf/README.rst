@@ -1,4 +1,4 @@
-``FLUIDAsserts`` is an engine
+``Fluid Asserts`` is an engine
 to automate the closing of security findings
 over execution environments (``DAST``).
 
@@ -12,7 +12,7 @@ Setup
 Usage
 =====
 
-Import the required ``FLUIDAsserts`` modules into your exploit:
+Import the required ``Fluid Asserts`` modules into your exploit:
 
 .. code-block:: python
 
@@ -26,7 +26,7 @@ And run your exploit:
 
    $ python example.py
    ---
-   # FLUIDAsserts (v. 18.5.39870)
+   # Fluid Asserts (v. 18.5.39870)
    #  ___
    # | >>|> fluid
    # |___|  attacks, we hack your software

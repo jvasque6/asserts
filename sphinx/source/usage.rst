@@ -2,7 +2,7 @@
 Usage
 =====
 
-Most of ``FLUIDAsserts`` functions for the end-user
+Most of ``Fluid Asserts`` functions for the end-user
 are `predicates` regarding a specific vulnerability.
 In that sense,
 you "ask" ``Asserts``

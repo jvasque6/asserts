@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-"""FLUIDAsserts syst module."""
+"""Fluid Asserts syst module."""

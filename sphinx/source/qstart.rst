@@ -20,7 +20,7 @@ See more details in the :doc:`install` page.
 Usage
 -----
 
-Import the required ``FLUIDAsserts`` modules into your exploit:
+Import the required ``Fluid Asserts`` modules into your exploit:
 
 .. literalinclude:: example/qstart-sqli-open.py
 

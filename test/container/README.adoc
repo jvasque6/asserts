@@ -70,7 +70,7 @@ para referencia futura en el archivo siguiente:
 
 $ sudo mv /etc/ansible/hosts /etc/ansible/hosts.orig
 
-Y se añaden los hosts de FLUIDAsserts asi:
+Y se añaden los hosts de Fluid Asserts asi:
 
 ***
 $ cat /etc/ansible/hosts
@@ -138,7 +138,7 @@ conectar el server.
 Puede que esta configuracion genere un entorno mas seguro para
 escenarios donde el contenedor se ejectura en servidores.
 
-Para los propositos de FLUIDAsserts que es solo para pruebas y
+Para los propositos de Fluid Asserts que es solo para pruebas y
 simulaciones de mock, esta configuracion parece suficiente.
 
 ****** CONECTANDOSE COMO NO ROOT *********************
@@ -172,7 +172,7 @@ usarse el -K para que se solicite precisamente la clave de root.
 http://blog.oddbit.com/2015/10/13/ansible-20-the-docker-connection-driver/
 
 Este es el modo mas simple y mas seguro de trabajar con docker y ansible
-para el proposito que requiere FLUIDAsserts, pues como todo el trabajo
+para el proposito que requiere Fluid Asserts, pues como todo el trabajo
 se hace localmente no deberia necesitarse SSH para hacer la configuracion
 
 Sin embargo al parecer en Ansible2 ocurre un error que solo esta reparado

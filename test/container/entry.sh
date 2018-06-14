@@ -34,7 +34,7 @@ chown -R "$USER":"$USER" /home/"$USER"/
 echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/"$USER"
 
 # Imprimiendo banner de inicio del server
-echo "FLUIDAsserts - Docker Ansible Base server (SSH, Python, SUDO)"
+echo "Fluid Asserts - Docker Ansible Base server (SSH, Python, SUDO)"
 
 # Configurando conexión SSH para Ansible (en CI falla con PAM)
 sed -i "s/UsePAM yes/UsePAM no/" /etc/ssh/sshd_config

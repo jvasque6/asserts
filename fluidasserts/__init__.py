@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""FLUIDAsserts main package."""
+"""Fluid Asserts main package."""
 
 # pylint: disable=no-name-in-module
 # standard imports
@@ -37,7 +37,7 @@ from pygments.util import UnclosingTextIOWrapper
 # Remove support for py2
 if sys.version_info < (3,):
     print('Py2 is not longer supported. Please, use a Py3 interpreter to run \
-FLUIDAsserts')
+Fluid Asserts')
     sys.exit(-1)
 
 OUTFILE = sys.stdout

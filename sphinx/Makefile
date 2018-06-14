@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = -a
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = FLUIDAsserts
+SPHINXPROJ    = Fluid Asserts
 SOURCEDIR     = source
 BUILDDIR      = build
 

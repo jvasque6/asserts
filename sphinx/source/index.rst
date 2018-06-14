@@ -13,10 +13,10 @@
    credits
 
 ========================================
-Welcome to FLUIDAsserts's documentation!
+Welcome to Fluid Asserts's documentation!
 ========================================
 
-``FLUIDAsserts`` is an engine
+``Fluid Asserts`` is an engine
 to automate the closing of security findings
 over execution environments.
 ``Asserts`` performs Dynamic and Static

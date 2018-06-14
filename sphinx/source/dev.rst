@@ -280,7 +280,7 @@ References
 ----------
 
 The following pages contain some ideas
-to keep in mind when developing ``FLUIDAsserts``:
+to keep in mind when developing ``Fluid Asserts``:
 
 * https://haacked.com/archive/2007/09/21/unit-testing-security-example.aspx/
 * https://www.owasp.org/index.php/OWASP_Secure_TDD_Project
