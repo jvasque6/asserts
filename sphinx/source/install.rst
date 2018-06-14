@@ -22,6 +22,34 @@ In Windows:
 
 Now you're ready to begin :doc:`testing<usage>` vulnerabilities' closure.
 
+-------------------------
+Inside a Docker container
+-------------------------
+
+If you have ``Docker`` you can check out and run ``Asserts``
+inside a container. Just ::
+
+   $ docker pull fluidattacks/asserts
+
+And then go inside the container: ::
+
+   $ docker run -it fluidattacks/asserts sh
+   / # python3 -c "import fluidasserts"
+
+.. literalinclude:: example/banner-only.py.out
+
+From inside the container you could run ``Asserts``
+from the python interactive shell,
+or quickly whip up a script using ``vi``.
+But it would be much more useful to `mount`
+the directory where your exploits live into the container: ::
+
+  $ docker run -v /home/me/myexploits/:/exploits/ -it fluidattacks/asserts sh
+  / # python3 /exploits/open-sqli.py
+
+.. literalinclude:: example/qstart-sqli-open.py.out
+   :language: yaml
+
 -----------------------------------------------
 Usage in a CI (Continuous Integration) pipeline
 -----------------------------------------------
@@ -33,7 +61,7 @@ you can integrate it into
 your ``CI`` pipeline to
 ensure that your software builds and ships
 with no open vulnerabilities.
-We will provide a custom ``Dcoker`` container
+We will provide a custom ``Docker`` container
 with the specific tests you need
 and maintain the build-breaking exploit.
 
