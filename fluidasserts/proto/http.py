@@ -380,7 +380,8 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         the_page = response.text
         if response.status_code != 200:
             show_unknown('There was an error',
-                         details=dict(url, status=response.status_code,
+                         details=dict(url=url,
+                                      status=response.status_code,
                                       fingerprint=fingerprint))
             return False
         if re.search(str(expected_text), the_page, re.IGNORECASE):
