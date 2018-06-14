@@ -54,6 +54,7 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
         if int(resp['vulnerability-matches']) > 0:
             vulns = resp['vulnerabilities']
             vuln_titles = [x['title'] for x in vulns]
+            vuln_titles = list(set(vuln_titles))
         else:
             vuln_titles = []
         return vuln_titles
