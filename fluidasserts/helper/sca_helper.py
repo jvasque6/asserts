@@ -7,6 +7,7 @@
 
 # 3rd party imports
 import json
+from functools import reduce
 
 # local imports
 from fluidasserts.helper import http_helper
@@ -53,8 +54,9 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
             raise PackageNotFoundException
         if int(resp['vulnerability-matches']) > 0:
             vulns = resp['vulnerabilities']
-            vuln_titles = [x['title'] for x in vulns]
-            vuln_titles = list(set(vuln_titles))
+            vuln_titles = [[x['title'], x['versions']] for x in vulns]
+            vuln_titles = reduce(lambda l, x: l.append(x) or
+                                 l if x not in l else l, vuln_titles, [])
         else:
             vuln_titles = []
         return vuln_titles
