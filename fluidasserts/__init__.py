@@ -260,7 +260,7 @@ CLIENT_IP = get_public_ip()
 
 HEADER = """
 ---
-# FLUIDAsserts (v. {})
+# Fluid Asserts (v. {})
 #  ___
 # | >>|> fluid
 # |___|  attacks, we hack your software
