@@ -20,6 +20,6 @@ VER=$(find /builds/fluidsignal/asserts/build/dist/ -type f -printf '%f' | \
 CHECKS=$(grep -rI fluidasserts -e '@track' | wc -l)
 sed -i "s/<CHECKS>/$CHECKS/" sphinx/source/index.rst
 sphinx-build -D version="v.$VER" -D release="v.$VER" \
-             -a sphinx/source/ public/
+             -b dirhtml -a sphinx/source/ public/
 sphinx-build -b linkcheck sphinx/source public/review/
 sphinx-build -b coverage  sphinx/source public/review/
