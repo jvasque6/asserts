@@ -15,7 +15,7 @@ mkdir -p public/
 # Generate e: separate page per module f: overwrite M: module doc first
 sphinx-apidoc -efM fluidasserts -o sphinx/source
 # Get version from build/dist zip
-VER=$(find /builds/fluidsignal/asserts/build/dist/ -type f | \
+VER=$(find /builds/fluidsignal/asserts/build/dist/ -type f -printf '%f' | \
       sed 's_fluidasserts-\|.zip__g')
 CHECKS=$(grep -rI fluidasserts -e '@track' | wc -l)
 sed -i "s/<CHECKS>/$CHECKS/" sphinx/source/index.rst
