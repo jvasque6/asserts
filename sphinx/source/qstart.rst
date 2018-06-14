@@ -31,9 +31,7 @@ whether the vulnerability
 is still open
 or has been closed:
 
-literal-include
-
-.. literalinclude:: example/qstart-sqli-open.out
+.. literalinclude:: example/qstart-sqli-open.py.out
    :language: yaml
 
 See more use cases and examples in our :doc:`usage` page.
