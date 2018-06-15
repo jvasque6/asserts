@@ -26,14 +26,14 @@ def _get_version():
 
 
 setup(
-    name='fluidasserts',
+    name='thefluidasserts',
     description='Assertion Library for Security Assumptions',
     long_description=_get_readme(),
     version=_get_version(),
     url='https://fluidattacks.com/web/en/products/asserts',
     project_urls={'Documentation': 'https://fluidsignal.gitlab.io/asserts/'},
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
-    author='FLUID Engineering Team',
+    author='Fluid Attacks Engineering Team',
     author_email='engineering@fluidattacks.com',
     packages=[
         'fluidasserts',
