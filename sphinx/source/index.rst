@@ -33,8 +33,8 @@ automate the closing of vulnerabilities.
 This makes it particularly useful
 since this testing can be performed by end users as-is
 or as part of a continuous integration pipeline.
-Thus any changes to the ``ToE``
-can be tested continuously against
+Thus any changes to the Target of Evaluation (``ToE``)
+can be continuously tested against
 the closing of confirmed vulnerabilities.
 
 ========
@@ -49,6 +49,12 @@ Here are some of the things ``Asserts`` can do for you:
   to ensure your product is released with no open vulnerabilities.
 * Helps ethical hackers in their daily activities by
   automating tasks.
+* Detailed tracing: For every vulnerability check
+  (both on ``SAST`` and ``DAST``),
+  ``Asserts`` prints the ``ToE`` fingerprint,
+  thus enabling clients to pinpoint
+  the exact moment when the vulnerability appeared.
+
 * Now easier to install than ever and thoroughly documented.
 
 What kind of vulnerabilities can ``Asserts`` test?
