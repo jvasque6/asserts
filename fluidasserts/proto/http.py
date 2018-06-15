@@ -861,8 +861,7 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
 
 
 @track
-def is_version_visible(ip_address: str, ssl: bool = False,
-                       port: int = 80) -> bool:
+def is_version_visible(url) -> bool:
     """
     Check if banner is visible.
 
@@ -870,24 +869,26 @@ def is_version_visible(ip_address: str, ssl: bool = False,
     :param ssl: Whether to use HTTP or HTTPS.
     :param port: If necessary, specify port to connect to.
     """
-    if ssl:
-        service = banner_helper.HTTPSService(port)
-    else:
-        service = banner_helper.HTTPService(port)
-    version = service.get_version(ip_address)
-    fingerprint = service.get_fingerprint(ip_address)
+    try:
+        service = banner_helper.HTTPService(url)
+    except http_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(url=url, error=str(exc).replace(':', ',')))
+        return False
+    version = service.get_version()
+    fingerprint = service.get_fingerprint()
 
     result = True
     if version:
         result = True
         show_open('HTTP version visible',
-                  details=dict(site=ip_address, port=port,
+                  details=dict(url=url,
                                version=version, fingerprint=fingerprint),
                   refs='apache/restringir-banner')
     else:
         result = False
         show_close('HTTP version not visible',
-                   details=dict(site=ip_address, port=port,
+                   details=dict(url=url,
                                 fingerprint=fingerprint),
                    refs='apache/restringir-banner')
     return result

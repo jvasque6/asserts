@@ -31,7 +31,7 @@ from typing import Optional
 import certifi
 
 # local imports
-# none
+from fluidasserts.helper import http_helper
 
 
 class Service(object):
@@ -161,64 +161,41 @@ class SMTPService(Service):
         return None
 
 
-class HTTPService(Service):
+class HTTPService():
     """HTTP Service definition."""
 
-    def __init__(self, port: int = 80, is_active: bool = True,
-                 is_ssl: bool = False,
-                 payload: str = b'HEAD / HTTP/1.0\r\n\r\n') -> None:
+    def __init__(self, url) -> None:
         """Build a new Service object."""
+        self.url = url
         try:
-            super(HTTPService, self).__init__(port=port,
-                                              is_active=is_active,
-                                              is_ssl=is_ssl,
-                                              payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
+            self.sess = http_helper.HTTPSession(self.url)
+        except http_helper.ConnError:
+            raise
 
-    def get_version(self, server: str) -> Optional[str]:
+    def get_banner(self) -> str:
+        """Get HTTP Server banner."""
+        try:
+            banner = self.sess.response.headers['Server']
+            return banner
+        except KeyError:
+            return ''
+
+    def get_version(self) -> Optional[str]:
         """
         Get version.
 
         :param server: Server to connect to.
         """
-        banner = self.get_banner(server)
+        banner = 'Server: {}'.format(self.get_banner())
         regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
                                 banner)
         if regex_match:
             return regex_match.group(1)
         return None
 
-
-class HTTPSService(Service):
-    """HTTPS Service definition."""
-
-    def __init__(self, port: int = 443,
-                 is_active: bool = True, is_ssl: bool = True,
-                 payload: str = b'HEAD / HTTP/1.0\r\n\r\n') -> None:
-        """Build a new HTTPService object."""
-        try:
-            super(HTTPSService, self).__init__(port=port,
-                                               is_active=is_active,
-                                               is_ssl=is_ssl,
-                                               payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
-
-    def get_version(self, server: str) -> Optional[str]:
-        """
-        Get version.
-
-        :param server: Server to connect to.
-        """
-        banner = self.get_banner(server)
-        regex_match = re.search(r'Server: [a-z-A-Z]+[^a-zA-Z0-9](.*)',
-                                banner)
-        if regex_match:
-            return regex_match.group(1)
-        return None
+    def get_fingerprint(self) -> dict:
+        """Get HTTP fingerprint."""
+        return self.sess.get_fingerprint()
 
 
 class SSHService(Service):

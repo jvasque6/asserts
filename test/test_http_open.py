@@ -451,3 +451,9 @@ def test_is_date_unsyncd_open():
     """Hora desincronizada?."""
     assert http.is_date_unsyncd(
         '%s/date/fail' % (BASE_URL))
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_is_version_visible_open():
+   """Server header contains version?."""
+   assert http.is_version_visible('%s/version/fail' % (BASE_URL))

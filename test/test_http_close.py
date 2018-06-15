@@ -444,9 +444,11 @@ def test_is_header_x_asp_net_version_present_close():
         '%s/x_aspnet_version/ok' % (NONEXISTANT_SERVICE))
 
 
-# @pytest.mark.usefixtures('mock_http')
-# def test_is_version_visible_close():
-#    assert not http.is_version_visible('127.0.0.1', port=5000)
+@pytest.mark.usefixtures('mock_http')
+def test_is_version_visible_close():
+   """Server header contains version?."""
+   assert not http.is_version_visible('%s/version/ok' % (BASE_URL))
+   assert not http.is_version_visible('%s/version/ok' % (NONEXISTANT_SERVICE))
 
 
 @pytest.mark.usefixtures('mock_http')
