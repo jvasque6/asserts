@@ -29,10 +29,6 @@ Inside a Docker container
 If you have ``Docker`` you can check out and run ``Asserts``
 inside a container. Just ::
 
-   $ docker pull fluidattacks/asserts
-
-And then go inside the container: ::
-
    $ docker run -it fluidattacks/asserts sh
    / # python3 -c "import fluidasserts"
 

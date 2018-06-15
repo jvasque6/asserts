@@ -48,8 +48,8 @@ pygments_monkeypatch_style("Fluidattacks", Fluidattacks)
 # -- Project information -----------------------------------------------------
 
 project = 'Fluid Asserts'
-copyright = '2018, FLUID Engineering Team'
-author = 'FLUID Engineering Team'
+copyright = '2018, Fluid Attacks Engineering Team'
+author = 'Fluid Attacks Engineering Team'
 
 # The short X.Y version
 version = '18.6.8385'
@@ -141,7 +141,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'Fluid Assertsdoc'
+htmlhelp_basename = 'fluidassertsdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -168,7 +168,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Fluid Asserts.tex', 'Fluid Asserts Documentation',
+    (master_doc, 'fluidasserts.tex', 'Fluid Asserts Documentation',
      'FLUID Engineering Team', 'manual'),
 ]
 

@@ -66,7 +66,7 @@ What kind of vulnerabilities can ``Asserts`` test?
   nine languages supported
   including proprietary (:mod:`C# <.csharp>`),
   open source (:mod:`Python <.python>`, :mod:`Java <.java>`,
-  :mod:`Javascript<.javascript>`),
+  :mod:`Javascript <.javascript>` and :mod:`Typescript <.javascript>`),
   markup (:mod:`HTML <.html>`),
   legacy (:mod:`RPG <.rpgle>`),
   :mod:`web configuration files <.dotnetconfig>`
@@ -83,7 +83,7 @@ What kind of vulnerabilities can ``Asserts`` test?
   since most vulnerabilities are network-borne.
   The main network protocols are covered:
 
-  * :mod:`SSL <.ssl>` (think :func:`Heartbleed <.has_heartbleed>`)
+  * :mod:`SSL <.ssl>` (:func:`Heartbleed <.has_heartbleed>`, :func:`POODLE <.has_poodle_sslv3>`, :func:`BEAST <.has_beast>`, :func:`BREACH <.has_breach>`)
   * :mod:`HTTP <.http>` (:func:`Cross-site scripting <.has_xss>`,
     :func:`Parameter Pollution <.has_hpp>`,
     :func:`User enumeration <.has_user_enumeration>`,
