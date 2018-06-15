@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""This modulle allows to check SSL vulnerabilities."""
+"""
+This modulle allows to check SSL vulnerabilities.
+
+Heartbleed code inspired by original PoC by
+Jared Stafford (jspenguin@jspenguin.org).
+"""
 
 # standard imports
 from __future__ import absolute_import
