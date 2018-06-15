@@ -3,8 +3,8 @@
 """
 This modulle allows to check SSL vulnerabilities.
 
-Heartbleed code inspired by original PoC by
-Jared Stafford (jspenguin@jspenguin.org).
+Heartbleed code inspired from original PoC by
+Jared Stafford (jspenguin@jspenguin.org)
 """
 
 # standard imports

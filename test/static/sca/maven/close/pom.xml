@@ -34,6 +34,10 @@
             <artifactId>log4jasdads</artifactId>
 	    <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>log4jasdasd</groupId>
+            <artifactId>log4jasdads</artifactId>
+        </dependency>
     </dependencies>
 
 
