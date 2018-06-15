@@ -26,7 +26,7 @@ def _get_version():
 
 
 setup(
-    name='thefluidasserts',
+    name='fluidasserts',
     description='Assertion Library for Security Assumptions',
     long_description=_get_readme(),
     version=_get_version(),
