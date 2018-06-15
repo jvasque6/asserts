@@ -243,7 +243,7 @@ class SSHService(Service):
         :param server: Server to connect to.
         """
         banner = self.get_banner(server)
-        regex_match = re.search(r'(.*)', banner)
+        regex_match = re.search(r'SSH[^ ]+(.*)', banner)
         version = regex_match.group(1)
         if len(version) < 3:
             return None

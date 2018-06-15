@@ -102,3 +102,29 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
         show_close('SSH does not have insecure HMAC encryption algorithms',
                    details=dict(host=host, fingerprint=fingerprint))
         return False
+
+
+@track
+def is_version_visible(ip_address: str, port: int = PORT) -> bool:
+    """
+    Check if banner is visible.
+
+    :param ip_address: IP address to test.
+    :param port: If necessary, specify port to connect to (default: 22).
+    """
+    service = banner_helper.SSHService(port)
+    version = service.get_version(ip_address)
+    fingerprint = service.get_fingerprint(ip_address)
+
+    result = True
+    if version:
+        result = True
+        show_open('SSH version visible on {}:{}'.format(ip_address, port),
+                  details=dict(version=version,
+                               fingerprint=fingerprint))
+    else:
+        result = False
+        show_close('SSH version not visible on {}:{}'.
+                   format(ip_address, port),
+                   details=dict(fingerprint=fingerprint))
+    return result
