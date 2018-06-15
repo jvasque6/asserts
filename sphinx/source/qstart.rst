@@ -12,7 +12,7 @@ Simply
 
    $ pip3 install -U fluidasserts
 
-Note that ``Asserts`` runs only with ``Python`` 3.
+Note that ``Asserts`` runs only with ``Python 3.5`` or higher.
 
 See more details in the :doc:`install` page.
 
