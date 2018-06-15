@@ -341,7 +341,7 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
         http_session = http_helper.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
-        if response.status_code != 200:
+        if response.status_code >= 500:
             show_unknown('There was an error',
                          details=dict(url=url, status=response.status_code,
                                       fingerprint=fingerprint))
@@ -378,7 +378,7 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         the_page = response.text
-        if response.status_code != 200:
+        if response.status_code >= 500:
             show_unknown('There was an error',
                          details=dict(url=url,
                                       status=response.status_code,
