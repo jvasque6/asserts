@@ -356,6 +356,10 @@ def test_userenum_post_close():
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (MOCK_SERVICE),
         'username', data=data)
+    data = 'notfound=pepe&password=grillo'
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/ok' % (MOCK_SERVICE),
+        'username', data=data)
 
 
 @pytest.mark.usefixtures('mock_http')

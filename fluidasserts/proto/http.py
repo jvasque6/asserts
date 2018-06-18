@@ -1048,13 +1048,18 @@ def has_user_enumeration(url: str, user_field: str,
     assert 'params' in kwargs or 'data' in kwargs or 'json' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
-        assert user_field in query_string
     elif 'data' in kwargs:
         query_string = kwargs['data']
-        assert user_field in query_string
     elif 'json' in kwargs:
         query_string = kwargs['json']
         assert user_field in json.dumps(query_string)
+
+    if 'json' not in kwargs and user_field not in query_string:
+        show_unknown('Given user_field not in query string',
+                     details=dict(url=url,
+                                  user_field=user_field,
+                                  query_string=query_string))
+        return False
 
     if not user_list:
         user_list = ['admin', 'administrator', 'guest', 'test']
@@ -1079,6 +1084,7 @@ def has_user_enumeration(url: str, user_field: str,
 
     from difflib import SequenceMatcher
     res = 0.0
+
     for resp_text, resp_time in merged:
         res += SequenceMatcher(None, resp_text, resp_time).ratio()
 
