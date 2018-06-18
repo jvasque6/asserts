@@ -7,6 +7,7 @@
 # standard imports
 import os
 import sys
+import tempfile
 from subprocess import call
 
 # 3rd party imports
@@ -15,7 +16,7 @@ from subprocess import call
 # local imports
 import fluidasserts
 
-LOGFILE = '/tmp/fluidasserts.log'
+(_, LOGFILE) = tempfile.mkstemp(suffix='.log')
 
 
 def main():
