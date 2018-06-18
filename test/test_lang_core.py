@@ -10,10 +10,10 @@
 
 # local imports
 from fluidasserts.lang import core
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 CODE_DIR = 'test/static/lang/c/'
 SECURE_CODE = CODE_DIR + 'secure.c'
 INSECURE_CODE = CODE_DIR + 'insecure.c'

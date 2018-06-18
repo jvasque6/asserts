@@ -10,11 +10,12 @@ import sys
 # None
 
 # local imports
+import fluidasserts
 from fluidasserts.lang import java
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 CODE_DIR = 'test/static/lang/java/'
 SECURE_CODE = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_CODE = CODE_DIR + 'GenericExceptionsOpen.java'

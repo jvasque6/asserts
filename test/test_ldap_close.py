@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import ldap
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 HARD_PORT = 389
 NON_EXISTANT = '0.0.0.0'
 

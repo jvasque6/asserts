@@ -15,12 +15,9 @@ from fluidasserts.sca import maven
 from fluidasserts.sca import npm
 from fluidasserts.sca import nuget
 from fluidasserts.sca import pypi
-import fluidasserts.utils.decorators
-import fluidasserts
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
-
 MAVEN_PROJECT_OPEN = 'test/static/sca/maven/open'
 MAVEN_PROJECT_CLOSE = 'test/static/sca/maven/close'
 MAVEN_PROJECT_NOT_FOUND = 'test/static/sca/maven/not_found'

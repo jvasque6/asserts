@@ -18,12 +18,12 @@ import pytest
 # local imports
 from fluidasserts.helper import http_helper
 from fluidasserts.proto import http
-import fluidasserts.utils.decorators
+
 
 #
 # Constants
 #
-fluidasserts.utils.decorators.UNITTEST = True
+
 MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/http/headers'
 BWAPP_PORT = 80

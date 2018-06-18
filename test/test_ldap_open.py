@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import ldap
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 WEAK_PORT = 389
 
 #

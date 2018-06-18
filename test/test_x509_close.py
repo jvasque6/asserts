@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.format import x509
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 SSL_PORT = 443
 NON_EXISTANT = '0.0.0.0'
 

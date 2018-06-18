@@ -19,13 +19,13 @@ import pytest
 
 # local imports
 from fluidasserts.proto import ftp
-import fluidasserts.utils.decorators
+
 
 
 #
 # Constants
 #
-fluidasserts.utils.decorators.UNITTEST = True
+
 ADMIN_PASS = 'ahViQu9E'
 NONPASS_USER = 'nonpass'
 SECURED_USER = 'secured'

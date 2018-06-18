@@ -10,11 +10,12 @@ import sys
 # None
 
 # local imports
+import fluidasserts
 from fluidasserts.lang import csharp
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 CODE_DIR = 'test/static/lang/csharp/'
 SECURE_CODE = CODE_DIR + 'GenericExceptionsClose.cs'
 INSECURE_CODE = CODE_DIR + 'GenericExceptionsOpen.cs'

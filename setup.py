@@ -93,4 +93,7 @@ setup(
         'requirements-detector==0.5.2',  #  fluidasserts.sca
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
+    entry_points=
+        {'console_scripts': ['asserts=fluidasserts.utils.cli:main'],
+    },
 )

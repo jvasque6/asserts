@@ -10,10 +10,10 @@
 
 # local imports
 from fluidasserts.lang import dotnetconfig
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 CODE_DIR = 'test/static/lang/dotnetconfig/'
 SECURE_WEBCONF = CODE_DIR + 'webNotVuln.config'
 INSECURE_WEBCONF = CODE_DIR + 'webVuln.config'

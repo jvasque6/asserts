@@ -12,10 +12,10 @@ HTML se encuentra adecuadamente implementado.
 
 # local imports
 from fluidasserts.lang import html
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 
 CODE_DIR = 'test/static/lang/html/'
 SECURE_CODE = CODE_DIR + 'non-vulnerable.html'

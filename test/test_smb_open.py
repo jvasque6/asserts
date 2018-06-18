@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import smb
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 SMB_PORT = 445
 
 #

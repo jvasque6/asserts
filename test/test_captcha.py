@@ -10,10 +10,10 @@
 
 # local imports
 from fluidasserts.format import captcha
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 SECURE_CAPTCHA_IMG = ['test/provision/captcha/secure.jpg', '504375']
 WEAK_CAPTCHA_IMG = ['test/provision/captcha/weak.jpg', 'WORDS']
 

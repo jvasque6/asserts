@@ -14,13 +14,13 @@ import pytest
 
 # local imports
 from fluidasserts.proto import ssh
-import fluidasserts.utils.decorators
+
 
 
 #
 # Constants
 #
-fluidasserts.utils.decorators.UNITTEST = True
+
 SSH_PORT = 22
 ADMIN_USER = 'root'
 ADMIN_PASS = 'Puef8poh2tei9AeB'

@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import tcp
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 HARD_PORT = 443
 WEAK_PORT = 21
 NON_EXISTANT = '0.0.0.0'

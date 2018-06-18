@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import smtp
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 HARD_PORT = 25
 
 #

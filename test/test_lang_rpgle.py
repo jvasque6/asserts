@@ -10,10 +10,10 @@
 
 # local imports
 from fluidasserts.lang import rpgle
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 CODE_DIR = 'test/static/lang/rpgle/'
 SECURE_CODE = CODE_DIR + 'dos_close.rpg'
 INSECURE_CODE = CODE_DIR + 'dos_open.rpg'

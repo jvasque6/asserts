@@ -14,10 +14,10 @@ import pytest
 
 # local imports
 from fluidasserts.proto import dns
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 TEST_ZONE = 'fluid.la'
 WEAK_PORT = 53
 HARD_PORT = 53

@@ -18,10 +18,10 @@ PDF.
 
 # local imports
 from fluidasserts.format import pdf
-import fluidasserts.utils.decorators
+
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 
 #
 # Open tests

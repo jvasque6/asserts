@@ -14,11 +14,11 @@ import pytest
 
 # local imports
 from fluidasserts.syst import linux
-import fluidasserts.utils.decorators
+
 
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 ADMIN_USER = 'root'
 ADMIN_PASS = 'Puef8poh2tei9AeB'
 NONPRIV_USER = 'nonpriv'

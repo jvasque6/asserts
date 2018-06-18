@@ -33,8 +33,8 @@ from pygments.util import UnclosingTextIOWrapper
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 # pylint: disable=no-member
-
 # Remove support for py2
+
 if sys.version_info < (3,):
     print('Py2 is not longer supported. Please, use a Py3 interpreter to run \
 Fluid Asserts')
@@ -159,9 +159,9 @@ def get_public_ip():
     return my_ip
 
 
-def get_caller_module():
+def get_caller_module(depth=3):
     """Get caller module."""
-    frm = inspect.stack()[3]
+    frm = inspect.stack()[depth]
     mod = inspect.getmodule(frm[0])
     caller = mod.__name__
     return caller
@@ -230,6 +230,40 @@ class Message(object):
                   TerminalFormatter(colorscheme=style), OUTFILE)
 
 
+def show_close(message, details=None, refs=None):
+    """Show close message."""
+    message = Message('CLOSED', message, details, refs)
+    message.as_yaml()
+
+
+def show_open(message, details=None, refs=None):
+    """Show close message."""
+    message = Message('OPEN', message, details, refs)
+    message.as_yaml()
+
+
+def show_unknown(message, details=None, refs=None):
+    """Show close message."""
+    message = Message('UNKNOWN', message, details, refs)
+    message.as_yaml()
+
+
+def show_banner():
+    """Show Asserts banner."""
+    header = """
+---
+# Fluid Asserts (v. {})
+#  ___
+# | >>|> fluid
+# |___|  attacks, we hack your software
+#
+# Loading attack modules ...
+""".format(__version__)
+
+    highlight(header, PropertiesLexer(),
+              TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
+
+
 # Set __version__
 try:
     _DIST = get_distribution('fluidasserts')
@@ -248,8 +282,8 @@ else:
 PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
 
 if 'FA_STRICT' in os.environ:
-    if os.environ['FA_STRICT'] != 'true' and \
-       os.environ['FA_STRICT'] != 'false':
+    ACCEPTED_VALUES = ['true', 'false']
+    if os.environ['FA_STRICT'] not in ACCEPTED_VALUES:
         print('FA_STRICT env variable is \
 set but with an unknown value. It must be "true" or "false".')
         sys.exit(-1)
@@ -257,42 +291,8 @@ set but with an unknown value. It must be "true" or "false".')
 CLIENT_ID = get_os_fingerprint()
 CLIENT_IP = get_public_ip()
 
-
-HEADER = """
----
-# Fluid Asserts (v. {})
-#  ___
-# | >>|> fluid
-# |___|  attacks, we hack your software
-#
-# Loading attack modules ...
-""".format(__version__)
-
-highlight(HEADER, PropertiesLexer(),
-          TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
 except mixpanel.MixpanelException:
     pass
-
-
-def show_close(message, details=None, refs=None):
-    """Show close message."""
-    message = Message('CLOSED', message, details, refs)
-    message.as_yaml()
-
-
-def show_open(message, details=None, refs=None):
-    """Show close message."""
-    message = Message('OPEN', message, details, refs)
-    message.as_yaml()
-    if 'FA_STRICT' in os.environ:
-        if os.environ['FA_STRICT'] == 'true':
-            sys.exit(1)
-
-
-def show_unknown(message, details=None, refs=None):
-    """Show close message."""
-    message = Message('UNKNOWN', message, details, refs)
-    message.as_yaml()

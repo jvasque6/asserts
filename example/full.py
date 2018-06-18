@@ -96,6 +96,7 @@ http.has_trace_method(url)
 http.has_delete_method(url)
 http.has_put_method(url)
 http.has_dirlisting('https://fluidattacks.com/icons')
+http.is_version_visible(url)
 #http.has_sqli(url, expect=None, params=None, data='', cookies=None)
 #http.has_xss(url, expect, params=None, data='', cookies=None)
 #http.has_command_injection(url, expect, params=None, data='', cookies=None)
@@ -109,9 +110,6 @@ http.has_dirlisting('https://fluidattacks.com/icons')
 #http.has_insecure_upload(url, expect, file_param, file_path, params=None,
 http.is_sessionid_exposed(url)
 server = 'fluidattacks.com'
-http.is_version_visible(server, port=80)
-http.is_version_visible(server, ssl=True, port=443)
 text = 'Continuous Hacking'
 http.has_not_text('https://fluidattacks.com', text)
-
 http.is_not_https_required('http://fluidattacks.com')

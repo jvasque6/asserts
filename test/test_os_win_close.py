@@ -13,11 +13,11 @@ from __future__ import print_function
 
 # local imports
 from fluidasserts.syst import win
-import fluidasserts.utils.decorators
+
 
 
 # Constants
-fluidasserts.utils.decorators.UNITTEST = True
+
 NONPRIV_USER = 'nonpriv'
 NONPRIV_PASS = 'ahgh7xee9eewaeGh'
 OS_PORT = 22
