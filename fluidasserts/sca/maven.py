@@ -43,8 +43,9 @@ def _get_requirements(path: str) -> list:
                 version = dep.find("xmlns:version", namespaces=namespaces)
                 if version is not None:
                     if version.text.startswith('$'):
-                        continue
-                    reqs.append((artifact_id.text, version.text))
+                        reqs.append((artifact_id.text, None))
+                    else:
+                        reqs.append((artifact_id.text, version.text))
                 else:
                     reqs.append((artifact_id.text, None))
     return reqs
