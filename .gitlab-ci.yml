@@ -49,12 +49,10 @@ test:
 
 fluidasserts:
   script:
-    - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
-    - docker pull fluid-docker.jfrog.io/$ORG:$APP
-    - docker run -e ORG=$ORG -e APP=$APP -e USER=$JFROG_USER -e PASS=$JFROG_PASS
-      -e FA_STRICT="false"
+    - docker pull fluidattacks/asserts
+    - docker run -e FA_STRICT="false" -w /code
       -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
-      fluid-docker.jfrog.io/$ORG:$APP
+      fluidattacks/asserts python3 /code/deploy/container/exploit.py
   except:
     - master
 
