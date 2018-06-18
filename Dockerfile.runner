@@ -13,4 +13,4 @@ RUN apk update \
     jpeg-dev \
     curl
 
-RUN pip3 install fluidasserts
+RUN pip3 install --no-cache-dir -U fluidasserts
