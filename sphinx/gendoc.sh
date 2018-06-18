@@ -8,7 +8,7 @@ striprun() {
 
 # Execute the examples and save their output
 for example in sphinx/source/example/*.py; do
-  striprun example
+  striprun "$example"
 done
 
 # HTML must go to public/ for gitlab pages
