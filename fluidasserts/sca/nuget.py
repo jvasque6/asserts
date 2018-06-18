@@ -85,6 +85,11 @@ def project_has_vulnerabilities(path: str) -> bool:
                      details=dict(error=str(exc).replace(':', ',')))
         return False
 
+    if not response:
+        show_unknown('Not packages found in project',
+                     details=dict(path=path))
+        return False
+
     for package in response:
         if package['version'] == -1:
             show_unknown('Sofware couldn\'t be found in package manager',

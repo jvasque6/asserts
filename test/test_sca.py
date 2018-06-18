@@ -24,12 +24,15 @@ fluidasserts.utils.decorators.UNITTEST = True
 MAVEN_PROJECT_OPEN = 'test/static/sca/maven/open'
 MAVEN_PROJECT_CLOSE = 'test/static/sca/maven/close'
 MAVEN_PROJECT_NOT_FOUND = 'test/static/sca/maven/not_found'
+MAVEN_PROJECT_EMPTY = 'test/static/sca/maven/empty'
 NUGET_PROJECT_OPEN = 'test/static/sca/nuget/open'
 NUGET_PROJECT_CLOSE = 'test/static/sca/nuget/close'
 NUGET_PROJECT_NOT_FOUND = 'test/static/sca/nuget/not_found'
+NUGET_PROJECT_EMPTY = 'test/static/sca/nuget/empty'
 PYPI_PROJECT_OPEN = 'test/static/sca/pypi/open'
 PYPI_PROJECT_CLOSE = 'test/static/sca/pypi/close'
 PYPI_PROJECT_NOT_FOUND = 'test/static/sca/pypi/not_found'
+
 
 #
 # Open tests
@@ -64,12 +67,14 @@ def test_package_has_vulnerabilities_close():
     assert not maven.package_has_vulnerabilities('mavenasdasda', '5.0.0')
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_NOT_FOUND)
+    assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_EMPTY)
     assert not npm.package_has_vulnerabilities('npm', '10.0.0')
     assert not npm.package_has_vulnerabilities('npasdasdasm', '10.0.0')
     assert not nuget.package_has_vulnerabilities('jquery', '10.0.0')
     assert not nuget.package_has_vulnerabilities('jqueryasdasd', '10.0.0')
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_CLOSE)
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_NOT_FOUND)
+    assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_EMPTY)
     assert not pypi.package_has_vulnerabilities('pips')
     assert not pypi.package_has_vulnerabilities('pipasdiahsds')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
@@ -80,6 +85,7 @@ def test_package_has_vulnerabilities_close():
     assert not bower.package_has_vulnerabilities('jquery')
     assert not chocolatey.package_has_vulnerabilities('python')
     assert not maven.package_has_vulnerabilities('maven')
+    assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not npm.package_has_vulnerabilities('npm')
     assert not nuget.package_has_vulnerabilities('jquery')
