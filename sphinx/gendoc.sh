@@ -1,14 +1,15 @@
-#!/usr/bin/env/bash
+#!/usr/bin/env sh
 
-function striprun {
+striprun() {
     python3 "$1" |
     perl -pe 's/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g' |
     tee "$1".out
 }
 
-export -f striprun
 # Execute the examples and save their output
-find sphinx/source/example/ -name '*.py' -exec sh -c 'striprun $1' _ {} \;
+for example in sphinx/source/example/*.py; do
+  striprun example
+done
 
 # HTML must go to public/ for gitlab pages
 mkdir -p public/
