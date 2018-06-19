@@ -1,6 +1,6 @@
 FROM alpine:latest
 
-RUN apk update \
+    RUN apk update \
     && apk upgrade \
     && apk add python \
     py3-pip \
@@ -11,6 +11,10 @@ RUN apk update \
     openssl-dev \
     make \
     jpeg-dev \
-    curl
+    curl \
+    && rm -rf /var/cache/apk/*
 
-RUN pip3 install --no-cache-dir -U fluidasserts
+ADD /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src/build/dist/*.zip /
+
+RUN pip3 install --no-cache-dir -U /*.zip
+RUN rm -f /*.zip
