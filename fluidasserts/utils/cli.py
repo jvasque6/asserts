@@ -24,10 +24,11 @@ def main():
     if len(sys.argv) < 2:
         sys.stderr.write('Usage: asserts <exploit.py>\n')
         return 1
+    my_env = {**os.environ, 'FA_CLI': 'true'}
     fluidasserts.show_banner()
     with open(LOGFILE, 'w') as outfile:
         ret = call([sys.executable, sys.argv[1]],
-                   stdout=outfile, stderr=outfile)
+                   stdout=outfile, stderr=outfile, env=my_env)
     with open(LOGFILE, 'r') as infile:
         content = infile.read()
     print(content)

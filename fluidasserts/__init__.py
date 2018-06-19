@@ -142,6 +142,18 @@ UNKNOWN_COLORS = {
 }
 
 
+def check_cli():
+    """Check execution from CLI."""
+    if 'FA_CLI' not in os.environ:
+        cli_warn = """
+########################################################
+## INVALID OUTPUT. PLEASE, RUN ASSERTS USING THE CLI. ##
+########################################################
+"""
+        highlight(cli_warn, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
+
+
 def get_os_fingerprint():
     """Get fingerprint of running OS."""
     sha256 = hashlib.sha256()
@@ -232,18 +244,21 @@ class Message(object):
 
 def show_close(message, details=None, refs=None):
     """Show close message."""
+    check_cli()
     message = Message('CLOSED', message, details, refs)
     message.as_yaml()
 
 
 def show_open(message, details=None, refs=None):
     """Show close message."""
+    check_cli()
     message = Message('OPEN', message, details, refs)
     message.as_yaml()
 
 
 def show_unknown(message, details=None, refs=None):
     """Show close message."""
+    check_cli()
     message = Message('UNKNOWN', message, details, refs)
     message.as_yaml()
 
@@ -287,6 +302,7 @@ if 'FA_STRICT' in os.environ:
         print('FA_STRICT env variable is \
 set but with an unknown value. It must be "true" or "false".')
         sys.exit(-1)
+
 
 CLIENT_ID = get_os_fingerprint()
 CLIENT_IP = get_public_ip()
