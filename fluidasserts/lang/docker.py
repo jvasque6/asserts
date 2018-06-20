@@ -31,9 +31,9 @@ def not_pinned(file_dest: str) -> bool:
     :param file_dest: Path to the Dockerfile to be tested.
     :returns: True if unpinned (bad), False if pinned (good).
     """
-    tk_from = Word('FROM')
+    tk_from = Literal('FROM')
     tk_image = Word(alphas)
-    tk_version = Word('latest')
+    tk_version = Literal('latest')
 
     pinned = tk_from + tk_image + Literal(':') + tk_version
 
