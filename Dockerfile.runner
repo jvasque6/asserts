@@ -1,6 +1,6 @@
-FROM alpine:latest
+FROM alpine:3.7
 
-    RUN apk update \
+RUN apk update \
     && apk upgrade \
     && apk add python \
     py3-pip \
@@ -14,7 +14,7 @@ FROM alpine:latest
     curl \
     && rm -rf /var/cache/apk/*
 
-ADD /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src/build/dist/*.zip /
+COPY dist/*.zip /
 
 RUN pip3 install --no-cache-dir -U /*.zip
 RUN rm -f /*.zip
