@@ -39,7 +39,7 @@ from flask import url_for
 # none
 
 
-APP = Flask(__name__)
+APP = Flask(__name__, static_folder='static', static_url_path='/static')
 
 
 @APP.route('/')
