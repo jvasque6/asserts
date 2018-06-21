@@ -306,6 +306,20 @@ def put_open():
     return resp
 
 
+@APP.route('/put_ok', methods=['PUT'])
+def put_ok():
+    """Metodo PUT."""
+    resp = Response("Method PUT Allowed")
+    return resp
+
+
+@APP.route('/delete_ok', methods=['DELETE'])
+def delete_ok():
+    """Metodo DELETE."""
+    resp = Response("Method DELETE Allowed")
+    return resp
+
+
 @APP.route('/http/headers/trace_close', methods=['OPTIONS'])
 def trace_close():
     """Metodo TRACE deshabilitado."""

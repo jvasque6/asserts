@@ -310,6 +310,25 @@ def test_basic_close():
     assert not http.is_basic_auth_enabled(
         '%s/basic/ok' % (NONEXISTANT_SERVICE))
 
+
+@pytest.mark.usefixtures('mock_http')
+def test_put_ok():
+    """HTTP PUT ok."""
+    assert not http.has_not_text('%s/put_ok' % (MOCK_SERVICE),
+                                 'Method PUT Allowed', method='PUT')
+    assert not http.has_not_text('%s/put_ok' % (NONEXISTANT_SERVICE),
+                                 'Method PUT Allowed', method='PUT')
+
+
+@pytest.mark.usefixtures('mock_http')
+def test_delete_ok():
+    """HTTP DELETE ok."""
+    assert not http.has_not_text('%s/delete_ok' % (MOCK_SERVICE),
+                                 'Method DELETE Allowed', method='DELETE')
+    assert not http.has_not_text('%s/delete_ok' % (NONEXISTANT_SERVICE),
+                                 'Method DELETE Allowed', method='DELETE')
+
+
 @pytest.mark.usefixtures('mock_http')
 def test_put_close():
     """HTTP PUT Not Allowed."""
