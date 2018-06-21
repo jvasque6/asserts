@@ -21,10 +21,11 @@ import fluidasserts
 
 def main():
     """Package CLI."""
+    init()
     if len(sys.argv) < 2:
+        fluidasserts.show_banner()
         sys.stderr.write('Usage: asserts <exploit.py>\n')
         return 1
-    init()
     my_env = {**os.environ, 'FA_CLI': 'true'}
     fluidasserts.show_banner()
     with open(LOGFILE, 'w') as outfile:
