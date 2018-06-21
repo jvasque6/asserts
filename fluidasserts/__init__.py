@@ -134,7 +134,7 @@ UNKNOWN_COLORS = {
 def enable_win_colors():
     """Enable windows colors."""
     global OUTFILE
-    if sys.platform in ('win32', 'cygwin'):
+    if sys.platform in ('win32', 'cygwin'):  # pragma: no cover
         OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
         try:
             import colorama.initialise
@@ -297,7 +297,7 @@ try:
         raise DistributionNotFound
 except DistributionNotFound:
     __version__ = 'Please install this project with setup.py'
-else:
+else:  # pragma: no cover
     __version__ = _DIST.version
 
 
