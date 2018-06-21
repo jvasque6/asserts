@@ -161,9 +161,15 @@ def test_has_switch_without_default_close():
 
 
 def test_has_insecure_randoms_close():
-    """Search conditionals without an else option."""
+    """Search insecure randoms."""
     assert not java.has_insecure_randoms(SECURE_CODE)
     assert not java.has_insecure_randoms(NON_EXISTANT_CODE)
+
+
+def test_has_if_without_else_close():
+    """Search conditionals without an else option."""
+    assert not java.has_if_without_else(SECURE_CODE)
+    assert not java.has_if_without_else(NON_EXISTANT_CODE)
 
 
 def test_uses_md5_hash_close():
