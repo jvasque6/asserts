@@ -33,6 +33,7 @@ from pygments.util import UnclosingTextIOWrapper
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 # pylint: disable=no-member
+# pylint: disable=global-statement
 # Remove support for py2
 
 if sys.version_info < (3,):
@@ -41,18 +42,6 @@ Fluid Asserts')
     sys.exit(-1)
 
 OUTFILE = sys.stdout
-
-if sys.platform in ('win32', 'cygwin'):
-    OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
-    try:
-        import colorama.initialise
-    except ImportError:
-        pass
-    else:
-        OUTFILE = colorama.initialise.wrap_stream(OUTFILE, convert=None,
-                                                  strip=None,
-                                                  autoreset=False,
-                                                  wrap=True)
 
 OPEN_COLORS = {
     Token: ('', ''),
@@ -142,9 +131,26 @@ UNKNOWN_COLORS = {
 }
 
 
+def enable_win_colors():
+    """Enable windows colors."""
+    global OUTFILE
+    if sys.platform in ('win32', 'cygwin'):
+        OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+        try:
+            import colorama.initialise
+        except ImportError:
+            pass
+        else:
+            OUTFILE = colorama.initialise.wrap_stream(OUTFILE, convert=None,
+                                                      strip=None,
+                                                      autoreset=False,
+                                                      wrap=True)
+
+
 def check_cli():
     """Check execution from CLI."""
     if 'FA_CLI' not in os.environ:
+        enable_win_colors()
         cli_warn = """
 ########################################################
 ## INVALID OUTPUT. PLEASE, RUN ASSERTS USING THE CLI. ##
@@ -265,6 +271,7 @@ def show_unknown(message, details=None, refs=None):
 
 def show_banner():
     """Show Asserts banner."""
+    enable_win_colors()
     header = """
 ---
 # Fluid Asserts (v. {})

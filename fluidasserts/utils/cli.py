@@ -11,7 +11,7 @@ import tempfile
 from subprocess import call
 
 # 3rd party imports
-# None
+from colorama import init
 
 # local imports
 import fluidasserts
@@ -24,6 +24,7 @@ def main():
     if len(sys.argv) < 2:
         sys.stderr.write('Usage: asserts <exploit.py>\n')
         return 1
+    init()
     my_env = {**os.environ, 'FA_CLI': 'true'}
     fluidasserts.show_banner()
     with open(LOGFILE, 'w') as outfile:
