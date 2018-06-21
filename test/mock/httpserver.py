@@ -525,7 +525,7 @@ def rest_access_ok():
 def rest_content_type_fail():
     """Recurso rest accesible."""
     resp = Response()
-    resp.status_code = 400
+    resp.status_code = 404
     return resp
 
 

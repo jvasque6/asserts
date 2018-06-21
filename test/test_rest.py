@@ -79,6 +79,8 @@ def test_content_type_close():
     """Resource is available?."""
     assert not rest.accepts_empty_content_type(
         BASE_URL + '/content_type/ok')
+    assert not rest.accepts_empty_content_type(
+        NONEXISTANT_SERVICE + '/content_type/ok')
 
 
 @pytest.mark.usefixtures('mock_http')
@@ -86,3 +88,5 @@ def test_insecure_accept_close():
     """Resource is available?."""
     assert not rest.accepts_insecure_accept_header(
         BASE_URL + '/insecure_accept/ok')
+    assert not rest.accepts_insecure_accept_header(
+        NONEXISTANT_SERVICE + '/insecure_accept/ok')

@@ -46,13 +46,13 @@ def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
     if 'headers' in kwargs:
         assert 'Content-Type' not in kwargs['headers']
     expected_codes = [406, 415]
-    error_codes = [400, 401, 403, 404, 500]
-    session = http_helper.HTTPSession(url, *args, **kwargs)
-
-    if session.response.status_code in error_codes:
+    try:
+        session = http_helper.HTTPSession(url, *args, **kwargs)
+    except http_helper.ConnError as exc:
         show_unknown('URL {} returned error'.format(url),
-                     details=dict(error=session.response.status_code))
-        return True
+                     details=dict(error=str(exc).replace(':', ',')))
+        return False
+
     if session.response.status_code not in expected_codes:
         show_open('URL {} accepts empty Content-Type requests'.
                   format(url))
@@ -72,17 +72,17 @@ def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
     """
     expected_codes = [406, 415]
-    error_codes = [400, 401, 403, 404, 500]
     if 'headers' in kwargs:
         kwargs['headers'].update({'Accept': '*/*'})
     else:
         kwargs = {'headers': {'Accept': '*/*'}}
-    session = http_helper.HTTPSession(url, *args, **kwargs)
-
-    if session.response.status_code in error_codes:
+    try:
+        session = http_helper.HTTPSession(url, *args, **kwargs)
+    except http_helper.ConnError as exc:
         show_unknown('URL {} returned error'.format(url),
-                     details=dict(http_code=session.response.status_code))
-        return True
+                     details=dict(error=str(exc).replace(':', ',')))
+        return False
+
     if session.response.status_code not in expected_codes:
         show_open('URL {} accepts insecure Accept request header value'.
                   format(url))
