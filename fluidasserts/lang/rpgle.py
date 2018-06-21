@@ -7,7 +7,7 @@
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
-                       NotAny, alphas, alphanums, nums, cppStyleComment)
+                       NotAny, alphas, alphanums, nums, cppStyleComment, Or)
 
 # local imports
 from fluidasserts.helper import lang_helper
@@ -37,14 +37,16 @@ def _get_block(file_lines, line) -> str:
 @track
 def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     r"""
-    Search for DoS for using ``DoW SQLCOD = 0``\ .
+    Search for DoS for using ``DoW SQLCOD = <ZERO>``\ .
 
     :param rpg_dest: Path to a RPG source or directory.
     """
     tk_dow = CaselessKeyword('dow')
     tk_sqlcod = CaselessKeyword('sqlcod')
+    tk_literal_zero = CaselessKeyword('*zeros')
+    tk_zeros = Or([Literal('0'), tk_literal_zero])
 
-    dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + Literal('0')
+    dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + tk_zeros
 
     result = False
     try:
