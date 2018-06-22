@@ -42,23 +42,28 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
         if "-cbc" not in transport.remote_cipher:
             show_close('SSH does not have insecure CBC encription algorithms',
                        details=dict(host=host,
+                                    port=port,
                                     remote_cipher=transport.remote_cipher,
                                     fingerprint=fingerprint))
             result = False
         else:
             show_open('SSH has insecure CBC encription algorithms',
                       details=dict(host=host,
+                                   port=port,
                                    remote_cipher=transport.remote_cipher,
                                    fingerprint=fingerprint))
             result = True
 
         return result
-    except socket.timeout:
-        show_unknown('Port closed', details=dict(host=host, port=port))
+    except socket.timeout as exc:
+        show_unknown('Port closed',
+                     details=dict(host=host,
+                                  port=port,
+                                  error=str(exc)))
         return False
     except paramiko.ssh_exception.AuthenticationException:
         show_close('SSH does not have insecure HMAC encryption algorithms',
-                   details=dict(host=host, fingerprint=fingerprint))
+                   details=dict(host=host, port=port, fingerprint=fingerprint))
         return False
 
 
@@ -84,23 +89,28 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
         if "hmac-md5" not in transport.remote_cipher:
             show_close('SSH does not have insecure HMAC encryption algorithms',
                        details=dict(host=host,
+                                    port=port,
                                     remote_cipher=transport.remote_cipher,
                                     fingerprint=fingerprint))
             result = False
         else:
             show_open('SSH has insecure HMAC encryption algorithms',
                       details=dict(host=host,
+                                   port=port,
                                    remote_cipher=transport.remote_cipher,
                                    fingerprint=fingerprint))
             result = True
 
         return result
-    except socket.timeout:
-        show_unknown('Port closed', details=dict(host=host, port=port))
+    except socket.timeout as exc:
+        show_unknown('Port closed',
+                     details=dict(host=host,
+                                  port=port,
+                                  error=str(exc)))
         return False
     except paramiko.ssh_exception.AuthenticationException:
         show_close('SSH does not have insecure HMAC encryption algorithms',
-                   details=dict(host=host, fingerprint=fingerprint))
+                   details=dict(host=host, port=port, fingerprint=fingerprint))
         return False
 
 
