@@ -24,7 +24,7 @@ def track(func: Callable) -> Callable:
         """
         try:
             MP.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
-        except mixpanel.MixpanelException:
+        except mixpanel.MixpanelException:  # pragma: no cover
             pass
         return func(*args, **kwargs)
     return decorated

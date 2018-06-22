@@ -317,5 +317,5 @@ CLIENT_IP = get_public_ip()
 try:
     MP = mixpanel.Mixpanel(PROJECT_TOKEN)
     MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
-except mixpanel.MixpanelException:
+except mixpanel.MixpanelException:  # pragma: no cover
     pass
