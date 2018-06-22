@@ -55,7 +55,8 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
             result = True
 
         return result
-    except socket.timeout as exc:
+    except (paramiko.ssh_exception.NoValidConnectionsError,
+            socket.timeout) as exc:
         show_unknown('Port closed',
                      details=dict(host=host,
                                   port=port,
@@ -102,7 +103,8 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
             result = True
 
         return result
-    except socket.timeout as exc:
+    except (paramiko.ssh_exception.NoValidConnectionsError,
+            socket.timeout) as exc:
         show_unknown('Port closed',
                      details=dict(host=host,
                                   port=port,

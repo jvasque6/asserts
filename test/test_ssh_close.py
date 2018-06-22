@@ -22,8 +22,9 @@ from fluidasserts.proto import ssh
 #
 
 SSH_PORT = 22
-ADMIN_USER = 'root'
-ADMIN_PASS = 'Puef8poh2tei9AeB'
+ADMIN_USER = 'nonpriv'
+ADMIN_PASS = 'ahgh7xee9eewaeGh'
+NON_EXISTANT_SERVER = '0.0.0.0'
 
 #
 # Open tests
@@ -37,11 +38,19 @@ def test_is_hmac_used_close(run_mock):
     """Server SSH uses HMAC?."""
     assert not ssh.is_hmac_used(run_mock, username=ADMIN_USER,
                                 password=ADMIN_PASS)
+    assert not ssh.is_hmac_used(run_mock, port=24, username=ADMIN_USER,
+                                password=ADMIN_PASS)
+    assert not ssh.is_hmac_used(NON_EXISTANT_SERVER, username=ADMIN_USER,
+                                password=ADMIN_PASS)
 
 
 def test_is_is_cbc_used_close(run_mock):
     """Server SSH uses CBC?."""
     assert not ssh.is_cbc_used(run_mock, username=ADMIN_USER,
+                               password=ADMIN_PASS)
+    assert not ssh.is_cbc_used(run_mock, port=24, username=ADMIN_USER,
+                               password=ADMIN_PASS)
+    assert not ssh.is_cbc_used(NON_EXISTANT_SERVER, username=ADMIN_USER,
                                password=ADMIN_PASS)
 
 
