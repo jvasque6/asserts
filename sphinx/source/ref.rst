@@ -11,6 +11,7 @@ Reference
    :caption: Packages:
    :name: api-toc
 
+   fluidasserts.cloud
    fluidasserts.lang
    fluidasserts.format
    fluidasserts.helper
