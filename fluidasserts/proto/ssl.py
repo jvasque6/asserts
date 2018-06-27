@@ -417,7 +417,7 @@ suites', details=dict(site=site, port=port))
 suites', details=dict(site=site, port=port))
         else:
             show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=exc))
+                         details=dict(site=site, port=port, error=str(exc)))
     return result
 
 

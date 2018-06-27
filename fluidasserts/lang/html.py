@@ -67,11 +67,11 @@ def has_not_autocomplete(filename: str) -> bool:
     if not (has_input or has_form):
         result = True
         show_open('Attribute in {}'.format(filename),
-                  details=dict(atributes=attr))
+                  details=dict(atributes=str(attr)))
     else:
         result = False
         show_close('Attribute in {}'.format(filename),
-                   details=dict(atributes=attr))
+                   details=dict(atributes=str(attr)))
     return result
 
 
@@ -103,11 +103,11 @@ def is_cacheable(filename: str) -> bool:
     if not has_pragma or not has_expires:
         result = True
         show_open('Attributes in {}'.format(filename),
-                  details=dict(attributes=attrs))
+                  details=dict(attributes=str(attrs)))
     else:
         result = False
         show_close('Attributes in {}'.format(filename),
-                   details=dict(attributes=attrs))
+                   details=dict(attributes=str(attrs)))
     return result
 
 
@@ -144,9 +144,9 @@ def is_header_content_type_missing(filename: str) -> bool:
     if not has_content_type:
         result = True
         show_open('Attributes in {}'.format(filename),
-                  details=dict(attributes=attrs))
+                  details=dict(attributes=str(attrs)))
     else:
         result = False
         show_close('Attributes in {}'.format(filename),
-                   details=dict(attributes=attrs))
+                   details=dict(attributes=str(attrs)))
     return result

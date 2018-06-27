@@ -26,7 +26,7 @@ def _has_attribute(filename: str, metaname: str) -> bool:
     metavalue = getattr(pdf_docinfo, metaname)
     if metavalue is not None:
         show_open('{} metadata in {}'.format(metaname, filename),
-                  details=dict(value=metavalue))
+                  details=dict(value=str(metavalue)))
 
         result = True
     else:
