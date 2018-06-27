@@ -86,7 +86,7 @@ setup(
         'pytesseract==0.2.0',        # fluidasserts.format.captcha
         'pillow==5.1.0',             # fluidasserts.format.captcha
         'pyparsing==2.2.0',          # fluidasserts.lang
-        'oyaml==0.4',                # fluidasserts
+        'oyaml==0.5',                # fluidasserts
         'pygments==2.2.0',           # fluidasserts
         'viewstate==0.4.3',          # fluidasserts.proto.http
         'ntplib==0.3.3',             # fluidasserts.proto.http
