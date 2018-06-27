@@ -8,11 +8,13 @@ We thank and acknowledge contributions from:
 * Camilo Cardona <ccardona@fluidattacks.com>
 * Germán López <glopez@fluidattacks.com>
 * Henry Valencia <hvalencia@fluidattacks.com>
-* Mateo Noreña <mnorena@fluidattacks.com>
+* Jonathan Armas  <jarmas@fluidattacks.com>
 * Juan Escobar
+* Mateo Noreña <mnorena@fluidattacks.com>
 * Pablo Tamayo <jtamayo@fluidattacks.com>
 * Rafael Álvarez <ralvarez@fluidattacks.com>
 * Rafael Ballestas <rballestas@fluidattacks.com>
+* Santiago Muñoz <smunoz@fluidattacks.com>
 
 Authors grant patrimonial and ownership rights
 to Fluidsignal Group S.A.
