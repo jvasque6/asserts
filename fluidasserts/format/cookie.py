@@ -45,7 +45,7 @@ def _has_not_http_only(cookie_name: str, url: Optional[str],
         cookielist = cookie_jar
     if cookielist is None:
         show_unknown('{} Cookies not present'.format(cookie_name),
-                     details=dict(url=url, cookie_jar=cookie_jar,
+                     details=dict(url=url,
                                   fingerprint=fingerprint))
         return False
     for cookie in cookielist:
@@ -54,17 +54,17 @@ def _has_not_http_only(cookie_name: str, url: Optional[str],
                cookie.has_nonstandard_attr('httponly'):
                 show_close('Cookie HttpOnly check for "{}"'.
                            format(cookie_name),
-                           details=dict(url=url, cookie_jar=cookie_jar,
+                           details=dict(url=url,
                                         fingerprint=fingerprint))
                 result = False
             else:
                 show_open('Cookie HttpOnly check for "{}"'.format(cookie_name),
-                          details=dict(url=url, cookie_jar=cookie_jar,
+                          details=dict(url=url,
                                        fingerprint=fingerprint))
                 result = True
             return result
     show_unknown('Cookie "{}" not found'.format(cookie_name),
-                 details=dict(url=url, cookie_jar=cookie_jar,
+                 details=dict(url=url,
                               fingerprint=fingerprint))
     return False
 
@@ -97,24 +97,24 @@ def _has_not_secure(cookie_name: str, url: Optional[str],
         cookielist = cookie_jar
     if cookielist is None:
         show_unknown('{} Cookies not present'.format(cookie_name),
-                     details=dict(url=url, cookie_jar=cookie_jar,
+                     details=dict(url=url,
                                   fingerprint=fingerprint))
         return False
     for cookie in cookielist:
         if cookie.name == cookie_name:
             if cookie.secure:
                 show_close('Cookie Secure check for "{}"'.format(cookie_name),
-                           details=dict(url=url, cookie_jar=cookie_jar,
+                           details=dict(url=url,
                                         fingerprint=fingerprint))
                 result = False
             else:
                 show_open('Cookie Secure check for "{}"'.format(cookie_name),
-                          details=dict(url=url, cookie_jar=cookie_jar,
+                          details=dict(url=url,
                                        fingerprint=fingerprint))
                 result = True
             return result
     show_unknown('Cookie "{}" not found'.format(cookie_name),
-                 details=dict(url=url, cookie_jar=cookie_jar,
+                 details=dict(url=url,
                               fingerprint=fingerprint))
     return False
 

@@ -56,28 +56,6 @@ fluidasserts:
   except:
     - master
 
-codequality:
-  image: docker:latest
-  variables:
-    DOCKER_DRIVER: overlay
-    SRC: /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src/fluidasserts
-  services:
-    - docker:dind
-  script:
-    - docker pull codeclimate/codeclimate
-    - docker run
-       --rm
-       --env CODECLIMATE_CODE="$SRC"
-       --volume "$SRC":/code
-       --volume /var/run/docker.sock:/var/run/docker.sock
-       --volume /tmp/cc:/tmp/cc
-       codeclimate/codeclimate analyze
-  retry: 2
-  artifacts:
-    paths: [codeclimate.json]
-  except:
-    - master
-
 deploy:
   stage: deploy
   variables:
