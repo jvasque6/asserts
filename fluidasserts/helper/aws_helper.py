@@ -23,6 +23,16 @@ class ConnError(botocore.vendored.requests.exceptions.ConnectionError):
     pass
 
 
+class ClientErr(botocore.exceptions.BotoCoreError):
+    """
+    A connection error occurred.
+
+    :py:exc:`ClientError` wrapper exception.
+    """
+
+    pass
+
+
 def get_credencials_report(key_id: str, secret: str) -> dict:
     """
     Get IAM credentials report.
@@ -39,3 +49,5 @@ def get_credencials_report(key_id: str, secret: str) -> dict:
         return [x.split(',') for x in users]
     except botocore.vendored.requests.exceptions.ConnectionError:
         raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr

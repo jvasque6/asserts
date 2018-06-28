@@ -31,6 +31,10 @@ def has_mfa_disabled(key_id: str, secret: str) -> bool:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
     for user in users:
         if user[3] == 'true':
             if user[7] == 'false':
