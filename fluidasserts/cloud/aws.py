@@ -17,7 +17,7 @@ from fluidasserts.helper import aws_helper
 
 
 @track
-def has_mfa_disabled(key_id: str, secret: str) -> bool:
+def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
     """
     Search users with password enabled and without MFA.
 
