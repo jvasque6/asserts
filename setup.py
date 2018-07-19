@@ -92,7 +92,7 @@ setup(
         'ntplib==0.3.3',             # fluidasserts.proto.http
         'pytz==2018.4',              # fluidasserts.proto.http
         'requirements-detector==0.5.2',  #  fluidasserts.sca
-        'boto3==1.7.46',             # fluidasserts.cloud.aws
+        'boto3==1.7.60',             # fluidasserts.cloud.aws
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points=
