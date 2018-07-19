@@ -80,7 +80,7 @@ setup(
         'tlslite-ng==0.7.4',         # fluidasserts.proto.ssl
         'pyOpenSSL==17.5.0',         # fluidasserts.proto.ssl
         'colorama==0.3.9',           # logging
-        'pysmb==1.1.22',             # fluidasserts.proto.smb
+        'pysmb==1.1.24',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
         'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
         'pytesseract==0.2.0',        # fluidasserts.format.captcha

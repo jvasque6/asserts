@@ -2,7 +2,7 @@ FROM alpine:latest
 
 ENV FLAVOR weak
 
-EXPOSE 139/tcp 445/tcp
+EXPOSE 139/tcp 445/tcp 135/udp 139/udp
 
 RUN apk update && apk upgrade && apk add samba
 RUN adduser -D -s /bin/sh nonpriv && \
