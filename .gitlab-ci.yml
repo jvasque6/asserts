@@ -65,8 +65,6 @@ deploy:
     - mkdir -p dist && cp -a ${SRC}/build/dist/*.zip dist/
     - docker build --no-cache -f Dockerfile.runner
       -t registry.gitlab.com/fluidsignal/asserts:runner .
-    - docker build --no-cache
-      -t fluid-docker.jfrog.io/$ORG:$APP deploy/container
   retry: 2
   only:
     - master
@@ -82,7 +80,6 @@ push_container:
     - docker tag registry.gitlab.com/fluidsignal/asserts:runner
       fluidattacks/asserts
     - docker push fluidattacks/asserts
-    - docker push fluid-docker.jfrog.io/$ORG:$APP
   after_script:
     - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   retry: 2

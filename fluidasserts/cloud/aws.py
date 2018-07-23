@@ -81,7 +81,7 @@ days and it\'s still active',
                                        password_last_used=pass_last_used))
                 result = True
             else:
-                show_open('User has used the password in the last 90 days',
-                          details=dict(user=user[0],
-                                       password_last_used=pass_last_used))
+                show_close('User has used the password in the last 90 days',
+                           details=dict(user=user[0],
+                                        password_last_used=pass_last_used))
     return result
