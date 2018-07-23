@@ -33,6 +33,18 @@ class ClientErr(botocore.exceptions.BotoCoreError):
     pass
 
 
+def get_aws_client(service: str, key_id: str, secret: str) -> object:
+    """
+    Get AWS client object.
+
+    :param service: AWS Service
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    return boto3.client(service, aws_access_key_id=key_id,
+                        aws_secret_access_key=secret)
+
+
 def get_credencials_report(key_id: str, secret: str) -> dict:
     """
     Get IAM credentials report.
@@ -41,9 +53,10 @@ def get_credencials_report(key_id: str, secret: str) -> dict:
     :param secret: AWS Key Secret
     """
     try:
-        client = boto3.client('iam',
-                              aws_access_key_id=key_id,
-                              aws_secret_access_key=secret)
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        client.generate_credential_report()
         response = client.get_credential_report()
         users = response['Content'].decode().split('\n')[1:]
         return [x.split(',') for x in users]

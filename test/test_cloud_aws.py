@@ -45,3 +45,19 @@ def test_has_mfa_disabled_close():
                                         AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
+
+
+def test_have_old_creds_enabled():
+    """Search old unused passwords."""
+    assert not aws.iam_have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY)
+    assert not aws.iam_have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not aws.iam_have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
