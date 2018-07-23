@@ -68,9 +68,9 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
-        'requests==2.18.4',          # fluidasserts.proto.http
-        'requests-oauthlib==0.8.0',  # fluidasserts.proto.http
-        'cryptography==2.2.2',       # fluidasserts.proto.ssl
+        'requests==2.19.1',          # fluidasserts.proto.http
+        'requests-oauthlib==1.0.0',  # fluidasserts.proto.http
+        'cryptography==2.3',       # fluidasserts.proto.ssl
         'certifi==2018.4.16',        # fluidasserts.proto.ssl
         'ldap3==2.5',                # fluidasserts.proto.ldap
         'paramiko==2.4.1',           # fluidasserts.helper.ssh_helper
@@ -78,13 +78,13 @@ setup(
         'beautifulsoup4==4.6.0',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.proto.dns
         'tlslite-ng==0.7.4',         # fluidasserts.proto.ssl
-        'pyOpenSSL==17.5.0',         # fluidasserts.proto.ssl
+        'pyOpenSSL==18.0.0',         # fluidasserts.proto.ssl
         'colorama==0.3.9',           # logging
         'pysmb==1.1.24',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
         'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
-        'pytesseract==0.2.0',        # fluidasserts.format.captcha
-        'pillow==5.1.0',             # fluidasserts.format.captcha
+        'pytesseract==0.2.4',        # fluidasserts.format.captcha
+        'pillow==5.2.0',             # fluidasserts.format.captcha
         'pyparsing==2.2.0',          # fluidasserts.lang
         'oyaml==0.5',                # fluidasserts
         'pygments==2.2.0',           # fluidasserts
@@ -92,7 +92,7 @@ setup(
         'ntplib==0.3.3',             # fluidasserts.proto.http
         'pytz==2018.4',              # fluidasserts.proto.http
         'requirements-detector==0.6',  #  fluidasserts.sca
-        'boto3==1.7.60',             # fluidasserts.cloud.aws
+        'boto3==1.7.62',             # fluidasserts.cloud.aws
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points=
