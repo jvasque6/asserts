@@ -12,7 +12,7 @@ VSFTP
 """
 
 # standard imports
-from __future__ import print_function
+# None
 
 # 3rd party imports
 import pytest

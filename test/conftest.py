@@ -64,13 +64,13 @@ def run_mock(request):
         con = client.containers.get(cont.id)
         c_ip = con.attrs['NetworkSettings']['Networks']\
             ['asserts_fluidasserts']['IPAddress']
-        if c_ip:
+        if c_ip.startswith(NETWORK_SUBNET[:3]):
             break
 
     for value in port_mapping.values():
         wait.tcp.open(int(value), host=c_ip, timeout=120)
-        time.sleep(1)
+        time.sleep(2)
 
     yield c_ip
     print('Stoping {} ...'.format(mock))
-    cont.stop(timeout=1)
+    cont.stop(timeout=5)
