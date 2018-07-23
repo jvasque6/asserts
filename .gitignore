@@ -3,7 +3,7 @@ build/
 builds/
 
 # Coverage files
-.coverage
+.coverage*
 
 # Python bytecode
 *.py[cod]
@@ -17,6 +17,7 @@ Exploiting/
 
 # Desconocido
 .cache/
+.pytest_cache/
 
 # Temporal local
 tmp/
