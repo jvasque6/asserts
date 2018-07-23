@@ -93,6 +93,7 @@ setup(
         'pytz==2018.4',              # fluidasserts.proto.http
         'requirements-detector==0.6',  #  fluidasserts.sca
         'boto3==1.7.62',             # fluidasserts.cloud.aws
+        'python-dateutil==2.7.3',             # fluidasserts.cloud.aws
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points=

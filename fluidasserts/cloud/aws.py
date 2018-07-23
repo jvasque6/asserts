@@ -3,10 +3,11 @@
 """AWS cloud checks."""
 
 # standard imports
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 
 # 3rd party imports
-# None
+from dateutil import parser
 
 # local imports
 from fluidasserts import show_close
@@ -74,7 +75,7 @@ def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
             client = aws_helper.get_aws_client('iam', key_id, secret)
             user_info = client.get_user(UserName=user[0])
             pass_last_used = user_info['User']['PasswordLastUsed']
-            if pass_last_used > datetime.now() + 90:
+            if pass_last_used > datetime.now() + timedelta(days=90):
                 show_open('User has not used the password in more than 90 \
 days and it\'s still active',
                           details=dict(user=user[0],
@@ -84,4 +85,44 @@ days and it\'s still active',
                 show_close('User has used the password in the last 90 days',
                            details=dict(user=user[0],
                                         password_last_used=pass_last_used))
+    return result
+
+
+@track
+def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
+    """
+    Find access keys not rotated in the last 90 days.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        users = aws_helper.get_credencials_report(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    for user in users:
+        if user[8] == 'true':
+            ak_last_change = parser.parse(user[9]).replace(tzinfo=pytz.UTC)
+            now_plus_90 = datetime.now() - timedelta(days=90)
+            if ak_last_change < now_plus_90.replace(tzinfo=pytz.UTC):
+                show_open('User\'s access key has not been rotated in the \
+last 90 days', details=dict(user=user[0],
+                            last_rotated=ak_last_change,
+                            expected_rotation_time=now_plus_90))
+                result = True
+            else:
+                show_close('User\'s access key has been rotated in the last \
+90 days', details=dict(user=user[0],
+                       last_rotated=ak_last_change,
+                       expected_rotation_time=now_plus_90))
+        else:
+            show_close('User has not access keys enabled',
+                       details=dict(user=user[0]))
     return result
