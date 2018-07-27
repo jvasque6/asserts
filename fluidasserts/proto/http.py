@@ -1017,10 +1017,10 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
                                 response_time=response_time,
                                 fingerprint=fingerprint))
         return False
-    show_close('Response time not acceptable',
-               details=dict(url=http_session.url,
-                            response_time=response_time,
-                            fingerprint=fingerprint))
+    show_open('Response time not acceptable',
+              details=dict(url=http_session.url,
+                           response_time=response_time,
+                           fingerprint=fingerprint))
     return True
 
 
