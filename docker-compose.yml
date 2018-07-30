@@ -9,6 +9,8 @@ services:
         gituser: $DOCKER_USER
         gitpass: $DOCKER_PASS
         branch: $CI_COMMIT_SHA
+    network_mode: bridge
+    tty: true
     command: scons deps
     container_name: asserts
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -25,6 +27,8 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
+    network_mode: bridge
+    tty: true
     command: scons self
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -39,6 +43,8 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
+    network_mode: bridge
+    tty: true
     command: scons lint
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -53,6 +59,8 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
+    network_mode: bridge
+    tty: true
     command: >
       bash -c "overcommit -s && overcommit -s pre-commit && overcommit -r"
     volumes:
@@ -68,6 +76,8 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
+    network_mode: bridge
+    tty: true
     command: scons dist
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -82,6 +92,8 @@ services:
     image: registry.gitlab.com/fluidsignal/asserts:builder
     depends_on:
       - deps
+    network_mode: bridge
+    tty: true
     command: scons test
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -97,6 +109,8 @@ services:
     depends_on:
       - deps
       - dist
+    network_mode: bridge
+    tty: true
     command: scons deploy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock

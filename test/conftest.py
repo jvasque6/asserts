@@ -91,7 +91,7 @@ def run_mock(request):
     while True:
         con = client.containers.get(cont.id)
         c_ip = con.attrs['NetworkSettings']['Networks']\
-            ['asserts_fluidasserts']['IPAddress']
+            ['bridge']['IPAddress']
         if c_ip:
             break
 
