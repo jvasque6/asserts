@@ -7,13 +7,14 @@ https://pytest.org/dev/fixture.html
 
 # standard imports
 from __future__ import print_function
+import errno
 import os
+import socket
 import time
 
 # 3rd party imports
 import docker
 import pytest
-import wait
 
 # local imports
 # none
@@ -22,6 +23,44 @@ import wait
 NETWORK_NAME = 'asserts_fluidasserts'
 NETWORK_SUBNET = '172.30.216.0/24'
 NETWORK_GW = '172.30.216.254'
+
+
+def wait_net_service(server, port, timeout=None):
+    """
+    Wait for network service to appear.
+
+    @param timeout: in seconds, if None or 0 wait forever
+    @return: True of False, if timeout is None may return only True or
+             throw unhandled network exception
+    """
+    sock = socket.socket()
+    if timeout:
+        from time import time as now
+        end = now() + timeout
+
+    while True:
+        try:
+            if timeout:
+                next_timeout = end - now()
+                if next_timeout < 0:
+                    return False
+                else:
+                    sock.settimeout(next_timeout)
+
+            sock.connect((server, port))
+
+        except socket.timeout:
+            if timeout:
+                return False
+
+        except socket.error as err:
+            if not isinstance(err.args, tuple) or err.errno != errno.ETIMEDOUT:
+                pass
+            else:
+                raise
+        else:
+            sock.close()
+            return True
 
 
 @pytest.fixture(scope='module')
@@ -68,9 +107,9 @@ def run_mock(request):
             break
 
     for value in port_mapping.values():
-        wait.tcp.open(int(value), host=c_ip, timeout=120)
+        wait_net_service(c_ip, value, 30)
         time.sleep(2)
 
     yield c_ip
     print('Stoping {} ...'.format(mock))
-    cont.stop(timeout=5)
+    cont.stop(timeout=10)
