@@ -50,6 +50,13 @@ def is_a_valid_user(ip_address: str, username: str,
                    details=dict(username=username, password=password,
                                 fingerprint=fingerprint))
         result = False
+    except OSError as exc:
+        show_close('Could not connect',
+                   details=dict(ip=ip_address, username=username,
+                                password=password,
+                                error=str(exc),
+                                fingerprint=fingerprint))
+        result = False
     return result
 
 
