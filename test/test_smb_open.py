@@ -18,7 +18,7 @@ from fluidasserts.proto import smb
 
 # Constants
 
-SMB_PORT = 445
+SMB_PORT = 139
 
 #
 # Open tests
@@ -26,7 +26,7 @@ SMB_PORT = 445
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('smb:weak', {'445/tcp': SMB_PORT})],
+                         [('smb:weak', {'139/tcp': SMB_PORT})],
                          indirect=True)
 def test_is_anonymous_enabled_open(run_mock):
     """Conexion anonima habilitada?."""

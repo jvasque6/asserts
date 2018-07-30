@@ -83,8 +83,6 @@ services:
     depends_on:
       - deps
     command: scons test
-    networks:
-      - fluidasserts
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
@@ -108,9 +106,3 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
-
-networks:
-  fluidasserts:
-    ipam:
-      config:
-        - subnet: 172.30.216.0/24
