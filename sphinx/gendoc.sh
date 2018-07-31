@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 striprun() {
-    python3 "$1" |
+    asserts "$1" |
     perl -pe 's/\e([^\[\]]|\[.*?[a-zA-Z]|\].*?\a)//g' |
     tee "$1".out
 }
