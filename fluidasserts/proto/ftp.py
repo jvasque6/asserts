@@ -12,6 +12,7 @@ from ftplib import FTP
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper import banner_helper
 from fluidasserts.utils.decorators import track
 
@@ -51,11 +52,11 @@ def is_a_valid_user(ip_address: str, username: str,
                                 fingerprint=fingerprint))
         result = False
     except OSError as exc:
-        show_close('Could not connect',
-                   details=dict(ip=ip_address, username=username,
-                                password=password,
-                                error=str(exc),
-                                fingerprint=fingerprint))
+        show_unknown('Could not connect',
+                     details=dict(ip=ip_address, username=username,
+                                  password=password,
+                                  error=str(exc),
+                                  fingerprint=fingerprint))
         result = False
     return result
 
