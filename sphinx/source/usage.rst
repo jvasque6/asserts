@@ -33,7 +33,7 @@ Then run it:
 
 .. code-block:: shell-session
 
-   $ python open_sqli.py
+   $ asserts open_sqli.py
 
 .. literalinclude:: example/qstart-sqli-open.py.out
     :language: yaml
@@ -45,7 +45,7 @@ use the same function:
 
 .. code-block:: shell-session
 
-   $ python closed_sqli.py
+   $ asserts closed_sqli.py
 
 .. literalinclude:: example/qstart-sqli-closed.py.out
     :language: yaml
@@ -61,7 +61,7 @@ a few more parameters:
 
 .. code-block:: shell-session
 
-   $ python open_xss.py
+   $ asserts open_xss.py
 
 .. literalinclude:: example/qstart-xss-open.py.out
     :language: yaml
@@ -73,7 +73,7 @@ an ``XSS`` vulnerability has been closed:
 
 .. code-block:: shell-session
 
-   $ python closed_xss.py
+   $ asserts closed_xss.py
 
 .. literalinclude:: example/qstart-xss-closed.py.out
     :language: yaml

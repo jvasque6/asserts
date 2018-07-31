@@ -26,12 +26,12 @@ from the main package:
    from fluidasserts import show_close, show_open
 
    def has_insecure_deserialization(java_dest: str) -> bool:
-     if ...:
-       show_open('Code uses insecure deserialization', details=...)
-       return True
-     else:
-       show_close('Code uses secure deserialization', details=...)
-       return False
+       if ...:
+           show_open('Code uses insecure deserialization', details=...)
+           return True
+       else:
+           show_close('Code uses secure deserialization', details=...)
+           return False
 
 This will sometimes lead to
 apparently awkward function names,
@@ -257,12 +257,12 @@ Type Hints according to :pep:`484`:
 .. code-block:: python
 
    def is_long_line(line: str) -> bool
-   """
-   Determine if a ``line`` is *too* long.
+       """
+       Determine if a ``line`` is *too* long.
 
-   :param line: A line of code to test.
-   :return: ``True`` if too long, ``False`` if **OK**.
-   """
+       :param line: A line of code to test.
+       :return: ``True`` if too long, ``False`` if **OK**.
+       """
 
 This is further enhanced by `MyPy <http://mypy-lang.org/>`_
 and the :mod:`typing` module

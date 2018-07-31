@@ -34,7 +34,7 @@ inside a container. Just ::
 And then go inside the container: ::
 
    $ docker run -it fluidattacks/asserts sh
-   / # python3 -c "import fluidasserts"
+   / # asserts
 
 .. literalinclude:: example/banner-only.py.out
 
@@ -48,7 +48,7 @@ But it would be much more useful to `mount`
 the directory where your exploits live into the container: ::
 
   $ docker run -v /home/me/myexploits/:/exploits/ -it fluidattacks/asserts sh
-  / # python3 /exploits/open-sqli.py
+  / # asserts /exploits/open-sqli.py
 
 .. literalinclude:: example/qstart-sqli-open.py.out
    :language: yaml
