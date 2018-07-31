@@ -64,3 +64,22 @@ def get_credencials_report(key_id: str, secret: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def get_account_password_policy(key_id: str, secret: str) -> dict:
+    """
+    Get IAM account password policy.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.get_account_password_policy()
+        return response['PasswordPolicy']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
