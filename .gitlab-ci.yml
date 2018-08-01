@@ -50,7 +50,7 @@ test:
 fluidasserts:
   script:
     - docker pull fluidattacks/asserts
-    - docker run -e FA_STRICT="false" -w /code
+    - docker run -t -e FA_STRICT="false" -w /code
       -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
       fluidattacks/asserts asserts /code/deploy/container/exploit.py
   except:
