@@ -410,3 +410,37 @@ def iam_root_without_mfa(key_id: str, secret: str) -> bool:
                   details=dict(account_summary=summary))
         result = True
     return result
+
+
+@track
+def iam_policies_attached_to_users(key_id: str, secret: str) -> bool:
+    """
+    Check if there are policies attached to users.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        users = aws_helper.list_users(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    for user in users:
+        user_pol = aws_helper.list_attached_user_policies(key_id,
+                                                          secret,
+                                                          user['UserName'])
+        if user_pol:
+            show_open('User has policies directly attached',
+                      details=(dict(user=user['UserName'],
+                                    user_policy=user_pol)))
+            result = True
+        else:
+            show_close('User has not policies attached',
+                       details=(dict(user=user['UserName'])))
+    return result

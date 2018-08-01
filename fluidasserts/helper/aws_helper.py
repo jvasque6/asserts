@@ -102,3 +102,42 @@ def get_account_summary(key_id: str, secret: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def list_users(key_id: str, secret: str) -> dict:
+    """
+    List IAM users.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.list_users()
+        return response['Users']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
+def list_attached_user_policies(key_id: str, secret: str, user: str) -> dict:
+    """
+    List attacked user policies.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    :param user: IAM user
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.list_attached_user_policies(UserName=user)
+        return response['AttachedPolicies']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
