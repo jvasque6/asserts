@@ -110,8 +110,9 @@ def test_not_requires_lowercase_close():
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
+
 def test_not_requires_symbols_close():
-    """Search IAM policy: Lowercase letter requirement."""
+    """Search IAM policy: Symbols requirement."""
     assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
                                             AWS_SECRET_ACCESS_KEY)
     assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
@@ -121,6 +122,22 @@ def test_not_requires_symbols_close():
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
     assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
+
+
+def test_not_requires_numbers_close():
+    """Search IAM policy: Numbers requirement."""
+    assert not aws.iam_not_requires_numbers(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY)
+    assert not aws.iam_not_requires_numbers(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not aws.iam_not_requires_numbers(AWS_ACCESS_KEY_ID,
                                             AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
