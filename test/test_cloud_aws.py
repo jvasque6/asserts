@@ -22,9 +22,10 @@ AWS_SECRET_ACCESS_KEY_BAD="bad"
 #
 
 
-#def test_has_mfa_disabled_open():
-#    """Search MFA on IAM users."""
-#    assert aws.iam_has_mfa_disabled(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+def test_pass_len_unsafe_open():
+    """Search IAM policy: Password length requirement."""
+    assert aws.iam_min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                           AWS_SECRET_ACCESS_KEY)
 
 
 #
@@ -139,5 +140,19 @@ def test_not_requires_numbers_close():
 
     assert not aws.iam_not_requires_numbers(AWS_ACCESS_KEY_ID,
                                             AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
+
+
+def test_pass_len_unsafe_close():
+    """Search IAM policy: Password length requirement."""
+    assert not aws.iam_min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                               AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not aws.iam_min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                               AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
