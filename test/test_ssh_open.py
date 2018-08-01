@@ -37,3 +37,8 @@ def test_is_cbc_used_open(run_mock):
     """Server SSH uses CBC?."""
     assert ssh.is_cbc_used(run_mock, username=ADMIN_USER,
                            password=ADMIN_PASS)
+
+
+def test_is_version_visible_open(run_mock):
+    """Server SSH version visible?."""
+    assert ssh.is_version_visible(run_mock)
