@@ -45,7 +45,7 @@ def get_aws_client(service: str, key_id: str, secret: str) -> object:
                         aws_secret_access_key=secret)
 
 
-def get_credencials_report(key_id: str, secret: str) -> dict:
+def get_credentials_report(key_id: str, secret: str) -> dict:
     """
     Get IAM credentials report.
 

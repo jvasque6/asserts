@@ -27,7 +27,7 @@ def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
     """
     result = False
     try:
-        users = aws_helper.get_credencials_report(key_id, secret)
+        users = aws_helper.get_credentials_report(key_id, secret)
     except aws_helper.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
@@ -61,7 +61,7 @@ def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
     """
     result = False
     try:
-        users = aws_helper.get_credencials_report(key_id, secret)
+        users = aws_helper.get_credentials_report(key_id, secret)
     except aws_helper.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
@@ -98,7 +98,7 @@ def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
     """
     result = False
     try:
-        users = aws_helper.get_credencials_report(key_id, secret)
+        users = aws_helper.get_credentials_report(key_id, secret)
     except aws_helper.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
@@ -125,6 +125,36 @@ last 90 days', details=dict(user=user[0],
         else:
             show_close('User has not access keys enabled',
                        details=dict(user=user[0]))
+    return result
+
+
+@track
+def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
+    """
+    Check if root account has access keys.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        users = aws_helper.get_credentials_report(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    root_user = users[0]
+    if root_user[8] == 'true' or root_user[13] == 'true':
+        show_open('Root user has access keys', details=dict(user=root_user))
+        result = True
+    else:
+        show_close('Root user has not access keys',
+                   details=dict(user=root_user))
+        result = False
     return result
 
 
