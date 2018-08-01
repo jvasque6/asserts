@@ -380,3 +380,33 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
                   details=dict(policy=policy))
         result = True
     return result
+
+
+@track
+def iam_root_without_mfa(key_id: str, secret: str) -> bool:
+    """
+    Check if root account has MFA.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        summary = aws_helper.get_account_summary(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    if summary['AccountMFAEnabled'] == 1:
+        show_close('Root password has MFA enabled',
+                   details=dict(account_summary=summary))
+        result = False
+    else:
+        show_open('Root password has MFA disabled',
+                  details=dict(account_summary=summary))
+        result = True
+    return result
