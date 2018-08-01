@@ -249,12 +249,13 @@ def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
 
 
 @track
-def iam_min_password_len_unsafe(key_id: str, secret: str) -> bool:
+def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     """
     Check if password policy requires passwords greater than 14 chars.
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
+    :param min_len: Mininum length required. Default 14
     """
     result = False
     try:
@@ -267,24 +268,25 @@ def iam_min_password_len_unsafe(key_id: str, secret: str) -> bool:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    if policy['MinimumPasswordLength'] > 14:
-        show_close('Password policy requires passwords greater than 14',
-                   details=dict(policy=policy))
+    if policy['MinimumPasswordLength'] > min_len:
+        show_close('Password policy requires long passwords',
+                   details=dict(min_length=min_len, policy=policy))
         result = False
     else:
         show_open('Password policy does not require passwords greater than 14',
-                  details=dict(policy=policy))
+                  details=dict(min_length=min_len, policy=policy))
         result = True
     return result
 
 
 @track
-def iam_password_reuse_unsafe(key_id: str, secret: str) -> bool:
+def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     """
     Check if password policy avoids reuse of the last 24 passwords.
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
+    :param min_len: Mininum reuse required. Default 24
     """
     result = False
     try:
@@ -298,13 +300,13 @@ def iam_password_reuse_unsafe(key_id: str, secret: str) -> bool:
                      details=dict(error=str(exc).replace(':', '')))
         return False
     if 'PasswordReusePrevention' in policy:
-        if policy['PasswordReusePrevention'] >= 24:
-            show_close('Password policy avoid using the last 24 passwords',
-                       details=dict(policy=policy))
+        if policy['PasswordReusePrevention'] >= min_reuse:
+            show_close('Password policy avoid reusing passwords',
+                       details=dict(min_reuse=min_reuse, policy=policy))
             result = False
         else:
-            show_open('Password policy allows using the last 24 passwords',
-                      details=dict(policy=policy))
+            show_open('Password policy allows reusing passwords',
+                      details=dict(min_reuse=min_reuse, policy=policy))
             result = True
     else:
         show_open('Password policy not contains reuse clause',
