@@ -273,7 +273,7 @@ def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
                    details=dict(min_length=min_len, policy=policy))
         result = False
     else:
-        show_open('Password policy does not require passwords greater than 14',
+        show_open('Password policy does not require long passwords',
                   details=dict(min_length=min_len, policy=policy))
         result = True
     return result
@@ -310,6 +310,43 @@ def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
             result = True
     else:
         show_open('Password policy not contains reuse clause',
+                  details=dict(policy=policy))
+        result = True
+    return result
+
+
+@track
+def iam_password_expiration_unsafe(key_id: str, secret: str,
+                                   max_days=90) -> bool:
+    """
+    Check if password policy expires the passwords within 90 days or less.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    :param max_days: Max expiration days. Default 90
+    """
+    result = False
+    try:
+        policy = aws_helper.get_account_password_policy(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    if 'MaxPasswordAge' in policy:
+        if policy['MaxPasswordAge'] >= max_days:
+            show_close('Password policy expiration policy is safe',
+                       details=dict(max_days=max_days, policy=policy))
+            result = False
+        else:
+            show_open('Password policy expiration policy is not safe',
+                      details=dict(max_days=max_days, policy=policy))
+            result = True
+    else:
+        show_open('Password policy not contains expiration clause',
                   details=dict(policy=policy))
         result = True
     return result
