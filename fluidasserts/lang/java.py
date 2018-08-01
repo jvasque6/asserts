@@ -286,6 +286,7 @@ def has_if_without_else(java_dest: str) -> bool:
     return result
 
 
+@track
 def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     """
     Check if code uses an insecure hashing algorithm.

@@ -304,6 +304,7 @@ def uses_md5_hash(csharp_dest: str) -> bool:
     return result
 
 
+@track
 def uses_sha1_hash(csharp_dest: str) -> bool:
     """
     Check if code uses SHA1 as hashing algorithm.
@@ -344,6 +345,7 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
     return result
 
 
+@track
 def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
     """
     Check if code uses ECB as encryption mode.
