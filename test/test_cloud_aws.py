@@ -109,3 +109,18 @@ def test_not_requires_lowercase_close():
                                               AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
+
+def test_not_requires_symbols_close():
+    """Search IAM policy: Lowercase letter requirement."""
+    assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY)
+    assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not aws.iam_not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                            AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
