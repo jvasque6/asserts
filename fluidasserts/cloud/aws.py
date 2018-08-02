@@ -3,7 +3,7 @@
 """
 AWS cloud checks.
 
-The checks are based on CIS AWS Fundations Benchmark.
+The checks are based on CIS AWS Foundations Benchmark.
 """
 
 # standard imports
@@ -418,7 +418,7 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
 @track
 def iam_root_without_mfa(key_id: str, secret: str) -> bool:
     """
-    Check if root account has MFA.
+    Check if root account has not MFA.
 
     CIS 1.13: Ensure MFA is enabled for the root account (Scored)
 
