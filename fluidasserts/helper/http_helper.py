@@ -147,6 +147,9 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                         stream=self.stream,
                                         timeout=20)
                 self.response = ret
+                if 'Location' in self.response.headers:
+                    self.headers['Referer'] = self.response.headers['Location']
+
                 if self.response.url != self.url:
                     self.url = self.response.url
 
@@ -241,6 +244,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             self.is_auth = False
 
     def get_html_value(self, field_type: str, field_name: str,
+                       field_id: str = 'name',
                        field: Optional[str] = 'value',
                        enc: Optional[bool] = False) -> str:
         """
@@ -252,7 +256,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         """
         soup = BeautifulSoup(self.response.text, 'html.parser')
         result_tag = soup.find(field_type,
-                               {'name': field_name})
+                               {field_id: field_name})
         text_to_get = None
         if result_tag:
             text_to_get = result_tag[field]
