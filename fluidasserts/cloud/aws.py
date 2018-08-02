@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-"""AWS cloud checks."""
+"""
+AWS cloud checks.
+
+The checks are based on CIS AWS Fundations Benchmark.
+"""
 
 # standard imports
 from datetime import datetime, timedelta
@@ -21,6 +25,9 @@ from fluidasserts.helper import aws_helper
 def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
     """
     Search users with password enabled and without MFA.
+
+    CIS 1.2: Ensure multi-factor authentication (MFA) is enabled for all IAM
+    users that have a console password (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -55,6 +62,9 @@ def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
 def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
     """
     Find password not used in the last 90 days.
+
+    CIS 1.3: Ensure credentials unused for 90 days or greater are
+    disabled (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -92,6 +102,8 @@ days and it\'s still active',
 def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
     """
     Find access keys not rotated in the last 90 days.
+
+    CIS 1.4: Ensure access keys are rotated every 90 days or less (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -133,6 +145,8 @@ def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
     """
     Check if root account has access keys.
 
+    CIS 1.12: Ensure no root account access key exists (Scored)
+
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
     """
@@ -162,6 +176,9 @@ def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
 def iam_not_requires_uppercase(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires uppercase letters.
+
+    CIS 1.5: Ensure IAM password policy requires at least one uppercase
+    letter (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -193,6 +210,9 @@ def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires lowercase letters.
 
+    CIS 1.6: Ensure IAM password policy require at least one lowercase
+    letter (Scored)
+
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
     """
@@ -222,6 +242,8 @@ def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
 def iam_not_requires_symbols(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires symbols.
+
+    CIS 1.7: Ensure IAM password policy require at least one symbol (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -253,6 +275,8 @@ def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires numbers.
 
+    CIS 1.8: Ensure IAM password policy require at least one number (Scored)
+
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
     """
@@ -282,6 +306,9 @@ def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
 def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     """
     Check if password policy requires passwords greater than 14 chars.
+
+    CIS 1.9: Ensure IAM password policy requires minimum length of 14 or
+    greater (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -313,6 +340,9 @@ def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
 def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     """
     Check if password policy avoids reuse of the last 24 passwords.
+
+    CIS 1.10: Ensure IAM password policy prevents password reuse: 24 or
+    greater (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -351,6 +381,9 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
     """
     Check if password policy expires the passwords within 90 days or less.
 
+    CIS 1.11: Ensure IAM password policy expires passwords within 90 days
+    or less (Scored)
+
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
     :param max_days: Max expiration days. Default 90
@@ -367,7 +400,7 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
                      details=dict(error=str(exc).replace(':', '')))
         return False
     if 'MaxPasswordAge' in policy:
-        if policy['MaxPasswordAge'] >= max_days:
+        if policy['MaxPasswordAge'] <= max_days:
             show_close('Password policy expiration policy is safe',
                        details=dict(max_days=max_days, policy=policy))
             result = False
@@ -386,6 +419,8 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
 def iam_root_without_mfa(key_id: str, secret: str) -> bool:
     """
     Check if root account has MFA.
+
+    CIS 1.13: Ensure MFA is enabled for the root account (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
@@ -416,6 +451,9 @@ def iam_root_without_mfa(key_id: str, secret: str) -> bool:
 def iam_policies_attached_to_users(key_id: str, secret: str) -> bool:
     """
     Check if there are policies attached to users.
+
+    CIS 1.16: Ensure IAM policies are attached only to groups or
+    roles (Scored)
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
