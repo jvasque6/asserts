@@ -4,11 +4,11 @@
 
 # standard imports
 import os
-import re
 import base64
+from typing import Dict, List
 
 # 3rd party imports
-from pyparsing import Literal
+from pyparsing import Literal, Regex
 
 # local imports
 from fluidasserts import show_close
@@ -21,7 +21,8 @@ from fluidasserts.utils.decorators import track
 LANGUAGE_SPECS = {}  # type: dict
 
 
-def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
+def _generic_lang_assert(code_file: str,
+                         expected_regex: str) -> Dict[str, List[str]]:
     """
     Check if a text is present in given source file.
 
@@ -30,25 +31,28 @@ def _generic_lang_assert(code_file: str, expected_regex: str) -> bool:
     :param code_file: Path to the file to be tested.
     :param expected_text: Bad text to look for in the file.
     """
-    with open(code_file, encoding='latin-1') as code_fd:
-        if re.search(str(expected_regex), code_fd.read(), re.IGNORECASE):
-            return True
-        return False
+    exp_gram = Regex(expected_regex)
+    vulns = lang_helper.check_grammar(exp_gram, code_file, LANGUAGE_SPECS)
+    return vulns
 
 
-def _show_has_text(is_open: bool, code_file: str, expected_text: str) -> None:
+def _show_has_text(vulns: Dict[str, List[str]], code_file: str,
+                   expected_text: str) -> None:
     """
-    Show open or close according to ``is_open`` parameter.
+    Show open or close according to ``vulns`` dictionary.
 
-    :param is_open: Indicates if finding is open.
+    :param vulns: Vulnerabilities found, if none is empty.
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
     """
-    if is_open:
+    if vulns:
         show_open('Bad text present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
-                               bad_text=expected_text))
+                               bad_text=expected_text,
+                               lines=", ".join(
+                                   [str(x) for x in vulns[code_file]]),
+                               total_vulns=len(vulns)))
     else:
         show_close('Bad text not present in code',
                    details=dict(code_file=code_file,
@@ -56,20 +60,23 @@ def _show_has_text(is_open: bool, code_file: str, expected_text: str) -> None:
                                 bad_text=expected_text))
 
 
-def _show_has_not_text(is_open: bool, code_file: str,
+def _show_has_not_text(vulns: Dict[str, List[str]], code_file: str,
                        expected_text: str) -> None:
     """
-    Show open or close based in is_open param.
+    Show open or close according to ``vulns`` dictionary.
 
-    :param is_open: Indicates if finding is open.
+    :param vulns: Vulnerabilities found, if none is empty.
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
     """
-    if not is_open:
+    if not vulns:
         show_open('Expected text not present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
-                               expected_text=expected_text))
+                               expected_text=expected_text,
+                               lines=", ".join(
+                                   [str(x) for x in vulns[code_file]]),
+                               total_vulns=len(vulns)))
     else:
         show_close('Expected text present in code',
                    details=dict(code_file=code_file,
@@ -91,17 +98,17 @@ def has_text(code_dest: str, expected_text: str) -> bool:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
     if os.path.isfile(code_dest):
-        ret = _generic_lang_assert(code_dest, expected_text)
-        _show_has_text(ret, code_dest, expected_text)
-        return ret
+        vulns = _generic_lang_assert(code_dest, expected_text)
+        _show_has_text(vulns, code_dest, expected_text)
+        return bool(vulns[code_dest])
 
     ret_fin = False
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            ret = _generic_lang_assert(full_path, expected_text)
-            _show_has_text(ret, full_path, expected_text)
-            ret_fin = ret_fin or ret
+            vulns = _generic_lang_assert(full_path, expected_text)
+            _show_has_text(vulns, full_path, expected_text)
+            ret_fin = ret_fin or bool(vulns[full_path])
     return ret_fin
 
 
@@ -119,17 +126,17 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
     if os.path.isfile(code_dest):
-        ret = _generic_lang_assert(code_dest, expected_text)
-        _show_has_not_text(ret, code_dest, expected_text)
-        return not ret
+        vulns = _generic_lang_assert(code_dest, expected_text)
+        _show_has_not_text(vulns, code_dest, expected_text)
+        return not bool(vulns[code_dest])
 
     ret_fin = False
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
-            ret = _generic_lang_assert(full_path, expected_text)
-            _show_has_not_text(ret, full_path, expected_text)
-            ret_fin = ret_fin or not ret
+            vulns = _generic_lang_assert(full_path, expected_text)
+            _show_has_not_text(vulns, full_path, expected_text)
+            ret_fin = ret_fin or not bool(vulns[full_path])
     return ret_fin
 
 
