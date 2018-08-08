@@ -63,7 +63,7 @@ def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
                     try:
                         block_end = Literal(lang_spec.get('block_comment_end'))
                         parser = SkipTo(block_end) + block_end
-                        parser.parseString(line, parseAll=True)
+                        parser.parseString(line)
                         in_block_comment = False
                         continue
                     except ParseException:
