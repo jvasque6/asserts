@@ -325,7 +325,7 @@ def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    if policy['MinimumPasswordLength'] > min_len:
+    if policy['MinimumPasswordLength'] >= min_len:
         show_close('Password policy requires long passwords',
                    details=dict(min_length=min_len, policy=policy))
         result = False
