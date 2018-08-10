@@ -8,7 +8,7 @@ public class Example
         {
             int[] a = new int[7];
             a[4]=30/0;
-            Console.WriteLine("First print statement in try block");
+            //Console.WriteLine("First print statement in try block");
         }
 
         catch(ArithmeticException e)
@@ -35,7 +35,7 @@ public class Example
         Console.WriteLine("Out of try-catch block...");
         catch(Exception e)
         {
-            Console.WriteLine("Warning: Some Other exception");
+            Debug.WriteLine("Warning: Some Other exception");
         }
 */
 }

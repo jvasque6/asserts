@@ -17,6 +17,8 @@ public class SwitchDefaultOpen{
       rjndl.BlockSize = 256;
       rjndl.Mode = CipherMode.ECB;
       ICryptoTransform transform = rjndl.CreateEncryptor();
+      Console.WriteLine("Test Console")
+      Debug.WriteLine("Test Debug")
 
       string monthString;
       switch (month)

@@ -25,6 +25,8 @@ INSECURE_SWITCH = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_SWITCH = CODE_DIR + 'SwitchDefaultClose.cs'
 INSECURE_RANDOM = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_RANDOM = CODE_DIR + 'SwitchDefaultClose.cs'
+INSECURE_WRITELINE = CODE_DIR + 'SwitchDefaultOpen.cs'
+SECURE_WRITELINE = CODE_DIR + 'EmptyCatchOpen.cs'
 NON_EXISTANT_CODE = CODE_DIR + 'NonExistant.cs'
 LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 
@@ -118,6 +120,25 @@ def test_uses_ecb_encryption_mode_in_dir_open():
     assert csharp.uses_ecb_encryption_mode(CODE_DIR)
 
 
+def test_uses_debug_writeline_open():
+    """Search Debug.WriteLine usage."""
+    assert csharp.uses_debug_writeline(INSECURE_WRITELINE)
+
+
+def test_uses_debug_writeline_in_dir_open():
+    """Search Debug.WriteLine usage."""
+    assert csharp.uses_debug_writeline(CODE_DIR)
+
+
+def test_uses_console_writeline_open():
+    """Search Console.WriteLine usage."""
+    assert csharp.uses_console_writeline(INSECURE_WRITELINE)
+
+
+def test_uses_console_writeline_in_dir_open():
+    """Search Console.WriteLine usage."""
+    assert csharp.uses_console_writeline(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -169,3 +190,15 @@ def test_uses_ecb_encryption_mode_close():
     """Search ECB Encryption Mode usage."""
     assert not csharp.uses_ecb_encryption_mode(SECURE_CODE)
     assert not csharp.uses_ecb_encryption_mode(NON_EXISTANT_CODE)
+
+
+def test_uses_debug_writeline_close():
+    """Search Debug.WriteLine usage."""
+    assert not csharp.uses_debug_writeline(SECURE_WRITELINE)
+    assert not csharp.uses_debug_writeline(NON_EXISTANT_CODE)
+
+
+def test_uses_console_writeline_close():
+    """Search Console.WriteLine usage."""
+    assert not csharp.uses_console_writeline(SECURE_WRITELINE)
+    assert not csharp.uses_console_writeline(NON_EXISTANT_CODE)

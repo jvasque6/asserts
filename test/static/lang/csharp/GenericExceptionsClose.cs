@@ -31,7 +31,7 @@ public class GenericExceptionsClose
     {
       Console.WriteLine("Out of try-catch block...");
       if (a > 5) {
-        Console.WriteLine("Big num")
+        Debug.WriteLine("Big num")
       }
       MD5 md5 = System.Security.Cryptography.MD5.Create();
       byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);

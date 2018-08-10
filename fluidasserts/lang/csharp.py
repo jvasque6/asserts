@@ -382,3 +382,77 @@ def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
     return result
+
+
+@track
+def uses_debug_writeline(csharp_dest: str) -> bool:
+    """
+    Check if code uses Debug.WriteLine method.
+
+    :param csharp_dest: Path to a C# source file or package.
+    """
+    method = "Debug.WriteLine"
+    tk_debug = CaselessKeyword('debug')
+    tk_wrilin = CaselessKeyword('writeline')
+    call_function = tk_debug + Literal('.') + tk_wrilin
+
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
+
+
+@track
+def uses_console_writeline(csharp_dest: str) -> bool:
+    """
+    Check if code uses Debug.WriteLine method.
+
+    :param csharp_dest: Path to a C# source file or package.
+    """
+    method = "Console.WriteLine"
+    tk_console = CaselessKeyword('console')
+    tk_wrilin = CaselessKeyword('writeline')
+    call_function = tk_console + Literal('.') + tk_wrilin
+
+    result = False
+    try:
+        matches = lang_helper.check_grammar(call_function, csharp_dest,
+                                            LANGUAGE_SPECS)
+    except AssertionError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang_helper.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang_helper.
+                                    file_hash(code_file)))
+    return result
