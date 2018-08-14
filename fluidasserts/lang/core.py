@@ -45,13 +45,14 @@ def _show_has_text(vulns: Dict[str, List[str]], code_file: str,
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
     """
-    if vulns:
+    lines = vulns[code_file]
+    if lines:
         show_open('Bad text present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
                                bad_text=expected_text,
                                lines=", ".join(
-                                   [str(x) for x in vulns[code_file]]),
+                                   [str(x) for x in lines]),
                                total_vulns=len(vulns)))
     else:
         show_close('Bad text not present in code',
@@ -69,18 +70,19 @@ def _show_has_not_text(vulns: Dict[str, List[str]], code_file: str,
     :param code_file: Path to the file.
     :param expected_text: Bad text to look for in the file.
     """
-    if not vulns:
+    lines = vulns[code_file]
+    if not lines:
         show_open('Expected text not present in code',
                   details=dict(code_file=code_file,
                                fingerprint=lang_helper.file_hash(code_file),
                                expected_text=expected_text,
-                               lines=", ".join(
-                                   [str(x) for x in vulns[code_file]]),
                                total_vulns=len(vulns)))
     else:
         show_close('Expected text present in code',
                    details=dict(code_file=code_file,
                                 fingerprint=lang_helper.file_hash(code_file),
+                                lines=", ".join(
+                                    [str(x) for x in lines]),
                                 expected_text=expected_text))
 
 

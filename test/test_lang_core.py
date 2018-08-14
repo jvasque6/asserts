@@ -28,11 +28,13 @@ NON_EXISTANT_CODE = CODE_DIR + 'notexistant.c'
 def test_has_text_open():
     """Test code has text."""
     assert core.has_text(INSECURE_CODE, 'strcpy')
+    assert core.has_text(INSECURE_CODE, 'user: root; pass: password123')
 
 
 def test_has_text_open_in_dir():
     """Test code has text."""
     assert core.has_text(CODE_DIR, 'strcpy')
+    assert core.has_text(CODE_DIR, 'user: root; pass: password123')
 
 
 def test_has_not_text_open():
@@ -68,6 +70,7 @@ def test_has_text_close():
     """Test code has text."""
     assert not core.has_text(SECURE_CODE, 'strcpy')
     assert not core.has_text(NON_EXISTANT_CODE, 'strcpy')
+    assert not core.has_text(SECURE_CODE, 'user: root; pass: password123')
 
 
 def test_has_not_text_close():
