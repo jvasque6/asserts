@@ -52,7 +52,12 @@ def test_has_generic_exceptions_in_dir_open():
 
 def test_swallows_exceptions_open():
     """Search empty catches."""
+    capt_out = io.StringIO()
+    fluidasserts.OUTFILE = capt_out
+    expected = LINES_FORMAT + '14, 19, 24, 32'
     assert csharp.swallows_exceptions(INSECURE_EMPTY_CATCH)
+    fluidasserts.OUTFILE = sys.stdout
+    assert expected in capt_out.getvalue()
 
 
 def test_swallows_exceptions_in_dir_open():

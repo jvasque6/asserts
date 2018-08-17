@@ -28,6 +28,10 @@ public class Example
             Test
             */
         }
+
+        catch (Exception)
+        {
+        }
     }
 /*
     try

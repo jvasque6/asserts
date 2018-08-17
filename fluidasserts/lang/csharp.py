@@ -91,7 +91,7 @@ def swallows_exceptions(csharp_dest: str) -> bool:
     tk_word = Word(alphas)
     parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') +
                     tk_word + Optional(Literal('(') + tk_word + Literal(')')) +
-                    tk_word + Literal(')'))
+                    Optional(tk_word) + Literal(')'))
     empty_catch = (Suppress(parser_catch) +
                    nestedExpr(opener='{', closer='}')).ignore(cppStyleComment)
 
