@@ -53,7 +53,7 @@ def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
                 show_close('User has password enabled with MFA',
                            details=dict(user=user[0]))
         else:
-            show_close('User has not password enabled',
+            show_close('User does not have password enabled',
                        details=dict(user=user[0]))
     return result
 
@@ -86,8 +86,8 @@ def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
             user_info = client.get_user(UserName=user[0])
             pass_last_used = user_info['User']['PasswordLastUsed']
             if pass_last_used > datetime.now() + timedelta(days=90):
-                show_open('User has not used the password in more than 90 \
-days and it\'s still active',
+                show_open('User does not have used the password in more than \
+                    90 days and it\'s still active',
                           details=dict(user=user[0],
                                        password_last_used=pass_last_used))
                 result = True
@@ -124,10 +124,11 @@ def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
             ak_last_change = parser.parse(user[9]).replace(tzinfo=pytz.UTC)
             now_plus_90 = datetime.now() - timedelta(days=90)
             if ak_last_change < now_plus_90.replace(tzinfo=pytz.UTC):
-                show_open('User\'s access key has not been rotated in the \
-last 90 days', details=dict(user=user[0],
-                            last_rotated=ak_last_change,
-                            expected_rotation_time=now_plus_90))
+                show_open('User\'s access key does not have been rotated in \
+                    the last 90 days',
+                          details=dict(user=user[0],
+                                       last_rotated=ak_last_change,
+                                       expected_rotation_time=now_plus_90))
                 result = True
             else:
                 show_close('User\'s access key has been rotated in the last \
@@ -135,7 +136,7 @@ last 90 days', details=dict(user=user[0],
                        last_rotated=ak_last_change,
                        expected_rotation_time=now_plus_90))
         else:
-            show_close('User has not access keys enabled',
+            show_close('User does not have access keys enabled',
                        details=dict(user=user[0]))
     return result
 
@@ -166,7 +167,7 @@ def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
         show_open('Root user has access keys', details=dict(user=root_user))
         result = True
     else:
-        show_close('Root user has not access keys',
+        show_close('Root user does not have access keys',
                    details=dict(user=root_user))
         result = False
     return result
@@ -418,7 +419,7 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
 @track
 def iam_root_without_mfa(key_id: str, secret: str) -> bool:
     """
-    Check if root account has not MFA.
+    Check if root account does not have MFA.
 
     CIS 1.13: Ensure MFA is enabled for the root account (Scored)
 
@@ -479,6 +480,6 @@ def iam_policies_attached_to_users(key_id: str, secret: str) -> bool:
                                     user_policy=user_pol)))
             result = True
         else:
-            show_close('User has not policies attached',
+            show_close('User does not have policies attached',
                        details=(dict(user=user['UserName'])))
     return result

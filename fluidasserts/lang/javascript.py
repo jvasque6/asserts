@@ -206,7 +206,7 @@ def swallows_exceptions(js_dest: str) -> bool:
                                                          code_file, lines,
                                                          _get_block)
         if not vulns:
-            show_close('Code does not has empty catches',
+            show_close('Code does not have empty catches',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
@@ -260,7 +260,7 @@ def has_switch_without_default(js_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not has switch with default clause',
+            show_open('Code does not have switch with default clause',
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
@@ -303,7 +303,7 @@ def has_if_without_else(js_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not has if with else clause',
+            show_open('Code does not have if with else clause',
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),

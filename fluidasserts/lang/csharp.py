@@ -108,7 +108,7 @@ def swallows_exceptions(csharp_dest: str) -> bool:
                                                          code_file, lines,
                                                          _get_block)
         if not vulns:
-            show_close('Code does not has empty catches',
+            show_close('Code does not have empty catches',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
@@ -162,7 +162,7 @@ def has_switch_without_default(csharp_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not has switch with default clause',
+            show_open('Code does not have switch with default clause',
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),
@@ -206,7 +206,7 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
                                    total_vulns=len(vulns)))
             result = True
         else:
-            show_close('Code does not generates insecure random numbers',
+            show_close('Code does not generate insecure random numbers',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
@@ -247,7 +247,7 @@ def has_if_without_else(csharp_dest: str) -> bool:
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not has if with else clause',
+            show_open('Code does not have if with else clause',
                       details=dict(file=code_file,
                                    fingerprint=lang_helper.
                                    file_hash(code_file),

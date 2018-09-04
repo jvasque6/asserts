@@ -72,7 +72,7 @@ def is_sudo_disabled(server: str, username: str, password: str,
                    format(server), details=dict(paths=out.decode('utf-8')))
         result = False
     else:
-        show_open('{} server has not sudo (or like) installed'.
+        show_open('{} server does not have sudo (or like) installed'.
                   format(server), details=dict(paths=out.decode('utf-8')))
         result = True
     return result
@@ -99,7 +99,7 @@ def are_compilers_installed(server: str, username: str, password: str,
                                   error=str(exc)))
         return False
     if not out:
-        show_close('{} server has not compilers installed'.
+        show_close('{} server does not have compilers installed'.
                    format(server), details=dict(paths=out.decode('utf-8')))
         result = False
     else:
@@ -134,7 +134,7 @@ def is_antimalware_not_installed(server: str, username: str, password: str,
                    details=dict(paths=out.decode('utf-8')))
         result = False
     else:
-        show_open('{} server has not an antivirus installed'.
+        show_open('{} server does not have an antivirus installed'.
                   format(server), details=dict(paths=out.decode('utf-8')))
         result = True
     return result
@@ -161,7 +161,7 @@ def is_remote_admin_enabled(server: str, username: str, password: str,
                                   error=str(exc)))
         return False
     if not out:
-        show_close('{} server has not remote admin login enabled'.
+        show_close('{} server does not have remote admin login enabled'.
                    format(server), details=dict(result=out.decode('utf-8')))
         result = False
     else:

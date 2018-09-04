@@ -91,7 +91,8 @@ def is_antimalware_not_installed(server: str, username: str,
                    details=dict(installed_software=installed_software))
         result = False
     else:
-        show_open('{} server has not an antivirus installed'.format(server),
+        show_open('{} server does not have an antivirus installed'
+                  .format(server),
                   details=dict(installed_software=installed_software))
         result = True
     return result

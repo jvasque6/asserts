@@ -111,7 +111,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
                       refs='rpg/inicializar-variables/')
             result = True
         else:
-            show_close('Code has not unitialized variables',
+            show_close('Code does not have unitialized variables',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)),
@@ -150,7 +150,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
                                    total_vulns=len(vulns)))
             result = True
         else:
-            show_close('Code has not empty monitors',
+            show_close('Code does not have empty monitors',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
@@ -194,7 +194,7 @@ def swallows_exceptions(rpg_dest: str) -> bool:
                                    total_vulns=len(vulns)))
             result = True
         else:
-            show_close('Code does not swallows exceptions',
+            show_close('Code does not swallow exceptions',
                        details=dict(file=code_file,
                                     fingerprint=lang_helper.
                                     file_hash(code_file)))
