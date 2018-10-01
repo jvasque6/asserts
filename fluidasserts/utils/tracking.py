@@ -35,9 +35,12 @@ def mp_track(func_to_track):
     """Track a function."""
     if os.environ.get('FA_NOTRACK') != 'true':
         project_token = '4ddf91a8a2c9f309f6a967d3462a496c'
+        user_id = get_os_fingerprint()
         mix_pan = Mixpanel(project_token)
         try:
-            mix_pan.people_set(get_os_fingerprint(), {'$ip': get_public_ip()})
-            mix_pan.track(get_os_fingerprint(), func_to_track)
+            mix_pan.people_set(user_id, {'$ip': get_public_ip()})
+            mix_pan.track(user_id, func_to_track, {
+                'python_version': platform.python_version(),
+                'platform': platform.system()})
         except MixpanelException:  # pragma: no cover
             pass
