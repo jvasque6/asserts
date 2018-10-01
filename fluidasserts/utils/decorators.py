@@ -5,8 +5,7 @@
 import functools
 from typing import Callable, Any
 
-import mixpanel
-from fluidasserts import MP, CLIENT_ID
+from .tracking import mp_track
 
 
 def track(func: Callable) -> Callable:
@@ -22,9 +21,6 @@ def track(func: Callable) -> Callable:
 
         Logs and registers function usage.
         """
-        try:
-            MP.track(CLIENT_ID, func.__module__ + ' -> ' + func.__name__)
-        except mixpanel.MixpanelException:  # pragma: no cover
-            pass
+        mp_track(func.__module__ + ' -> ' + func.__name__)
         return func(*args, **kwargs)
     return decorated

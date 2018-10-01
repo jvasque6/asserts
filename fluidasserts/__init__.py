@@ -7,17 +7,13 @@
 from __future__ import absolute_import
 
 import datetime
-import hashlib
 import inspect
 import os
-import platform
 import sys
 from collections import OrderedDict
 
 # 3rd party imports
-import mixpanel
 import oyaml as yaml
-import requests
 
 from pkg_resources import get_distribution, DistributionNotFound
 from pygments import highlight
@@ -160,23 +156,6 @@ def check_cli():
                   TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
 
 
-def get_os_fingerprint():
-    """Get fingerprint of running OS."""
-    sha256 = hashlib.sha256()
-    data = sys.platform + sys.version + platform.node()
-    sha256.update(data.encode('utf-8'))
-    return sha256.hexdigest()
-
-
-def get_public_ip():
-    """Get public IP of system."""
-    try:
-        my_ip = requests.get('https://api.ipify.org').text
-    except requests.exceptions.ConnectionError:
-        my_ip = 'Private IP'
-    return my_ip
-
-
 def get_caller_module(depth=3):
     """Get caller module."""
     frm = inspect.stack()[depth]
@@ -269,6 +248,16 @@ def show_unknown(message, details=None, refs=None):
     message.as_yaml()
 
 
+def check_boolean_env_var(var_name):
+    """Check value of boolean environment variable."""
+    if var_name in os.environ:
+        accepted_values = ['true', 'false']
+        if os.environ[var_name] not in accepted_values:
+            print(var_name + ' env variable is \
+    set but with an unknown value. It must be "true" or "false".')
+            sys.exit(-1)
+
+
 def show_banner():
     """Show Asserts banner."""
     enable_win_colors()
@@ -301,21 +290,5 @@ else:  # pragma: no cover
     __version__ = _DIST.version
 
 
-PROJECT_TOKEN = '4ddf91a8a2c9f309f6a967d3462a496c'
-
-if 'FA_STRICT' in os.environ:
-    ACCEPTED_VALUES = ['true', 'false']
-    if os.environ['FA_STRICT'] not in ACCEPTED_VALUES:
-        print('FA_STRICT env variable is \
-set but with an unknown value. It must be "true" or "false".')
-        sys.exit(-1)
-
-
-CLIENT_ID = get_os_fingerprint()
-CLIENT_IP = get_public_ip()
-
-try:
-    MP = mixpanel.Mixpanel(PROJECT_TOKEN)
-    MP.people_set(CLIENT_ID, {'$ip': CLIENT_IP})
-except mixpanel.MixpanelException:  # pragma: no cover
-    pass
+check_boolean_env_var('FA_STRICT')
+check_boolean_env_var('FA_NOTRACK')
