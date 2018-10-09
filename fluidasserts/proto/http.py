@@ -33,7 +33,8 @@ HDR_RGX = {
     'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
     'expires': '^\\s*0\\s*$',
     'pragma': '^\\s*no-cache\\s*$',
-    'strict-transport-security': '^\\s*max-age=\\s*\\d+',
+    'strict-transport-security': '^\\s*max-age=\\s*\\d+;\
+    (\\s)*includesubdomains;(\\s)*preload',
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',
@@ -301,6 +302,39 @@ by default'.format(header),
                        refs='apache/habilitar-headers-seguridad')
             result = False
         return result
+
+    if header == 'Strict-Transport-Security':
+        if header in headers_info:
+            value = headers_info[header]
+            if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+                hdr_attrs = value.split(';')
+                max_age = list(filter(lambda x: x.startswith('max-age'),
+                                      hdr_attrs))[0]
+                max_age_val = max_age.split('=')[1]
+                if int(max_age_val) >= 31536000:
+                    show_close('HTTP header {} is secure'.format(header),
+                               details=dict(url=url,
+                                            header=header,
+                                            value=value,
+                                            fingerprint=fingerprint),
+                               refs='apache/habilitar-headers-seguridad')
+                    result = False
+                else:
+                    show_open('{} HTTP header is insecure'.
+                              format(header),
+                              details=dict(url=url, header=header, value=value,
+                                           fingerprint=fingerprint),
+                              refs='apache/habilitar-headers-seguridad')
+                    result = True
+            else:
+                show_open('{} HTTP header is insecure'.
+                          format(header),
+                          details=dict(url=url, header=header, value=value,
+                                       fingerprint=fingerprint),
+                          refs='apache/habilitar-headers-seguridad')
+                result = True
+        return result
+
     if header in headers_info:
         value = headers_info[header]
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):

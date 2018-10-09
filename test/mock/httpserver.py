@@ -244,7 +244,8 @@ def expires_fail():
 def hsts_ok():
     """Header que define bien la implementacion de HSTS."""
     resp = Response('Expires OK')
-    resp.headers['Strict-Transport-Security'] = 'max-age=31536000'
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000; \
+        includeSubDomains; preload'
     return resp
 
 
