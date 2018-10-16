@@ -44,29 +44,17 @@ def get_total_checks(output_list):
 
 def get_total_open_checks(output_list):
     """Get total open checks."""
-    counter = 0
-    for output in output_list:
-        if output['status'] == 'OPEN':
-            counter = counter + 1
-    return counter
+    return sum(output['status'] == 'OPEN' for output in output_list)
 
 
 def get_total_closed_checks(output_list):
     """Get total closed checks."""
-    counter = 0
-    for output in output_list:
-        if output['status'] == 'CLOSED':
-            counter = counter + 1
-    return counter
+    return sum(output['status'] == 'CLOSED' for output in output_list)
 
 
 def get_total_unknown_checks(output_list):
     """Get total unknown checks."""
-    counter = 0
-    for output in output_list:
-        if output['status'] == 'UNKNOWN':
-            counter = counter + 1
-    return counter
+    return sum(output['status'] == 'UNKNOWN' for output in output_list)
 
 
 def main():
