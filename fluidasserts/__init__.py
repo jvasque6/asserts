@@ -235,14 +235,14 @@ def show_close(message, details=None, refs=None):
 
 
 def show_open(message, details=None, refs=None):
-    """Show close message."""
+    """Show open message."""
     check_cli()
     message = Message('OPEN', message, details, refs)
     message.as_yaml()
 
 
 def show_unknown(message, details=None, refs=None):
-    """Show close message."""
+    """Show unknown message."""
     check_cli()
     message = Message('UNKNOWN', message, details, refs)
     message.as_yaml()
