@@ -333,6 +333,13 @@ by default'.format(header),
                                        fingerprint=fingerprint),
                           refs='apache/habilitar-headers-seguridad')
                 result = True
+        else:
+            show_open('{} HTTP header not present'.
+                      format(header),
+                      details=dict(url=url, header=header,
+                                   fingerprint=fingerprint),
+                      refs='apache/habilitar-headers-seguridad')
+            result = True
         return result
 
     if header in headers_info:
