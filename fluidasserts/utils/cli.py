@@ -6,17 +6,67 @@
 
 # standard imports
 import os
+import re
 import sys
 import tempfile
 from subprocess import call
 
 # 3rd party imports
 from colorama import init
+import yaml
 
 # local imports
 import fluidasserts
 
 (_, LOGFILE) = tempfile.mkstemp(suffix='.log')
+
+
+def escape_ansi(line):
+    """Remove ANSI chars from string."""
+    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+    return ansi_escape.sub('', line)
+
+
+def get_parsed_output():
+    """Get parsed YAML output."""
+    output_list = []
+    with open(LOGFILE) as fd_yaml:
+        parsed = yaml.load_all(escape_ansi(fd_yaml.read()))
+    for output in parsed:
+        output_list.append(output)
+    return output_list
+
+
+def get_total_checks(output_list):
+    """Get total checks."""
+    return len(output_list)
+
+
+def get_total_open_checks(output_list):
+    """Get total open checks."""
+    counter = 0
+    for output in output_list:
+        if output['status'] == 'OPEN':
+            counter = counter + 1
+    return counter
+
+
+def get_total_closed_checks(output_list):
+    """Get total closed checks."""
+    counter = 0
+    for output in output_list:
+        if output['status'] == 'CLOSED':
+            counter = counter + 1
+    return counter
+
+
+def get_total_unknown_checks(output_list):
+    """Get total unknown checks."""
+    counter = 0
+    for output in output_list:
+        if output['status'] == 'UNKNOWN':
+            counter = counter + 1
+    return counter
 
 
 def main():
@@ -34,6 +84,17 @@ def main():
     with open(LOGFILE, 'r') as infile:
         content = infile.read()
     print(content)
+    parsed = get_parsed_output()
+
+    final_message = {
+        'Total checks': get_total_checks(parsed),
+        'Opened checks': get_total_open_checks(parsed),
+        'Closed checks': get_total_closed_checks(parsed),
+        'Unknown checks': get_total_unknown_checks(parsed)
+    }
+
+    print(yaml.dump(final_message, default_flow_style=False,
+                    explicit_start=True))
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
