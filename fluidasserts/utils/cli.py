@@ -27,11 +27,9 @@ def escape_ansi(line):
     return ansi_escape.sub('', line)
 
 
-def get_parsed_output():
+def get_parsed_output(content):
     """Get parsed YAML output."""
-    with open(LOGFILE) as fd_yaml:
-        parsed = yaml.load_all(escape_ansi(fd_yaml.read()))
-    return [x for x in parsed]
+    return [x for x in yaml.load_all(escape_ansi(content))]
 
 
 def get_total_checks(output_list):
@@ -69,7 +67,7 @@ def main():
     with open(LOGFILE, 'r') as infile:
         content = infile.read()
     print(content)
-    parsed = get_parsed_output()
+    parsed = get_parsed_output(content)
 
     final_message = {
         'Total checks': get_total_checks(parsed),
