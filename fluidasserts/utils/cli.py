@@ -79,10 +79,12 @@ def main():
     parsed = get_parsed_output(content)
 
     final_message = {
-        'Total checks': get_total_checks(parsed),
-        'Opened checks': get_total_open_checks(parsed),
-        'Closed checks': get_total_closed_checks(parsed),
-        'Unknown checks': get_total_unknown_checks(parsed)
+        'summary': {
+            'total-checks': get_total_checks(parsed),
+            'opened-checks': get_total_open_checks(parsed),
+            'closed-checks': get_total_closed_checks(parsed),
+            'unknown-checks': get_total_unknown_checks(parsed)
+        }
     }
 
     print(yaml.dump(final_message, default_flow_style=False,
