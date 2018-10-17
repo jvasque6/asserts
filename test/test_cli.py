@@ -40,3 +40,10 @@ def test_cli_color():
     testargs = ["asserts", "-c", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
        assert not cli.main()
+
+
+def test_cli_http():
+    """Run CLI http option."""
+    testargs = ["asserts", "-H", 'https://127.0.0.1']
+    with patch.object(sys, 'argv', testargs):
+       assert not cli.main()
