@@ -74,11 +74,13 @@ Consider removing it manually'.format(logfile))
     return (ret, content)
 
 
-def exec_http_package(url):
+def exec_http_package(urls):
     """Execute generic checks of HTTP package."""
     template = """
 from fluidasserts.proto import http
-
+"""
+    for url in urls:
+        template += """
 http.is_header_x_asp_net_version_present('__url__')
 http.is_header_access_control_allow_origin_missing('__url__')
 http.is_header_cache_control_missing('__url__')
@@ -122,7 +124,7 @@ def main():
                            action='store_true')
     argparser.add_argument('-c', '--no-color', help='remove colors',
                            action='store_true')
-    argparser.add_argument('-H', '--http', nargs=1, metavar='URL',
+    argparser.add_argument('-H', '--http', nargs='+', metavar='URL',
                            help='perform generic HTTP checks over given URL')
     argparser.add_argument('exploit', nargs='?', help='exploit to execute')
 
@@ -133,7 +135,7 @@ def main():
         sys.exit(-1)
 
     if args.http:
-        (ret, content) = exec_http_package(args.http[0])
+        (ret, content) = exec_http_package(args.http)
     elif args.exploit:
         (ret, content) = exec_wrapper(args.exploit)
     if not args.quiet:
