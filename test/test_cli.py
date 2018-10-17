@@ -28,8 +28,8 @@ def test_cli():
        assert not cli.main()
 
 
-def test_cli_error():
-    """Run CLI."""
-    testargs = ["asserts"]
+def test_cli_quiet():
+    """Run CLI in quiet mode."""
+    testargs = ["asserts", "-q", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
-       assert cli.main()
+       assert not cli.main()

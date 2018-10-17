@@ -5,6 +5,7 @@
 """Asserts CLI."""
 
 # standard imports
+import argparse
 import os
 import re
 import sys
@@ -55,18 +56,26 @@ def get_total_unknown_checks(output_list):
 def main():
     """Package CLI."""
     init()
-    if len(sys.argv) < 2:
-        fluidasserts.show_banner()
-        sys.stderr.write('Usage: asserts <exploit.py>\n')
-        return 1
-    my_env = {**os.environ, 'FA_CLI': 'true'}
     fluidasserts.show_banner()
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-q', '--quiet', help='decrease output verbosity',
+                           action='store_true')
+    argparser.add_argument('exploit', help='exploit to execute')
+
+    args = argparser.parse_args()
+
+    my_env = {**os.environ, 'FA_CLI': 'true'}
+
     with open(LOGFILE, 'w') as outfile:
-        ret = call([sys.executable, sys.argv[1]],
+        ret = call([sys.executable, args.exploit],
                    stdout=outfile, stderr=outfile, env=my_env)
+
     with open(LOGFILE, 'r') as infile:
         content = infile.read()
-    print(content)
+
+    if not args.quiet:
+        print(content)
+
     parsed = get_parsed_output(content)
 
     final_message = {
