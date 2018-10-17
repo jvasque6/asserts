@@ -33,3 +33,10 @@ def test_cli_quiet():
     testargs = ["asserts", "-q", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
        assert not cli.main()
+
+
+def test_cli_color():
+    """Run CLI in without colors."""
+    testargs = ["asserts", "-c", ASSERTS_EXPLOIT]
+    with patch.object(sys, 'argv', testargs):
+       assert not cli.main()

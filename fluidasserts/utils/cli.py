@@ -60,6 +60,8 @@ def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-q', '--quiet', help='decrease output verbosity',
                            action='store_true')
+    argparser.add_argument('-c', '--no-color', help='remove colors',
+                           action='store_true')
     argparser.add_argument('exploit', help='exploit to execute')
 
     args = argparser.parse_args()
@@ -74,7 +76,10 @@ def main():
         content = infile.read()
 
     if not args.quiet:
-        print(content)
+        if args.no_color:
+            print(escape_ansi(content))
+        else:
+            print(content)
 
     parsed = get_parsed_output(content)
 
