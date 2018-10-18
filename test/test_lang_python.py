@@ -12,15 +12,13 @@ import sys
 # local imports
 from fluidasserts.lang import python
 
-import fluidasserts
-
 # Constants
 
 CODE_DIR = 'test/static/lang/python/'
 SECURE_CODE = CODE_DIR + 'exceptions_close.py'
 INSECURE_CODE = CODE_DIR + 'exceptions_open.py'
 NON_EXISTANT_CODE = CODE_DIR + 'not_exists.py'
-LINES_FORMAT = 'lines[39;49;00m: [31;01m'
+LINES_FORMAT = 'lines: '
 
 
 #
@@ -40,10 +38,11 @@ def test_has_generic_exceptions_in_dir_open():
 def test_swallows_exceptions_open():
     """Code swallows exceptions."""
     capt_out = io.StringIO()
-    fluidasserts.OUTFILE = capt_out
+    temp_stdout = sys.stdout
+    sys.stdout = capt_out
     expected = LINES_FORMAT + '13, 17, 21'
     assert python.swallows_exceptions(INSECURE_CODE)
-    fluidasserts.OUTFILE = sys.stdout
+    sys.stdout = temp_stdout
     assert expected in capt_out.getvalue()
 
 

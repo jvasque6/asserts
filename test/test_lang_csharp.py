@@ -10,7 +10,6 @@ import sys
 # None
 
 # local imports
-import fluidasserts
 from fluidasserts.lang import csharp
 
 
@@ -28,7 +27,7 @@ SECURE_RANDOM = CODE_DIR + 'SwitchDefaultClose.cs'
 INSECURE_WRITELINE = CODE_DIR + 'SwitchDefaultOpen.cs'
 SECURE_WRITELINE = CODE_DIR + 'EmptyCatchOpen.cs'
 NON_EXISTANT_CODE = CODE_DIR + 'NonExistant.cs'
-LINES_FORMAT = 'lines[39;49;00m: [31;01m'
+LINES_FORMAT = 'lines: '
 
 #
 # Open tests
@@ -38,10 +37,11 @@ LINES_FORMAT = 'lines[39;49;00m: [31;01m'
 def test_has_generic_exceptions_open():
     """Code uses generic exceptions."""
     capt_out = io.StringIO()
-    fluidasserts.OUTFILE = capt_out
+    temp_stdout = sys.stdout
+    sys.stdout =  capt_out
     expected = LINES_FORMAT + '44, 54'
     assert csharp.has_generic_exceptions(INSECURE_CODE)
-    fluidasserts.OUTFILE = sys.stdout
+    sys.stdout = temp_stdout
     assert expected in capt_out.getvalue()
 
 
@@ -53,10 +53,11 @@ def test_has_generic_exceptions_in_dir_open():
 def test_swallows_exceptions_open():
     """Search empty catches."""
     capt_out = io.StringIO()
-    fluidasserts.OUTFILE = capt_out
+    temp_stdout = sys.stdout
+    sys.stdout = capt_out
     expected = LINES_FORMAT + '14, 19, 24, 32'
     assert csharp.swallows_exceptions(INSECURE_EMPTY_CATCH)
-    fluidasserts.OUTFILE = sys.stdout
+    sys.stdout = temp_stdout
     assert expected in capt_out.getvalue()
 
 

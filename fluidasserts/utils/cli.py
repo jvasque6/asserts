@@ -7,28 +7,154 @@
 # standard imports
 import argparse
 import os
-import re
 import sys
 import tempfile
 from subprocess import call
 
+# pylint: disable=no-name-in-module
+# pylint: disable=global-statement
+# pylint: disable=no-member
+
 # 3rd party imports
-from colorama import init
 import yaml
+from colorama import init
+from pygments import highlight
+from pygments.lexers import PropertiesLexer
+from pygments.formatters import TerminalFormatter
+from pygments.token import Keyword, Name, Comment, String, Error, \
+    Number, Operator, Generic, Token, Whitespace
+from pygments.util import UnclosingTextIOWrapper
 
 # local imports
 import fluidasserts
 
 
-def escape_ansi(line):
-    """Remove ANSI chars from string."""
-    ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
-    return ansi_escape.sub('', line)
+OUTFILE = sys.stdout
+
+OPEN_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('darkred', 'red'),
+    Comment.Preproc: ('darkred', 'red'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('red', 'red'),
+    Number: ('red', 'red'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('red', 'red'),
+}
+
+CLOSE_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('darkgreen', 'green'),
+    Number: ('darkgreen', 'green'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('darkgreen', 'green'),
+}
+
+UNKNOWN_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('darkgray', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'darkgray'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('darkgray', 'darkgray'),
+    Number: ('darkgray', 'darkgray'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('darkgray', 'darkgray'),
+}
+
+
+def enable_win_colors():
+    """Enable windows colors."""
+    global OUTFILE
+    if sys.platform in ('win32', 'cygwin'):  # pragma: no cover
+        OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+        try:
+            import colorama.initialise
+        except ImportError:
+            pass
+        else:
+            OUTFILE = colorama.initialise.wrap_stream(OUTFILE, convert=None,
+                                                      strip=None,
+                                                      autoreset=False,
+                                                      wrap=True)
+
+
+def show_banner():
+    """Show Asserts banner."""
+    enable_win_colors()
+    header = """
+---
+# Fluid Asserts (v. {})
+#  ___
+# | >>|> fluid
+# |___|  attacks, we hack your software
+#
+# Loading attack modules ...
+""".format(fluidasserts.__version__)
+
+    highlight(header, PropertiesLexer(),
+              TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
 
 
 def get_parsed_output(content):
     """Get parsed YAML output."""
-    return [x for x in yaml.load_all(escape_ansi(content))]
+    return [x for x in yaml.load_all(content)]
 
 
 def get_total_checks(output_list):
@@ -63,6 +189,24 @@ def filter_content(parsed_content, args):
                            parsed_content)
 
     return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
+
+
+def colorize(parsed_content):
+    """Colorize content."""
+    enable_win_colors()
+    for node in parsed_content:
+        if node['status'] == 'OPEN':
+            style = OPEN_COLORS
+        if node['status'] == 'CLOSED':
+            style = CLOSE_COLORS
+        if node['status'] == 'UNKNOWN':
+            style = UNKNOWN_COLORS
+
+        message = yaml.dump(node, default_flow_style=False,
+                            explicit_start=True)
+        highlight(message, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=style),
+                  OUTFILE)
 
 
 def exec_wrapper(exploit):
@@ -132,7 +276,7 @@ http.is_date_unsyncd('__url__')
 def main():
     """Package CLI."""
     init()
-    fluidasserts.show_banner()
+    show_banner()
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-q', '--quiet', help='decrease output verbosity',
                            action='store_true')
@@ -165,14 +309,12 @@ def main():
 
     if not args.quiet:
         if args.show_open or args.show_closed or args.show_unknown:
-            print(yaml.dump(filter_content(parsed, args),
-                            default_flow_style=False,
-                            explicit_start=True))
+            colorize(filter_content(parsed, args))
         else:
             if args.no_color:
-                print(escape_ansi(content))
-            else:
                 print(content)
+            else:
+                colorize(parsed)
 
     total_checks = get_total_checks(parsed)
     open_checks = get_total_open_checks(parsed)
@@ -194,8 +336,11 @@ def main():
         }
     }
 
-    print(yaml.dump(final_message, default_flow_style=False,
-                    explicit_start=True))
+    message = yaml.dump(final_message, default_flow_style=False,
+                        explicit_start=True)
+
+    highlight(message, PropertiesLexer(),
+              TerminalFormatter(colorscheme=UNKNOWN_COLORS), OUTFILE)
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':

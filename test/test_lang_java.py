@@ -10,7 +10,6 @@ import sys
 # None
 
 # local imports
-import fluidasserts
 from fluidasserts.lang import java
 
 
@@ -30,7 +29,7 @@ INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
 SECURE_CIPHER = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_CIPHER = CODE_DIR + 'GenericExceptionsOpen.java'
 NON_EXISTANT_CODE = CODE_DIR + 'NotExists.java'
-LINES_FORMAT = 'lines[39;49;00m: [31;01m'
+LINES_FORMAT = 'lines: '
 
 #
 # Open tests
@@ -60,10 +59,11 @@ def test_uses_print_stack_trace_in_dir_open():
 def test_swallows_exceptions_open():
     """Search empty catches."""
     capt_out = io.StringIO()
-    fluidasserts.OUTFILE = capt_out
+    temp_stdout = sys.stdout
+    sys.stdout = capt_out
     expected = LINES_FORMAT + '12, 15'
     assert java.swallows_exceptions(INSECURE_EMPTY_CATCH)
-    fluidasserts.OUTFILE = sys.stdout
+    sys.stdout = temp_stdout
     assert expected in capt_out.getvalue()
 
 
