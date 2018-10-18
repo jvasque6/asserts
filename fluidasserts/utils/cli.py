@@ -174,12 +174,23 @@ def main():
             else:
                 print(content)
 
+    total_checks = get_total_checks(parsed)
+    open_checks = get_total_open_checks(parsed)
+    closed_checks = get_total_closed_checks(parsed)
+    unknown_checks = get_total_unknown_checks(parsed)
+
     final_message = {
         'summary': {
-            'total-checks': get_total_checks(parsed),
-            'opened-checks': get_total_open_checks(parsed),
-            'closed-checks': get_total_closed_checks(parsed),
-            'unknown-checks': get_total_unknown_checks(parsed)
+            'total-checks': '{} ({}%)'.format(total_checks, '100'),
+            'opened-checks':
+                '{} ({:.2f}%)'.format(open_checks,
+                                      open_checks / total_checks * 100),
+            'closed-checks':
+                '{} ({:.2f}%)'.format(closed_checks,
+                                      closed_checks / total_checks * 100),
+            'unknown-checks':
+                '{} ({:.2f}%)'.format(unknown_checks,
+                                      unknown_checks / total_checks * 100),
         }
     }
 
