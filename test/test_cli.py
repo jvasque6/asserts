@@ -49,6 +49,13 @@ def test_cli_http():
        assert not cli.main()
 
 
+def test_cli_ssl():
+    """Run CLI ssl option."""
+    testargs = ["asserts", "-S", '127.0.0.1']
+    with patch.object(sys, 'argv', testargs):
+       assert not cli.main()
+
+
 def test_cli_filtered():
     """Run CLI with filtered results."""
     testargs = ["asserts", "-cou", ASSERTS_EXPLOIT]

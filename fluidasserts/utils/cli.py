@@ -226,8 +226,7 @@ def exec_wrapper(exploit):
         try:
             os.remove(logfile)
         except PermissionError:
-            print('Could not remove temp file {}. \
-Consider removing it manually'.format(logfile))
+            pass
 
     return (ret, content)
 
@@ -273,6 +272,48 @@ http.is_date_unsyncd('__url__')
     return exec_wrapper(exploitfile)
 
 
+def exec_ssl_package(ip_addresses):
+    """Execute generic checks of SSL package."""
+    template = """
+from fluidasserts.proto import ssl
+"""
+    for ip_addr in ip_addresses:
+        template += """
+ssl.is_pfs_disabled('__ip__')
+ssl.is_sslv3_enabled('__ip__')
+ssl.is_tlsv1_enabled('__ip__')
+ssl.has_poodle_tls('__ip__')
+ssl.has_poodle_sslv3('__ip__')
+ssl.has_breach('__ip__')
+ssl.allows_anon_ciphers('__ip__')
+ssl.allows_weak_ciphers('__ip__')
+ssl.has_beast('__ip__')
+ssl.has_heartbleed('__ip__')
+
+""".replace('__ip__', ip_addr)
+
+    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
+    with open(exploitfile, 'w+') as exploitfd:
+        exploitfd.write(template)
+
+    return exec_wrapper(exploitfile)
+
+
+def get_content(args):
+    """Get raw content according to args parameter."""
+    content = ''
+    if args.http:
+        (ret, _content) = exec_http_package(args.http)
+        content += _content
+    if args.ssl:
+        (ret, _content) = exec_ssl_package(args.ssl)
+        content += _content
+    elif args.exploit:
+        (ret, _content) = exec_wrapper(args.exploit)
+        content += _content
+    return (ret, content)
+
+
 def main():
     """Package CLI."""
     init()
@@ -292,18 +333,17 @@ def main():
                            action='store_true')
     argparser.add_argument('-H', '--http', nargs='+', metavar='URL',
                            help='perform generic HTTP checks over given URL')
+    argparser.add_argument('-S', '--ssl', nargs='+', metavar='IP',
+                           help='perform generic SSL checks over given IP')
     argparser.add_argument('exploit', nargs='?', help='exploit to execute')
 
     args = argparser.parse_args()
 
-    if not args.exploit and not args.http:
+    if not args.exploit and not args.http and not args.ssl:
         argparser.print_help()
         sys.exit(-1)
 
-    if args.http:
-        (ret, content) = exec_http_package(args.http)
-    elif args.exploit:
-        (ret, content) = exec_wrapper(args.exploit)
+    (ret, content) = get_content(args)
 
     parsed = get_parsed_output(content)
 
