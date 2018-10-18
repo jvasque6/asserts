@@ -51,6 +51,20 @@ def get_total_unknown_checks(output_list):
     return sum(output['status'] == 'UNKNOWN' for output in output_list)
 
 
+def filter_content(parsed_content, args):
+    """Show filtered content according to args."""
+    opened_nodes = filter(lambda x: x['status'] == 'OPEN' and args.show_open,
+                          parsed_content)
+    closed_nodes = filter(lambda x: x['status'] == 'CLOSED' and
+                          args.show_closed,
+                          parsed_content)
+    unknown_nodes = filter(lambda x: x['status'] == 'UNKNOWN' and
+                           args.show_unknown,
+                           parsed_content)
+
+    return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
+
+
 def exec_wrapper(exploit):
     """Wrapper executor exploit."""
     (_, logfile) = tempfile.mkstemp(suffix='.log')
@@ -122,7 +136,15 @@ def main():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-q', '--quiet', help='decrease output verbosity',
                            action='store_true')
-    argparser.add_argument('-c', '--no-color', help='remove colors',
+    argparser.add_argument('-n', '--no-color', help='remove colors',
+                           action='store_true')
+    argparser.add_argument('-o', '--show-open', help='show only opened checks',
+                           action='store_true')
+    argparser.add_argument('-c', '--show-closed',
+                           help='show only closed checks',
+                           action='store_true')
+    argparser.add_argument('-u', '--show-unknown',
+                           help='show only unknown (error) checks',
                            action='store_true')
     argparser.add_argument('-H', '--http', nargs='+', metavar='URL',
                            help='perform generic HTTP checks over given URL')
@@ -138,13 +160,19 @@ def main():
         (ret, content) = exec_http_package(args.http)
     elif args.exploit:
         (ret, content) = exec_wrapper(args.exploit)
-    if not args.quiet:
-        if args.no_color:
-            print(escape_ansi(content))
-        else:
-            print(content)
 
     parsed = get_parsed_output(content)
+
+    if not args.quiet:
+        if args.show_open or args.show_closed or args.show_unknown:
+            print(yaml.dump(filter_content(parsed, args),
+                            default_flow_style=False,
+                            explicit_start=True))
+        else:
+            if args.no_color:
+                print(escape_ansi(content))
+            else:
+                print(content)
 
     final_message = {
         'summary': {

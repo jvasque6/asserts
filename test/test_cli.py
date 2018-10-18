@@ -47,3 +47,10 @@ def test_cli_http():
     testargs = ["asserts", "-H", 'https://127.0.0.1']
     with patch.object(sys, 'argv', testargs):
        assert not cli.main()
+
+
+def test_cli_filtered():
+    """Run CLI with filtered results."""
+    testargs = ["asserts", "-cou", ASSERTS_EXPLOIT]
+    with patch.object(sys, 'argv', testargs):
+       assert not cli.main()
