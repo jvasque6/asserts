@@ -30,9 +30,17 @@ NON_EXISTANT = '0.0.0.0'
 @pytest.mark.parametrize('run_mock',
                          [('mysql:hard', {'22/tcp': OS_PORT})],
                          indirect=True)
-def test_min_priv_enabled_close(run_mock):
-    """Secure umask?."""
+def test_high_privileged_close(run_mock):
+    """Daemon running with high privileges?."""
     assert not mysql_os.daemon_high_privileged(run_mock, NONPRIV_USER,
                                                NONPRIV_PASS)
     assert not mysql_os.daemon_high_privileged(NON_EXISTANT, NONPRIV_USER,
                                                NONPRIV_PASS)
+
+
+def test_history_enabled_close(run_mock):
+    """MySQL history files non empty?."""
+    assert not mysql_os.history_enabled(run_mock, NONPRIV_USER,
+                                        NONPRIV_PASS)
+    assert not mysql_os.history_enabled(NON_EXISTANT, NONPRIV_USER,
+                                        NONPRIV_PASS)

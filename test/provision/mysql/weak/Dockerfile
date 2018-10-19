@@ -1,11 +1,3 @@
-FROM leafney/docker-alpine-mysql
+FROM registry.gitlab.com/fluidsignal/asserts/mocks/mysql:hard
 
-RUN apk update && apk upgrade && apk add openssh
-RUN ssh-keygen -A && \
-    adduser -D -s /bin/sh nonpriv && \
-    echo "root:Puef8poh2tei9AeB" | chpasswd && \
-    echo "nonpriv:ahgh7xee9eewaeGh" | chpasswd && \
-    echo "PermitRootLogin no" >> /etc/ssh/sshd_config
-
-ENTRYPOINT []
-CMD /usr/sbin/sshd -D
+ADD dot_mysqlhis /home/.mysql_history
