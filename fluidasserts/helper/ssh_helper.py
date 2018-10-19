@@ -30,7 +30,6 @@ class ConnError(Exception):
 def build_ssh_object() -> paramiko.client.SSHClient:
     """Build a Paramiko SSHClient object."""
     ssh = paramiko.SSHClient()
-    ssh.load_system_host_keys()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     return ssh
 
