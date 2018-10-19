@@ -67,3 +67,25 @@ do size=$(stat -c %b $i); c=$(($c+$size)); done; echo $c'
     show_open('MySQL history files are not empty',
               details=dict(server=server, size=out.decode()))
     return True
+
+
+@track
+def pwd_on_env(server: str, username: str, password: str,
+               ssh_config: str = None) -> bool:
+    """Check for MYSQL_PWD env var."""
+    cmd = r'grep -h MYSQL_PWD /proc/*/environ'
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd,
+                                  ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
+    if out.decode() == '':
+        show_close('MYSQL_PWD not on environment',
+                   details=dict(server=server, size=out.decode()))
+        return False
+    show_open('MYSQL_PWD found on environment',
+              details=dict(server=server, values=out.decode()))
+    return True

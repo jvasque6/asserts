@@ -32,15 +32,21 @@ NON_EXISTANT = '0.0.0.0'
                          indirect=True)
 def test_high_privileged_close(run_mock):
     """Daemon running with high privileges?."""
-    assert not mysql_os.daemon_high_privileged(run_mock, NONPRIV_USER,
-                                               NONPRIV_PASS)
-    assert not mysql_os.daemon_high_privileged(NON_EXISTANT, NONPRIV_USER,
-                                               NONPRIV_PASS)
+    assert not mysql_os.daemon_high_privileged(run_mock, ADMIN_USER,
+                                               ADMIN_PASS)
+    assert not mysql_os.daemon_high_privileged(NON_EXISTANT, ADMIN_USER,
+                                               ADMIN_PASS)
 
 
 def test_history_enabled_close(run_mock):
     """MySQL history files non empty?."""
-    assert not mysql_os.history_enabled(run_mock, NONPRIV_USER,
-                                        NONPRIV_PASS)
-    assert not mysql_os.history_enabled(NON_EXISTANT, NONPRIV_USER,
-                                        NONPRIV_PASS)
+    assert not mysql_os.history_enabled(run_mock, ADMIN_USER,
+                                        ADMIN_PASS)
+    assert not mysql_os.history_enabled(NON_EXISTANT, ADMIN_USER,
+                                        ADMIN_PASS)
+
+
+def test_pwd_on_env_close(run_mock):
+    """MYSQL_PWD on env?."""
+    assert not mysql_os.pwd_on_env(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert not mysql_os.pwd_on_env(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)

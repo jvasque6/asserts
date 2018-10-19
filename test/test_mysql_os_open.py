@@ -32,5 +32,9 @@ NON_EXISTANT = '0.0.0.0'
                          indirect=True)
 def test_history_enabled_open(run_mock):
     """MySQL history files non empty?."""
-    assert mysql_os.history_enabled(run_mock, NONPRIV_USER,
-                                        NONPRIV_PASS)
+    assert mysql_os.history_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_pwd_on_env_open(run_mock):
+    """MYSQL_PWD on env?."""
+    assert mysql_os.pwd_on_env(run_mock, ADMIN_USER, ADMIN_PASS)
