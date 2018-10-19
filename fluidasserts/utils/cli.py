@@ -197,9 +197,11 @@ def colorize(parsed_content):
     for node in parsed_content:
         if node['status'] == 'OPEN':
             style = OPEN_COLORS
-        if node['status'] == 'CLOSED':
+        elif node['status'] == 'CLOSED':
             style = CLOSE_COLORS
-        if node['status'] == 'UNKNOWN':
+        elif node['status'] == 'UNKNOWN':
+            style = UNKNOWN_COLORS
+        else:
             style = UNKNOWN_COLORS
 
         message = yaml.dump(node, default_flow_style=False,
@@ -207,6 +209,15 @@ def colorize(parsed_content):
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=style),
                   OUTFILE)
+
+
+def print_message(message, args):
+    """Print message according to args."""
+    if args.no_color:
+        print(yaml.dump(message, default_flow_style=False,
+                        explicit_start=True))
+    else:
+        colorize(message)
 
 
 def exec_wrapper(exploit):
@@ -349,12 +360,9 @@ def main():
 
     if not args.quiet:
         if args.show_open or args.show_closed or args.show_unknown:
-            colorize(filter_content(parsed, args))
+            print_message(filter_content(parsed, args), args)
         else:
-            if args.no_color:
-                print(content)
-            else:
-                colorize(parsed)
+            print_message(parsed, args)
 
     total_checks = get_total_checks(parsed)
     open_checks = get_total_open_checks(parsed)
