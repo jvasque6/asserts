@@ -84,8 +84,30 @@ def pwd_on_env(server: str, username: str, password: str,
         return False
     if out.decode() == '':
         show_close('MYSQL_PWD not on environment',
-                   details=dict(server=server, size=out.decode()))
+                   details=dict(server=server))
         return False
     show_open('MYSQL_PWD found on environment',
               details=dict(server=server, values=out.decode()))
+    return True
+
+
+@track
+def has_insecure_shell(server: str, username: str, password: str,
+                       ssh_config: str = None) -> bool:
+    """Check for mysql user with interactive shell."""
+    cmd = r'getent passwd mysql | cut -d: -f7 | grep -e nologin -e false'
+    try:
+        out, _ = ssh_exec_command(server, username, password, cmd,
+                                  ssh_config)
+    except ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(server=server, username=username,
+                                  error=str(exc)))
+        return False
+    if out.decode() != '':
+        show_close('"mysql" user uses a non-interactive shell',
+                   details=dict(server=server, shell=out.decode()))
+        return False
+    show_open('"mysql" user uses an interactive shell',
+              details=dict(server=server))
     return True

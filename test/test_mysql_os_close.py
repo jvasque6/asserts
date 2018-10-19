@@ -50,3 +50,10 @@ def test_pwd_on_env_close(run_mock):
     """MYSQL_PWD on env?."""
     assert not mysql_os.pwd_on_env(run_mock, ADMIN_USER, ADMIN_PASS)
     assert not mysql_os.pwd_on_env(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
+
+
+def test_has_insecure_shell_close(run_mock):
+    """mysql has interactive shell?."""
+    assert not mysql_os.has_insecure_shell(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert not mysql_os.has_insecure_shell(NON_EXISTANT, ADMIN_USER,
+                                           ADMIN_PASS)

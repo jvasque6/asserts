@@ -38,3 +38,8 @@ def test_history_enabled_open(run_mock):
 def test_pwd_on_env_open(run_mock):
     """MYSQL_PWD on env?."""
     assert mysql_os.pwd_on_env(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_has_insecure_shell_open(run_mock):
+    """mysql has interactive shell?."""
+    assert mysql_os.has_insecure_shell(run_mock, ADMIN_USER, ADMIN_PASS)
