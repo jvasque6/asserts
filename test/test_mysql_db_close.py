@@ -65,3 +65,11 @@ def test_secure_file_close(run_mock):
     #                                      ADMIN_PASS)
     assert not mysql_db.secure_file_priv_disabled(NON_EXISTANT, ADMIN_USER,
                                                   ADMIN_PASS)
+
+
+def test_strict_all_tables_close(run_mock):
+    """STRICT_ALL_TABLES enabled?."""
+    #assert not mysql_db.strict_all_tables_disabled(run_mock, ADMIN_USER,
+    #                                      ADMIN_PASS)
+    assert not mysql_db.strict_all_tables_disabled(NON_EXISTANT, ADMIN_USER,
+                                                   ADMIN_PASS)

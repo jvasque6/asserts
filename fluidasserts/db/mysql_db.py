@@ -177,3 +177,31 @@ Variable_name = 'secure_file_priv' AND Value<>''"
             show_close('Parameter "secure_file_priv" is established',
                        details=dict(server=server))
         return result
+
+
+@track
+def strict_all_tables_disabled(server: str, username: str,
+                               password: str) -> bool:
+    """Check if STRICT_ALL_TABLES is enabled on MySQL server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SHOW VARIABLES LIKE 'sql_mode'"
+        mycursor.execute(query)
+
+        result = 'STRICT_ALL_TABLES' not in list(mycursor)[0][1]
+
+        if result:
+            show_open('STRICT_ALL_TABLES not enabled on by server',
+                      details=dict(server=server))
+        else:
+            show_close('STRICT_ALL_TABLES enabled on by server',
+                       details=dict(server=server))
+        return result

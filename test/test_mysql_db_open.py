@@ -46,3 +46,9 @@ def test_secure_file_open(run_mock):
     """MySQL secure_file_priv enabled?."""
     assert mysql_db.secure_file_priv_disabled(run_mock, ADMIN_USER,
                                               ADMIN_PASS)
+
+
+def test_strict_all_tables_open(run_mock):
+    """STRICT_ALL_TABLES enabled?."""
+    assert mysql_db.strict_all_tables_disabled(run_mock, ADMIN_USER,
+                                               ADMIN_PASS)
