@@ -28,7 +28,7 @@ NON_EXISTANT = '0.0.0.0'
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('mysql:weak', {'22/tcp': OS_PORT})],
+                         [('mysql_os:weak', {'22/tcp': OS_PORT})],
                          indirect=True)
 def test_history_enabled_open(run_mock):
     """MySQL history files non empty?."""

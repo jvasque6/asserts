@@ -28,7 +28,7 @@ NON_EXISTANT = '0.0.0.0'
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('mysql:hard', {'22/tcp': OS_PORT})],
+                         [('mysql_os:hard', {'22/tcp': OS_PORT})],
                          indirect=True)
 def test_high_privileged_close(run_mock):
     """Daemon running with high privileges?."""

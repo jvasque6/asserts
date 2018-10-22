@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/fluidsignal/asserts/mocks/mysql:hard
+FROM registry.gitlab.com/fluidsignal/asserts/mocks/mysql_os:hard
 
 ENV MYSQL_PWD=something
 
