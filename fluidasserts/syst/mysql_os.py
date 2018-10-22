@@ -73,7 +73,8 @@ do size=$(stat -c %b $i); c=$(($c+$size)); done; echo $c'
 def pwd_on_env(server: str, username: str, password: str,
                ssh_config: str = None) -> bool:
     """Check for MYSQL_PWD env var."""
-    cmd = r'grep -h MYSQL_PWD /proc/*/environ'
+    cmd = r'grep -h MYSQL_PWD /proc/*/environ \
+/home/*/.{bashrc,profile,bash_profile}'
     try:
         out, _ = ssh_exec_command(server, username, password, cmd,
                                   ssh_config)
