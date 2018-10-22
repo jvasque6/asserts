@@ -25,7 +25,7 @@ Application Security Testing
 `SAST <https://www.owasp.org/index.php/Source_Code_Analysis_Tools>`_) and
 dynamic testing of many protocols (DXST).
 
-.. image:: _static/fluidassertses.png
+.. image:: _static/asserts.png
 
 ``Asserts`` reuses previously handcrafted
 attack vectors in order to
