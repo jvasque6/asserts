@@ -148,3 +148,32 @@ PLUGIN_NAME='daemon_memcached'"
             show_close('Memcached daemon not enabled on server',
                        details=dict(server=server))
         return result
+
+
+@track
+def secure_file_priv_disabled(server: str, username: str,
+                              password: str)-> bool:
+    """Check if secure_file_priv is configured on server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SHOW GLOBAL VARIABLES WHERE \
+Variable_name = 'secure_file_priv' AND Value<>''"
+        mycursor.execute(query)
+
+        result = len(list(mycursor)) == 0
+
+        if result:
+            show_open('Parameter "secure_file_priv" not established',
+                      details=dict(server=server))
+        else:
+            show_close('Parameter "secure_file_priv" is established',
+                       details=dict(server=server))
+        return result

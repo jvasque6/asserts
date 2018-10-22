@@ -57,3 +57,11 @@ def test_memcached_enabled_close(run_mock):
                                           ADMIN_PASS)
     assert not mysql_db.memcached_enabled(NON_EXISTANT, ADMIN_USER,
                                           ADMIN_PASS)
+
+
+def test_secure_file_close(run_mock):
+    """MySQL secure_file_priv enabled?."""
+    #assert not mysql_db.secure_file_priv_disabled(run_mock, ADMIN_USER,
+    #                                      ADMIN_PASS)
+    assert not mysql_db.secure_file_priv_disabled(NON_EXISTANT, ADMIN_USER,
+                                                  ADMIN_PASS)

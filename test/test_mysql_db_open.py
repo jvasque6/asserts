@@ -40,3 +40,9 @@ def test_local_infile_open(run_mock):
 def test_symlinks_enabled_open(run_mock):
     """MySQL symlinks enabled?."""
     assert mysql_db.symlinks_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_secure_file_open(run_mock):
+    """MySQL secure_file_priv enabled?."""
+    assert mysql_db.secure_file_priv_disabled(run_mock, ADMIN_USER,
+                                              ADMIN_PASS)
