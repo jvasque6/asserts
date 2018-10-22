@@ -45,6 +45,7 @@ setup(
         'fluidasserts.utils',
         'fluidasserts.sca',
         'fluidasserts.cloud',
+        'fluidasserts.db',
     ],
     data_files=[
         ('', ['conf/conf.cfg', 'conf/conf.spec']),
@@ -93,7 +94,8 @@ setup(
         'pytz==2018.4',              # fluidasserts.proto.http
         'requirements-detector==0.6',  #  fluidasserts.sca
         'boto3==1.7.62',             # fluidasserts.cloud.aws
-        'python-dateutil==2.7.3',             # fluidasserts.cloud.aws
+        'python-dateutil==2.7.3',    # fluidasserts.cloud.aws
+        'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points=
