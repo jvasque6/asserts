@@ -73,3 +73,9 @@ def test_strict_all_tables_close(run_mock):
     #                                      ADMIN_PASS)
     assert not mysql_db.strict_all_tables_disabled(NON_EXISTANT, ADMIN_USER,
                                                    ADMIN_PASS)
+
+
+def test_log_error_close(run_mock):
+    """MySQL log_error enabled?."""
+    assert not mysql_db.log_error_disabled(NON_EXISTANT, ADMIN_USER,
+                                           ADMIN_PASS)

@@ -205,3 +205,30 @@ def strict_all_tables_disabled(server: str, username: str,
             show_close('STRICT_ALL_TABLES enabled on by server',
                        details=dict(server=server))
         return result
+
+
+@track
+def log_error_disabled(server: str, username: str, password: str) -> bool:
+    """Check if 'log_error' parameter is set on MySQL server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SHOW variables LIKE 'log_error'"
+        mycursor.execute(query)
+
+        result = ('log_error', '') in list(mycursor)
+
+        if result:
+            show_open('Parameter "log_error" not set on server',
+                      details=dict(server=server))
+        else:
+            show_close('Parameter "log_error" is set on server',
+                       details=dict(server=server))
+        return result
