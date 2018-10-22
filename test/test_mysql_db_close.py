@@ -32,3 +32,12 @@ def test_test_db_present_close(run_mock):
     """MySQL 'test' DB present?."""
     #assert not mysql_db.test_db_exists(run_mock, ADMIN_USER, ADMIN_PASS)
     assert not mysql_db.test_db_exists(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
+
+
+
+def test_local_infile_close(run_mock):
+    """MySQL 'local_infile' on?."""
+    #assert not mysql_db.local_infile_enabled(run_mock, ADMIN_USER,
+    #                                         ADMIN_PASS)
+    assert not mysql_db.local_infile_enabled(NON_EXISTANT, ADMIN_USER,
+                                             ADMIN_PASS)

@@ -30,3 +30,8 @@ OS_PORT = 3306
 def test_test_db_present_open(run_mock):
     """MySQL 'test' DB present?."""
     assert mysql_db.test_db_exists(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_local_infile_open(run_mock):
+    """MySQL 'local_infile' on?."""
+    assert mysql_db.local_infile_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
