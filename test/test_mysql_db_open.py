@@ -35,3 +35,8 @@ def test_test_db_present_open(run_mock):
 def test_local_infile_open(run_mock):
     """MySQL 'local_infile' on?."""
     assert mysql_db.local_infile_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_symlinks_enabled_open(run_mock):
+    """MySQL symlinks enabled?."""
+    assert mysql_db.symlinks_enabled(run_mock, ADMIN_USER, ADMIN_PASS)

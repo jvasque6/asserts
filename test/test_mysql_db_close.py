@@ -41,3 +41,19 @@ def test_local_infile_close(run_mock):
     #                                         ADMIN_PASS)
     assert not mysql_db.local_infile_enabled(NON_EXISTANT, ADMIN_USER,
                                              ADMIN_PASS)
+
+
+def test_symlinks_enabled_close(run_mock):
+    """MySQL symlinks enabled?."""
+    #assert not mysql_db.symlinks_enabled(run_mock, ADMIN_USER,
+    #                                         ADMIN_PASS)
+    assert not mysql_db.symlinks_enabled(NON_EXISTANT, ADMIN_USER,
+                                             ADMIN_PASS)
+
+
+def test_memcached_enabled_close(run_mock):
+    """MySQL memcached enabled?."""
+    assert not mysql_db.memcached_enabled(run_mock, ADMIN_USER,
+                                          ADMIN_PASS)
+    assert not mysql_db.memcached_enabled(NON_EXISTANT, ADMIN_USER,
+                                          ADMIN_PASS)

@@ -81,7 +81,7 @@ def local_infile_enabled(server: str, username: str, password: str) -> bool:
     else:
         mycursor = mydb.cursor()
 
-        query = "SHOW VARIABLES WHERE Variable_name = 'local_infile';"
+        query = "SHOW VARIABLES WHERE Variable_name = 'local_infile'"
         mycursor.execute(query)
 
         result = ('local_infile', 'ON') in list(mycursor)
@@ -91,5 +91,60 @@ def local_infile_enabled(server: str, username: str, password: str) -> bool:
                       details=dict(server=server))
         else:
             show_close('Parameter "local_infile" is ON on server',
+                       details=dict(server=server))
+        return result
+
+
+@track
+def symlinks_enabled(server: str, username: str, password: str) -> bool:
+    """Check if symbolic links are enabled on MySQL server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SHOW variables LIKE 'have_symlink'"
+        mycursor.execute(query)
+
+        result = ('have_symlink', 'DISABLED') not in list(mycursor)
+
+        if result:
+            show_open('Symbolic links are supported by server',
+                      details=dict(server=server))
+        else:
+            show_close('Symbolic links are not supported by server',
+                       details=dict(server=server))
+        return result
+
+
+@track
+def memcached_enabled(server: str, username: str, password: str) -> bool:
+    """Check if memcached daemon is enabled on server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SELECT * FROM information_schema.plugins WHERE \
+PLUGIN_NAME='daemon_memcached'"
+        mycursor.execute(query)
+
+        result = len(list(mycursor)) != 0
+
+        if result:
+            show_open('Memcached daemon enabled on server',
+                      details=dict(server=server))
+        else:
+            show_close('Memcached daemon not enabled on server',
                        details=dict(server=server))
         return result
