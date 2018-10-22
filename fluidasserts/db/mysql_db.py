@@ -70,7 +70,7 @@ def test_db_exists(server: str, username: str, password: str) -> bool:
 
 @track
 def local_infile_enabled(server: str, username: str, password: str) -> bool:
-    """Check if "local_infile" parameter is set to ON."""
+    """Check if 'local_infile' parameter is set to ON."""
     try:
         mydb = _get_mysql_cursor(server, username, password)
     except ConnError as exc:
@@ -152,7 +152,7 @@ PLUGIN_NAME='daemon_memcached'"
 
 @track
 def secure_file_priv_disabled(server: str, username: str,
-                              password: str)-> bool:
+                              password: str) -> bool:
     """Check if secure_file_priv is configured on server."""
     try:
         mydb = _get_mysql_cursor(server, username, password)
@@ -230,5 +230,33 @@ def log_error_disabled(server: str, username: str, password: str) -> bool:
                       details=dict(server=server))
         else:
             show_close('Parameter "log_error" is set on server',
+                       details=dict(server=server))
+        return result
+
+
+@track
+def logs_on_system_fs(server: str, username: str, password: str) -> bool:
+    """Check if logs are stored on a system filesystem on server."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SELECT @@global.log_bin_basename"
+        mycursor.execute(query)
+
+        _result = list(mycursor)[0][0]
+        result = _result.startswith('/var') or _result.startswith('/usr')
+
+        if result:
+            show_open('Logs are stored on system filesystems on server',
+                      details=dict(server=server))
+        else:
+            show_close('Logs are outside system filesystems on server',
                        details=dict(server=server))
         return result

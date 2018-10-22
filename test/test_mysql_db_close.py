@@ -79,3 +79,11 @@ def test_log_error_close(run_mock):
     """MySQL log_error enabled?."""
     assert not mysql_db.log_error_disabled(NON_EXISTANT, ADMIN_USER,
                                            ADMIN_PASS)
+
+
+def test_logs_on_systemfs_close(run_mock):
+    """MySQL logs on system filesystems enabled?."""
+    #assert not mysql_db.logs_on_system_fs(run_mock, ADMIN_USER,
+    #                                      ADMIN_PASS)
+    assert not mysql_db.logs_on_system_fs(NON_EXISTANT, ADMIN_USER,
+                                          ADMIN_PASS)
