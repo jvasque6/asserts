@@ -87,3 +87,11 @@ def test_logs_on_systemfs_close(run_mock):
     #                                      ADMIN_PASS)
     assert not mysql_db.logs_on_system_fs(NON_EXISTANT, ADMIN_USER,
                                           ADMIN_PASS)
+
+
+def test_logs_verbosity_close(run_mock):
+    """MySQL logs on system filesystems enabled?."""
+    #assert not mysql_db.logs_verbosity_low(run_mock, ADMIN_USER,
+    #                                      ADMIN_PASS)
+    assert not mysql_db.logs_verbosity_low(NON_EXISTANT, ADMIN_USER,
+                                           ADMIN_PASS)

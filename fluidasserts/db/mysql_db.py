@@ -268,3 +268,36 @@ def logs_on_system_fs(server: str, username: str, password: str) -> bool:
             show_close('Logs are outside system filesystems on server',
                        details=dict(server=server))
         return result
+
+
+@level('low')
+@track
+def logs_verbosity_low(server: str, username: str, password: str) -> bool:
+    """Check if logs verbosity includes errors, warnings and notes."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = "SHOW GLOBAL VARIABLES LIKE 'log_error_verbosity'"
+        mycursor.execute(query)
+
+        if list(mycursor):
+            verbosity = list(mycursor)[0][1]
+            result = verbosity != '2' and verbosity != '3'
+        else:
+            verbosity = 'empty'
+            result = True
+
+        if result:
+            show_open('Logs verbosity not enough',
+                      details=dict(server=server, verbosity=verbosity))
+        else:
+            show_close('Logs verbosity are sufficient',
+                       details=dict(server=server, verbosity=verbosity))
+        return result

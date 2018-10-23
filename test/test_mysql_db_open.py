@@ -64,3 +64,9 @@ def test_logs_on_systemfs_open(run_mock):
     """MySQL logs on system filesystems enabled?."""
     assert mysql_db.logs_on_system_fs(run_mock, ADMIN_USER,
                                       ADMIN_PASS)
+
+
+def test_logs_verbosity_open(run_mock):
+    """MySQL verbosity enough?."""
+    assert mysql_db.logs_verbosity_low(run_mock, ADMIN_USER,
+                                       ADMIN_PASS)
