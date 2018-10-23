@@ -42,7 +42,7 @@ def level(risk_level: str) -> Callable:
             Gives a risk level to each check.
             """
             ret_val = func(*args, **kwargs)
-            print('risk_level: {}'.format(risk_level), flush=True)
+            print('risk-level: {}'.format(risk_level), flush=True)
             return ret_val
         return decorated
     return wrapper
