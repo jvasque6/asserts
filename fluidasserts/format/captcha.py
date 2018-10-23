@@ -13,9 +13,10 @@ import pytesseract
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.helper import http_helper
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
+@level('medium')
 @track
 def is_insecure_in_image(image: str, expected_text: str) -> bool:
     """
@@ -39,6 +40,7 @@ def is_insecure_in_image(image: str, expected_text: str) -> bool:
     return False
 
 
+@level('medium')
 @track
 def is_insecure_in_url(image_url: str, expected_text: str,
                        *args, **kwargs) -> bool:

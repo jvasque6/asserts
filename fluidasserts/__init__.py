@@ -108,21 +108,21 @@ def show_close(message, details=None, refs=None):
     """Show close message."""
     check_cli()
     message = Message('CLOSED', message, details, refs)
-    print(message.as_yaml())
+    print(message.as_yaml(), end='', flush=True)
 
 
 def show_open(message, details=None, refs=None):
     """Show open message."""
     check_cli()
     message = Message('OPEN', message, details, refs)
-    print(message.as_yaml())
+    print(message.as_yaml(), end='', flush=True)
 
 
 def show_unknown(message, details=None, refs=None):
     """Show unknown message."""
     check_cli()
     message = Message('UNKNOWN', message, details, refs)
-    print(message.as_yaml())
+    print(message.as_yaml(), end='', flush=True)
 
 
 def check_boolean_env_var(var_name):

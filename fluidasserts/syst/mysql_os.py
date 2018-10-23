@@ -13,9 +13,10 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper.ssh_helper import ssh_exec_command, ConnError
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
+@level('high')
 @track
 def daemon_high_privileged(server: str, username: str, password: str,
                            ssh_config: str = None) -> bool:
@@ -46,6 +47,7 @@ non-privileged account',
     return True
 
 
+@level('low')
 @track
 def history_enabled(server: str, username: str, password: str,
                     ssh_config: str = None) -> bool:
@@ -69,6 +71,7 @@ do size=$(stat -c %b $i); c=$(($c+$size)); done; echo $c'
     return True
 
 
+@level('high')
 @track
 def pwd_on_env(server: str, username: str, password: str,
                ssh_config: str = None) -> bool:
@@ -92,6 +95,7 @@ def pwd_on_env(server: str, username: str, password: str,
     return True
 
 
+@level('medium')
 @track
 def has_insecure_shell(server: str, username: str, password: str,
                        ssh_config: str = None) -> bool:

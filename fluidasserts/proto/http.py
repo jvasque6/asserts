@@ -23,6 +23,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import level
 
 # pylint: disable=C0302
 
@@ -443,6 +444,7 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         return False
 
 
+@level('low')
 @track
 def has_multiple_text(url: str, regex_list: List[str],
                       *args, **kwargs) -> bool:
@@ -457,6 +459,7 @@ def has_multiple_text(url: str, regex_list: List[str],
     return _generic_has_multiple_text(url, regex_list, *args, **kwargs)
 
 
+@level('low')
 @track
 def has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     r"""
@@ -470,6 +473,7 @@ def has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expected_text, *args, **kwargs)
 
 
+@level('low')
 @track
 def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     r"""
@@ -503,6 +507,7 @@ def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         return False
 
 
+@level('low')
 @track
 def is_header_x_asp_net_version_present(url: str, *args, **kwargs) -> bool:
     r"""
@@ -515,6 +520,7 @@ def is_header_x_asp_net_version_present(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'X-AspNet-Version', *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_access_control_allow_origin_missing(url: str,
                                                   *args, **kwargs) -> bool:
@@ -529,6 +535,7 @@ def is_header_access_control_allow_origin_missing(url: str,
                                 *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_cache_control_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -541,6 +548,7 @@ def is_header_cache_control_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'Cache-Control', *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_header_content_security_policy_missing(url: str,
                                               *args, **kwargs) -> bool:
@@ -555,6 +563,7 @@ def is_header_content_security_policy_missing(url: str,
                                 *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -567,6 +576,7 @@ def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'Content-Type', *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_expires_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -579,6 +589,7 @@ def is_header_expires_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'Expires', *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_pragma_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -591,6 +602,7 @@ def is_header_pragma_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'Pragma', *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_server_present(url: str, *args, **kwargs) -> bool:
     r"""
@@ -603,6 +615,7 @@ def is_header_server_present(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'Server', *args, **kwargs)
 
 
+@level('low')
 @track
 def is_header_x_content_type_options_missing(url: str, *args,
                                              **kwargs) -> bool:
@@ -617,6 +630,7 @@ def is_header_x_content_type_options_missing(url: str, *args,
                                 *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -629,6 +643,7 @@ def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'X-Frame-Options', *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_header_perm_cross_dom_pol_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -642,6 +657,7 @@ def is_header_perm_cross_dom_pol_missing(url: str, *args, **kwargs) -> bool:
                                 *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_header_x_xxs_protection_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -654,6 +670,7 @@ def is_header_x_xxs_protection_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'X-XSS-Protection', *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
     r"""
@@ -667,6 +684,7 @@ def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
                                 *args, **kwargs)
 
 
+@level('medium')
 @track
 def is_basic_auth_enabled(url: str, *args, **kwargs) -> bool:
     r"""
@@ -679,6 +697,7 @@ def is_basic_auth_enabled(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'WWW-Authenticate', *args, **kwargs)
 
 
+@level('low')
 @track
 def has_trace_method(url: str, *args, **kwargs) -> bool:
     r"""
@@ -691,6 +710,7 @@ def has_trace_method(url: str, *args, **kwargs) -> bool:
     return _has_method(url, 'TRACE', *args, **kwargs)
 
 
+@level('low')
 @track
 def has_delete_method(url: str, *args, **kwargs) -> bool:
     r"""
@@ -703,6 +723,7 @@ def has_delete_method(url: str, *args, **kwargs) -> bool:
     return _has_method(url, 'DELETE', *args, **kwargs)
 
 
+@level('low')
 @track
 def has_put_method(url: str, *args, **kwargs) -> bool:
     r"""
@@ -715,6 +736,7 @@ def has_put_method(url: str, *args, **kwargs) -> bool:
     return _has_method(url, 'PUT', *args, **kwargs)
 
 
+@level('high')
 @track
 def has_sqli(url: str, *args, **kwargs) -> bool:
     r"""
@@ -729,6 +751,7 @@ def has_sqli(url: str, *args, **kwargs) -> bool:
     return _generic_has_multiple_text(url, expect, *args, **kwargs)
 
 
+@level('medium')
 @track
 def has_xss(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -742,6 +765,7 @@ def has_xss(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -755,6 +779,7 @@ def has_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_php_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -768,6 +793,7 @@ def has_php_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('medium')
 @track
 def has_session_fixation(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -781,6 +807,7 @@ def has_session_fixation(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_insecure_dor(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -794,6 +821,7 @@ def has_insecure_dor(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_dirtraversal(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -807,6 +835,7 @@ def has_dirtraversal(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_csrf(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -820,6 +849,7 @@ def has_csrf(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_lfi(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -833,6 +863,7 @@ def has_lfi(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('medium')
 @track
 def has_hpp(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
@@ -846,6 +877,7 @@ def has_hpp(url: str, expect: str, *args, **kwargs) -> bool:
     return _generic_has_text(url, expect, *args, **kwargs)
 
 
+@level('high')
 @track
 def has_insecure_upload(url: str, expect: str, file_param: str,
                         file_path: str, *args, **kwargs) -> bool:
@@ -863,6 +895,7 @@ def has_insecure_upload(url: str, expect: str, file_param: str,
 
 
 # pylint: disable=keyword-arg-before-vararg
+@level('medium')
 @track
 def is_sessionid_exposed(url: str, argument: str = 'sessionid',
                          *args, **kwargs) -> bool:
@@ -901,6 +934,7 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
     return result
 
 
+@level('low')
 @track
 def is_version_visible(url) -> bool:
     """
@@ -935,6 +969,7 @@ def is_version_visible(url) -> bool:
     return result
 
 
+@level('medium')
 @track
 def is_not_https_required(url: str) -> bool:
     r"""
@@ -963,6 +998,7 @@ def is_not_https_required(url: str) -> bool:
         return False
 
 
+@level('low')
 @track
 def has_dirlisting(url: str, *args, **kwargs) -> bool:
     r"""
@@ -997,6 +1033,7 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
         return False
 
 
+@level('medium')
 @track
 def is_resource_accessible(url: str, *args, **kwargs) -> bool:
     r"""
@@ -1027,6 +1064,7 @@ def is_resource_accessible(url: str, *args, **kwargs) -> bool:
     return True
 
 
+@level('low')
 @track
 def is_response_delayed(url: str, *args, **kwargs) -> bool:
     r"""
@@ -1067,6 +1105,7 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
 
 # pylint: disable=too-many-locals
 # pylint: disable=keyword-arg-before-vararg
+@level('medium')
 @track
 def has_user_enumeration(url: str, user_field: str,
                          user_list: Optional[List] = None,
@@ -1142,7 +1181,8 @@ def has_user_enumeration(url: str, user_field: str,
 
 # pylint: disable=keyword-arg-before-vararg
 # pylint: disable=too-many-arguments
-@track  # noqa
+@level('medium')  # noqa
+@track
 def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
                     user_list: List[str] = None, pass_list: List[str] = None,
                     *args, **kwargs) -> bool:
@@ -1202,6 +1242,7 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     return False
 
 
+@level('medium')
 @track
 def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
     r"""
@@ -1242,6 +1283,7 @@ def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@level('low')
 @track
 def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
     r"""

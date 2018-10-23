@@ -12,7 +12,7 @@ import mysql.connector
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 class ConnError(Exception):
@@ -42,6 +42,7 @@ def _get_mysql_cursor(server: str,
         return mydb
 
 
+@level('low')
 @track
 def test_db_exists(server: str, username: str, password: str) -> bool:
     """Check if "test" database exists."""
@@ -68,6 +69,7 @@ def test_db_exists(server: str, username: str, password: str) -> bool:
         return result
 
 
+@level('medium')
 @track
 def local_infile_enabled(server: str, username: str, password: str) -> bool:
     """Check if 'local_infile' parameter is set to ON."""
@@ -95,6 +97,7 @@ def local_infile_enabled(server: str, username: str, password: str) -> bool:
         return result
 
 
+@level('low')
 @track
 def symlinks_enabled(server: str, username: str, password: str) -> bool:
     """Check if symbolic links are enabled on MySQL server."""
@@ -122,6 +125,7 @@ def symlinks_enabled(server: str, username: str, password: str) -> bool:
         return result
 
 
+@level('low')
 @track
 def memcached_enabled(server: str, username: str, password: str) -> bool:
     """Check if memcached daemon is enabled on server."""
@@ -150,6 +154,7 @@ PLUGIN_NAME='daemon_memcached'"
         return result
 
 
+@level('medium')
 @track
 def secure_file_priv_disabled(server: str, username: str,
                               password: str) -> bool:
@@ -179,6 +184,7 @@ Variable_name = 'secure_file_priv' AND Value<>''"
         return result
 
 
+@level('medium')
 @track
 def strict_all_tables_disabled(server: str, username: str,
                                password: str) -> bool:
@@ -207,6 +213,7 @@ def strict_all_tables_disabled(server: str, username: str,
         return result
 
 
+@level('medium')
 @track
 def log_error_disabled(server: str, username: str, password: str) -> bool:
     """Check if 'log_error' parameter is set on MySQL server."""
@@ -234,6 +241,7 @@ def log_error_disabled(server: str, username: str, password: str) -> bool:
         return result
 
 
+@level('medium')
 @track
 def logs_on_system_fs(server: str, username: str, password: str) -> bool:
     """Check if logs are stored on a system filesystem on server."""

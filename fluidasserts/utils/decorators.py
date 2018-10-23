@@ -24,3 +24,25 @@ def track(func: Callable) -> Callable:
         mp_track(func.__module__ + ' -> ' + func.__name__)
         return func(*args, **kwargs)
     return decorated
+
+
+def level(risk_level: str) -> Callable:
+    """Decorator factory."""
+    def wrapper(func: Callable) -> Callable:
+        """
+        Decorator.
+
+        Gives a risk level to each check.
+        """
+        @functools.wraps(func)
+        def decorated(*args, **kwargs) -> Any:  # noqa
+            """
+            Decorate function.
+
+            Gives a risk level to each check.
+            """
+            ret_val = func(*args, **kwargs)
+            print('risk_level: {}'.format(risk_level), flush=True)
+            return ret_val
+        return decorated
+    return wrapper

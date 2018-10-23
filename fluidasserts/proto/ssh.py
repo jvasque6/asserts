@@ -15,11 +15,12 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import banner_helper
 from fluidasserts.helper import ssh_helper
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 PORT = 22
 
 
+@level('medium')
 @track
 def is_cbc_used(host: str, port: int = PORT, username: str = None,
                 password: str = None) -> bool:
@@ -68,6 +69,7 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
         return False
 
 
+@level('medium')
 @track
 def is_hmac_used(host: str, port: int = PORT, username: str = None,
                  password: str = None) -> bool:
@@ -116,6 +118,7 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
         return False
 
 
+@level('low')
 @track
 def is_version_visible(ip_address: str, port: int = PORT) -> bool:
     """

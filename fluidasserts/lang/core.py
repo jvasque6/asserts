@@ -15,7 +15,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import lang_helper
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {}  # type: dict
@@ -86,6 +86,7 @@ def _show_has_not_text(vulns: Dict[str, List[str]], code_file: str,
                                 expected_text=expected_text))
 
 
+@level('low')
 @track
 def has_text(code_dest: str, expected_text: str) -> bool:
     """
@@ -114,6 +115,7 @@ def has_text(code_dest: str, expected_text: str) -> bool:
     return ret_fin
 
 
+@level('low')
 @track
 def has_not_text(code_dest: str, expected_text: str) -> bool:
     """
@@ -142,6 +144,7 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
     return ret_fin
 
 
+@level('low')
 @track
 def file_exists(code_file: str) -> bool:
     """
@@ -160,6 +163,7 @@ def file_exists(code_file: str) -> bool:
     return False
 
 
+@level('medium')
 @track
 def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
     """

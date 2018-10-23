@@ -11,7 +11,7 @@ from PyPDF2 import PdfFileReader
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 def _has_attribute(filename: str, metaname: str) -> bool:
@@ -35,6 +35,7 @@ def _has_attribute(filename: str, metaname: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_creator(filename: str) -> bool:
     """
@@ -45,6 +46,7 @@ def has_creator(filename: str) -> bool:
     return _has_attribute(filename, 'creator')
 
 
+@level('low')
 @track
 def has_producer(filename: str) -> bool:
     """
@@ -55,6 +57,7 @@ def has_producer(filename: str) -> bool:
     return _has_attribute(filename, 'producer')
 
 
+@level('low')
 @track
 def has_author(filename: str) -> bool:
     """

@@ -12,10 +12,11 @@
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper import http_helper
 
 
+@level('low')
 @track
 def has_access(url: str, *args, **kwargs) -> bool:
     r"""
@@ -34,6 +35,7 @@ def has_access(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@level('low')
 @track
 def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
     r"""
@@ -62,6 +64,7 @@ def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@level('low')
 @track
 def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     r"""

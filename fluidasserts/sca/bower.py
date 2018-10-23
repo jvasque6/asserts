@@ -13,11 +13,12 @@ from fluidasserts.helper import sca_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 PACKAGE_MANAGER = 'bower'
 
 
+@level('high')
 @track
 def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     """

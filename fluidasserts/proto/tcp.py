@@ -13,9 +13,10 @@ import ssl
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
+@level('low')
 @track
 def is_port_open(ipaddress: str, port: int) -> bool:
     """
@@ -36,6 +37,7 @@ def is_port_open(ipaddress: str, port: int) -> bool:
         return False
 
 
+@level('medium')
 @track
 def is_port_insecure(ipaddress: str, port: int) -> bool:
     """

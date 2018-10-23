@@ -15,7 +15,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
@@ -36,6 +36,7 @@ def _get_block(file_lines, line) -> str:
     return "".join(file_lines[line - 1:])
 
 
+@level('low')
 @track
 def has_generic_exceptions(java_dest: str) -> bool:
     """
@@ -76,6 +77,7 @@ def has_generic_exceptions(java_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def uses_print_stack_trace(java_dest: str) -> bool:
     """
@@ -112,6 +114,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def swallows_exceptions(java_dest: str) -> bool:
     """
@@ -156,6 +159,7 @@ def swallows_exceptions(java_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_switch_without_default(java_dest: str) -> bool:
     r"""
@@ -204,6 +208,7 @@ def has_switch_without_default(java_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_insecure_randoms(java_dest: str) -> bool:
     r"""
@@ -243,6 +248,7 @@ def has_insecure_randoms(java_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_if_without_else(java_dest: str) -> bool:
     r"""
@@ -286,6 +292,7 @@ def has_if_without_else(java_dest: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     """
@@ -327,6 +334,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def uses_md5_hash(java_dest: str) -> bool:
     """
@@ -340,6 +348,7 @@ def uses_md5_hash(java_dest: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def uses_sha1_hash(java_dest: str) -> bool:
     """
@@ -353,6 +362,7 @@ def uses_sha1_hash(java_dest: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def uses_des_algorithm(java_dest: str) -> bool:
     """

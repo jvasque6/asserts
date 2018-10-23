@@ -17,7 +17,7 @@ from cryptography.x509.oid import NameOID
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper.ssl_helper import connect as connect
 from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
 
@@ -68,6 +68,7 @@ def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
     return result
 
 
+@level('medium')
 @track
 def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     """
@@ -128,6 +129,7 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     return result
 
 
+@level('medium')
 @track
 def is_cert_inactive(site: str, port: int = PORT) -> bool:
     """
@@ -178,6 +180,7 @@ def is_cert_inactive(site: str, port: int = PORT) -> bool:
     return result
 
 
+@level('medium')
 @track
 def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     """
@@ -234,6 +237,7 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     return result
 
 
+@level('medium')
 @track
 def is_sha1_used(site: str, port: int = PORT) -> bool:
     """
@@ -250,6 +254,7 @@ def is_sha1_used(site: str, port: int = PORT) -> bool:
     return _uses_sign_alg(site, 'sha1', port)
 
 
+@level('medium')
 @track
 def is_md5_used(site: str, port: int = PORT) -> bool:
     """

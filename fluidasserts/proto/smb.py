@@ -15,7 +15,7 @@ from smb import smb_structs
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 Typconn = SMBConnection.SMBConnection
@@ -48,6 +48,7 @@ def _smb_connect(server: Optional[str] = None,
         return False
 
 
+@level('medium')
 @track
 def has_dirlisting(share: str, *args, **kwargs) -> bool:
     r"""
@@ -83,6 +84,7 @@ def has_dirlisting(share: str, *args, **kwargs) -> bool:
         return False
 
 
+@level('high')
 @track
 def is_anonymous_enabled(server: str = None,
                          domain: str = 'WORKGROUP') -> bool:
@@ -107,6 +109,7 @@ def is_anonymous_enabled(server: str = None,
     return True
 
 
+@level('low')
 @track
 def is_signing_disabled(server, user, password, domain='WORKGROUP'):
     """

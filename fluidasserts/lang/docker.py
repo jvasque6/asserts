@@ -13,7 +13,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 LANGUAGE_SPECS = {
     'extensions': None,
@@ -23,6 +23,7 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
+@level('low')
 @track
 def not_pinned(file_dest: str) -> bool:
     """

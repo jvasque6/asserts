@@ -15,7 +15,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
@@ -48,6 +48,7 @@ def _get_block(file_lines, line) -> str:
     return block_str.rstrip()
 
 
+@level('low')
 @track
 def has_generic_exceptions(py_dest: str) -> bool:
     """
@@ -82,6 +83,7 @@ def has_generic_exceptions(py_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def swallows_exceptions(py_dest: str) -> bool:
     """

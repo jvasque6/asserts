@@ -14,7 +14,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 LANGUAGE_SPECS = {
     'extensions': ['rpg', 'rpgle'],
@@ -34,6 +34,7 @@ def _get_block(file_lines, line) -> str:
     return "\n".join(file_lines[line - 1:])
 
 
+@level('medium')
 @track
 def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     r"""
@@ -72,6 +73,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_unitialized_vars(rpg_dest: str) -> bool:
     """
@@ -119,6 +121,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_generic_exceptions(rpg_dest: str) -> bool:
     """
@@ -157,6 +160,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def swallows_exceptions(rpg_dest: str) -> bool:
     """

@@ -22,9 +22,10 @@ from dns.zone import NoSOA
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
+@level('medium')
 @track
 def is_xfr_enabled(domain: str, nameserver: str) -> bool:
     """
@@ -60,6 +61,7 @@ def is_xfr_enabled(domain: str, nameserver: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
     """
@@ -97,6 +99,7 @@ def is_dynupdate_enabled(domain: str, nameserver: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def has_cache_poison(domain: str, nameserver: str) -> bool:
     """
@@ -143,6 +146,7 @@ def has_cache_poison(domain: str, nameserver: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_cache_snooping(nameserver: str) -> bool:
     """
@@ -189,6 +193,7 @@ def has_cache_snooping(nameserver: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_recursion(nameserver: str) -> bool:
     """
@@ -226,6 +231,7 @@ def has_recursion(nameserver: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def can_amplify(nameserver: str) -> bool:
     """

@@ -14,12 +14,13 @@ from ldap3 import Server
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 PORT = 389
 SSL_PORT = 636
 
 
+@level('high')
 @track
 def is_anonymous_bind_allowed(ldap_server: str, port: int = PORT) -> bool:
     """

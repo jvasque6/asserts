@@ -191,6 +191,35 @@ def filter_content(parsed_content, args):
     return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
 
 
+def get_risk_levels(parsed_content):
+    """Get risk levels of opened checks."""
+    high_risk = sum(x['status'] == 'OPEN' and
+                    x['risk_level'] == 'high' for x in parsed_content)
+    medium_risk = sum(x['status'] == 'OPEN' and
+                      x['risk_level'] == 'medium' for x in parsed_content)
+    low_risk = sum(x['status'] == 'OPEN' and
+                   x['risk_level'] == 'low' for x in parsed_content)
+
+    opened = get_total_open_checks(parsed_content)
+
+    if opened > 0:
+        risk_level = {
+            'high': '{} ({:.2f}%)'.format(high_risk,
+                                          high_risk / opened * 100),
+            'medium': '{} ({:.2f}%)'.format(medium_risk,
+                                            medium_risk / opened * 100),
+            'low': '{} ({:.2f}%)'.format(low_risk,
+                                         low_risk / opened * 100),
+        }
+    else:
+        risk_level = {
+            'high': '0 (0%)',
+            'medium': '0 (0%)',
+            'low': '0 (0%)',
+        }
+    return risk_level
+
+
 def colorize(parsed_content):
     """Colorize content."""
     enable_win_colors()
@@ -375,6 +404,7 @@ def main():
             'opened-checks':
                 '{} ({:.2f}%)'.format(open_checks,
                                       open_checks / total_checks * 100),
+            'risk-level': get_risk_levels(parsed),
             'closed-checks':
                 '{} ({:.2f}%)'.format(closed_checks,
                                       closed_checks / total_checks * 100),

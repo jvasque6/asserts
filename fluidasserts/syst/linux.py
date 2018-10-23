@@ -13,9 +13,10 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper.ssh_helper import ssh_exec_command, ConnError
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
+@level('medium')
 @track
 def is_min_priv_disabled(server: str, username: str, password: str,
                          ssh_config: str = None) -> bool:
@@ -47,6 +48,7 @@ def is_min_priv_disabled(server: str, username: str, password: str,
     return result
 
 
+@level('medium')
 @track
 def is_sudo_disabled(server: str, username: str, password: str,
                      ssh_config: str = None) -> bool:
@@ -78,6 +80,7 @@ def is_sudo_disabled(server: str, username: str, password: str,
     return result
 
 
+@level('medium')
 @track
 def are_compilers_installed(server: str, username: str, password: str,
                             ssh_config: str = None) -> bool:
@@ -109,6 +112,7 @@ def are_compilers_installed(server: str, username: str, password: str,
     return result
 
 
+@level('medium')
 @track
 def is_antimalware_not_installed(server: str, username: str, password: str,
                                  ssh_config: str = None) -> bool:
@@ -140,6 +144,7 @@ def is_antimalware_not_installed(server: str, username: str, password: str,
     return result
 
 
+@level('high')
 @track
 def is_remote_admin_enabled(server: str, username: str, password: str,
                             ssh_config: str = None) -> bool:
@@ -171,6 +176,7 @@ def is_remote_admin_enabled(server: str, username: str, password: str,
     return result
 
 
+@level('low')
 @track
 def are_syncookies_disabled(server: str, username: str, password: str,
                             ssh_config: str = None) -> bool:

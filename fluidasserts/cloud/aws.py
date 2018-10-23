@@ -17,10 +17,11 @@ from dateutil import parser
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper import aws_helper
 
 
+@level('high')
 @track
 def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
     """
@@ -58,6 +59,7 @@ def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
     """
@@ -98,6 +100,7 @@ def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
     """
@@ -141,6 +144,7 @@ def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
     """
@@ -173,6 +177,7 @@ def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_not_requires_uppercase(key_id: str, secret: str) -> bool:
     """
@@ -206,6 +211,7 @@ def iam_not_requires_uppercase(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
     """
@@ -239,6 +245,7 @@ def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_not_requires_symbols(key_id: str, secret: str) -> bool:
     """
@@ -271,6 +278,7 @@ def iam_not_requires_symbols(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
     """
@@ -303,6 +311,7 @@ def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('high')
 @track
 def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     """
@@ -337,6 +346,7 @@ def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     return result
 
 
+@level('medium')
 @track
 def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     """
@@ -376,6 +386,7 @@ def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     return result
 
 
+@level('medium')
 @track
 def iam_password_expiration_unsafe(key_id: str, secret: str,
                                    max_days=90) -> bool:
@@ -416,6 +427,7 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
     return result
 
 
+@level('high')
 @track
 def iam_root_without_mfa(key_id: str, secret: str) -> bool:
     """
@@ -448,6 +460,7 @@ def iam_root_without_mfa(key_id: str, secret: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def iam_policies_attached_to_users(key_id: str, secret: str) -> bool:
     """

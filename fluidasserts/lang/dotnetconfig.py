@@ -14,7 +14,7 @@ from fluidasserts.helper import lang_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
@@ -34,6 +34,7 @@ def _get_block(file_lines, line) -> str:
     return "".join(file_lines[line - 1:])
 
 
+@level('low')
 @track
 def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     """
@@ -78,6 +79,7 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     return result
 
 
+@level('medium')
 @track
 def has_ssl_disabled(apphostconf_dest: str) -> bool:
     """
@@ -128,6 +130,7 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def has_debug_enabled(webconf_dest: str) -> bool:
     """

@@ -9,7 +9,7 @@ from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException,
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.utils.decorators import track
+from fluidasserts.utils.decorators import track, level
 
 
 def _has_attributes(filename: str, tag: str, attrs: dict) -> bool:
@@ -45,6 +45,7 @@ def _has_attributes(filename: str, tag: str, attrs: dict) -> bool:
         return result
 
 
+@level('low')
 @track
 def has_not_autocomplete(filename: str) -> bool:
     """
@@ -75,6 +76,7 @@ def has_not_autocomplete(filename: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def is_cacheable(filename: str) -> bool:
     """Check if cache is posible.
@@ -111,6 +113,7 @@ def is_cacheable(filename: str) -> bool:
     return result
 
 
+@level('low')
 @track
 def is_header_content_type_missing(filename: str) -> bool:
     """Check if Content-Type header is missing.
