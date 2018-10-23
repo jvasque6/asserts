@@ -194,11 +194,11 @@ def filter_content(parsed_content, args):
 def get_risk_levels(parsed_content):
     """Get risk levels of opened checks."""
     high_risk = sum(x['status'] == 'OPEN' and
-                    x['risk_level'] == 'high' for x in parsed_content)
+                    x['risk-level'] == 'high' for x in parsed_content)
     medium_risk = sum(x['status'] == 'OPEN' and
-                      x['risk_level'] == 'medium' for x in parsed_content)
+                      x['risk-level'] == 'medium' for x in parsed_content)
     low_risk = sum(x['status'] == 'OPEN' and
-                   x['risk_level'] == 'low' for x in parsed_content)
+                   x['risk-level'] == 'low' for x in parsed_content)
 
     opened = get_total_open_checks(parsed_content)
 
@@ -400,17 +400,19 @@ def main():
 
     final_message = {
         'summary': {
-            'total-checks': '{} ({}%)'.format(total_checks, '100'),
-            'opened-checks':
-                '{} ({:.2f}%)'.format(open_checks,
-                                      open_checks / total_checks * 100),
-            'risk-level': get_risk_levels(parsed),
-            'closed-checks':
-                '{} ({:.2f}%)'.format(closed_checks,
-                                      closed_checks / total_checks * 100),
-            'unknown-checks':
-                '{} ({:.2f}%)'.format(unknown_checks,
-                                      unknown_checks / total_checks * 100),
+            'checks': {
+                'total': '{} ({}%)'.format(total_checks, '100'),
+                'unknown':
+                    '{} ({:.2f}%)'.format(unknown_checks,
+                                          unknown_checks / total_checks * 100),
+                'closed':
+                    '{} ({:.2f}%)'.format(closed_checks,
+                                          closed_checks / total_checks * 100),
+                'opened':
+                    '{} ({:.2f}%)'.format(open_checks,
+                                          open_checks / total_checks * 100),
+            },
+            'risk': get_risk_levels(parsed),
         }
     }
 
