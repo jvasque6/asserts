@@ -120,7 +120,7 @@ Usage data
 
 Fluid Asserts collects some user's data like
 public IP address, operating system, Python version
-and the checks that you use.
+and the name of the checks that you use.
 We do this in order to analyze what are
 the most common platforms and the most used functions.
 This help us to develop more useful tests in a future.
@@ -131,3 +131,6 @@ You can enable the tracking later
 by deleting that environment variable
 or changing its value to “false”.
 
+Fluid Asserts does not collect sensitive data like
+targets of evaluation (URLs, IPs) or
+results of the tests.
