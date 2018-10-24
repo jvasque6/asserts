@@ -193,30 +193,33 @@ def filter_content(parsed_content, args):
 
 def get_risk_levels(parsed_content):
     """Get risk levels of opened checks."""
-    high_risk = sum(x['status'] == 'OPEN' and
-                    x['risk-level'] == 'high' for x in parsed_content)
-    medium_risk = sum(x['status'] == 'OPEN' and
-                      x['risk-level'] == 'medium' for x in parsed_content)
-    low_risk = sum(x['status'] == 'OPEN' and
-                   x['risk-level'] == 'low' for x in parsed_content)
+    try:
+        high_risk = sum(x['status'] == 'OPEN' and
+                        x['risk-level'] == 'high' for x in parsed_content)
+        medium_risk = sum(x['status'] == 'OPEN' and
+                          x['risk-level'] == 'medium' for x in parsed_content)
+        low_risk = sum(x['status'] == 'OPEN' and
+                       x['risk-level'] == 'low' for x in parsed_content)
 
-    opened = get_total_open_checks(parsed_content)
+        opened = get_total_open_checks(parsed_content)
 
-    if opened > 0:
-        risk_level = {
-            'high': '{} ({:.2f}%)'.format(high_risk,
-                                          high_risk / opened * 100),
-            'medium': '{} ({:.2f}%)'.format(medium_risk,
-                                            medium_risk / opened * 100),
-            'low': '{} ({:.2f}%)'.format(low_risk,
-                                         low_risk / opened * 100),
-        }
-    else:
-        risk_level = {
-            'high': '0 (0%)',
-            'medium': '0 (0%)',
-            'low': '0 (0%)',
-        }
+        if opened > 0:
+            risk_level = {
+                'high': '{} ({:.2f}%)'.format(high_risk,
+                                              high_risk / opened * 100),
+                'medium': '{} ({:.2f}%)'.format(medium_risk,
+                                                medium_risk / opened * 100),
+                'low': '{} ({:.2f}%)'.format(low_risk,
+                                             low_risk / opened * 100),
+            }
+        else:
+            risk_level = {
+                'high': '0 (0%)',
+                'medium': '0 (0%)',
+                'low': '0 (0%)',
+            }
+    except KeyError:
+        risk_level = 'undefined'
     return risk_level
 
 

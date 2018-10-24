@@ -88,7 +88,6 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     :param path: Project path.
     """
-    result = False
     try:
         reqs = _get_requirements(path)
         response = sca_helper.scan_requirements(reqs, PACKAGE_MANAGER)
@@ -102,20 +101,12 @@ def project_has_vulnerabilities(path: str) -> bool:
                      details=dict(path=path))
         return False
 
+    result = False
     for package in response:
         if package['version'] == -1:
-            show_unknown('Sofware couldn\'t be found in package manager',
-                         details=dict(package=package['package']))
             continue
-        if package['vulns']:
+        ret = package_has_vulnerabilities(package['package'],
+                                          package['version'])
+        if ret:
             result = True
-            show_open('Software has vulnerabilities',
-                      details=dict(package=package['package'],
-                                   version=package['version'],
-                                   vuln_num=len(package['vulns']),
-                                   vulns=package['vulns']))
-        else:
-            show_close('Software doesn\'t have vulnerabilities',
-                       details=dict(package=package['package'],
-                                    version=package['version']))
     return result
