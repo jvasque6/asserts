@@ -66,16 +66,3 @@ def has_author(filename: str) -> bool:
     :param filename: Path to the ``PDF`` file.
     """
     return _has_attribute(filename, 'author')
-
-
-# def has_create_date(filename):
-#    __has_attribute(filename, "/Create Date")
-
-# def has_modify_date(filename):
-#    __has_attribute(filename, "/Modify Date")
-
-# def has_tagged(filename):
-#    __has_attribute(filename, "/Tagged PDF")
-
-# def has_language(filename):
-#    __has_attribute(filename, "/Language")
