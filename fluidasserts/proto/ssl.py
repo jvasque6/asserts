@@ -277,7 +277,9 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
             show_open('Site vulnerable to POODLE TLS attack',
                       details=dict(site=site, port=port))
             result = True
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
+    except (tlslite.errors.TLSRemoteAlert,
+            tlslite.errors.TLSAbruptCloseError,
+            tlslite.errors.TLSLocalAlert):
         show_close('Site not vulnerable to POODLE TLS attack',
                    details=dict(site=site, port=port))
         result = False
