@@ -435,3 +435,35 @@ WHERE BINARY password=CONCAT("*", UPPER(SHA1(UNHEX(SHA1(user)))))'
             show_close('All users have passwords different to the username',
                        details=dict(server=server))
         return result
+
+
+@level('high')
+@track
+def users_have_wildcard_host(server: str, username: str,
+                             password: str) -> bool:
+    """Check if users have a wildcard host grants."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'SELECT user FROM mysql.user WHERE host = "%"'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        result = len(_result) != 0
+
+        if result:
+            show_open('There are users with wildcard hosts',
+                      details=dict(server=server,
+                                   users=", ".join([x[0].decode()
+                                                    for x in _result])))
+        else:
+            show_close('There are not users with wildcard hosts',
+                       details=dict(server=server))
+        return result

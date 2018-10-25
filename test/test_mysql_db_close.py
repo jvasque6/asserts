@@ -125,3 +125,9 @@ def test_password_equals_to_user_close(run_mock):
                                                 ADMIN_PASS)
     assert not mysql_db.password_equals_to_user(NON_EXISTANT, ADMIN_USER,
                                                 ADMIN_PASS)
+
+
+def test_wildcard_hosts_close(run_mock):
+    """MySQL users have wildcard hosts?."""
+    assert not mysql_db.users_have_wildcard_host(NON_EXISTANT, ADMIN_USER,
+                                                 ADMIN_PASS)

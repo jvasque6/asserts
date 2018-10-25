@@ -76,3 +76,9 @@ def test_password_expiration_open(run_mock):
     """MySQL password expiration safe?."""
     assert mysql_db.password_expiration_unsafe(run_mock, ADMIN_USER,
                                                ADMIN_PASS)
+
+
+def test_wildcard_hosts_open(run_mock):
+    """MySQL users have wildcard hosts?."""
+    assert mysql_db.users_have_wildcard_host(run_mock, ADMIN_USER,
+                                             ADMIN_PASS)
