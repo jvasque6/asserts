@@ -289,7 +289,7 @@ def logs_verbosity_low(server: str, username: str, password: str) -> bool:
 
         if list(mycursor):
             verbosity = list(mycursor)[0][1]
-            result = verbosity != '2' and verbosity != '3'
+            result = verbosity not in ('2', '3')
         else:
             verbosity = 'empty'
             result = True

@@ -13,7 +13,6 @@ from subprocess import call
 
 # pylint: disable=no-name-in-module
 # pylint: disable=global-statement
-# pylint: disable=no-member
 
 # 3rd party imports
 import yaml

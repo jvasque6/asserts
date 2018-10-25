@@ -137,7 +137,7 @@ def has_cache_poison(domain: str, nameserver: str) -> bool:
         if len(answer) != 2:
             show_open('Cache poisoning possible on server',
                       details=dict(domain=domain, nameserver=nameserver))
-            return True
+            result = True
         else:
             show_close('Cache poisoning not possible on server',
                        details=dict(domain=domain, nameserver=nameserver))

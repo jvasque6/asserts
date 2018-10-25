@@ -24,8 +24,8 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper import http_helper
-from fluidasserts.helper.ssl_helper import connect as connect
-from fluidasserts.helper.ssl_helper import connect_legacy as connect_legacy
+from fluidasserts.helper.ssl_helper import connect
+from fluidasserts.helper.ssl_helper import connect_legacy
 
 PORT = 443
 TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]

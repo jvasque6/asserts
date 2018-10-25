@@ -58,8 +58,6 @@ def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
                                        ciphers=ciphers)
         wrapped_socket.connect((hostname, port))
         yield wrapped_socket
-    except socket.error:
-        raise
     finally:
         wrapped_socket.close()
 
@@ -90,11 +88,9 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     else:
         tlslite.recordlayer.RecordLayer.addPadding = ORIG_METHOD
 
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect((hostname, port))
-    except socket.error:
-        raise
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((hostname, port))
+
     try:
         connection = tlslite.TLSConnection(sock)
 

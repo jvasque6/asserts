@@ -69,31 +69,31 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
-        'requests==2.19.1',          # fluidasserts.proto.http
+        'requests==2.20.0',          # fluidasserts.proto.http
         'requests-oauthlib==1.0.0',  # fluidasserts.proto.http
-        'cryptography==2.3',       # fluidasserts.proto.ssl
-        'certifi==2018.4.16',        # fluidasserts.proto.ssl
-        'ldap3==2.5',                # fluidasserts.proto.ldap
-        'paramiko==2.4.1',           # fluidasserts.helper.ssh_helper
+        'cryptography==2.3.1',       # fluidasserts.proto.ssl
+        'certifi==2018.10.15',       # fluidasserts.proto.ssl
+        'ldap3==2.5.1',              # fluidasserts.proto.ldap
+        'paramiko==2.4.2',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
-        'beautifulsoup4==4.6.0',     # fluidasserts.helper.http_helper
+        'beautifulsoup4==4.6.3',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.proto.dns
-        'tlslite-ng==0.7.4',         # fluidasserts.proto.ssl
+        'tlslite-ng==0.7.5',         # fluidasserts.proto.ssl
         'pyOpenSSL==18.0.0',         # fluidasserts.proto.ssl
-        'colorama==0.3.9',           # logging
-        'pysmb==1.1.24',             # fluidasserts.proto.smb
+        'colorama==0.4.0',           # logging
+        'pysmb==1.1.25',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
         'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
-        'pytesseract==0.2.4',        # fluidasserts.format.captcha
-        'pillow==5.2.0',             # fluidasserts.format.captcha
-        'pyparsing==2.2.0',          # fluidasserts.lang
-        'oyaml==0.5',                # fluidasserts
+        'pytesseract==0.2.5',        # fluidasserts.format.captcha
+        'pillow==5.3.0',             # fluidasserts.format.captcha
+        'pyparsing==2.2.2',          # fluidasserts.lang
+        'oyaml==0.7',                # fluidasserts
         'pygments==2.2.0',           # fluidasserts
         'viewstate==0.4.3',          # fluidasserts.proto.http
         'ntplib==0.3.3',             # fluidasserts.proto.http
-        'pytz==2018.4',              # fluidasserts.proto.http
+        'pytz==2018.6',              # fluidasserts.proto.http
         'requirements-detector==0.6',  #  fluidasserts.sca
-        'boto3==1.7.62',             # fluidasserts.cloud.aws
+        'boto3==1.9.31',             # fluidasserts.cloud.aws
         'python-dateutil==2.7.3',    # fluidasserts.cloud.aws
         'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
     ],

@@ -34,7 +34,7 @@ def build_ssh_object() -> paramiko.client.SSHClient:
     return ssh
 
 
-# pylint: disable=R0914
+# pylint: disable=too-many-locals
 def ssh_user_pass(server: str, username: str, password: str,
                   command: str) -> Tuple[bool, bool]:
     """
@@ -55,6 +55,7 @@ def ssh_user_pass(server: str, username: str, password: str,
         ssh_stdin.close()
         out = ssh_stdout.read()[:-1]
         err = ssh_stderr.read()[:-1]
+
     except (paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.AuthenticationException) as exc:
         raise ConnError(exc)

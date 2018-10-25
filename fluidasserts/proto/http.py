@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import Optional, List, Union
 
 # 3rd party imports
-from urllib.parse import parse_qsl as parse_qsl
+from urllib.parse import parse_qsl
 from viewstate import ViewState, ViewStateException
 from pytz import timezone
 import ntplib
@@ -25,7 +25,7 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track
 from fluidasserts.utils.decorators import level
 
-# pylint: disable=C0302
+# pylint: disable=too-many-lines
 
 HDR_RGX = {
     'access-control-allow-origin': '^https?:\\/\\/.*$',
@@ -286,7 +286,7 @@ by default'.format(header),
 
     result = True
 
-    if header == 'X-AspNet-Version' or header == 'Server':
+    if header in ('X-AspNet-Version', 'Server'):
         if header in headers_info:
             value = headers_info[header]
             show_open('{} HTTP insecure header present'.
@@ -1203,10 +1203,11 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     They must be strings as they would appear in the request.
     """
     assert 'params' in kwargs or 'data' in kwargs
-    if 'params' in kwargs:
-        query_string = kwargs['params']
-    if 'data' in kwargs:
-        query_string = kwargs['data']
+
+    try:
+        query_string = kwargs.get('data')
+    except AttributeError:
+        query_string = kwargs.get('params')
 
     assert isinstance(user_list, list)
     assert isinstance(pass_list, list)

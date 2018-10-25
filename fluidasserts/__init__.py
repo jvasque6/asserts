@@ -59,7 +59,7 @@ def get_caller_function():
     return function
 
 
-class Message(object):
+class Message():
     """Output message class."""
 
     def __init__(self, status, message, details, references):

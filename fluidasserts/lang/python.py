@@ -42,7 +42,8 @@ def _get_block(file_lines, line) -> str:
     block_header = SkipTo(LineEnd())
     block_body = indentedBlock(prs_block, indent_stack)
     block_def = Group(block_header + block_body)
-    prs_block << (block_def | block_line)       # pylint: disable=W0104
+    # pylint: disable=pointless-statement
+    prs_block << (block_def | block_line)
     block_list = prs_block.parseString(rem_file).asList()
     block_str = (lang_helper.lists_as_string(block_list, '', 0))
     return block_str.rstrip()

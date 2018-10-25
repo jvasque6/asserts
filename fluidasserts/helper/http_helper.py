@@ -7,7 +7,7 @@ import hashlib
 from typing import Optional, Tuple
 
 # 3rd party imports
-from urllib.parse import quote as quote
+from urllib.parse import quote
 
 from bs4 import BeautifulSoup
 from requests_oauthlib import OAuth1
@@ -19,9 +19,9 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 # local imports
 # None
 
-# pylint: disable=W0212
-# pylint: disable=R0902
-# pylint: disable=R0913
+# pylint: disable=protected-access
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-arguments
 
 # pylint: disable=no-member
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
@@ -37,7 +37,7 @@ class ConnError(Exception):
     pass
 
 
-class HTTPSession(object):
+class HTTPSession():
     """Class of HTTP request objects."""
 
     def __init__(self, url: str, params: Optional[str] = None,

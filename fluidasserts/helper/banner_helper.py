@@ -34,7 +34,7 @@ import certifi
 from fluidasserts.helper import http_helper
 
 
-class Service(object):
+class Service():
     """Abstract class of service."""
 
     __metaclass__ = ABCMeta
@@ -167,10 +167,7 @@ class HTTPService():
     def __init__(self, url) -> None:
         """Build a new Service object."""
         self.url = url
-        try:
-            self.sess = http_helper.HTTPSession(self.url)
-        except http_helper.ConnError:
-            raise
+        self.sess = http_helper.HTTPSession(self.url)
 
     def get_banner(self) -> str:
         """Get HTTP Server banner."""
