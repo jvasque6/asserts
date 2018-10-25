@@ -77,15 +77,15 @@ CLOSE_COLORS = {
     Name.Constant: ('darkred', 'red'),
     Name.Attribute: ('lightgray', 'darkgray'),
     Name.Tag: ('blue', 'blue'),
-    String: ('darkgreen', 'green'),
-    Number: ('darkgreen', 'green'),
+    String: ('*darkgreen*', '*green*'),
+    Number: ('*darkgreen*', '*green*'),
     Generic.Deleted: ('red', 'red'),
     Generic.Inserted: ('darkgreen', 'green'),
     Generic.Heading: ('**', '**'),
     Generic.Subheading: ('*purple*', '*fuchsia*'),
     Generic.Prompt: ('**', '**'),
     Generic.Error: ('red', 'red'),
-    Error: ('darkgreen', 'green'),
+    Error: ('*darkgreen*', '*green*'),
 }
 
 UNKNOWN_COLORS = {
@@ -106,15 +106,15 @@ UNKNOWN_COLORS = {
     Name.Constant: ('darkred', 'red'),
     Name.Attribute: ('lightgray', 'darkgray'),
     Name.Tag: ('blue', 'blue'),
-    String: ('teal', 'teal'),
-    Number: ('teal', 'teal'),
+    String: ('*teal*', '*teal*'),
+    Number: ('*teal*', '*teal*'),
     Generic.Deleted: ('red', 'red'),
     Generic.Inserted: ('darkgreen', 'green'),
     Generic.Heading: ('**', '**'),
     Generic.Subheading: ('*purple*', '*fuchsia*'),
     Generic.Prompt: ('**', '**'),
     Generic.Error: ('red', 'red'),
-    Error: ('teal', 'teal'),
+    Error: ('*teal*', '*teal*'),
 }
 
 SUMMARY_COLORS = {
