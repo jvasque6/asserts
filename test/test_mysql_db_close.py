@@ -95,3 +95,11 @@ def test_logs_verbosity_close(run_mock):
     #                                      ADMIN_PASS)
     assert not mysql_db.logs_verbosity_low(NON_EXISTANT, ADMIN_USER,
                                            ADMIN_PASS)
+
+
+def test_auto_creates_users_close(run_mock):
+    """MySQL auto creates users?."""
+    assert not mysql_db.auto_creates_users(run_mock, ADMIN_USER,
+                                           ADMIN_PASS)
+    assert not mysql_db.auto_creates_users(NON_EXISTANT, ADMIN_USER,
+                                           ADMIN_PASS)

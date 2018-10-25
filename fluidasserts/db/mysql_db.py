@@ -301,3 +301,36 @@ def logs_verbosity_low(server: str, username: str, password: str) -> bool:
             show_close('Logs verbosity are sufficient',
                        details=dict(server=server, verbosity=verbosity))
         return result
+
+
+@level('high')
+@track
+def auto_creates_users(server: str, username: str, password: str) -> bool:
+    """Check if 'NO_AUTO_CREATE_USER' param is set."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        queries = ['SELECT @@global.sql_mode', 'SELECT @@session.sql_mode']
+        result = False
+        for query in queries:
+            mycursor.execute(query)
+
+            _result = list(mycursor)[0][0]
+            result = 'NO_AUTO_CREATE_USER' not in _result
+            if result:
+                break
+
+        if result:
+            show_open('Param "NO_AUTO_CREATE_USER" not set on server',
+                      details=dict(server=server))
+        else:
+            show_close('Param "NO_AUTO_CREATE_USER" is set on server',
+                       details=dict(server=server))
+        return result
