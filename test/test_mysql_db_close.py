@@ -111,3 +111,17 @@ def test_users_without_pass_close(run_mock):
                                                    ADMIN_PASS)
     assert not mysql_db.has_users_without_password(NON_EXISTANT, ADMIN_USER,
                                                    ADMIN_PASS)
+
+
+def test_password_expiration_close(run_mock):
+    """MySQL password expiration safe?."""
+    assert not mysql_db.password_expiration_unsafe(NON_EXISTANT, ADMIN_USER,
+                                                   ADMIN_PASS)
+
+
+def test_password_equals_to_user_close(run_mock):
+    """MySQL users have password equal to the username?."""
+    assert not mysql_db.password_equals_to_user(run_mock, ADMIN_USER,
+                                                ADMIN_PASS)
+    assert not mysql_db.password_equals_to_user(NON_EXISTANT, ADMIN_USER,
+                                                ADMIN_PASS)

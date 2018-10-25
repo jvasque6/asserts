@@ -70,3 +70,9 @@ def test_logs_verbosity_open(run_mock):
     """MySQL verbosity enough?."""
     assert mysql_db.logs_verbosity_low(run_mock, ADMIN_USER,
                                        ADMIN_PASS)
+
+
+def test_password_expiration_open(run_mock):
+    """MySQL password expiration safe?."""
+    assert mysql_db.password_expiration_unsafe(run_mock, ADMIN_USER,
+                                               ADMIN_PASS)

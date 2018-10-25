@@ -366,3 +366,72 @@ def has_users_without_password(server: str, username: str,
             show_close('All users have passwords on server',
                        details=dict(server=server))
         return result
+
+
+@level('high')
+@track
+def password_expiration_unsafe(server: str, username: str,
+                               password: str) -> bool:
+    """Check password expliration is safe."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'SHOW VARIABLES LIKE "default_password_lifetime"'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        if not _result:
+            result = True
+        elif int(_result[0][1]) > 90:
+            result = True
+        else:
+            result = False
+
+        if result:
+            show_open('Password lifetime is unsafe',
+                      details=dict(server=server))
+
+        else:
+            show_close('Password lifetime is safe',
+                       details=dict(server=server))
+        return result
+
+
+@level('high')
+@track
+def password_equals_to_user(server: str, username: str,
+                            password: str) -> bool:
+    """Check if users have a password set."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'SELECT User,password FROM mysql.user \
+WHERE BINARY password=CONCAT("*", UPPER(SHA1(UNHEX(SHA1(user)))))'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        result = len(_result) != 0
+
+        if result:
+            show_open('There are users with the password=username',
+                      details=dict(server=server,
+                                   users=", ".join([x[0].decode()
+                                                    for x in _result])))
+        else:
+            show_close('All users have passwords different to the username',
+                       details=dict(server=server))
+        return result
