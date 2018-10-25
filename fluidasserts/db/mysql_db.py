@@ -334,3 +334,35 @@ def auto_creates_users(server: str, username: str, password: str) -> bool:
             show_close('Param "NO_AUTO_CREATE_USER" is set on server',
                        details=dict(server=server))
         return result
+
+
+@level('high')
+@track
+def has_users_without_password(server: str, username: str,
+                               password: str) -> bool:
+    """Check if users have a password set."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'select user from mysql.user where password=""'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        result = len(_result) != 0
+
+        if result:
+            show_open('There are users without password on server',
+                      details=dict(server=server,
+                                   users=", ".join([x[0].decode()
+                                                    for x in _result])))
+        else:
+            show_close('All users have passwords on server',
+                       details=dict(server=server))
+        return result

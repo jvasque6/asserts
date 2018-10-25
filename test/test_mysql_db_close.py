@@ -103,3 +103,11 @@ def test_auto_creates_users_close(run_mock):
                                            ADMIN_PASS)
     assert not mysql_db.auto_creates_users(NON_EXISTANT, ADMIN_USER,
                                            ADMIN_PASS)
+
+
+def test_users_without_pass_close(run_mock):
+    """MySQL users have passwords?."""
+    assert not mysql_db.has_users_without_password(run_mock, ADMIN_USER,
+                                                   ADMIN_PASS)
+    assert not mysql_db.has_users_without_password(NON_EXISTANT, ADMIN_USER,
+                                                   ADMIN_PASS)
