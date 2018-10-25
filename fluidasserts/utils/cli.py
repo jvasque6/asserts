@@ -106,15 +106,44 @@ UNKNOWN_COLORS = {
     Name.Constant: ('darkred', 'red'),
     Name.Attribute: ('lightgray', 'darkgray'),
     Name.Tag: ('blue', 'blue'),
-    String: ('darkgray', 'darkgray'),
-    Number: ('darkgray', 'darkgray'),
+    String: ('teal', 'teal'),
+    Number: ('teal', 'teal'),
     Generic.Deleted: ('red', 'red'),
     Generic.Inserted: ('darkgreen', 'green'),
     Generic.Heading: ('**', '**'),
     Generic.Subheading: ('*purple*', '*fuchsia*'),
     Generic.Prompt: ('**', '**'),
     Generic.Error: ('red', 'red'),
-    Error: ('darkgray', 'darkgray'),
+    Error: ('teal', 'teal'),
+}
+
+SUMMARY_COLORS = {
+    Token: ('', ''),
+    Whitespace: ('lightgray', 'darkgray'),
+    Comment: ('lightgray', 'darkgray'),
+    Comment.Preproc: ('teal', 'turquoise'),
+    Keyword: ('darkblue', 'blue'),
+    Keyword.Type: ('teal', 'turquoise'),
+    Operator.Word: ('purple', 'fuchsia'),
+    Name.Builtin: ('teal', 'turquoise'),
+    Name.Function: ('darkgreen', 'green'),
+    Name.Namespace: ('_teal_', '_turquoise_'),
+    Name.Class: ('_darkgreen_', '_green_'),
+    Name.Exception: ('teal', 'turquoise'),
+    Name.Decorator: ('white', 'lightgray'),
+    Name.Variable: ('darkred', 'red'),
+    Name.Constant: ('darkred', 'red'),
+    Name.Attribute: ('lightgray', 'white'),
+    Name.Tag: ('blue', 'blue'),
+    String: ('white', 'white'),
+    Number: ('white', 'white'),
+    Generic.Deleted: ('red', 'red'),
+    Generic.Inserted: ('darkgreen', 'green'),
+    Generic.Heading: ('**', '**'),
+    Generic.Subheading: ('*purple*', '*fuchsia*'),
+    Generic.Prompt: ('**', '**'),
+    Generic.Error: ('red', 'red'),
+    Error: ('white', 'white'),
 }
 
 
@@ -233,7 +262,7 @@ def colorize(parsed_content):
         elif node['status'] == 'UNKNOWN':
             style = UNKNOWN_COLORS
         else:
-            style = UNKNOWN_COLORS
+            style = SUMMARY_COLORS
 
         message = yaml.dump(node, default_flow_style=False,
                             explicit_start=True)
@@ -422,7 +451,7 @@ def main():
                         explicit_start=True)
 
     highlight(message, PropertiesLexer(),
-              TerminalFormatter(colorscheme=UNKNOWN_COLORS), OUTFILE)
+              TerminalFormatter(colorscheme=SUMMARY_COLORS), OUTFILE)
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
