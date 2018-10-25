@@ -131,3 +131,9 @@ def test_wildcard_hosts_close(run_mock):
     """MySQL users have wildcard hosts?."""
     assert not mysql_db.users_have_wildcard_host(NON_EXISTANT, ADMIN_USER,
                                                  ADMIN_PASS)
+
+
+def test_uses_ssl_close(run_mock):
+    """MySQL uses SSL?."""
+    #assert not mysql_db.uses_ssl(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert not mysql_db.uses_ssl(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)

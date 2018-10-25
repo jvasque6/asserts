@@ -467,3 +467,32 @@ def users_have_wildcard_host(server: str, username: str,
             show_close('There are not users with wildcard hosts',
                        details=dict(server=server))
         return result
+
+
+@level('medium')
+@track
+def uses_ssl(server: str, username: str, password: str) -> bool:
+    """Check if MySQL server uses SSL."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'SHOW variables WHERE variable_name = "have_ssl"'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        result = _result[0][1] == 'DISABLED'
+
+        if result:
+            show_open('Server don\'t use SSL',
+                      details=dict(server=server))
+        else:
+            show_close('Server uses SSL',
+                       details=dict(server=server))
+        return result
