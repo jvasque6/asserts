@@ -19,11 +19,6 @@ import tlslite
 PORT = 443
 
 ORIG_METHOD = copy.deepcopy(tlslite.recordlayer.RecordLayer.addPadding)
-CIPHER_NAMES = ["chacha20-poly1305",
-                "aes256gcm", "aes128gcm",
-                "aes256", "aes128"]
-KEY_EXCHANGE = ["rsa", "dhe_rsa", "ecdhe_rsa", "srp_sha", "srp_sha_rsa",
-                "ecdh_anon", "dh_anon"]
 
 
 def _my_add_padding(self, data: bytes) -> bytes:
@@ -72,7 +67,7 @@ def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
 # pylint: disable=too-many-arguments
 @contextmanager
 def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
-            min_version: Tuple[int, int] = (3, 1),
+            min_version: Tuple[int, int] = (3, 0),
             max_version: Tuple[int, int] = (3, 3),
             cipher_names: List[str] = None,
             key_exchange_names: List[str] = None,
@@ -90,11 +85,6 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     :param key_exchange_names: List of exchange names.
     :param anon: Whether to make the handshake anonymously.
     """
-    if cipher_names is None:
-        cipher_names = CIPHER_NAMES
-    if key_exchange_names is None:
-        key_exchange_names = KEY_EXCHANGE
-
     if check_poodle_tls:
         tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding
     else:
@@ -111,8 +101,10 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
         settings = tlslite.HandshakeSettings()
         settings.minVersion = min_version
         settings.maxVersion = max_version
-        settings.cipherNames = cipher_names
-        settings.keyExchangeNames = key_exchange_names
+        if cipher_names:
+            settings.cipherNames = cipher_names
+        if key_exchange_names:
+            settings.keyExchangeNames = key_exchange_names
 
         if anon:
             connection.handshakeClientAnonymous(settings=settings)
