@@ -12,6 +12,7 @@ Reference
    :name: api-toc
 
    fluidasserts.cloud
+   fluidasserts.db
    fluidasserts.lang
    fluidasserts.format
    fluidasserts.helper
