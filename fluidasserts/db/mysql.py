@@ -3,7 +3,7 @@
 """This module allows to check generic MySQL DB vulnerabilities."""
 
 # standard imports
-# None
+from __future__ import absolute_import
 
 # 3rd party imports
 import mysql.connector
