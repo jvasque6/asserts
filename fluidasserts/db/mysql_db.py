@@ -469,7 +469,7 @@ def users_have_wildcard_host(server: str, username: str,
         return result
 
 
-@level('medium')
+@level('high')
 @track
 def uses_ssl(server: str, username: str, password: str) -> bool:
     """Check if MySQL server uses SSL."""
@@ -494,5 +494,38 @@ def uses_ssl(server: str, username: str, password: str) -> bool:
                       details=dict(server=server))
         else:
             show_close('Server uses SSL',
+                       details=dict(server=server))
+        return result
+
+
+@level('high')
+@track
+def ssl_unforced(server: str, username: str, password: str) -> bool:
+    """Check if users are forced to use SSL."""
+    try:
+        mydb = _get_mysql_cursor(server, username, password)
+    except ConnError as exc:
+        show_unknown('There was an error connecting to MySQL engine',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        return False
+    else:
+        mycursor = mydb.cursor()
+
+        query = 'SELECT user, ssl_type FROM mysql.user WHERE NOT HOST \
+IN ("::1", "127.0.0.1", "localhost") AND \
+NOT ssl_type IN ("ANY", "X509", "SPECIFIED")'
+        mycursor.execute(query)
+
+        _result = list(mycursor)
+        result = len(_result) != 0
+
+        if result:
+            show_open('Users are not forced to use SSL',
+                      details=dict(server=server,
+                                   users=", ".join([x[0].decode()
+                                                    for x in _result])))
+        else:
+            show_close('Users are forced to use SSL',
                        details=dict(server=server))
         return result

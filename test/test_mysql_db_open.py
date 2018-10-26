@@ -87,3 +87,8 @@ def test_wildcard_hosts_open(run_mock):
 def test_uses_ssl_open(run_mock):
     """MySQL uses SSL?."""
     assert mysql_db.uses_ssl(run_mock, ADMIN_USER, ADMIN_PASS)
+
+
+def test_ssl_forced_open(run_mock):
+    """MySQL users forced to use?."""
+    assert mysql_db.ssl_unforced(run_mock, ADMIN_USER, ADMIN_PASS)
