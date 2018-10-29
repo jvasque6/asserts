@@ -42,7 +42,6 @@ def is_a_valid_user(ip_address: str, username: str,
         ftp = FTP()
         ftp.connect(ip_address, port)
         ftp.login(username, password)
-        ftp.quit()
         result = True
         show_open('FTP Authentication {}:{}'.format(ip_address, port),
                   details=dict(username=username, password=password,
@@ -59,6 +58,8 @@ def is_a_valid_user(ip_address: str, username: str,
                                   error=str(exc),
                                   fingerprint=fingerprint))
         result = False
+    finally:
+        ftp.close()
     return result
 
 

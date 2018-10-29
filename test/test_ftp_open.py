@@ -32,6 +32,7 @@ SECURED_USER = 'secured'
 GUESSED_USER = 'guessed'
 GUESSED_PASS = 'guessed123'
 FTP_PORT = 21
+FTP_PASS_PORT = 20
 
 #
 # Open tests
@@ -39,7 +40,8 @@ FTP_PORT = 21
 
 
 @pytest.mark.parametrize('run_mock',
-                         [('ftp:weak', {'21/tcp': FTP_PORT})],
+                         [('ftp:weak', {'21/tcp': FTP_PORT,
+                                        '20/tcp': FTP_PASS_PORT})],
                          indirect=True)
 def test_is_anonymous_enabled_open(run_mock):
     """Servidor FTP vulnerable SI soporta conexion anonima?."""

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Unit test config module.
-
-https://pytest.org/dev/fixture.html
-"""
+"""Unit test config module."""
 
 # standard imports
 from __future__ import print_function
@@ -21,8 +18,6 @@ import pytest
 
 # Constants
 NETWORK_NAME = 'bridge'
-NETWORK_SUBNET = '172.30.216.0/24'
-NETWORK_GW = '172.30.216.254'
 
 
 def wait_net_service(server, port, timeout=None):
