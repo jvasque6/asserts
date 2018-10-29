@@ -34,13 +34,11 @@ def test_is_anonymous_enabled_close(run_mock):
 
 def test_has_dirlisting_close(run_mock):
     """Conexion anonima habilitada?."""
-    assert not smb.has_dirlisting('public',
-                                  server=run_mock,
+    assert not smb.has_dirlisting(run_mock, 'public',
                                   user="root",
                                   password='Puef8poh2tei9AeB',
                                   domain='WORKGROUP')
-    assert not smb.has_dirlisting('public',
-                                  server=NON_EXISTANT,
+    assert not smb.has_dirlisting(NON_EXISTANT,'public',
                                   user="root",
                                   password='Puef8poh2tei9AeB',
                                   domain='WORKGROUP')

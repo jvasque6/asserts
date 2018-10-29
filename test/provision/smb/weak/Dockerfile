@@ -15,4 +15,4 @@ RUN adduser -D -s /bin/sh nonpriv && \
 
 COPY etc_samba_smb.conf-weak /etc/samba/smb.conf
 
-CMD /usr/sbin/smbd -F
+CMD /usr/sbin/smbd -FS --no-process-group
