@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module allows to check generic MySQL DB vulnerabilities."""
+"""This module allows to check generic MySQL/MariaDB DB vulnerabilities."""
 
 # standard imports
 from __future__ import absolute_import
@@ -372,7 +372,7 @@ def has_users_without_password(server: str, username: str,
 @track
 def password_expiration_unsafe(server: str, username: str,
                                password: str) -> bool:
-    """Check password expliration is safe."""
+    """Check if password expiration time is safe."""
     try:
         mydb = _get_mysql_cursor(server, username, password)
     except ConnError as exc:
@@ -408,7 +408,7 @@ def password_expiration_unsafe(server: str, username: str,
 @track
 def password_equals_to_user(server: str, username: str,
                             password: str) -> bool:
-    """Check if users have a password set."""
+    """Check if users' password is the same username."""
     try:
         mydb = _get_mysql_cursor(server, username, password)
     except ConnError as exc:
