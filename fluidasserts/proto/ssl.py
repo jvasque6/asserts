@@ -178,7 +178,8 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
             show_close('Forward Secrecy enabled on site',
                        details=dict(site=site, port=port))
             result = False
-    except tlslite.errors.TLSRemoteAlert:
+    except (tlslite.errors.TLSRemoteAlert,
+            tlslite.errors.TLSAbruptCloseError):
         try:
             with connect_legacy(site, port, ciphers):
                 show_close('Forward Secrecy enabled on site',

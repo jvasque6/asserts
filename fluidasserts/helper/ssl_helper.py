@@ -93,6 +93,7 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
 
     try:
         connection = tlslite.TLSConnection(sock)
+        connection.ignoreAbruptClose = True
 
         settings = tlslite.HandshakeSettings()
         settings.minVersion = min_version
