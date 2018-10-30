@@ -102,7 +102,7 @@ you will need some dependencies
 which you can install with this command
 on a ``Debian``-based OS: ::
 
-   $ sudo apt install python3-dev python3-pip python3.5-venv git cloc scons rubygems
+   $ sudo apt install python3-dev python3-pip python3.6-venv git cloc scons rubygems
 
 And then some python packages via ``pip``: ::
 
