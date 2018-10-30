@@ -94,7 +94,7 @@ pages:
   artifacts:
     paths: [public/]
   only:
-    - aroldan
+    - master
 
 cleanup_job:
   stage: cleanup
