@@ -4,9 +4,7 @@
 
 # standard imports
 from __future__ import print_function
-import errno
 import os
-import socket
 import time
 
 # 3rd party imports
@@ -19,7 +17,6 @@ import wait
 
 # Constants
 NETWORK_NAME = 'bridge'
-
 
 
 @pytest.fixture(scope='module')
