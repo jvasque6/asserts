@@ -1,4 +1,4 @@
-FROM debian:stable-slim
+FROM debian:buster-slim
 
 WORKDIR /usr/src/asserts
 
@@ -7,7 +7,7 @@ RUN apt-get update -qq && \
         curl \
         apt-transport-https \
         ca-certificates \
-        gpg && \
+        gpg gpg-agent && \
     dpkg --clear-avail && \
     apt-get clean
 
@@ -35,7 +35,7 @@ RUN apt-get update -qq && \
         python3-setuptools \
         tesseract-ocr \
         ruby \
-        ruby2.3-dev \
+        ruby2.5-dev \
         libffi-dev \
         pkg-config \
         gcc \
@@ -43,10 +43,10 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-    pip install -U pip==9.0.3 \
+    pip3 install -U pip==9.0.3 \
         setuptools  \
         wheel && \
-    pip install -U \
+    pip3 install -U \
         tox \
         tox-pyenv \
         pylint \
