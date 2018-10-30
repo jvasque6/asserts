@@ -43,7 +43,7 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-    pip3 install -U pip==9.0.3 \
+    pip install -U pip==9.0.3 \
         setuptools  \
         wheel && \
     pip3 install -U \
