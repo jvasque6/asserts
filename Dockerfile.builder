@@ -19,19 +19,16 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         python3 \
         python3-dev \
-        python-dev \
         libssl-dev \
         libffi-dev \
         scons \
-        python-virtualenv \
+        python3-virtualenv \
         sed \
         grep \
         gawk \
         lsb-release \
         netcat-traditional \
-        python-pip \
         python3-pip \
-        python-setuptools \
         python3-setuptools \
         tesseract-ocr \
         ruby \
@@ -43,10 +40,11 @@ RUN apt-get update -qq && \
         make \
         docker-ce \
         git && \
-    pip install -U pip==9.0.3 \
-        setuptools  \
+    pip3 install -U  setuptools \
         wheel && \
     pip3 install -U \
+        wheel \
+        setuptools \
         tox \
         tox-pyenv \
         pylint \
@@ -60,8 +58,8 @@ RUN apt-get update -qq && \
         certifi \
         gitdb2 \
         smmap2 \
-        gitpython && \
-    pip3 install pyflakes \
+        gitpython \
+        pyflakes \
         mypy && \
     gem install overcommit && \
     dpkg --clear-avail && \
