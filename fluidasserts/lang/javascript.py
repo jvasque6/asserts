@@ -237,12 +237,12 @@ def has_switch_without_default(js_dest: str) -> bool:
     :param js_dest: Path to a JavaScript source file or package.
     """
     tk_switch = CaselessKeyword('switch')
-    tk_case = CaselessKeyword('case') + (Word(alphanums))
-    tk_default = CaselessKeyword('default')
+    tk_case = CaselessKeyword('case') + SkipTo(Literal(':'))
+    tk_default = CaselessKeyword('default') + Literal(':')
     tk_break = (CaselessKeyword('break') + Optional(Literal(';'))) | \
         Literal('}')
     def_stmt = Or([Suppress(tk_case), tk_default]) + \
-        Suppress(Literal(':') + SkipTo(tk_break, include=True))
+        Suppress(SkipTo(tk_break, include=True))
     prsr_sw = tk_switch + nestedExpr()
     switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
     sw_wout_def = (Suppress(prsr_sw) +

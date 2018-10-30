@@ -36,6 +36,7 @@ function functionAWithConsoleLog() {
             break;
         case 6:
             day = "Saturday";
+            break;
     }
 }
 
@@ -90,8 +91,10 @@ function functionBWithConsoleLog() {
             break;
         case 6:
             day = "Saturday";
+            break;
         //default:
             //day = "Error";
+            //break;
         /*default:
             day = "Error";
         */

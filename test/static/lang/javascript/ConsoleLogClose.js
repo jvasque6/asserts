@@ -59,13 +59,13 @@ function functionBWithoutConsoleLog() {
         case 3:
             day = "Wednesday";
             break;
-        case 4:
+        case "4":
             day = "Thursday";
             break;
-        case 5:
+        case "5":
             day = "Friday";
             break;
-        case 6:
+        case "6":
             day = "Saturday";
             break;
         default:
