@@ -32,50 +32,47 @@ NON_EXISTANT = '0.0.0.0'
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('os:hard', {'22/tcp': OS_PORT})],
-                         indirect=True)
-
-def test_min_priv_enabled_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['os_hard'], indirect=True)
+def test_min_priv_enabled_close(get_mock_ip):
     """Secure umask?."""
-    assert not linux.is_min_priv_disabled(run_mock, NONPRIV_USER,
+    assert not linux.is_min_priv_disabled(get_mock_ip, NONPRIV_USER,
                                           NONPRIV_PASS)
     assert not linux.is_min_priv_disabled(NON_EXISTANT, NONPRIV_USER,
                                           NONPRIV_PASS)
 
 
-def test_os_sudo_enabled_close(run_mock):
+def test_os_sudo_enabled_close(get_mock_ip):
     """Sudo enabled?."""
-    assert not linux.is_sudo_disabled(run_mock, NONPRIV_USER, NONPRIV_PASS)
+    assert not linux.is_sudo_disabled(get_mock_ip, NONPRIV_USER, NONPRIV_PASS)
     assert not linux.is_sudo_disabled(NON_EXISTANT, NONPRIV_USER, NONPRIV_PASS)
 
 
-def test_compilers_installed_close(run_mock):
+def test_compilers_installed_close(get_mock_ip):
     """Compiler installed?."""
-    assert not linux.are_compilers_installed(run_mock, NONPRIV_USER,
+    assert not linux.are_compilers_installed(get_mock_ip, NONPRIV_USER,
                                              NONPRIV_PASS)
     assert not linux.are_compilers_installed(NON_EXISTANT, NONPRIV_USER,
                                              NONPRIV_PASS)
 
-def test_antimalware_installed_close(run_mock):
+def test_antimalware_installed_close(get_mock_ip):
     """Antimalware installed?."""
-    assert not linux.is_antimalware_not_installed(run_mock, NONPRIV_USER,
+    assert not linux.is_antimalware_not_installed(get_mock_ip, NONPRIV_USER,
                                                   NONPRIV_PASS)
     assert not linux.is_antimalware_not_installed(NON_EXISTANT, NONPRIV_USER,
                                                   NONPRIV_PASS)
 
 
-def test_remote_admin_enabled_close(run_mock):
+def test_remote_admin_enabled_close(get_mock_ip):
     """Remote admin enabled?."""
-    assert not linux.is_remote_admin_enabled(run_mock, NONPRIV_USER,
+    assert not linux.is_remote_admin_enabled(get_mock_ip, NONPRIV_USER,
                                              NONPRIV_PASS)
     assert not linux.is_remote_admin_enabled(NON_EXISTANT, NONPRIV_USER,
                                              NONPRIV_PASS)
 
 
-def test_syncookies_enabled_close(run_mock):
+def test_syncookies_enabled_close(get_mock_ip):
     """SYN Cookies enabled?."""
-    assert not linux.are_syncookies_disabled(run_mock, NONPRIV_USER,
+    assert not linux.are_syncookies_disabled(get_mock_ip, NONPRIV_USER,
                                              NONPRIV_PASS)
     assert not linux.are_syncookies_disabled(NON_EXISTANT, NONPRIV_USER,
                                              NONPRIV_PASS)

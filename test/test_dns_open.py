@@ -28,30 +28,27 @@ HARD_PORT = 53
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('dns:weak', {'53/tcp': WEAK_PORT,
-                                        '53/udp': WEAK_PORT})],
-                         indirect=True)
-def test_is_xfr_enabled_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['dns_weak'], indirect=True)
+def test_is_xfr_enabled_open(get_mock_ip):
     """Transferencia de zonas habilitado en server?."""
-    assert dns.is_xfr_enabled(TEST_ZONE, run_mock)
+    assert dns.is_xfr_enabled(TEST_ZONE, get_mock_ip)
 
 
-def test_has_cache_poison_open(run_mock):
+def test_has_cache_poison_open(get_mock_ip):
     """Server vulnerable a cache poison?."""
-    assert dns.has_cache_poison(TEST_ZONE, run_mock)
+    assert dns.has_cache_poison(TEST_ZONE, get_mock_ip)
 
 
-def test_has_cache_snooping_open(run_mock):
+def test_has_cache_snooping_open(get_mock_ip):
     """Server vulnerable a cache snooping?."""
-    assert dns.has_cache_snooping(run_mock)
+    assert dns.has_cache_snooping(get_mock_ip)
 
 
-def test_has_recursion_open(run_mock):
+def test_has_recursion_open(get_mock_ip):
     """Server has recursion enabled?."""
-    assert dns.has_recursion(run_mock)
+    assert dns.has_recursion(get_mock_ip)
 
 
-def test_can_amplify_open(run_mock):
+def test_can_amplify_open(get_mock_ip):
     """Server can perform DNS amplification attacks?."""
-    assert dns.can_amplify(run_mock)
+    assert dns.can_amplify(get_mock_ip)

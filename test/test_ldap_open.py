@@ -25,9 +25,7 @@ WEAK_PORT = 389
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('ldap:weak', {'389/tcp': WEAK_PORT})],
-                         indirect=True)
-def test_is_anonymous_bind_allowed_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['ldap_weak'], indirect=True)
+def test_is_anonymous_bind_allowed_open(get_mock_ip):
     """Test if anonymous bind allowed?."""
-    assert ldap.is_anonymous_bind_allowed(run_mock, WEAK_PORT)
+    assert ldap.is_anonymous_bind_allowed(get_mock_ip, WEAK_PORT)

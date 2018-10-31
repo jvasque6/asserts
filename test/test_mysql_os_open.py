@@ -27,19 +27,17 @@ NON_EXISTANT = '0.0.0.0'
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('mysql_os:weak', {'22/tcp': OS_PORT})],
-                         indirect=True)
-def test_history_enabled_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['mysql_os_weak'], indirect=True)
+def test_history_enabled_open(get_mock_ip):
     """MySQL history files non empty?."""
-    assert mysql_os.history_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql_os.history_enabled(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_pwd_on_env_open(run_mock):
+def test_pwd_on_env_open(get_mock_ip):
     """MYSQL_PWD on env?."""
-    assert mysql_os.pwd_on_env(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql_os.pwd_on_env(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_has_insecure_shell_open(run_mock):
+def test_has_insecure_shell_open(get_mock_ip):
     """mysql has interactive shell?."""
-    assert mysql_os.has_insecure_shell(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql_os.has_insecure_shell(get_mock_ip, ADMIN_USER, ADMIN_PASS)

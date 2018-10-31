@@ -26,9 +26,7 @@ NON_EXISTANT = '0.0.0.0'
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('ldap:hard', {'389/tcp': HARD_PORT})],
-                         indirect=True)
-def test_is_anonymous_bind_allowed_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['ldap_hard'], indirect=True)
+def test_is_anonymous_bind_allowed_close(get_mock_ip):
     """Test if anonymous bind allowed?."""
     assert not ldap.is_anonymous_bind_allowed(NON_EXISTANT, HARD_PORT)

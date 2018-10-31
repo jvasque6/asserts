@@ -31,24 +31,22 @@ NON_EXISTANT_SERVER = '0.0.0.0'
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('os:hard', {'22/tcp': SSH_PORT})],
-                         indirect=True)
-def test_is_hmac_used_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['os_hard'], indirect=True)
+def test_is_hmac_used_close(get_mock_ip):
     """Server SSH uses HMAC?."""
-    assert not ssh.is_hmac_used(run_mock, username=ADMIN_USER,
+    assert not ssh.is_hmac_used(get_mock_ip, username=ADMIN_USER,
                                 password=ADMIN_PASS)
-    assert not ssh.is_hmac_used(run_mock, port=24, username=ADMIN_USER,
+    assert not ssh.is_hmac_used(get_mock_ip, port=24, username=ADMIN_USER,
                                 password=ADMIN_PASS)
     assert not ssh.is_hmac_used(NON_EXISTANT_SERVER, username=ADMIN_USER,
                                 password=ADMIN_PASS)
 
 
-def test_is_is_cbc_used_close(run_mock):
+def test_is_is_cbc_used_close(get_mock_ip):
     """Server SSH uses CBC?."""
-    assert not ssh.is_cbc_used(run_mock, username=ADMIN_USER,
+    assert not ssh.is_cbc_used(get_mock_ip, username=ADMIN_USER,
                                password=ADMIN_PASS)
-    assert not ssh.is_cbc_used(run_mock, port=24, username=ADMIN_USER,
+    assert not ssh.is_cbc_used(get_mock_ip, port=24, username=ADMIN_USER,
                                password=ADMIN_PASS)
     assert not ssh.is_cbc_used(NON_EXISTANT_SERVER, username=ADMIN_USER,
                                password=ADMIN_PASS)

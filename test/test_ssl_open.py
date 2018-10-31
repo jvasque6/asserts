@@ -25,39 +25,37 @@ SSL_PORT = 443
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('ssl:weak', {'443/tcp': SSL_PORT})],
-                         indirect=True)
-def test_pfs_enabled_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_pfs_enabled_open(get_mock_ip):
     """PFS habilitado en sitio?."""
-    assert ssl.is_pfs_disabled(run_mock)
+    assert ssl.is_pfs_disabled(get_mock_ip)
 
 
-def test_sslv3_enabled_open(run_mock):
+def test_sslv3_enabled_open(get_mock_ip):
     """SSLv3 habilitado en sitio?."""
-    assert ssl.is_sslv3_enabled(run_mock)
+    assert ssl.is_sslv3_enabled(get_mock_ip)
 
 
-def test_tlsv1_enabled_open(run_mock):
+def test_tlsv1_enabled_open(get_mock_ip):
     """TLSv1 habilitado en sitio?."""
-    assert ssl.is_tlsv1_enabled(run_mock)
+    assert ssl.is_tlsv1_enabled(get_mock_ip)
 
 
-def test_has_poodle_sslv3_open(run_mock):
+def test_has_poodle_sslv3_open(get_mock_ip):
     """Sitio vulnerable a POODLE?."""
-    assert ssl.has_poodle_sslv3(run_mock)
+    assert ssl.has_poodle_sslv3(get_mock_ip)
 
 
-def test_has_beast_open(run_mock):
+def test_has_beast_open(get_mock_ip):
     """Sitio vulnerable a BEAST?."""
-    assert ssl.has_beast(run_mock)
+    assert ssl.has_beast(get_mock_ip)
 
 
-def test_allows_weak_alg_open(run_mock):
+def test_allows_weak_alg_open(get_mock_ip):
     """Sitio permite algoritmos debiles?."""
-    assert ssl.allows_weak_ciphers(run_mock)
+    assert ssl.allows_weak_ciphers(get_mock_ip)
 
 
-def test_allows_anon_alg_open(run_mock):
+def test_allows_anon_alg_open(get_mock_ip):
     """Sitio permite algoritmos anonimos?."""
-    assert ssl.allows_anon_ciphers(run_mock)
+    assert ssl.allows_anon_ciphers(get_mock_ip)

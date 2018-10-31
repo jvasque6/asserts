@@ -16,5 +16,5 @@ RUN apk update \
 
 COPY dist/*.zip /
 
-RUN pip3 install --no-cache-dir -U /*.zip
+RUN pip3 install -U pip && pip3 install --no-cache-dir -U /*.zip
 RUN rm -f /*.zip

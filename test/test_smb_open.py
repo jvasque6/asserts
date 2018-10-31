@@ -25,25 +25,23 @@ SMB_PORT = 139
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('smb:weak', {'139/tcp': SMB_PORT})],
-                         indirect=True)
-def test_is_anonymous_enabled_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['smb_weak'], indirect=True)
+def test_is_anonymous_enabled_open(get_mock_ip):
     """Conexion anonima habilitada?."""
-    assert smb.is_anonymous_enabled(run_mock)
+    assert smb.is_anonymous_enabled(get_mock_ip)
 
 
-def test_has_dirlisting_open(run_mock):
+def test_has_dirlisting_open(get_mock_ip):
     """Conexion anonima habilitada?."""
-    assert smb.has_dirlisting(run_mock, 'public',
+    assert smb.has_dirlisting(get_mock_ip, 'public',
                               user="root",
                               password='Puef8poh2tei9AeB',
                               domain='WORKGROUP')
 
 
-def test_is_signing_disabled_open(run_mock):
+def test_is_signing_disabled_open(get_mock_ip):
     """SMB connection signed?."""
-    assert smb.is_signing_disabled(server=run_mock,
+    assert smb.is_signing_disabled(server=get_mock_ip,
                                    user="root",
                                    password='Puef8poh2tei9AeB',
                                    domain='WORKGROUP')

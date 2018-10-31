@@ -21,7 +21,7 @@ test_needs = ['#setup.cfg',	# opts de pytest
               test_files]
 test_results = ['#build/results.log',
                 '#build/test/results.txt']
-test_builder = Builder(action = 'tox -c conf/tox.ini py.test')
+test_builder = Builder(action = 'tox -c conf/tox.ini -e test')
 lenv.Append(BUILDERS = {'Test' : test_builder})
 test_run = lenv.Test(target=test_results,
                      source=test_needs)

@@ -72,24 +72,22 @@ def get_bwapp_cookies(cont_ip):
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('bwapp', {'80/tcp': BWAPP_PORT})],
-                         indirect=True)
-def test_a1_sqli_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
+def test_a1_sqli_open(get_mock_ip):
     """App vulnerable a SQLi?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
-    vulnerable_url = 'http://' + run_mock + '/sqli_1.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/sqli_1.php'
     params = {'title': 'a\'', 'action': 'search'}
     assert http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
 
 
-def test_a1_os_injection_open(run_mock):
+def test_a1_os_injection_open(get_mock_ip):
     """App vulnerable a command injection?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/commandi.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/commandi.php'
 
     data = {'target': 'www.nsa.gov;uname', 'form': 'submit'}
 
@@ -99,12 +97,12 @@ def test_a1_os_injection_open(run_mock):
                                           data=data, cookies=bwapp_cookie)
 
 
-def test_a1_php_injection_open(run_mock):
+def test_a1_php_injection_open(get_mock_ip):
     """App vulnerable a PHP injection?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/phpi.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/phpi.php'
 
     params = {'message': 'test;phpinfo();'}
 
@@ -115,12 +113,12 @@ def test_a1_php_injection_open(run_mock):
                                               cookies=bwapp_cookie)
 
 
-def test_a1_hpp_open(run_mock):
+def test_a1_hpp_open(get_mock_ip):
     """App vulnerable a HTTP Parameter Polluiton?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + \
+    vulnerable_url = 'http://' + get_mock_ip + \
         '/hpp-3.php?movie=6&movie=7&movie=8&name=pepe&action=vote'
 
     expected = 'HTTP Parameter Pollution detected'
@@ -129,12 +127,12 @@ def test_a1_hpp_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-def test_a1_insecure_upload_open(run_mock):
+def test_a1_insecure_upload_open(get_mock_ip):
     """App vulnerable a insecure upload?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/unrestricted_file_upload.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/unrestricted_file_upload.php'
 
     file_param = 'file'
     file_path = 'test/provision/bwapp/exploit.php'
@@ -147,12 +145,12 @@ def test_a1_insecure_upload_open(run_mock):
                                         cookies=bwapp_cookie)
 
 
-def test_a2_sessionid_exposed_open(run_mock):
+def test_a2_sessionid_exposed_open(get_mock_ip):
     """Session ID expuesto?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
-    bwapp_cookie.set('security_level', '0', domain=run_mock, path='/')
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
+    bwapp_cookie.set('security_level', '0', domain=get_mock_ip, path='/')
 
-    vulnerable_url = 'http://' + run_mock + '/smgmt_sessionid_url.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/smgmt_sessionid_url.php'
 
     assert http.is_sessionid_exposed(vulnerable_url,
                                      argument='PHPSESSID',
@@ -166,12 +164,12 @@ def test_a2_session_fixation_open():
         '%s/session_fixation_open' % (BASE_URL), 'Login required')
 
 
-def test_a3_xss_open(run_mock):
+def test_a3_xss_open(get_mock_ip):
     """App vulnerable a XSS?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/xss_get.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/xss_get.php'
     params = {'firstname': '<script>alert(1)</script>',
               'lastname': 'b', 'form': 'submit'}
 
@@ -181,12 +179,12 @@ def test_a3_xss_open(run_mock):
                             cookies=bwapp_cookie)
 
 
-def test_a4_insecure_dor_open(run_mock):
+def test_a4_insecure_dor_open(get_mock_ip):
     """App vulnerable a direct object reference?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/insecure_direct_object_ref_2.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/insecure_direct_object_ref_2.php'
 
     data = {'ticket_quantity': '1', 'ticket_price': '31337',
             'action': 'order'}
@@ -197,12 +195,12 @@ def test_a4_insecure_dor_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-def test_a7_dirtraversal_open(run_mock):
+def test_a7_dirtraversal_open(get_mock_ip):
     """App vulnerable a directory traversal?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/directory_traversal_2.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/directory_traversal_2.php'
 
     params = {'directory': '../'}
 
@@ -212,12 +210,12 @@ def test_a7_dirtraversal_open(run_mock):
                                      cookies=bwapp_cookie)
 
 
-def test_a7_lfi_open(run_mock):
+def test_a7_lfi_open(get_mock_ip):
     """App vulnerable a LFI?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/rlfi.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/rlfi.php'
 
     params = {'language': 'message.txt', 'action': 'go'}
 
@@ -227,12 +225,12 @@ def test_a7_lfi_open(run_mock):
                         cookies=bwapp_cookie)
 
 
-def test_a8_csrf_open(run_mock):
+def test_a8_csrf_open(get_mock_ip):
     """App vulnerable a Cross-Site Request Forgery?."""
-    bwapp_cookie = get_bwapp_cookies(run_mock)
+    bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + run_mock + '/csrf_1.php'
+    vulnerable_url = 'http://' + get_mock_ip + '/csrf_1.php'
 
     params = {'password_new': 'bug', 'password_conf': 'bug',
               'action': 'change'}

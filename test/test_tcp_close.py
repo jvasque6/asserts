@@ -27,16 +27,14 @@ NON_EXISTANT = '0.0.0.0'
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('tcp:hard', {'21/tcp': HARD_PORT})],
-                         indirect=True)
-def test_port_open_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['tcp_hard'], indirect=True)
+def test_port_open_close(get_mock_ip):
     """Check open port."""
-    assert not tcp.is_port_open(run_mock, WEAK_PORT)
+    assert not tcp.is_port_open(get_mock_ip, WEAK_PORT)
     assert not tcp.is_port_open(NON_EXISTANT, WEAK_PORT)
 
 
-def test_port_insecure_close(run_mock):
+def test_port_insecure_close(get_mock_ip):
     """Check secure port."""
-    assert not tcp.is_port_insecure(run_mock, HARD_PORT)
+    assert not tcp.is_port_insecure(get_mock_ip, HARD_PORT)
     assert not tcp.is_port_insecure(NON_EXISTANT, HARD_PORT)

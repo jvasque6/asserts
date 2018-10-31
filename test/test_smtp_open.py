@@ -25,14 +25,12 @@ WEAK_PORT = 25
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('smtp:weak', {'25/tcp': WEAK_PORT})],
-                         indirect=True)
-def test_has_vrfy_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['smtp_weak'], indirect=True)
+def test_has_vrfy_open(get_mock_ip):
     """Funcion VRFY habilitada?."""
-    assert smtp.has_vrfy(run_mock, WEAK_PORT)
+    assert smtp.has_vrfy(get_mock_ip, WEAK_PORT)
 
 
-def test_is_version_visible_open(run_mock):
+def test_is_version_visible_open(get_mock_ip):
     """Check version visible."""
-    assert smtp.is_version_visible(run_mock, WEAK_PORT)
+    assert smtp.is_version_visible(get_mock_ip, WEAK_PORT)

@@ -38,29 +38,27 @@ FTP_PORT = 21
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('ftp:hard', {'21/tcp': FTP_PORT})],
-                         indirect=True)
-def test_is_anonymous_enabled_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['ftp_hard'], indirect=True)
+def test_is_anonymous_enabled_close(get_mock_ip):
     """Servidor FTP vulnerable SI soporta conexion anonima?."""
-    assert not ftp.is_anonymous_enabled(run_mock)
+    assert not ftp.is_anonymous_enabled(get_mock_ip)
 
 
-def test_is_admin_enabled_close(run_mock):
+def test_is_admin_enabled_close(get_mock_ip):
     """Servidor FTP vulnerable SI soporta conexion del ADMIN."""
-    assert not ftp.is_admin_enabled(run_mock, ADMIN_PASS)
+    assert not ftp.is_admin_enabled(get_mock_ip, ADMIN_PASS)
 
 
-def test_user_without_password_close(run_mock):
+def test_user_without_password_close(get_mock_ip):
     """Servidor FTP vulnerable SI autentica usuario sin clave?."""
-    assert not ftp.user_without_password(run_mock, NONPASS_USER)
+    assert not ftp.user_without_password(get_mock_ip, NONPASS_USER)
 
 
-def test_is_a_valid_user_close(run_mock):
+def test_is_a_valid_user_close(get_mock_ip):
     """Servidor FTP vulnerable SI autentica a usuario adivinado?."""
-    assert not ftp.is_a_valid_user(run_mock, GUESSED_USER, GUESSED_PASS)
+    assert not ftp.is_a_valid_user(get_mock_ip, GUESSED_USER, GUESSED_PASS)
 
 
-def test_is_version_visible_close(run_mock):
+def test_is_version_visible_close(get_mock_ip):
     """Servidor FTP vulnerable SI muestra version?."""
-    assert not ftp.is_version_visible(run_mock)
+    assert not ftp.is_version_visible(get_mock_ip)

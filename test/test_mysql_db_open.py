@@ -24,71 +24,69 @@ OS_PORT = 3306
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('mysql_db:weak', {'3306/tcp': OS_PORT})],
-                         indirect=True)
-def test_test_db_present_open(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_weak'], indirect=True)
+def test_test_db_present_open(get_mock_ip):
     """MySQL 'test' DB present?."""
-    assert mysql.test_db_exists(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql.test_db_exists(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_local_infile_open(run_mock):
+def test_local_infile_open(get_mock_ip):
     """MySQL 'local_infile' on?."""
-    assert mysql.local_infile_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql.local_infile_enabled(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_symlinks_enabled_open(run_mock):
+def test_symlinks_enabled_open(get_mock_ip):
     """MySQL symlinks enabled?."""
-    assert mysql.symlinks_enabled(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql.symlinks_enabled(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_secure_file_open(run_mock):
+def test_secure_file_open(get_mock_ip):
     """MySQL secure_file_priv enabled?."""
-    assert mysql.secure_file_priv_disabled(run_mock, ADMIN_USER,
+    assert mysql.secure_file_priv_disabled(get_mock_ip, ADMIN_USER,
                                            ADMIN_PASS)
 
 
-def test_strict_all_tables_open(run_mock):
+def test_strict_all_tables_open(get_mock_ip):
     """STRICT_ALL_TABLES enabled?."""
-    assert mysql.strict_all_tables_disabled(run_mock, ADMIN_USER,
+    assert mysql.strict_all_tables_disabled(get_mock_ip, ADMIN_USER,
                                             ADMIN_PASS)
 
 
-def test_log_error_open(run_mock):
+def test_log_error_open(get_mock_ip):
     """MySQL log_error enabled?."""
-    assert mysql.log_error_disabled(run_mock, ADMIN_USER,
+    assert mysql.log_error_disabled(get_mock_ip, ADMIN_USER,
                                        ADMIN_PASS)
 
 
-def test_logs_on_systemfs_open(run_mock):
+def test_logs_on_systemfs_open(get_mock_ip):
     """MySQL logs on system filesystems enabled?."""
-    assert mysql.logs_on_system_fs(run_mock, ADMIN_USER,
+    assert mysql.logs_on_system_fs(get_mock_ip, ADMIN_USER,
                                    ADMIN_PASS)
 
 
-def test_logs_verbosity_open(run_mock):
+def test_logs_verbosity_open(get_mock_ip):
     """MySQL verbosity enough?."""
-    assert mysql.logs_verbosity_low(run_mock, ADMIN_USER,
+    assert mysql.logs_verbosity_low(get_mock_ip, ADMIN_USER,
                                     ADMIN_PASS)
 
 
-def test_password_expiration_open(run_mock):
+def test_password_expiration_open(get_mock_ip):
     """MySQL password expiration safe?."""
-    assert mysql.password_expiration_unsafe(run_mock, ADMIN_USER,
+    assert mysql.password_expiration_unsafe(get_mock_ip, ADMIN_USER,
                                             ADMIN_PASS)
 
 
-def test_wildcard_hosts_open(run_mock):
+def test_wildcard_hosts_open(get_mock_ip):
     """MySQL users have wildcard hosts?."""
-    assert mysql.users_have_wildcard_host(run_mock, ADMIN_USER,
+    assert mysql.users_have_wildcard_host(get_mock_ip, ADMIN_USER,
                                           ADMIN_PASS)
 
 
-def test_uses_ssl_open(run_mock):
+def test_uses_ssl_open(get_mock_ip):
     """MySQL uses SSL?."""
-    assert mysql.uses_ssl(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql.uses_ssl(get_mock_ip, ADMIN_USER, ADMIN_PASS)
 
 
-def test_ssl_forced_open(run_mock):
+def test_ssl_forced_open(get_mock_ip):
     """MySQL users forced to use?."""
-    assert mysql.ssl_unforced(run_mock, ADMIN_USER, ADMIN_PASS)
+    assert mysql.ssl_unforced(get_mock_ip, ADMIN_USER, ADMIN_PASS)

@@ -25,14 +25,12 @@ HARD_PORT = 25
 #
 
 
-@pytest.mark.parametrize('run_mock',
-                         [('smtp:hard', {'25/tcp': HARD_PORT})],
-                         indirect=True)
-def test_has_vrfy_close(run_mock):
+@pytest.mark.parametrize('get_mock_ip', ['smtp_hard'], indirect=True)
+def test_has_vrfy_close(get_mock_ip):
     """Funcion VRFY habilitada?."""
-    assert not smtp.has_vrfy(run_mock, HARD_PORT)
+    assert not smtp.has_vrfy(get_mock_ip, HARD_PORT)
 
 
-def test_is_version_visible_close(run_mock):
+def test_is_version_visible_close(get_mock_ip):
     """Check version visible."""
-    assert not smtp.is_version_visible(run_mock, HARD_PORT)
+    assert not smtp.is_version_visible(get_mock_ip, HARD_PORT)
