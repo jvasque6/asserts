@@ -33,7 +33,7 @@ def send_mail(template_name, email_to, context):
     for email in email_to:
         message['to'].append({'email': email})
 
-    for key, value in context.iteritems():
+    for key, value in context.items():
         message['global_merge_vars'].append(
             {'name': key, 'content': value}
         )
