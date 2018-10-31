@@ -31,31 +31,37 @@ def test_pfs_enabled_open(get_mock_ip):
     assert ssl.is_pfs_disabled(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_sslv3_enabled_open(get_mock_ip):
     """SSLv3 habilitado en sitio?."""
     assert ssl.is_sslv3_enabled(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_tlsv1_enabled_open(get_mock_ip):
     """TLSv1 habilitado en sitio?."""
     assert ssl.is_tlsv1_enabled(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_has_poodle_sslv3_open(get_mock_ip):
     """Sitio vulnerable a POODLE?."""
     assert ssl.has_poodle_sslv3(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_has_beast_open(get_mock_ip):
     """Sitio vulnerable a BEAST?."""
     assert ssl.has_beast(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_allows_weak_alg_open(get_mock_ip):
     """Sitio permite algoritmos debiles?."""
     assert ssl.allows_weak_ciphers(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_allows_anon_alg_open(get_mock_ip):
     """Sitio permite algoritmos anonimos?."""
     assert ssl.allows_anon_ciphers(get_mock_ip)

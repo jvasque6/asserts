@@ -31,6 +31,7 @@ def test_has_vrfy_open(get_mock_ip):
     assert smtp.has_vrfy(get_mock_ip, WEAK_PORT)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['smtp_weak'], indirect=True)
 def test_is_version_visible_open(get_mock_ip):
     """Check version visible."""
     assert smtp.is_version_visible(get_mock_ip, WEAK_PORT)

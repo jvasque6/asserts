@@ -36,23 +36,27 @@ def test_min_priv_enabled_open(get_mock_ip):
     assert linux.is_min_priv_disabled(get_mock_ip, NONPRIV_USER, NONPRIV_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['os_weak'], indirect=True)
 def test_os_sudo_enabled_open(get_mock_ip):
     """Sudo enabled?."""
     assert linux.is_sudo_disabled(get_mock_ip, NONPRIV_USER, NONPRIV_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['os_weak'], indirect=True)
 def test_compilers_installed_open(get_mock_ip):
     """Compiler installed?."""
     assert linux.are_compilers_installed(get_mock_ip, NONPRIV_USER,
                                          NONPRIV_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['os_weak'], indirect=True)
 def test_antimalware_installed_open(get_mock_ip):
     """Antimalware installed?."""
     assert linux.is_antimalware_not_installed(get_mock_ip, NONPRIV_USER,
                                               NONPRIV_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['os_weak'], indirect=True)
 def test_remote_admin_enabled_open(get_mock_ip):
     """Remote admin enabled?."""
     assert linux.is_remote_admin_enabled(get_mock_ip, NONPRIV_USER,

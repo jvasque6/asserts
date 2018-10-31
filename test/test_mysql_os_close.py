@@ -36,6 +36,7 @@ def test_high_privileged_close(get_mock_ip):
                                                ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_os_hard'], indirect=True)
 def test_history_enabled_close(get_mock_ip):
     """MySQL history files non empty?."""
     assert not mysql_os.history_enabled(get_mock_ip, ADMIN_USER,
@@ -44,12 +45,14 @@ def test_history_enabled_close(get_mock_ip):
                                         ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_os_hard'], indirect=True)
 def test_pwd_on_env_close(get_mock_ip):
     """MYSQL_PWD on env?."""
     assert not mysql_os.pwd_on_env(get_mock_ip, ADMIN_USER, ADMIN_PASS)
     assert not mysql_os.pwd_on_env(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_os_hard'], indirect=True)
 def test_has_insecure_shell_close(get_mock_ip):
     """mysql has interactive shell?."""
     assert not mysql_os.has_insecure_shell(get_mock_ip, ADMIN_USER, ADMIN_PASS)

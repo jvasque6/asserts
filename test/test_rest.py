@@ -50,14 +50,12 @@ def test_has_access_open():
     assert rest.has_access(BASE_URL + '/access/fail')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_content_type_open():
     """Resource is available?."""
     assert rest.accepts_empty_content_type(
         BASE_URL + '/content_type/fail')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_insecure_accept_open():
     """Resource is available?."""
     assert rest.accepts_insecure_accept_header(
@@ -68,13 +66,11 @@ def test_insecure_accept_open():
 #
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_has_access_close():
     """Resource is available?."""
     assert not rest.has_access(BASE_URL + '/access/ok')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_content_type_close():
     """Resource is available?."""
     assert not rest.accepts_empty_content_type(
@@ -83,7 +79,6 @@ def test_content_type_close():
         NONEXISTANT_SERVICE + '/content_type/ok')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_insecure_accept_close():
     """Resource is available?."""
     assert not rest.accepts_insecure_accept_header(

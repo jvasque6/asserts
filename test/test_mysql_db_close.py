@@ -31,7 +31,7 @@ def test_test_db_present_close(get_mock_ip):
     assert not mysql.test_db_exists(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
 
 
-
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_local_infile_close(get_mock_ip):
     """MySQL 'local_infile' on?."""
     #assert not mysql_db.local_infile_enabled(get_mock_ip, ADMIN_USER,
@@ -40,6 +40,7 @@ def test_local_infile_close(get_mock_ip):
                                           ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_symlinks_enabled_close(get_mock_ip):
     """MySQL symlinks enabled?."""
     #assert not mysql_db.symlinks_enabled(get_mock_ip, ADMIN_USER,
@@ -48,6 +49,7 @@ def test_symlinks_enabled_close(get_mock_ip):
                                       ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_memcached_enabled_close(get_mock_ip):
     """MySQL memcached enabled?."""
     assert not mysql.memcached_enabled(get_mock_ip, ADMIN_USER,
@@ -56,6 +58,7 @@ def test_memcached_enabled_close(get_mock_ip):
                                        ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_secure_file_close(get_mock_ip):
     """MySQL secure_file_priv enabled?."""
     #assert not mysql_db.secure_file_priv_disabled(get_mock_ip, ADMIN_USER,
@@ -64,6 +67,7 @@ def test_secure_file_close(get_mock_ip):
                                                ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_strict_all_tables_close(get_mock_ip):
     """STRICT_ALL_TABLES enabled?."""
     #assert not mysql_db.strict_all_tables_disabled(get_mock_ip, ADMIN_USER,
@@ -72,12 +76,14 @@ def test_strict_all_tables_close(get_mock_ip):
                                                    ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_log_error_close(get_mock_ip):
     """MySQL log_error enabled?."""
     assert not mysql.log_error_disabled(NON_EXISTANT, ADMIN_USER,
                                         ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_logs_on_systemfs_close(get_mock_ip):
     """MySQL logs on system filesystems enabled?."""
     #assert not mysql_db.logs_on_system_fs(get_mock_ip, ADMIN_USER,
@@ -86,6 +92,7 @@ def test_logs_on_systemfs_close(get_mock_ip):
                                        ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_logs_verbosity_close(get_mock_ip):
     """MySQL logs on system filesystems enabled?."""
     #assert not mysql_db.logs_verbosity_low(get_mock_ip, ADMIN_USER,
@@ -94,6 +101,7 @@ def test_logs_verbosity_close(get_mock_ip):
                                         ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_auto_creates_users_close(get_mock_ip):
     """MySQL auto creates users?."""
     assert not mysql.auto_creates_users(get_mock_ip, ADMIN_USER,
@@ -102,6 +110,7 @@ def test_auto_creates_users_close(get_mock_ip):
                                            ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_users_without_pass_close(get_mock_ip):
     """MySQL users have passwords?."""
     assert not mysql.has_users_without_password(get_mock_ip, ADMIN_USER,
@@ -110,12 +119,14 @@ def test_users_without_pass_close(get_mock_ip):
                                                 ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_password_expiration_close(get_mock_ip):
     """MySQL password expiration safe?."""
     assert not mysql.password_expiration_unsafe(NON_EXISTANT, ADMIN_USER,
                                                 ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_password_equals_to_user_close(get_mock_ip):
     """MySQL users have password equal to the username?."""
     assert not mysql.password_equals_to_user(get_mock_ip, ADMIN_USER,
@@ -124,18 +135,21 @@ def test_password_equals_to_user_close(get_mock_ip):
                                              ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_wildcard_hosts_close(get_mock_ip):
     """MySQL users have wildcard hosts?."""
     assert not mysql.users_have_wildcard_host(NON_EXISTANT, ADMIN_USER,
                                               ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_uses_ssl_close(get_mock_ip):
     """MySQL uses SSL?."""
     #assert not mysql_db.uses_ssl(get_mock_ip, ADMIN_USER, ADMIN_PASS)
     assert not mysql.uses_ssl(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_ssl_forced_close(get_mock_ip):
     """MySQL users forced to use?."""
     #assert not mysql_db.ssl_unforced(get_mock_ip, ADMIN_USER, ADMIN_PASS)

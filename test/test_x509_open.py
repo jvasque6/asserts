@@ -31,6 +31,7 @@ def test_cn_equal_to_site_open(get_mock_ip):
     assert x509.is_cert_cn_not_equal_to_site(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_cert_lifespan_safe_open(get_mock_ip):
     """Vigencia del certificado es segura?."""
     assert x509.is_cert_validity_lifespan_unsafe(get_mock_ip)

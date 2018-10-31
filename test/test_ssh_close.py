@@ -42,6 +42,7 @@ def test_is_hmac_used_close(get_mock_ip):
                                 password=ADMIN_PASS)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['os_hard'], indirect=True)
 def test_is_is_cbc_used_close(get_mock_ip):
     """Server SSH uses CBC?."""
     assert not ssh.is_cbc_used(get_mock_ip, username=ADMIN_USER,

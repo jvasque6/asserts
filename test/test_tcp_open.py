@@ -31,12 +31,14 @@ def test_port_open_open(get_mock_ip):
     assert tcp.is_port_open(get_mock_ip, WEAK_PORT)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['tcp_weak'], indirect=True)
 def test_port_open_error(get_mock_ip):
     """Check open port with error."""
     with pytest.raises(AssertionError):
         tcp.is_port_open(get_mock_ip, -1)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['tcp_weak'], indirect=True)
 def test_port_insecure_open(get_mock_ip):
     """Check secure port."""
     assert tcp.is_port_insecure(get_mock_ip, WEAK_PORT)

@@ -5,6 +5,7 @@
 # standard imports
 from __future__ import print_function
 import os
+import time
 
 # 3rd party imports
 import docker
@@ -18,10 +19,8 @@ import wait
 NETWORK_NAME = 'bridge'
 
 
-def get_ip(mock):
+def get_ip(con):
     """Get mock IP."""
-    client = docker.from_env()
-    con = client.containers.get(mock)
     return con.attrs['NetworkSettings']['Networks']\
         ['bridge']['IPAddress']
 
@@ -64,7 +63,7 @@ def run_mocks(request):
             mock_name = mock.replace(':', '_')
             cont = client.containers.get(mock_name)
             cont.remove(force=True)
-        except docker.errors.NotFound:
+        except (docker.errors.NotFound, docker.errors.APIError):
             pass
 
     for mock, port_mapping in mocks.items():
@@ -78,25 +77,31 @@ def run_mocks(request):
 
         mock_name = mock.replace(':', '_')
 
-        client.images.build(path=mock_dir, tag=image)
-
-        client.containers.run(image, name=mock_name, tty=True, detach=True)
+        try:
+            client.images.build(path=mock_dir, tag=image)
+            client.containers.run(image, name=mock_name, tty=True, detach=True)
+        except docker.errors.APIError:
+            pass
 
     for mock, port_mapping in mocks.items():
-        ip = get_ip(mock.replace(':', '_'))
+        ip = get_ip(client.containers.get(mock.replace(':', '_')))
         for value in port_mapping.values():
             wait.tcp.open(value, ip, timeout=30)
 
     yield ip
-    for mock, _ in mocks.items():
+    for mock in mocks:
         mock_name = mock.replace(':', '_')
         cont = client.containers.get(mock_name)
-        cont.remove(force=True)
+        if cont.status == 'running':
+            cont.kill()
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope='function')
 def get_mock_ip(request):
     """Run mock with given parameters."""
     mock = request.param
-    print('Running {} ... '.format(mock))
-    yield get_ip(mock)
+    client = docker.from_env()
+    con = client.containers.get(mock)
+    if con.status != 'running':
+        con.start()
+    yield get_ip(con)

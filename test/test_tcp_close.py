@@ -34,6 +34,7 @@ def test_port_open_close(get_mock_ip):
     assert not tcp.is_port_open(NON_EXISTANT, WEAK_PORT)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['tcp_hard'], indirect=True)
 def test_port_insecure_close(get_mock_ip):
     """Check secure port."""
     assert not tcp.is_port_insecure(get_mock_ip, HARD_PORT)

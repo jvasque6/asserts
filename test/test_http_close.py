@@ -88,6 +88,7 @@ def test_a1_sqli_close(get_mock_ip):
                              params, cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_os_injection_close(get_mock_ip):
     """App vulnerable a command injection?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -107,6 +108,7 @@ def test_a1_os_injection_close(get_mock_ip):
                                           cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_php_injection_close(get_mock_ip):
     """App vulnerable a PHP injection?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -126,6 +128,7 @@ def test_a1_php_injection_close(get_mock_ip):
                                               cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_hpp_close(get_mock_ip):
     """App vulnerable a HTTP Parameter Polluiton?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -140,6 +143,7 @@ def test_a1_hpp_close(get_mock_ip):
     assert not http.has_hpp(NONEXISTANT_SERVICE, expected, cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_insecure_upload_close(get_mock_ip):
     """App vulnerable a insecure upload?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -160,6 +164,8 @@ def test_a1_insecure_upload_close(get_mock_ip):
                                         file_param, file_path, data=data,
                                         cookies=bwapp_cookie)
 
+
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a2_sessionid_exposed_close(get_mock_ip):
     """Session ID expuesto?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -175,7 +181,6 @@ def test_a2_sessionid_exposed_close(get_mock_ip):
                                          cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_a2_session_fixation_close():
     """Session fixation posible?."""
     assert http.has_session_fixation(
@@ -184,6 +189,7 @@ def test_a2_session_fixation_close():
         '%s/session_fixation_close' % (NONEXISTANT_SERVICE), 'Login required')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a3_xss_close(get_mock_ip):
     """App vulnerable a XSS?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -202,6 +208,8 @@ def test_a3_xss_close(get_mock_ip):
     assert not http.has_xss(NONEXISTANT_SERVICE, expected, params,
                         cookies=bwapp_cookie)
 
+
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a4_insecure_dor_close(get_mock_ip):
     """App vulnerable a direct object reference?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -220,6 +228,7 @@ def test_a4_insecure_dor_close(get_mock_ip):
                                      cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a7_dirtraversal_close(get_mock_ip):
     """App vulnerable a directory traversal?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -238,6 +247,8 @@ def test_a7_dirtraversal_close(get_mock_ip):
                                      params=params,
                                      cookies=bwapp_cookie)
 
+
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a7_lfi_close(get_mock_ip):
     """App vulnerable a LFI?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -255,6 +266,7 @@ def test_a7_lfi_close(get_mock_ip):
                             cookies=bwapp_cookie)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a8_csrf_close(get_mock_ip):
     """App vulnerable a Cross-Site Request Forgery?."""
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
@@ -273,7 +285,6 @@ def test_a8_csrf_close(get_mock_ip):
                          cookies=bwapp_cookie)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?."""
     assert not http.is_header_access_control_allow_origin_missing(
@@ -282,7 +293,6 @@ def test_access_control_allow_origin_close():
         '%s/access_control_allow_origin/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_cache_control_close():
     """Header Cache-Control establecido?."""
     assert not http.is_header_cache_control_missing(
@@ -291,7 +301,6 @@ def test_cache_control_close():
         '%s/cache_control/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_hsts_close():
     """Header Strict-Transport-Security establecido?."""
     assert not http.is_header_hsts_missing(
@@ -300,7 +309,6 @@ def test_hsts_close():
         '%s/hsts/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_basic_close():
     """Auth BASIC no habilitado?."""
     assert not http.is_basic_auth_enabled(
@@ -309,7 +317,6 @@ def test_basic_close():
         '%s/basic/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_put_ok():
     """HTTP PUT ok."""
     assert not http.has_not_text('%s/put_ok' % (MOCK_SERVICE),
@@ -318,7 +325,6 @@ def test_put_ok():
                                  'Method PUT Allowed', method='PUT')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_delete_ok():
     """HTTP DELETE ok."""
     assert not http.has_not_text('%s/delete_ok' % (MOCK_SERVICE),
@@ -327,28 +333,24 @@ def test_delete_ok():
                                  'Method DELETE Allowed', method='DELETE')
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_put_close():
     """HTTP PUT Not Allowed."""
     assert not http.has_put_method('%s/put_close' % (BASE_URL))
     assert not http.has_put_method('%s/put_close' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_trace_close():
     """HTTP TRACE Not Allowed."""
     assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
     assert not http.has_trace_method('%s/trace_close' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_delete_close():
     """HTTP DELETE Not Allowed."""
     assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
     assert not http.has_delete_method('%s/delete_close' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_notfound_string_close():
     """Expected string not found?."""
     url = '%s/notfound' % (BASE_URL)
@@ -357,7 +359,6 @@ def test_notfound_string_close():
     assert not http.has_text(NONEXISTANT_SERVICE, expected)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_found_string_close():
     """Expected string not found?."""
     url = '%s/expected' % (BASE_URL)
@@ -366,7 +367,6 @@ def test_found_string_close():
     assert not http.has_not_text(NONEXISTANT_SERVICE, expected)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_userenum_post_close():
     """Enumeracion de usuarios posible?."""
     data = 'username=pepe&password=grillo'
@@ -379,7 +379,6 @@ def test_userenum_post_close():
         'username', data=data)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_userenum_post_json_close():
     """Enumeracion de usuarios posible?."""
     data = {'username': 'pepe',
@@ -389,7 +388,6 @@ def test_userenum_post_json_close():
         'username', json=data)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_userenum_get_close():
     """Enumeracion de usuarios posible?."""
     data = 'username=pepe&password=grillo'
@@ -398,7 +396,6 @@ def test_userenum_get_close():
         'username', params=data)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_bruteforce_close():
     """Bruteforce posible?."""
     data = 'username=pepe&password=grillo'
@@ -429,7 +426,6 @@ def test_bruteforce_close():
         data=data)
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_responsetime_close():
     """Tiempo de respuesta aceptable?."""
     assert not http.is_response_delayed(
@@ -438,7 +434,6 @@ def test_responsetime_close():
         '%s/responsetime/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_dirlisting_close():
     """Dirlisting habilitado?."""
     assert not http.has_dirlisting(
@@ -447,7 +442,6 @@ def test_dirlisting_close():
         '%s/dirlisting/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_http_response_close():
     """Respuesta 403 FORBIDDEN?."""
     assert not http.is_resource_accessible(
@@ -456,7 +450,6 @@ def test_http_response_close():
         '%s/response/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_is_header_x_asp_net_version_present_close():
     """Header X-AspNet-Version establecido?."""
     assert not http.is_header_x_asp_net_version_present(
@@ -465,14 +458,12 @@ def test_is_header_x_asp_net_version_present_close():
         '%s/x_aspnet_version/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_is_version_visible_close():
    """Server header contains version?."""
    assert not http.is_version_visible('%s/version/ok' % (BASE_URL))
    assert not http.is_version_visible('%s/version/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_is_header_x_xxs_protection_missing_close():
     """Header x-xss-protection establecido?."""
     assert not http.is_header_x_xxs_protection_missing(
@@ -481,7 +472,6 @@ def test_is_header_x_xxs_protection_missing_close():
         '%s/xxs_protection/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_is_header_perm_cross_dom_pol_missing_close():
     """Header cross-domain-policy establecido?."""
     assert not http.is_header_perm_cross_dom_pol_missing(
@@ -490,7 +480,6 @@ def test_is_header_perm_cross_dom_pol_missing_close():
         '%s/perm_cross_dom_pol/ok' % (NONEXISTANT_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_has_clear_viewstate_close():
     """ViewState cifrado?."""
     assert not http.has_clear_viewstate(
@@ -500,7 +489,6 @@ def test_has_clear_viewstate_close():
         '%s/http/viewstate/encrypted/not_found' % (MOCK_SERVICE))
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_is_date_unsyncd_close():
     """Hora desincronizada?."""
     assert not http.is_date_unsyncd(

@@ -30,6 +30,7 @@ def test_is_anonymous_enabled_close(get_mock_ip):
     assert not smb.is_anonymous_enabled(get_mock_ip+':446')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['smb_hard'], indirect=True)
 def test_has_dirlisting_close(get_mock_ip):
     """Conexion anonima habilitada?."""
     assert not smb.has_dirlisting(get_mock_ip, 'public',
@@ -42,6 +43,7 @@ def test_has_dirlisting_close(get_mock_ip):
                                   domain='WORKGROUP')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['smb_hard'], indirect=True)
 def test_is_signing_disabled_close(get_mock_ip):
     """SMB connection signed?."""
     assert not smb.is_signing_disabled(server=get_mock_ip,

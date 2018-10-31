@@ -33,29 +33,34 @@ def test_is_xfr_enabled_close(get_mock_ip):
     assert not dns.is_xfr_enabled(TEST_ZONE, '0.0.0.0')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_is_dynupdates_enabled_close(get_mock_ip):
     """Actualizacion de zonas habilitado en server?."""
     assert not dns.is_dynupdate_enabled(TEST_ZONE, get_mock_ip)
     assert not dns.is_dynupdate_enabled(TEST_ZONE, '200.200.200.200')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_has_cache_poison_close(get_mock_ip):
     """Server vulnerable a cache poison?."""
     assert not dns.has_cache_poison(TEST_ZONE, get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_has_cache_snooping_close(get_mock_ip):
     """Server vulnerable a cache snooping?."""
     assert not dns.has_cache_snooping(get_mock_ip)
     assert not dns.has_cache_snooping('200.200.200.200')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_has_recursion_close(get_mock_ip):
     """Server vulnerable a cache snooping?."""
     assert not dns.has_recursion(get_mock_ip)
     assert not dns.has_recursion('0.0.0.0')
 
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_can_amplify_close(get_mock_ip):
     """Server can perform DNS amplification attacks?."""
     assert not dns.can_amplify(get_mock_ip)
