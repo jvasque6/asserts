@@ -47,7 +47,6 @@ def get_bwapp_cookies(cont_ip):
 # Open tests
 #
 
-@pytest.mark.usefixtures('mock_http')
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_sqli_open(get_mock_ip):
     """App vulnerable a SQLi?."""

@@ -24,7 +24,6 @@ NONEXISTANT_SERVICE = 'http://nonexistant.fluidattacks.com'
 #
 
 
-@pytest.mark.usefixtures('mock_http')
 def test_has_access_open():
     """Resource is available?."""
     assert rest.has_access(BASE_URL + '/access/fail')
