@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-AWS cloud checks.
+AWS cloud checks (IAM).
 
 The checks are based on CIS AWS Foundations Benchmark.
 """
@@ -23,7 +23,7 @@ from fluidasserts.helper import aws_helper
 
 @level('high')
 @track
-def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
+def has_mfa_disabled(key_id: str, secret: str) -> bool:
     """
     Search users with password enabled and without MFA.
 
@@ -61,7 +61,7 @@ def iam_has_mfa_disabled(key_id: str, secret: str) -> bool:
 
 @level('medium')
 @track
-def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
+def have_old_creds_enabled(key_id: str, secret: str) -> bool:
     """
     Find password not used in the last 90 days.
 
@@ -102,7 +102,7 @@ def iam_have_old_creds_enabled(key_id: str, secret: str) -> bool:
 
 @level('medium')
 @track
-def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
+def have_old_access_keys(key_id: str, secret: str) -> bool:
     """
     Find access keys not rotated in the last 90 days.
 
@@ -146,7 +146,7 @@ def iam_have_old_access_keys(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
+def root_has_access_keys(key_id: str, secret: str) -> bool:
     """
     Check if root account has access keys.
 
@@ -179,7 +179,7 @@ def iam_root_has_access_keys(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_not_requires_uppercase(key_id: str, secret: str) -> bool:
+def not_requires_uppercase(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires uppercase letters.
 
@@ -213,7 +213,7 @@ def iam_not_requires_uppercase(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
+def not_requires_lowercase(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires lowercase letters.
 
@@ -247,7 +247,7 @@ def iam_not_requires_lowercase(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_not_requires_symbols(key_id: str, secret: str) -> bool:
+def not_requires_symbols(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires symbols.
 
@@ -280,7 +280,7 @@ def iam_not_requires_symbols(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
+def not_requires_numbers(key_id: str, secret: str) -> bool:
     """
     Check if password policy requires numbers.
 
@@ -313,7 +313,7 @@ def iam_not_requires_numbers(key_id: str, secret: str) -> bool:
 
 @level('high')
 @track
-def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
+def min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     """
     Check if password policy requires passwords greater than 14 chars.
 
@@ -348,7 +348,7 @@ def iam_min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
 
 @level('medium')
 @track
-def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
+def password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     """
     Check if password policy avoids reuse of the last 24 passwords.
 
@@ -388,8 +388,7 @@ def iam_password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
 
 @level('medium')
 @track
-def iam_password_expiration_unsafe(key_id: str, secret: str,
-                                   max_days=90) -> bool:
+def password_expiration_unsafe(key_id: str, secret: str, max_days=90) -> bool:
     """
     Check if password policy expires the passwords within 90 days or less.
 
@@ -429,7 +428,7 @@ def iam_password_expiration_unsafe(key_id: str, secret: str,
 
 @level('high')
 @track
-def iam_root_without_mfa(key_id: str, secret: str) -> bool:
+def root_without_mfa(key_id: str, secret: str) -> bool:
     """
     Check if root account does not have MFA.
 
@@ -462,7 +461,7 @@ def iam_root_without_mfa(key_id: str, secret: str) -> bool:
 
 @level('low')
 @track
-def iam_policies_attached_to_users(key_id: str, secret: str) -> bool:
+def policies_attached_to_users(key_id: str, secret: str) -> bool:
     """
     Check if there are policies attached to users.
 
