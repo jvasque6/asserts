@@ -3,12 +3,10 @@
 """Modulo para pruebas de captcha."""
 
 # standard imports
-from multiprocessing import Process
-import time
+# None
 
 # 3rd party imports
-from test.mock import httpserver
-import pytest
+# None
 
 # local imports
 from fluidasserts.format import captcha

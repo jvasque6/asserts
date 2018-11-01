@@ -6,7 +6,7 @@
 # None
 
 # 3rd party imports
-import pytest
+# None
 
 # local imports
 from fluidasserts.proto import rest

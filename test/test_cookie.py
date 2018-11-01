@@ -10,7 +10,7 @@ HTTP se encuentra adecuadamente implementado.
 from __future__ import print_function
 
 # 3rd party imports
-import pytest
+# None
 
 # local imports
 from fluidasserts.format import cookie
