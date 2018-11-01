@@ -4,6 +4,7 @@
 
 # standard imports
 from __future__ import print_function
+from multiprocessing import Process
 import os
 import time
 
@@ -13,7 +14,7 @@ import pytest
 import wait
 
 # local imports
-# none
+from test.mock import httpserver
 
 # Constants
 NETWORK_NAME = 'bridge'
@@ -23,6 +24,18 @@ def get_ip(con):
     """Get mock IP."""
     return con.attrs['NetworkSettings']['Networks']\
         ['bridge']['IPAddress']
+
+
+@pytest.fixture(scope='session', autouse=True)
+def mock_http(request):
+    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
+    # Inicia el servidor HTTP en background
+    prcs = Process(target=httpserver.start, name='MockHTTPServer')
+    prcs.daemon = True
+    prcs.start()
+
+    # Espera que inicie servidor antes de recibir conexiones
+    time.sleep(1)
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -87,13 +100,6 @@ def run_mocks(request):
         ip = get_ip(client.containers.get(mock.replace(':', '_')))
         for value in port_mapping.values():
             wait.tcp.open(value, ip, timeout=30)
-
-    yield ip
-    for mock in mocks:
-        mock_name = mock.replace(':', '_')
-        cont = client.containers.get(mock_name)
-        if cont.status == 'running':
-            cont.kill()
 
 
 @pytest.fixture(scope='function')
