@@ -8,11 +8,8 @@ HTTP se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-from multiprocessing import Process
-import time
 
 # 3rd party imports
-from test.mock import httpserver
 import pytest
 
 # local imports
@@ -24,24 +21,6 @@ from fluidasserts.helper import http_helper
 #
 MOCK_SERVICE = 'http://localhost:5000'
 NON_EXISTANT = 'https://nonexistant.fluidattacks.com'
-
-
-@pytest.fixture(scope='module')
-def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
-    prcs = Process(target=httpserver.start, name='MockHTTPServer')
-    prcs.daemon = True
-    prcs.start()
-
-    # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.5)
-
-    def teardown():
-        """Detiene servidor HTTP al finalizar las pruebas."""
-        prcs.terminate()
-
-    request.addfinalizer(teardown)
 
 
 @pytest.mark.usefixtures('mock_http')

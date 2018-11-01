@@ -1105,7 +1105,7 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
 
 # pylint: disable=too-many-locals
 # pylint: disable=keyword-arg-before-vararg
-@level('medium')
+@level('medium')  # noqa
 @track
 def has_user_enumeration(url: str, user_field: str,
                          user_list: Optional[List] = None,
@@ -1152,12 +1152,22 @@ def has_user_enumeration(url: str, user_field: str,
     # Evaluate the response with non-existant users
     fake_datasets = _create_dataset(user_field, fake_users, query_string)
 
-    fake_res = _request_dataset(url, fake_datasets, *args, **kwargs)
-
+    try:
+        fake_res = _request_dataset(url, fake_datasets, *args, **kwargs)
+    except http_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
     true_datasets = _create_dataset(user_field, user_list, query_string)
 
-    user_res = _request_dataset(url, true_datasets, *args, **kwargs)
-
+    try:
+        user_res = _request_dataset(url, true_datasets, *args, **kwargs)
+    except http_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
     num_comp = len(fake_res) * len(user_res)
 
     merged = [(x, y) for x in fake_res for y in user_res]

@@ -8,11 +8,9 @@ HTTP se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-from multiprocessing import Process
-import time
 
 # 3rd party imports
-from test.mock import httpserver
+
 import pytest
 
 # local imports
@@ -27,28 +25,6 @@ from fluidasserts.proto import http
 MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/http/headers'
 BWAPP_PORT = 80
-
-#
-# Fixtures
-#
-
-
-@pytest.fixture(scope='module')
-def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
-    prcs = Process(target=httpserver.start, name='MockHTTPServer')
-    prcs.daemon = True
-    prcs.start()
-
-    # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.5)
-
-    def teardown():
-        """Detiene servidor HTTP al finalizar las pruebas."""
-        prcs.terminate()
-
-    request.addfinalizer(teardown)
 
 
 def get_bwapp_cookies(cont_ip):

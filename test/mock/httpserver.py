@@ -556,4 +556,7 @@ def rest_insecure_accept_ok():
 
 def start():
     """Inicia el servidor de pruebas."""
-    APP.run()
+    try:
+        APP.run()
+    except OSError:
+        pass

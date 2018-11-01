@@ -3,11 +3,9 @@
 """Test methods of fluidasserts.code.docker."""
 
 # standard imports
-from multiprocessing import Process
-import time
+# None
 
 # 3rd party imports
-from test.mock import httpserver
 import pytest
 
 # local imports
@@ -20,24 +18,6 @@ MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/rest'
 BWAPP_PORT = 80
 NONEXISTANT_SERVICE = 'http://nonexistant.fluidattacks.com'
-
-
-@pytest.fixture(scope='module')
-def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
-    prcs = Process(target=httpserver.start, name='MockHTTPServer')
-    prcs.daemon = True
-    prcs.start()
-
-    # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.5)
-
-    def teardown():
-        """Detiene servidor HTTP al finalizar las pruebas."""
-        prcs.terminate()
-
-    request.addfinalizer(teardown)
 
 #
 # Open tests

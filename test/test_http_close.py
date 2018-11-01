@@ -8,11 +8,8 @@ HTTP se encuentra adecuadamente implementado.
 
 # standard imports
 from __future__ import print_function
-from multiprocessing import Process
-import time
 
 # 3rd party imports
-from test.mock import httpserver
 import pytest
 
 # local imports
@@ -28,28 +25,6 @@ MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/http/headers'
 BWAPP_PORT = 80
 NONEXISTANT_SERVICE = 'http://nonexistant.fluidattacks.com'
-
-#
-# Fixtures
-#
-
-
-@pytest.fixture(scope='module')
-def mock_http(request):
-    """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
-    prcs = Process(target=httpserver.start, name='MockHTTPServer')
-    prcs.daemon = True
-    prcs.start()
-
-    # Espera que inicie servidor antes de recibir conexiones
-    time.sleep(0.5)
-
-    def teardown():
-        """Detiene servidor HTTP al finalizar las pruebas."""
-        prcs.terminate()
-
-    request.addfinalizer(teardown)
 
 
 def get_bwapp_cookies(cont_ip):
@@ -373,10 +348,6 @@ def test_userenum_post_close():
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (MOCK_SERVICE),
         'username', data=data)
-    data = 'notfound=pepe&password=grillo'
-    assert not http.has_user_enumeration(
-        '%s/userenum_post/ok' % (MOCK_SERVICE),
-        'username', data=data)
 
 
 def test_userenum_post_json_close():
@@ -394,6 +365,9 @@ def test_userenum_get_close():
     assert not http.has_user_enumeration(
         '%s/userenum_get/ok' % (MOCK_SERVICE),
         'username', params=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_get/ok' % (NONEXISTANT_SERVICE),
+        'username', params=data)
 
 
 def test_bruteforce_close():
@@ -407,15 +381,6 @@ def test_bruteforce_close():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
-    assert not http.can_brute_force(
-        '%s/bruteforce/ok' % (MOCK_SERVICE),
-        'admin',
-        'username',
-        'password',
-        user_list=['root', 'admin'],
-        pass_list=['pass', 'password'],
-        data=data,
-        params='')
     assert not http.can_brute_force(
         '%s/bruteforce/ok' % (NONEXISTANT_SERVICE),
         'admin',
@@ -484,10 +449,10 @@ def test_has_clear_viewstate_close():
     """ViewState cifrado?."""
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/ok' % (MOCK_SERVICE))
-
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/not_found' % (MOCK_SERVICE))
-
+    assert not http.has_clear_viewstate(
+        '%s/http/viewstate/encrypted/not_found' % (NONEXISTANT_SERVICE))
 
 def test_is_date_unsyncd_close():
     """Hora desincronizada?."""
