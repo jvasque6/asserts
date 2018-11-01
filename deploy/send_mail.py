@@ -7,7 +7,7 @@ from glob import glob
 from git import Repo
 import mandrill
 
-API_KEY = '***REMOVED***'
+API_KEY = os.environ['MANDRILL_APIKEY']
 
 
 def _get_changelog():
