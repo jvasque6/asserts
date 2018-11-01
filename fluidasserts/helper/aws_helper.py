@@ -42,7 +42,8 @@ def get_aws_client(service: str, key_id: str, secret: str) -> object:
     :param secret: AWS Key Secret
     """
     return boto3.client(service, aws_access_key_id=key_id,
-                        aws_secret_access_key=secret)
+                        aws_secret_access_key=secret,
+                        region_name='us-east-1')
 
 
 def get_credentials_report(key_id: str, secret: str) -> dict:
@@ -137,6 +138,25 @@ def list_attached_user_policies(key_id: str, secret: str, user: str) -> dict:
                                 secret=secret)
         response = client.list_attached_user_policies(UserName=user)
         return response['AttachedPolicies']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
+def list_trails(key_id: str, secret: str) -> dict:
+    """
+    List CLOUDTRAIL trails.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('cloudtrail',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.describe_trails()
+        return response['trailList']
     except botocore.vendored.requests.exceptions.ConnectionError:
         raise ConnError
     except botocore.exceptions.ClientError:
