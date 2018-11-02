@@ -22,22 +22,7 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
-
-  self:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
-    depends_on:
-      - deps
-    network_mode: bridge
-    tty: true
-    command: scons self
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
-    environment:
-      - PYPI_USER=$PYPI_USER
-      - PYPI_PASS=$PYPI_PASS
-      - DOCKER_USER=$DOCKER_USER
-      - DOCKER_PASS=$DOCKER_PASS
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   lint:
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -54,6 +39,7 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   overcommit:
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -71,6 +57,7 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   dist:
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -87,6 +74,7 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   test:
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -103,6 +91,7 @@ services:
       - PYPI_PASS=$PYPI_PASS
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   deploy:
     image: registry.gitlab.com/fluidsignal/asserts:builder
@@ -121,3 +110,4 @@ services:
       - DOCKER_USER=$DOCKER_USER
       - DOCKER_PASS=$DOCKER_PASS
       - MANDRILL_APIKEY=$MANDRILL_APIKEY
+      - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME

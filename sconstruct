@@ -15,8 +15,9 @@ env['ENV']['HOME'] = os.environ['HOME']
 try:
     env['ENV']['DOCKER_USER'] = os.environ['DOCKER_USER']
     env['ENV']['DOCKER_PASS'] = os.environ['DOCKER_PASS']
+    env['ENV']['CI_COMMIT_REF_NAME'] = os.environ['CI_COMMIT_REF_NAME']
 except:
-    print('DOCKER_USER and DOCKER_PASS envs variable must be set')
+    print('DOCKER_USER, DOCKER_PASS and CI_COMMIT_REF_NAME envs variable must be set')
     sys.exit(1)
 
 # Variables que se propagan del entorno exterior en caso de existir

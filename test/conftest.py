@@ -7,6 +7,7 @@ from __future__ import print_function
 from multiprocessing import Process
 import os
 import time
+import sys
 
 # 3rd party imports
 import docker
@@ -18,6 +19,17 @@ from test.mock import httpserver
 
 # Constants
 NETWORK_NAME = 'bridge'
+
+
+def get_mock_name(mock):
+    """Get mock IP."""
+    try:
+        mock_name = '{}_{}'.format(mock.replace(':', '_'),
+                                   os.environ['CI_COMMIT_REF_NAME'])
+    except KeyError:
+        print('CI_COMMIT_REF_NAME not in environ')
+        sys.exit(-1)
+    return mock_name
 
 
 def get_ip(con):
@@ -71,9 +83,9 @@ def run_mocks(request):
                 username=os.environ['DOCKER_USER'],
                 password=os.environ['DOCKER_PASS'])
 
-    for mock, _ in mocks.items():
+    for mock in mocks:
         try:
-            mock_name = mock.replace(':', '_')
+            mock_name = get_mock_name(mock)
             cont = client.containers.get(mock_name)
             cont.remove(force=True)
         except (docker.errors.NotFound, docker.errors.APIError):
@@ -88,7 +100,7 @@ def run_mocks(request):
         else:
             mock_dir = 'test/provision/' + mock
 
-        mock_name = mock.replace(':', '_')
+        mock_name = get_mock_name(mock)
 
         try:
             client.images.build(path=mock_dir, tag=image)
@@ -97,7 +109,7 @@ def run_mocks(request):
             pass
 
     for mock, port_mapping in mocks.items():
-        ip = get_ip(client.containers.get(mock.replace(':', '_')))
+        ip = get_ip(client.containers.get(get_mock_name(mock)))
         for value in port_mapping.values():
             wait.tcp.open(value, ip, timeout=30)
 
@@ -107,7 +119,7 @@ def get_mock_ip(request):
     """Run mock with given parameters."""
     mock = request.param
     client = docker.from_env()
-    con = client.containers.get(mock)
+    con = client.containers.get(get_mock_name(mock))
     if con.status != 'running':
         con.start()
     yield get_ip(con)
