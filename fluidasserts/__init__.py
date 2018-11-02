@@ -6,15 +6,17 @@
 from __future__ import absolute_import
 
 import datetime
+import importlib
 import inspect
 import os
 import sys
 from collections import OrderedDict
 
 # 3rd party imports
+import docstring_parser
+from pkg_resources import get_distribution, DistributionNotFound
 import oyaml as yaml
 
-from pkg_resources import get_distribution, DistributionNotFound
 
 # local imports
 # none
@@ -41,12 +43,21 @@ def check_cli():
         print(cli_warn)
 
 
+def get_module_description(package, module):
+    """Return the module description based on the docstring."""
+    package = importlib.import_module(package)
+    mod = getattr(package, module)
+    docstring = docstring_parser.parse(mod.__doc__)
+    desc = '\n'.join(filter(None, (docstring.short_description,
+                                   docstring.long_description)))
+    return desc
+
+
 def get_caller_module(depth=3):
     """Get caller module."""
     frm = inspect.stack()[depth]
     mod = inspect.getmodule(frm[0])
-    caller = mod.__name__
-    return caller
+    return mod.__name__
 
 
 def get_caller_function():
@@ -77,6 +88,8 @@ class Message():
         self.caller_module = get_caller_module()
         self.caller_function = get_caller_function()
         self.check = '{}.{}'.format(self.caller_module, self.caller_function)
+        self.module_description = get_module_description(self.caller_module,
+                                                         self.caller_function)
 
     def __build_message(self):
         """Build message dict."""
@@ -90,6 +103,7 @@ class Message():
                                          key=operator.itemgetter(0)))
 
         data = [('check', self.check),
+                ('description', self.module_description),
                 ('status', self.status),
                 ('message', self.message),
                 ('details', details),

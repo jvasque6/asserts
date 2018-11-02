@@ -96,6 +96,7 @@ setup(
         'boto3==1.9.31',             # fluidasserts.cloud.aws
         'python-dateutil==2.7.3',    # fluidasserts.cloud.aws
         'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
+        'docstring-parser==0.1',     # fluidasserts
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points=
