@@ -22,8 +22,7 @@ from fluidasserts.helper import http_helper
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track
-from fluidasserts.utils.decorators import level
+from fluidasserts.utils.decorators import track, level
 
 # pylint: disable=too-many-lines
 
@@ -449,7 +448,7 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
 def has_multiple_text(url: str, regex_list: List[str],
                       *args, **kwargs) -> bool:
     r"""
-    Check if one of a list of bad texts is present.
+    Check if one of a list of bad texts is present in URL response.
 
     :param url: URL to test.
     :param regex_list: List of regexes to search.
@@ -463,7 +462,7 @@ def has_multiple_text(url: str, regex_list: List[str],
 @track
 def has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     r"""
-    Check if a bad text is present.
+    Check if a bad text is present in URL response.
 
     :param url: URL to test.
     :param expected_text: Text to search. Can be regex.
@@ -477,7 +476,7 @@ def has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
 @track
 def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     r"""
-    Check if a required text is not present.
+    Check if a required text is not present in URL response.
 
     :param url: URL to test.
     :param expected_text: Text to search. Can be regex.
@@ -525,7 +524,7 @@ def is_header_x_asp_net_version_present(url: str, *args, **kwargs) -> bool:
 def is_header_access_control_allow_origin_missing(url: str,
                                                   *args, **kwargs) -> bool:
     r"""
-    Check if access-control-allow-origin header is missing.
+    Check if Access-Control-Allow-Origin HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -539,7 +538,7 @@ def is_header_access_control_allow_origin_missing(url: str,
 @track
 def is_header_cache_control_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if cache-control header is missing.
+    Check if Cache-Control HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -553,7 +552,7 @@ def is_header_cache_control_missing(url: str, *args, **kwargs) -> bool:
 def is_header_content_security_policy_missing(url: str,
                                               *args, **kwargs) -> bool:
     r"""
-    Check if content-security-policy header is missing.
+    Check if Content-Security-Policy HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -567,7 +566,7 @@ def is_header_content_security_policy_missing(url: str,
 @track
 def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if content-type header is missing.
+    Check if Content-Type HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -580,7 +579,7 @@ def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_expires_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if expires header is missing.
+    Check if Expires HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -593,7 +592,7 @@ def is_header_expires_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_pragma_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if pragma header is missing.
+    Check if Pragma HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -606,7 +605,7 @@ def is_header_pragma_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_server_present(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if server header is insecure.
+    Check if Server HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -620,7 +619,7 @@ def is_header_server_present(url: str, *args, **kwargs) -> bool:
 def is_header_x_content_type_options_missing(url: str, *args,
                                              **kwargs) -> bool:
     r"""
-    Check if x-content-type-options header is missing.
+    Check if X-Content-Type-Options HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -634,7 +633,7 @@ def is_header_x_content_type_options_missing(url: str, *args,
 @track
 def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if x-frame-options header is missing.
+    Check if X-Frame-Options HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -647,7 +646,7 @@ def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_perm_cross_dom_pol_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if permitted-cross-domain-policies header is missing.
+    Check if Permitted-Cross-Domain-Policies HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -661,7 +660,7 @@ def is_header_perm_cross_dom_pol_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_x_xxs_protection_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if x-xss-protection header is missing.
+    Check if X-XSS-Protection HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -674,7 +673,7 @@ def is_header_x_xxs_protection_missing(url: str, *args, **kwargs) -> bool:
 @track
 def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if strict-transport-security header is missing.
+    Check if Strict-Transport-Security HTTP header is properly set.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -701,7 +700,7 @@ def is_basic_auth_enabled(url: str, *args, **kwargs) -> bool:
 @track
 def has_trace_method(url: str, *args, **kwargs) -> bool:
     r"""
-    Check HTTP TRACE.
+    Check if HTTP TRACE method is enabled.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -714,7 +713,7 @@ def has_trace_method(url: str, *args, **kwargs) -> bool:
 @track
 def has_delete_method(url: str, *args, **kwargs) -> bool:
     r"""
-    Check HTTP DELETE.
+    Check if HTTP DELETE method is enabled.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -727,7 +726,7 @@ def has_delete_method(url: str, *args, **kwargs) -> bool:
 @track
 def has_put_method(url: str, *args, **kwargs) -> bool:
     r"""
-    Check HTTP PUT.
+    Check is HTTP PUT method is enabled.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -740,7 +739,7 @@ def has_put_method(url: str, *args, **kwargs) -> bool:
 @track
 def has_sqli(url: str, *args, **kwargs) -> bool:
     r"""
-    Check SQLi vuln by checking expected string.
+    Check SQLi vulnerability by checking common SQL strings.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -755,7 +754,7 @@ def has_sqli(url: str, *args, **kwargs) -> bool:
 @track
 def has_xss(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check XSS vuln by checking expected string.
+    Check XSS vulnerability by checking injected string.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -769,7 +768,7 @@ def has_xss(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check command injection vuln by checking expected string.
+    Check command injection vulnerability by checking a expected string.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -783,7 +782,7 @@ def has_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_php_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check PHP command injection vuln by checking expected string.
+    Check PHP command injection vulnerability by checking a expected string.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -797,7 +796,7 @@ def has_php_command_injection(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_session_fixation(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check session fixation by no passing cookies and authenticating.
+    Check session fixation by not passing cookies and having authenticated.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -811,7 +810,7 @@ def has_session_fixation(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_insecure_dor(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check insecure direct object reference vuln.
+    Check insecure direct object reference vulnerability.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -825,7 +824,7 @@ def has_insecure_dor(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_dirtraversal(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check directory traversal vuln by checking expected string.
+    Check directory traversal vulnerability by checking a expected string.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -839,7 +838,7 @@ def has_dirtraversal(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_csrf(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check CSRF vuln by checking expected string.
+    Check Cross-Site Request Forgery vulnerability.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -853,7 +852,7 @@ def has_csrf(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_lfi(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check local file inclusion vuln by checking expected string.
+    Check local file inclusion vulnerability by checking a expected string.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -867,7 +866,7 @@ def has_lfi(url: str, expect: str, *args, **kwargs) -> bool:
 @track
 def has_hpp(url: str, expect: str, *args, **kwargs) -> bool:
     r"""
-    Check HTTP Parameter Pollution vuln.
+    Check HTTP Parameter Pollution vulnerability.
 
     :param url: URL to test.
     :param expect: Text to search in potential vulnerabilty .
@@ -882,7 +881,7 @@ def has_hpp(url: str, expect: str, *args, **kwargs) -> bool:
 def has_insecure_upload(url: str, expect: str, file_param: str,
                         file_path: str, *args, **kwargs) -> bool:
     r"""
-    Check insecure upload vuln.
+    Check insecure upload vulnerability.
 
     :param url: URL to test.
     :param file_param: Name of a file to try to upload.
@@ -938,7 +937,7 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
 @track
 def is_version_visible(url) -> bool:
     """
-    Check if banner is visible.
+    Check if product version is visible on HTTP response headers.
 
     :param ip_address: IP address to test.
     :param ssl: Whether to use HTTP or HTTPS.
@@ -973,7 +972,7 @@ def is_version_visible(url) -> bool:
 @track
 def is_not_https_required(url: str) -> bool:
     r"""
-    Check if HTTPS is always forced on a given url.
+    Check if HTTPS is always forced on a given URL.
 
     :param url: URL to test.
     """
@@ -1037,7 +1036,7 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
 @track
 def is_resource_accessible(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if url is available by checking response code.
+    Check if URL is available by checking response code.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.
@@ -1257,7 +1256,7 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
 @track
 def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
     r"""
-    Check if url has encrypted ViewState by checking response.
+    Check if URL has encrypted ViewState by checking response.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.

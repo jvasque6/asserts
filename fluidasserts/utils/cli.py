@@ -275,7 +275,7 @@ def print_message(message, args):
     """Print message according to args."""
     if args.no_color:
         print(yaml.dump(message, default_flow_style=False,
-                        explicit_start=True))
+                        explicit_start=True), flush=True)
     else:
         colorize(message)
 

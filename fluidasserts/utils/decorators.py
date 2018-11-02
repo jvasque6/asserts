@@ -4,6 +4,7 @@
 
 import functools
 from typing import Callable, Any
+import yaml
 
 from .tracking import mp_track
 
@@ -42,7 +43,10 @@ def level(risk_level: str) -> Callable:
             Gives a risk level to each check.
             """
             ret_val = func(*args, **kwargs)
-            print('risk-level: {}'.format(risk_level), flush=True)
+            risk = {'risk-level': risk_level}
+            message = yaml.dump(risk, default_flow_style=False,
+                                explicit_start=False)
+            print(message, flush=True)
             return ret_val
         return decorated
     return wrapper
