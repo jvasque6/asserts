@@ -2,16 +2,14 @@ FROM alpine:3.8
 
 RUN apk update \
     && apk upgrade \
-    && apk add python \
-    py3-pip \
+    && apk add py3-pip \
     python3-dev \
+    libffi-dev \
     gcc \
     libc-dev \
-    libffi-dev \
     openssl-dev \
     make \
     jpeg-dev \
-    curl \
     && rm -rf /var/cache/apk/*
 
 COPY dist/*.zip /
