@@ -10,6 +10,7 @@ RUN apk update \
     openssl-dev \
     make \
     jpeg-dev \
+    curl \
     && rm -rf /var/cache/apk/*
 
 COPY dist/*.zip /
