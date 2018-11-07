@@ -108,3 +108,48 @@ from anyone to port 3389',
 from anyone to port 3389',
                        details=dict(group=group['Description']))
     return result
+
+
+@level('medium')
+@track
+def default_seggroup_allows_all_traffic(key_id: str, secret: str) -> bool:
+    """
+    Check if default security groups allows connection to or from anyone.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        sec_groups = aws_helper.list_security_groups(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    if not sec_groups:
+        show_close('Not security groups were found')
+        return False
+
+    result = False
+
+    def_groups = filter(lambda x: x['GroupName'] == 'default', sec_groups)
+
+    for group in def_groups:
+        for ip_perm in group['IpPermissions'] + group['IpPermissionsEgress']:
+            vuln = [ip_perm for x in ip_perm['IpRanges']
+                    if x['CidrIp'] == '0.0.0.0/0']
+        if vuln:
+            show_open('Default security group allows connection \
+to or from anyone',
+                      details=dict(group=group['Description'],
+                                   ip_ranges=vuln))
+            result = True
+        else:
+            show_close('Default security group allows connection \
+to or from anyone',
+                       details=dict(group=group['Description']))
+
+    return result
