@@ -55,9 +55,9 @@ def _check_password_strength(password: str, length: int) -> bool:
                                numbers=str(nums), special=str(special)))
         result = True
     else:
-        show_open('{} password is secure'.format(password),
-                  details=dict(caps=str(caps), lower=str(lower),
-                               numbers=str(nums), special=str(special)))
+        show_close('{} password is secure'.format(password),
+                   details=dict(caps=str(caps), lower=str(lower),
+                                numbers=str(nums), special=str(special)))
         result = False
 
     return result
