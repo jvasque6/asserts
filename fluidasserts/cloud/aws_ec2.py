@@ -142,13 +142,13 @@ def default_seggroup_allows_all_traffic(key_id: str, secret: str) -> bool:
             vuln = [ip_perm for x in ip_perm['IpRanges']
                     if x['CidrIp'] == '0.0.0.0/0']
         if vuln:
-            show_open('Default security group allows connection \
+            show_open('Default security groups allows connection \
 to or from anyone',
                       details=dict(group=group['Description'],
                                    ip_ranges=vuln))
             result = True
         else:
-            show_close('Default security group allows connection \
+            show_close('Default security groups not allows connection \
 to or from anyone',
                        details=dict(group=group['Description']))
 
