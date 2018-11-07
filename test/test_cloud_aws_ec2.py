@@ -29,6 +29,14 @@ def test_defgroup_anyone_open():
                                                     AWS_SECRET_ACCESS_KEY)
 
 
+def test_unencrypted_volumes_open():
+    """Are there unencrypted volumes?."""
+    assert \
+        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+
+
+
 #
 # Closing tests
 #
@@ -77,5 +85,21 @@ def test_defgroup_anyone_close():
     assert not \
         aws_ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
                                                     AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
+
+
+def test_unencrypted_volumes_close():
+    """Are there unencrypted volumes?."""
+    assert not \
+        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not \
+        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)

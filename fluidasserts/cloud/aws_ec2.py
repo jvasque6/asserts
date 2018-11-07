@@ -153,3 +153,37 @@ to or from anyone',
                        details=dict(group=group['Description']))
 
     return result
+
+
+@level('medium')
+@track
+def has_unencrypted_volumes(key_id: str, secret: str) -> bool:
+    """
+    Check if there are unencrypted volumes.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        volumes = aws_helper.list_volumes(key_id, secret)
+    except aws_helper.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws_helper.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    if not volumes:
+        show_close('Not volumes found')
+        return False
+
+    result = False
+
+    for volume in volumes:
+        if not volume['Encrypted']:
+            show_open('Volume is not encrypted', details=dict(volume=volume))
+            result = True
+        else:
+            show_close('Volume is encrypted', details=dict(volume=volume))
+    return result

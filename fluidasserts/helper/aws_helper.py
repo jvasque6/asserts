@@ -180,3 +180,22 @@ def list_security_groups(key_id: str, secret: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def list_volumes(key_id: str, secret: str) -> dict:
+    """
+    List EC2 EBS volumes.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('ec2',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.describe_volumes()
+        return response['Volumes']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
