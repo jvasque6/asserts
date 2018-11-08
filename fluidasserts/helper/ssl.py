@@ -53,7 +53,7 @@ def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
         sock.settimeout(5)
         wrapped_socket = ssl.SSLSocket(sock=sock,
                                        ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_REQUIRED,
+                                       cert_reqs=ssl.CERT_NONE,
                                        server_hostname=hostname,
                                        ciphers=ciphers)
         wrapped_socket.connect((hostname, port))

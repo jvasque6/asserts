@@ -3,8 +3,9 @@
 """This module allows to check TCP-specific vulnerabilities."""
 
 # standard imports
-import socket
 import ssl
+import socket
+
 
 # third party imports
 # None
@@ -13,6 +14,7 @@ import ssl
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.helper import ssl as ssl_helper
 from fluidasserts.utils.decorators import track, level
 
 
@@ -48,12 +50,9 @@ def is_port_insecure(ipaddress: str, port: int) -> bool:
     """
     assert 1 <= port <= 65535
     try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(3)
-        ssl_sock = ssl.wrap_socket(sock)
-        ssl_sock.connect((ipaddress, port))
-        show_close('Port is secure', details=dict(ip=ipaddress, port=port))
-        return False
+        with ssl_helper.connect_legacy(ipaddress, port):
+            show_close('Port is secure', details=dict(ip=ipaddress, port=port))
+            return False
     except (ConnectionRefusedError, socket.timeout):
         show_unknown('Could not connect',
                      details=dict(ip=ipaddress, port=port))
