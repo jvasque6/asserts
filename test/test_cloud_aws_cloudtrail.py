@@ -9,7 +9,7 @@ import os
 # None
 
 # local imports
-from fluidasserts.cloud import aws_cloudtrail
+from fluidasserts.cloud.aws import cloudtrail
 
 
 # Constants
@@ -27,15 +27,15 @@ AWS_SECRET_ACCESS_KEY_BAD="bad"
 
 def test_trails_not_multiregion_close():
     """Search if trails are multiregion."""
-    assert not aws_cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
-    assert not aws_cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY_BAD)
+    assert not cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
+    assert not cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
+    assert not cloudtrail.trails_not_multiregion(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)

@@ -9,7 +9,7 @@ import os
 # None
 
 # local imports
-from fluidasserts.cloud import aws_ec2
+from fluidasserts.cloud.aws import ec2
 
 
 # Constants
@@ -25,15 +25,15 @@ AWS_SECRET_ACCESS_KEY_BAD="bad"
 def test_defgroup_anyone_open():
     """Security groups allows connection to or from anyone?."""
     assert \
-        aws_ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
-                                                    AWS_SECRET_ACCESS_KEY)
+        ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
+                                                AWS_SECRET_ACCESS_KEY)
 
 
 def test_unencrypted_volumes_open():
     """Are there unencrypted volumes?."""
     assert \
-        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY)
+        ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY)
 
 
 
@@ -43,32 +43,32 @@ def test_unencrypted_volumes_open():
 
 def test_anyone_to_ssh_close():
     """Seg group allows anyone to connect to SSH?."""
-    assert not aws_ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
-    assert not aws_ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY_BAD)
+    assert not ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
+    assert not ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
+    assert not ec2.seggroup_allows_anyone_to_ssh(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_anyone_to_rdp_close():
     """Seg group allows anyone to connect to RDP?."""
-    assert not aws_ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
-    assert not aws_ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY_BAD)
+    assert not ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
+    assert not ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY)
+    assert not ec2.seggroup_allows_anyone_to_rdp(AWS_ACCESS_KEY_ID,
+                                                 AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
@@ -76,15 +76,15 @@ def test_anyone_to_rdp_close():
 def test_defgroup_anyone_close():
     """Security groups allows connection to or from anyone?."""
     assert not \
-        aws_ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
-                                                     AWS_SECRET_ACCESS_KEY_BAD)
+        ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
+                                                AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
     assert not \
-        aws_ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
-                                                    AWS_SECRET_ACCESS_KEY)
+        ec2.default_seggroup_allows_all_traffic(AWS_ACCESS_KEY_ID,
+                                                AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
@@ -92,14 +92,14 @@ def test_defgroup_anyone_close():
 def test_unencrypted_volumes_close():
     """Are there unencrypted volumes?."""
     assert not \
-        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY_BAD)
+        ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
     assert not \
-        aws_ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY)
+        ec2.has_unencrypted_volumes(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)

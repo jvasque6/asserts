@@ -45,6 +45,7 @@ setup(
         'fluidasserts.utils',
         'fluidasserts.sca',
         'fluidasserts.cloud',
+        'fluidasserts.cloud.aws',
         'fluidasserts.db',
     ],
     data_files=[

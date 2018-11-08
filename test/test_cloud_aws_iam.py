@@ -9,7 +9,7 @@ import os
 # None
 
 # local imports
-from fluidasserts.cloud import aws_iam
+from fluidasserts.cloud.aws import iam
 
 
 # Constants
@@ -24,26 +24,25 @@ AWS_SECRET_ACCESS_KEY_BAD="bad"
 
 def test_pass_len_unsafe_open():
     """Search IAM policy: Password length requirement."""
-    assert aws_iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
-                                           AWS_SECRET_ACCESS_KEY)
+    assert iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                       AWS_SECRET_ACCESS_KEY)
 
 
 def test_pass_reuse_unsafe_open():
     """Search IAM policy: Password reuse requirement."""
-    assert aws_iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
-                                         AWS_SECRET_ACCESS_KEY)
+    assert iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
+                                     AWS_SECRET_ACCESS_KEY)
 
 
 def test_pass_expiration_unsafe_open():
     """Search IAM policy: Password expiration requirement."""
-    assert aws_iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
+    assert iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
 
 
 def test_root_mfa_open():
     """Search IAM summary: MFA for root."""
-    assert aws_iam.root_without_mfa(AWS_ACCESS_KEY_ID,
-                                    AWS_SECRET_ACCESS_KEY)
+    assert iam.root_without_mfa(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
 #
 # Closing tests
@@ -51,199 +50,199 @@ def test_root_mfa_open():
 
 def test_has_mfa_disabled_close():
     """Search MFA on IAM users."""
-    assert not aws_iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY)
+    assert not iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.has_mfa_disabled(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_have_old_creds_enabled_close():
     """Search old unused passwords."""
-    assert not aws_iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
+    assert not iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
+    assert not iam.have_old_creds_enabled(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_have_old_access_keys_close():
     """Search old access keys."""
-    assert not aws_iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
+    assert not iam.have_old_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_root_has_access_keys_close():
     """Search root access keys."""
-    assert not aws_iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
+    assert not iam.root_has_access_keys(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_not_requires_uppercase_close():
     """Search IAM policy: Uppercase letter requirement."""
-    assert not aws_iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_uppercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_not_requires_lowercase_close():
     """Search IAM policy: Lowercase letter requirement."""
-    assert not aws_iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_lowercase(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_not_requires_symbols_close():
     """Search IAM policy: Symbols requirement."""
-    assert not aws_iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_symbols(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_not_requires_numbers_close():
     """Search IAM policy: Numbers requirement."""
-    assert not aws_iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
-                                            AWS_SECRET_ACCESS_KEY)
+    assert not iam.not_requires_numbers(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_pass_len_unsafe_close():
     """Search IAM policy: Password length requirement."""
-    assert not aws_iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
-                                               AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                           AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
-                                               AWS_SECRET_ACCESS_KEY)
+    assert not iam.min_password_len_unsafe(AWS_ACCESS_KEY_ID,
+                                           AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_pass_reuse_unsafe_close():
     """Search IAM policy: Password reuse requirement."""
-    assert not aws_iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
-                                             AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
+                                         AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
-                                             AWS_SECRET_ACCESS_KEY)
+    assert not iam.password_reuse_unsafe(AWS_ACCESS_KEY_ID,
+                                         AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_pass_expiration_unsafe_close():
     """Search IAM policy: Password expiration requirement."""
-    assert not aws_iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
-                                                  AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
-                                                  AWS_SECRET_ACCESS_KEY)
+    assert not iam.password_expiration_unsafe(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_root_mfa_close():
     """Search IAM summary: MFA for root."""
-    assert not aws_iam.root_without_mfa(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.root_without_mfa(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.root_without_mfa(AWS_ACCESS_KEY_ID,
-                                        AWS_SECRET_ACCESS_KEY)
+    assert not iam.root_without_mfa(AWS_ACCESS_KEY_ID,
+                                    AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
 
 
 def test_policies_attached_close():
     """Search IAM policies: Policies attached directly to users."""
-    assert not aws_iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
-                                                  AWS_SECRET_ACCESS_KEY)
-    assert not aws_iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
-                                                  AWS_SECRET_ACCESS_KEY_BAD)
+    assert not iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY)
+    assert not iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY_BAD)
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
 
-    assert not aws_iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
-                                                  AWS_SECRET_ACCESS_KEY)
+    assert not iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
+                                              AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
