@@ -12,7 +12,7 @@ import pytesseract
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http
 from fluidasserts.utils.decorators import track, level
 
 
@@ -55,11 +55,11 @@ def is_insecure_in_url(image_url: str, expected_text: str,
     :param image_url: Path to the image to be tested.
     :param expected_text: Text the image might contain.
     :param \*args: Optional positional arguments for
-        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+        :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-        :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+        :class:`~fluidasserts.helper.http.HTTPSession`.
     """
-    session = http_helper.HTTPSession(image_url, stream=True, *args, **kwargs)
+    session = http.HTTPSession(image_url, stream=True, *args, **kwargs)
     fingerprint = session.get_fingerprint()
     image = session.response.raw
     result = pytesseract.image_to_string(Image.open(image))

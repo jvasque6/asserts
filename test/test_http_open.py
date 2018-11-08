@@ -14,7 +14,7 @@ from __future__ import print_function
 import pytest
 
 # local imports
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http as helper
 from fluidasserts.proto import http
 
 
@@ -30,9 +30,9 @@ BWAPP_PORT = 80
 def get_bwapp_cookies(cont_ip):
     """Log in to bWAPP and return valid cookie."""
     install_url = 'http://' + cont_ip + '/install.php?install=yes'
-    http_helper.HTTPSession(install_url)
+    helper.HTTPSession(install_url)
     login_url = 'http://' + cont_ip + '/login.php'
-    http_session = http_helper.HTTPSession(login_url)
+    http_session = helper.HTTPSession(login_url)
 
     http_session.data = 'login=bee&password=bug&security_level=0&form=submit'
 

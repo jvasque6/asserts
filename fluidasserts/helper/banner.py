@@ -31,7 +31,7 @@ from typing import Optional
 import certifi
 
 # local imports
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http
 
 
 class Service():
@@ -167,7 +167,7 @@ class HTTPService():
     def __init__(self, url) -> None:
         """Build a new Service object."""
         self.url = url
-        self.sess = http_helper.HTTPSession(self.url)
+        self.sess = http.HTTPSession(self.url)
 
     def get_banner(self) -> str:
         """Get HTTP Server banner."""

@@ -17,7 +17,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import aws_helper
+from fluidasserts.helper import aws
 
 
 @level('low')
@@ -31,12 +31,12 @@ def trails_not_multiregion(key_id: str, secret: str) -> bool:
     """
     result = False
     try:
-        trails = aws_helper.list_trails(key_id, secret)
-    except aws_helper.ConnError as exc:
+        trails = aws.list_trails(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False

@@ -17,7 +17,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import aws_helper
+from fluidasserts.helper import aws
 
 
 @level('medium')
@@ -30,12 +30,12 @@ def seggroup_allows_anyone_to_ssh(key_id: str, secret: str) -> bool:
     :param secret: AWS Key Secret
     """
     try:
-        sec_groups = aws_helper.list_security_groups(key_id, secret)
-    except aws_helper.ConnError as exc:
+        sec_groups = aws.list_security_groups(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
@@ -75,12 +75,12 @@ def seggroup_allows_anyone_to_rdp(key_id: str, secret: str) -> bool:
     :param secret: AWS Key Secret
     """
     try:
-        sec_groups = aws_helper.list_security_groups(key_id, secret)
-    except aws_helper.ConnError as exc:
+        sec_groups = aws.list_security_groups(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
@@ -120,12 +120,12 @@ def default_seggroup_allows_all_traffic(key_id: str, secret: str) -> bool:
     :param secret: AWS Key Secret
     """
     try:
-        sec_groups = aws_helper.list_security_groups(key_id, secret)
-    except aws_helper.ConnError as exc:
+        sec_groups = aws.list_security_groups(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
@@ -165,12 +165,12 @@ def has_unencrypted_volumes(key_id: str, secret: str) -> bool:
     :param secret: AWS Key Secret
     """
     try:
-        volumes = aws_helper.list_volumes(key_id, secret)
-    except aws_helper.ConnError as exc:
+        volumes = aws.list_volumes(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False

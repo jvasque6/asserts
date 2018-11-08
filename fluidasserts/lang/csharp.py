@@ -11,7 +11,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        SkipTo)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -56,8 +56,8 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(generic_exception, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(generic_exception, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -66,7 +66,7 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -74,7 +74,7 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use generic exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -99,25 +99,24 @@ def swallows_exceptions(csharp_dest: str) -> bool:
 
     result = False
     try:
-        catches = lang_helper.check_grammar(parser_catch, csharp_dest,
-                                            LANGUAGE_SPECS)
+        catches = lang.check_grammar(parser_catch, csharp_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
     for code_file, lines in catches.items():
-        vulns = lang_helper.block_contains_empty_grammar(empty_catch,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(empty_catch,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code does not have empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -149,25 +148,24 @@ def has_switch_without_default(csharp_dest: str) -> bool:
 
     result = False
     try:
-        switches = lang_helper.check_grammar(switch_head, csharp_dest,
-                                             LANGUAGE_SPECS)
+        switches = lang.check_grammar(switch_head, csharp_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
     for code_file, lines in switches.items():
-        vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(sw_wout_def,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have switch with default clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -194,8 +192,8 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
 
     result = False
     try:
-        random_new = lang_helper.check_grammar(call_function, csharp_dest,
-                                               LANGUAGE_SPECS)
+        random_new = lang.check_grammar(call_function, csharp_dest,
+                                        LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -204,7 +202,7 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code generates insecure random numbers',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -212,7 +210,7 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
         else:
             show_close('Code does not generate insecure random numbers',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -237,24 +235,24 @@ def has_if_without_else(csharp_dest: str) -> bool:
 
     result = False
     try:
-        conds = lang_helper.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
+        conds = lang.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
     for code_file, lines in conds.items():
-        vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(if_wout_else,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have if with else clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -287,8 +285,8 @@ def uses_md5_hash(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -297,7 +295,7 @@ def uses_md5_hash(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -305,7 +303,7 @@ def uses_md5_hash(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -329,8 +327,8 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -339,7 +337,7 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -347,7 +345,7 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -369,8 +367,8 @@ def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -379,7 +377,7 @@ def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -387,7 +385,7 @@ def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -407,8 +405,8 @@ def uses_debug_writeline(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -417,7 +415,7 @@ def uses_debug_writeline(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -425,7 +423,7 @@ def uses_debug_writeline(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -445,8 +443,8 @@ def uses_console_writeline(csharp_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, csharp_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, csharp_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
@@ -455,7 +453,7 @@ def uses_console_writeline(csharp_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -463,6 +461,6 @@ def uses_console_writeline(csharp_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

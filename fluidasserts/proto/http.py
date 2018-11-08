@@ -17,8 +17,8 @@ import ntplib
 import requests
 
 # local imports
-from fluidasserts.helper import banner_helper
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import banner
+from fluidasserts.helper import http
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -177,7 +177,7 @@ def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
             kw_new['params'] = dataset
         elif 'json' in kw_new:
             kw_new['json'] = dataset
-        sess = http_helper.HTTPSession(url, *args, **kw_new)
+        sess = http.HTTPSession(url, *args, **kw_new)
         resp.append((len(sess.response.text), sess.response.status_code))
     return resp
 
@@ -195,7 +195,7 @@ def _options_request(url: str, *args, **kwargs) -> Optional[requests.Response]:
     try:
         return requests.options(url, verify=False, *args, **kwargs)
     except requests.ConnectionError as exc:
-        raise http_helper.ConnError(exc)
+        raise http.ConnError(exc)
 
 
 def _has_method(url: str, method: str, *args, **kwargs) -> bool:
@@ -209,7 +209,7 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
     """
     try:
         is_method_present = _options_request(url, *args, **kwargs).headers
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -245,10 +245,10 @@ def _has_insecure_header(url: str, header: str,     # noqa
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
         fingerprint = http_session.get_fingerprint()
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -379,7 +379,7 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         if response.status_code >= 500:
@@ -398,7 +398,7 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
         show_close('No bad text was present',
                    details=dict(url=url, fingerprint=fingerprint))
         return False
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -415,7 +415,7 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         the_page = response.text
@@ -436,7 +436,7 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
                                 bad_text=expected_text,
                                 fingerprint=fingerprint))
         return False
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -484,7 +484,7 @@ def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         the_page = response.text
@@ -499,7 +499,7 @@ def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
                                 expected_text=expected_text,
                                 fingerprint=fingerprint))
         return False
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -907,10 +907,10 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         response_url = http_session.response.url
         fingerprint = http_session.get_fingerprint()
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -944,8 +944,8 @@ def is_version_visible(url) -> bool:
     :param port: If necessary, specify port to connect to.
     """
     try:
-        service = banner_helper.HTTPService(url)
-    except http_helper.ConnError as exc:
+        service = banner.HTTPService(url)
+    except http.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(url=url, error=str(exc).replace(':', ',')))
         return False
@@ -978,7 +978,7 @@ def is_not_https_required(url: str) -> bool:
     """
     assert url.startswith('http://')
     try:
-        http_session = http_helper.HTTPSession(url)
+        http_session = http.HTTPSession(url)
         fingerprint = http_session.get_fingerprint()
         if http_session.url.startswith('https'):
             show_close('HTTPS is forced on URL',
@@ -990,7 +990,7 @@ def is_not_https_required(url: str) -> bool:
                   details=dict(url=http_session.url, fingerprint=fingerprint),
                   refs='apache/configurar-soporte-https')
         return True
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1013,7 +1013,7 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
     """
     bad_text = 'Index of'
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         response = http_session.response
         fingerprint = http_session.get_fingerprint()
         the_page = response.text
@@ -1025,7 +1025,7 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
         show_close('Directory listing not enabled',
                    details=dict(url=url, fingerprint=fingerprint))
         return False
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1043,9 +1043,9 @@ def is_resource_accessible(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_close('Could not connnect to resource',
                    details=dict(url=url,
                                 message=str(exc).replace(':', ',')))
@@ -1078,9 +1078,9 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
     """
     max_response_time = 1
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1153,7 +1153,7 @@ def has_user_enumeration(url: str, user_field: str,
 
     try:
         fake_res = _request_dataset(url, fake_datasets, *args, **kwargs)
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1162,7 +1162,7 @@ def has_user_enumeration(url: str, user_field: str,
 
     try:
         user_res = _request_dataset(url, true_datasets, *args, **kwargs)
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1235,9 +1235,9 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
         elif 'data' in kwargs:
             kwargs['data'] = _datas
         try:
-            sess = http_helper.HTTPSession(url, *args, **kwargs)
+            sess = http.HTTPSession(url, *args, **kwargs)
             fingerprint = sess.get_fingerprint()
-        except http_helper.ConnError as exc:
+        except http.ConnError as exc:
             show_unknown('Could not connect',
                          details=dict(url=url, data_used=_datas,
                                       error=str(exc).replace(':', ',')))
@@ -1263,9 +1263,9 @@ def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        http_session = http_helper.HTTPSession(url, *args, **kwargs)
+        http_session = http.HTTPSession(url, *args, **kwargs)
         fingerprint = http_session.get_fingerprint()
-    except http_helper.ConnError as exc:
+    except http.ConnError as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
@@ -1304,7 +1304,7 @@ def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     try:
-        sess = http_helper.HTTPSession(url, *args, **kwargs)
+        sess = http.HTTPSession(url, *args, **kwargs)
         fingerprint = sess.get_fingerprint()
 
         server_date = datetime.strptime(sess.response.headers['Date'],
@@ -1314,7 +1314,7 @@ def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
         response = ntpclient.request('pool.ntp.org', port=123, version=3)
         ntp_date = datetime.fromtimestamp(response.tx_time, tz=timezone('GMT'))
         ntp_ts = datetime.utcfromtimestamp(ntp_date.timestamp()).timestamp()
-    except (KeyError, http_helper.ConnError) as exc:
+    except (KeyError, http.ConnError) as exc:
         show_unknown('Could not connnect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))

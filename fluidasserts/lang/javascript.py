@@ -10,7 +10,7 @@ from pyparsing import (CaselessKeyword, Literal, Suppress, Word, alphanums,
                        nestedExpr, cppStyleComment, Optional, Or, SkipTo)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -49,8 +49,7 @@ def uses_console_log(js_dest: str) -> bool:
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
     result = False
     try:
-        matches = lang_helper.check_grammar(clog, js_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(clog, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -58,7 +57,7 @@ def uses_console_log(js_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -66,7 +65,7 @@ def uses_console_log(js_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -84,8 +83,8 @@ def uses_eval(js_dest: str) -> bool:
     call_function = tk_method + Suppress(nestedExpr())
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, js_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, js_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -93,7 +92,7 @@ def uses_eval(js_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -101,7 +100,7 @@ def uses_eval(js_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -122,8 +121,7 @@ def uses_localstorage(js_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(lsto, js_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(lsto, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -131,7 +129,7 @@ def uses_localstorage(js_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -139,7 +137,7 @@ def uses_localstorage(js_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -162,8 +160,7 @@ def has_insecure_randoms(js_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, js_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -171,7 +168,7 @@ def has_insecure_randoms(js_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -179,7 +176,7 @@ def has_insecure_randoms(js_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -201,24 +198,23 @@ def swallows_exceptions(js_dest: str) -> bool:
 
     result = False
     try:
-        catches = lang_helper.check_grammar(parser_catch, js_dest,
-                                            LANGUAGE_SPECS)
+        catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in catches.items():
-        vulns = lang_helper.block_contains_empty_grammar(empty_catch,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(empty_catch,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code does not have empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -251,24 +247,23 @@ def has_switch_without_default(js_dest: str) -> bool:
 
     result = False
     try:
-        switches = lang_helper.check_grammar(switch_head, js_dest,
-                                             LANGUAGE_SPECS)
+        switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in switches.items():
-        vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(sw_wout_def,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have switch with default clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -296,23 +291,23 @@ def has_if_without_else(js_dest: str) -> bool:
 
     result = False
     try:
-        conds = lang_helper.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
+        conds = lang.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in conds.items():
-        vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(if_wout_else,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have if with else clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))

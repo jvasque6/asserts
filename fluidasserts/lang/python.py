@@ -11,7 +11,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        SkipTo, LineEnd, indentedBlock, Group)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -45,7 +45,7 @@ def _get_block(file_lines, line) -> str:
     # pylint: disable=pointless-statement
     prs_block << (block_def | block_line)
     block_list = prs_block.parseString(rem_file).asList()
-    block_str = (lang_helper.lists_as_string(block_list, '', 0))
+    block_str = (lang.lists_as_string(block_list, '', 0))
     return block_str.rstrip()
 
 
@@ -62,8 +62,8 @@ def has_generic_exceptions(py_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(generic_exception, py_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(generic_exception, py_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
@@ -71,7 +71,7 @@ def has_generic_exceptions(py_dest: str) -> bool:
         if vulns:
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -79,7 +79,7 @@ def has_generic_exceptions(py_dest: str) -> bool:
         else:
             show_close('Code does not use generic exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -108,23 +108,23 @@ def swallows_exceptions(py_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(parser_exception, py_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(parser_exception, py_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
     for code_file, lines in matches.items():
-        vulns = lang_helper.block_contains_grammar(empty_exception, code_file,
-                                                   lines, _get_block)
+        vulns = lang.block_contains_grammar(empty_exception, code_file,
+                                            lines, _get_block)
         if not vulns:
             show_close('Code does not have empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))

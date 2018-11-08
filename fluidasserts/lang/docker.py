@@ -9,7 +9,7 @@
 from pyparsing import Word, Literal, alphas
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -40,7 +40,7 @@ def not_pinned(file_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=file_dest))
         return False
@@ -48,7 +48,7 @@ def not_pinned(file_dest: str) -> bool:
         if vulns:
             show_open('Dockerfile uses unpinned base image(s)',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -56,6 +56,6 @@ def not_pinned(file_dest: str) -> bool:
         else:
             show_close('Dockerfile has pinned base image(s)',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

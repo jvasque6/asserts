@@ -13,7 +13,7 @@ from ftplib import FTP
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper import banner_helper
+from fluidasserts.helper import banner
 from fluidasserts.utils.decorators import track, level
 
 PORT = 21
@@ -35,7 +35,7 @@ def is_a_valid_user(ip_address: str, username: str,
     :param password: Password to check.
     :param port: If necessary, specifiy port to connect to.
     """
-    service = banner_helper.FTPService(port)
+    service = banner.FTPService(port)
     fingerprint = service.get_fingerprint(ip_address)
     result = False
     try:
@@ -109,7 +109,7 @@ def is_version_visible(ip_address: str, port: int = PORT) -> bool:
     :param ip_address: IP address to connect to.
     :param port: If necessary, specifiy port to connect to.
     """
-    service = banner_helper.FTPService(port)
+    service = banner.FTPService(port)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
 

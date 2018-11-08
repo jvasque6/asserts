@@ -10,7 +10,7 @@ from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
                        NotAny, alphas, alphanums, nums, cppStyleComment, Or)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -51,8 +51,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(dos_dow_sqlcod, rpg_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(dos_dow_sqlcod, rpg_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -60,7 +59,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
         if vulns:
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -68,7 +67,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
         else:
             show_close('Code does not have DoS for using "DoW SQLCOD = 0"',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -97,8 +96,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(unitialized, rpg_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -106,7 +104,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
         if vulns:
             show_open('Code has unitialized variables',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)),
@@ -115,7 +113,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
         else:
             show_close('Code does not have unitialized variables',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)),
                        refs='rpg/inicializar-variables/')
     return result
@@ -138,8 +136,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(tk_monitor, rpg_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -147,7 +144,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
         if vulns:
             show_open('Code has empty monitors',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -155,7 +152,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
         else:
             show_close('Code does not have empty monitors',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -180,19 +177,17 @@ def swallows_exceptions(rpg_dest: str) -> bool:
     prs_sw = (tk_monitor + tk_end_mon).ignore(cppStyleComment)
     result = False
     try:
-        matches = lang_helper.check_grammar(tk_monitor, rpg_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
     for code_file, lines in matches.items():
-        vulns = lang_helper.block_contains_grammar(prs_sw,
-                                                   code_file, lines,
-                                                   _get_block)
+        vulns = lang.block_contains_grammar(prs_sw, code_file, lines,
+                                            _get_block)
         if vulns:
             show_open('Code swallows exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -200,6 +195,6 @@ def swallows_exceptions(rpg_dest: str) -> bool:
         else:
             show_close('Code does not swallow exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

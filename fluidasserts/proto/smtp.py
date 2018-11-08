@@ -12,7 +12,7 @@ import smtplib
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import banner_helper
+from fluidasserts.helper import banner
 
 PORT = 25
 
@@ -27,7 +27,7 @@ def has_vrfy(ip_address: str, port: int = PORT) -> bool:
     :param port: If necessary, specify port to connect to (default: 25).
     """
     server = smtplib.SMTP(ip_address, port)
-    service = banner_helper.SMTPService(port)
+    service = banner.SMTPService(port)
     fingerprint = service.get_fingerprint(ip_address)
     vrfy = server.verify('root')
 
@@ -56,7 +56,7 @@ def is_version_visible(ip_address: str, port: int = PORT) -> bool:
     :param ip_address: IP address to test.
     :param port: If necessary, specify port to connect to (default: 25).
     """
-    service = banner_helper.SMTPService(port)
+    service = banner.SMTPService(port)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
 

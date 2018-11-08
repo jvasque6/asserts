@@ -9,7 +9,7 @@ import os
 from xml.etree import ElementTree
 
 # local imports
-from fluidasserts.helper import sca_helper
+from fluidasserts.helper import sca
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -61,7 +61,7 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param version: Package version.
     """
     try:
-        vulns = sca_helper.get_vulns(PACKAGE_MANAGER, package, version)
+        vulns = sca.get_vulns(PACKAGE_MANAGER, package, version)
         if vulns:
             show_open('Software has vulnerabilities',
                       details=dict(package=package, version=version,
@@ -70,11 +70,11 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
         show_close('Software doesn\'t have vulnerabilities',
                    details=dict(package=package, version=version))
         return False
-    except sca_helper.ConnError as exc:
+    except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
         return False
-    except sca_helper.PackageNotFoundException:
+    except sca.PackageNotFoundException:
         show_unknown('Sofware couldn\'t be found in package manager',
                      details=dict(package=package, version=version))
         return False
@@ -90,8 +90,8 @@ def project_has_vulnerabilities(path: str) -> bool:
     """
     try:
         reqs = _get_requirements(path)
-        response = sca_helper.scan_requirements(reqs, PACKAGE_MANAGER)
-    except sca_helper.ConnError as exc:
+        response = sca.scan_requirements(reqs, PACKAGE_MANAGER)
+    except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
         return False

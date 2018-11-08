@@ -13,7 +13,7 @@ from typing import Optional
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http
 from fluidasserts.utils.decorators import track, level
 
 
@@ -28,17 +28,17 @@ def _has_not_http_only(cookie_name: str, url: Optional[str],
     :param cookie_jar: Dict-like collection of cookies
                        as returned by ``requests.cookies``.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     fingerprint = None
     if url is not None:
         try:
-            sess = http_helper.HTTPSession(url, *args, **kwargs)
+            sess = http.HTTPSession(url, *args, **kwargs)
             cookielist = sess.cookies
             fingerprint = sess.get_fingerprint()
-        except http_helper.ConnError:
+        except http.ConnError:
             show_unknown('Could not connect', details=dict(url=url))
             return False
     else:
@@ -80,17 +80,17 @@ def _has_not_secure(cookie_name: str, url: Optional[str],
     :param cookie_jar: Dict-like collection of cookies
                        as returned by ``requests.cookies``.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     fingerprint = None
     if url is not None:
         try:
-            sess = http_helper.HTTPSession(url, *args, **kwargs)
+            sess = http.HTTPSession(url, *args, **kwargs)
             cookielist = sess.cookies
             fingerprint = sess.get_fingerprint()
-        except http_helper.ConnError:
+        except http.ConnError:
             show_unknown('Could not connect', details=dict(url=url))
             return False
     else:
@@ -128,9 +128,9 @@ def has_not_httponly_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     :param cookie_name: Name of the cookie to test.
     :param url: URL to get cookies.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     return _has_not_http_only(cookie_name, url, None, *args, **kwargs)
 
@@ -146,9 +146,9 @@ def has_not_httponly_in_cookiejar(cookie_name: str, cookie_jar: dict,
     :param cookie_jar: Dict-like collection of cookies
                        as returned by ``requests.cookies``.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     return _has_not_http_only(cookie_name, None, cookie_jar,
                               *args, **kwargs)
@@ -163,9 +163,9 @@ def has_not_secure_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     :param cookie_name: Name of the cookie to test.
     :param url: URL to get cookies.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     return _has_not_secure(cookie_name, url, None, *args, **kwargs)
 
@@ -181,9 +181,9 @@ def has_not_secure_in_cookiejar(cookie_name: str, cookie_jar: dict,
     :param cookie_jar: Dict-like collection of cookies
                        as returned by ``requests.cookies``.
     :param \*args: Optional positional arguments for
-                   :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                   :class:`~fluidasserts.helper.http.HTTPSession`.
     :param \*\*kwargs: Optional keyword arguments for
-                       :class:`~fluidasserts.helper.http_helper.HTTPSession`.
+                       :class:`~fluidasserts.helper.http.HTTPSession`.
     """
     return _has_not_secure(cookie_name, None, cookie_jar,
                            *args, **kwargs)

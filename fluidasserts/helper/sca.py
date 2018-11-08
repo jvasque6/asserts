@@ -10,14 +10,14 @@ import json
 from functools import reduce
 
 # local imports
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http
 
 
-class ConnError(http_helper.ConnError):
+class ConnError(http.ConnError):
     """
     A connection error occurred.
 
-    :py:exc:`http_helper.ConnError` wrapper exception.
+    :py:exc:`http.ConnError` wrapper exception.
     """
 
     pass
@@ -48,7 +48,7 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
         url = base_url + '/' + package_manager + '/' + package
 
     try:
-        sess = http_helper.HTTPSession(url)
+        sess = http.HTTPSession(url)
         resp = json.loads(sess.response.text)[0]
         if resp['id'] == 0:
             raise PackageNotFoundException
@@ -60,7 +60,7 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
         else:
             vuln_titles = []
         return vuln_titles
-    except http_helper.ConnError:
+    except http.ConnError:
         raise ConnError
 
 
@@ -78,6 +78,6 @@ def scan_requirements(requirements: list, package_manager: str) -> list:
             result.append(dict(package=req[0], version=req[1], vulns=vulns))
         except PackageNotFoundException:
             result.append(dict(package=req[0], version=-1, vulns=[]))
-        except http_helper.ConnError:
+        except http.ConnError:
             raise ConnError
     return result

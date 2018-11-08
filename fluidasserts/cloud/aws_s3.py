@@ -17,7 +17,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import aws_helper
+from fluidasserts.helper import aws
 
 
 @level('low')
@@ -30,12 +30,12 @@ def has_server_access_logging_disabled(key_id: str, secret: str) -> bool:
     :param secret: AWS Key Secret
     """
     try:
-        buckets = aws_helper.list_buckets(key_id, secret)
-    except aws_helper.ConnError as exc:
+        buckets = aws.list_buckets(key_id, secret)
+    except aws.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    except aws_helper.ClientErr as exc:
+    except aws.ClientErr as exc:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
@@ -45,7 +45,7 @@ def has_server_access_logging_disabled(key_id: str, secret: str) -> bool:
 
     result = False
     for bucket in buckets:
-        logging = aws_helper.get_bucket_logging(key_id, secret, bucket['Name'])
+        logging = aws.get_bucket_logging(key_id, secret, bucket['Name'])
         if 'LoggingEnabled' not in logging:
             show_open('Logging not enabled on bucket',
                       details=dict(bucket=bucket))

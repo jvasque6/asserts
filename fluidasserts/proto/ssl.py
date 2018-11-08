@@ -23,9 +23,9 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import http_helper
-from fluidasserts.helper.ssl_helper import connect
-from fluidasserts.helper.ssl_helper import connect_legacy
+from fluidasserts.helper import http
+from fluidasserts.helper.ssl import connect
+from fluidasserts.helper.ssl import connect_legacy
 
 PORT = 443
 TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
@@ -351,7 +351,7 @@ def has_breach(site: str, port: int = PORT) -> bool:
     for compression in common_compressors:
         header = {'Accept-Encoding': '{},deflate'.format(compression)}
         try:
-            sess = http_helper.HTTPSession(url, headers=header)
+            sess = http.HTTPSession(url, headers=header)
             fingerprint = sess.get_fingerprint()
             if 'Content-Encoding' in sess.response.headers:
                 if compression in sess.response.headers['Content-Encoding']:
@@ -360,7 +360,7 @@ def has_breach(site: str, port: int = PORT) -> bool:
                                            compression=compression,
                                            fingerprint=fingerprint))
                     return True
-        except http_helper.ConnError as exc:
+        except http.ConnError as exc:
             show_unknown('Could not connect',
                          details=dict(site=site, port=port, error=str(exc)))
             return False

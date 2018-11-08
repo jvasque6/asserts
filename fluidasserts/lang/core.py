@@ -14,7 +14,7 @@ from pyparsing import Literal, Regex
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts.utils.decorators import track, level
 
 
@@ -32,7 +32,7 @@ def _generic_lang_assert(code_file: str,
     :param expected_text: Bad text to look for in the file.
     """
     exp_gram = Regex(expected_regex)
-    vulns = lang_helper.check_grammar(exp_gram, code_file, LANGUAGE_SPECS)
+    vulns = lang.check_grammar(exp_gram, code_file, LANGUAGE_SPECS)
     return vulns
 
 
@@ -49,7 +49,7 @@ def _show_has_text(vulns: Dict[str, List[str]], code_file: str,
     if lines:
         show_open('Bad text present in code',
                   details=dict(file=code_file,
-                               fingerprint=lang_helper.file_hash(code_file),
+                               fingerprint=lang.file_hash(code_file),
                                bad_text=expected_text,
                                lines=", ".join(
                                    [str(x) for x in lines]),
@@ -57,7 +57,7 @@ def _show_has_text(vulns: Dict[str, List[str]], code_file: str,
     else:
         show_close('Bad text not present in code',
                    details=dict(file=code_file,
-                                fingerprint=lang_helper.file_hash(code_file),
+                                fingerprint=lang.file_hash(code_file),
                                 bad_text=expected_text))
 
 
@@ -74,13 +74,13 @@ def _show_has_not_text(vulns: Dict[str, List[str]], code_file: str,
     if not lines:
         show_open('Expected text not present in code',
                   details=dict(file=code_file,
-                               fingerprint=lang_helper.file_hash(code_file),
+                               fingerprint=lang.file_hash(code_file),
                                expected_text=expected_text,
                                total_vulns=len(vulns)))
     else:
         show_close('Expected text present in code',
                    details=dict(file=code_file,
-                                fingerprint=lang_helper.file_hash(code_file),
+                                fingerprint=lang.file_hash(code_file),
                                 lines=", ".join(
                                     [str(x) for x in lines]),
                                 expected_text=expected_text))
@@ -155,11 +155,11 @@ def file_exists(code_file: str) -> bool:
     if os.path.isfile(code_file):
         show_open('File exists',
                   details=dict(path=code_file,
-                               fingerprint=lang_helper.file_hash(code_file)))
+                               fingerprint=lang.file_hash(code_file)))
         return True
     show_close('File does not exist',
                details=dict(path=code_file,
-                            fingerprint=lang_helper.file_hash(code_file)))
+                            fingerprint=lang.file_hash(code_file)))
     return False
 
 
@@ -179,8 +179,7 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
 
     result = False
     try:
-        b64_matches = lang_helper.check_grammar(prs_base64, code_dest,
-                                                LANGUAGE_SPECS)
+        b64_matches = lang.check_grammar(prs_base64, code_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
@@ -189,7 +188,7 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
             show_open('Code has confidential data encoded in base64',
                       details=dict(expected=expected_text,
                                    file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -198,6 +197,6 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
             show_close('Code does not have confidential data encoded in \
                 base64',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

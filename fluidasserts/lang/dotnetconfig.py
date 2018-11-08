@@ -10,7 +10,7 @@ from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute,
                        htmlComment)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -51,8 +51,8 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
                        tk_remove_tag])
     result = False
     try:
-        custom_headers = lang_helper.check_grammar(tk_tag_s, webconf_dest,
-                                                   LANGUAGE_SPECS)
+        custom_headers = lang.check_grammar(tk_tag_s, webconf_dest,
+                                            LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
@@ -61,20 +61,20 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     tk_rem = Suppress(tk_tag_s) + OneOrMore(tk_child_tag)
 
     for code_file, lines in custom_headers.items():
-        vulns = lang_helper.block_contains_empty_grammar(tk_rem,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(tk_rem,
+                                                  code_file, lines,
+                                                  _get_block)
         if vulns:
             show_open('Header X-Powered-By is present',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
             show_close('Header X-Powered-By is not present',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -98,34 +98,34 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
     tk_access_none.setParseAction(withAttribute(sslFlags='None'))
     result = False
     try:
-        sec_tag = lang_helper.check_grammar(tk_tag_s, apphostconf_dest,
-                                            LANGUAGE_SPECS)
+        sec_tag = lang.check_grammar(tk_tag_s, apphostconf_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=apphostconf_dest))
         return False
 
     for code_file, lines in sec_tag.items():
-        access_tags = lang_helper.block_contains_grammar(tk_access,
-                                                         code_file,
-                                                         lines,
-                                                         _get_block)
+        access_tags = lang.block_contains_grammar(tk_access,
+                                                  code_file,
+                                                  lines,
+                                                  _get_block)
 
-        none_sslflags = lang_helper.block_contains_grammar(tk_access_none,
-                                                           code_file,
-                                                           lines,
-                                                           _get_block)
+        none_sslflags = lang.block_contains_grammar(tk_access_none,
+                                                    code_file,
+                                                    lines,
+                                                    _get_block)
         if not access_tags or none_sslflags:
             show_open('SSL is disabled',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in lines])))
             result = True
         else:
             show_close('SSL is enabled',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -148,28 +148,28 @@ def has_debug_enabled(webconf_dest: str) -> bool:
     tk_comp_debug.setParseAction(withAttribute(debug='true'))
     result = False
     try:
-        sysweb_tag = lang_helper.check_grammar(tk_tag_s, webconf_dest,
-                                               LANGUAGE_SPECS)
+        sysweb_tag = lang.check_grammar(tk_tag_s, webconf_dest,
+                                        LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
         return False
 
     for code_file, lines in sysweb_tag.items():
-        debug_tags = lang_helper.block_contains_grammar(tk_comp_debug,
-                                                        code_file,
-                                                        lines,
-                                                        _get_block)
+        debug_tags = lang.block_contains_grammar(tk_comp_debug,
+                                                 code_file,
+                                                 lines,
+                                                 _get_block)
         if debug_tags:
             show_open('Debug is enabled',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in lines])))
             result = True
         else:
             show_close('Debug is disabled',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

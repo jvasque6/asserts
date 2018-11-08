@@ -13,7 +13,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
-from fluidasserts.helper import http_helper
+from fluidasserts.helper import http
 
 
 @level('low')
@@ -26,7 +26,7 @@ def has_access(url: str, *args, **kwargs) -> bool:
     :param \*args: Optional arguments for :class:`HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
     """
-    http_session = http_helper.HTTPSession(url, *args, **kwargs)
+    http_session = http.HTTPSession(url, *args, **kwargs)
     ok_access_list = [200]
     if http_session.response.status_code in ok_access_list:
         show_open('Access available to {}'.format(url))
@@ -49,8 +49,8 @@ def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
         assert 'Content-Type' not in kwargs['headers']
     expected_codes = [406, 415]
     try:
-        session = http_helper.HTTPSession(url, *args, **kwargs)
-    except http_helper.ConnError as exc:
+        session = http.HTTPSession(url, *args, **kwargs)
+    except http.ConnError as exc:
         show_unknown('URL {} returned error'.format(url),
                      details=dict(error=str(exc).replace(':', ',')))
         return False
@@ -80,8 +80,8 @@ def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     else:
         kwargs = {'headers': {'Accept': '*/*'}}
     try:
-        session = http_helper.HTTPSession(url, *args, **kwargs)
-    except http_helper.ConnError as exc:
+        session = http.HTTPSession(url, *args, **kwargs)
+    except http.ConnError as exc:
         show_unknown('URL {} returned error'.format(url),
                      details=dict(error=str(exc).replace(':', ',')))
         return False

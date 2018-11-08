@@ -12,7 +12,7 @@ import re
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper.winrm_helper import winrm_exec_command, ConnError
+from fluidasserts.helper.winrm import winrm_exec_command, ConnError
 from fluidasserts.utils.decorators import track, level
 
 

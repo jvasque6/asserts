@@ -11,7 +11,7 @@ from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        SkipTo)
 
 # local imports
-from fluidasserts.helper import lang_helper
+from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
@@ -55,8 +55,8 @@ def has_generic_exceptions(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(generic_exception, java_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(generic_exception, java_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -64,7 +64,7 @@ def has_generic_exceptions(java_dest: str) -> bool:
         if vulns:
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -72,7 +72,7 @@ def has_generic_exceptions(java_dest: str) -> bool:
         else:
             show_close('Code does not use generic exceptions',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -92,8 +92,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(pst, java_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -101,7 +100,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -109,7 +108,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -134,24 +133,23 @@ def swallows_exceptions(java_dest: str) -> bool:
 
     result = False
     try:
-        catches = lang_helper.check_grammar(parser_catch, java_dest,
-                                            LANGUAGE_SPECS)
+        catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in catches.items():
-        vulns = lang_helper.block_contains_empty_grammar(empty_catch,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(empty_catch,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code does not have empty catches',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code has empty catches',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -183,24 +181,23 @@ def has_switch_without_default(java_dest: str) -> bool:
 
     result = False
     try:
-        switches = lang_helper.check_grammar(switch_head, java_dest,
-                                             LANGUAGE_SPECS)
+        switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in switches.items():
-        vulns = lang_helper.block_contains_empty_grammar(sw_wout_def,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(sw_wout_def,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has switch with default clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have switch with default clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -226,8 +223,8 @@ def has_insecure_randoms(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(call_function, java_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, java_dest,
+                                     LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -235,7 +232,7 @@ def has_insecure_randoms(java_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -243,7 +240,7 @@ def has_insecure_randoms(java_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -268,23 +265,23 @@ def has_if_without_else(java_dest: str) -> bool:
 
     result = False
     try:
-        conds = lang_helper.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
+        conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in conds.items():
-        vulns = lang_helper.block_contains_empty_grammar(if_wout_else,
-                                                         code_file, lines,
-                                                         _get_block)
+        vulns = lang.block_contains_empty_grammar(if_wout_else,
+                                                  code_file, lines,
+                                                  _get_block)
         if not vulns:
             show_close('Code has if with else clause',
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
         else:
             show_open('Code does not have if with else clause',
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -312,8 +309,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(instance_md5, java_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(instance_md5, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -321,7 +317,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -329,7 +325,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result
 
@@ -381,8 +377,7 @@ def uses_des_algorithm(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang_helper.check_grammar(instance_des, java_dest,
-                                            LANGUAGE_SPECS)
+        matches = lang.check_grammar(instance_des, java_dest, LANGUAGE_SPECS)
     except AssertionError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -390,7 +385,7 @@ def uses_des_algorithm(java_dest: str) -> bool:
         if vulns:
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
-                                   fingerprint=lang_helper.
+                                   fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)))
@@ -398,6 +393,6 @@ def uses_des_algorithm(java_dest: str) -> bool:
         else:
             show_close('Code does not use {} method'.format(method),
                        details=dict(file=code_file,
-                                    fingerprint=lang_helper.
+                                    fingerprint=lang.
                                     file_hash(code_file)))
     return result

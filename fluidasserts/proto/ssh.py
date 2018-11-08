@@ -13,8 +13,8 @@ import paramiko
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.helper import banner_helper
-from fluidasserts.helper import ssh_helper
+from fluidasserts.helper import banner
+from fluidasserts.helper import ssh
 from fluidasserts.utils.decorators import track, level
 
 PORT = 22
@@ -34,11 +34,11 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
     """
     result = True
     try:
-        service = banner_helper.SSHService(port)
+        service = banner.SSHService(port)
         fingerprint = service.get_fingerprint(host)
-        ssh = ssh_helper.build_ssh_object()
-        ssh.connect(host, port, username=username, password=password)
-        transport = ssh.get_transport()
+        ssh_obj = ssh.build_ssh_object()
+        ssh_obj.connect(host, port, username=username, password=password)
+        transport = ssh_obj.get_transport()
 
         if "-cbc" not in transport.remote_cipher:
             show_close('SSH does not have insecure CBC encription algorithms',
@@ -83,11 +83,11 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
     """
     result = True
     try:
-        service = banner_helper.SSHService(port)
+        service = banner.SSHService(port)
         fingerprint = service.get_fingerprint(host)
-        ssh = ssh_helper.build_ssh_object()
-        ssh.connect(host, port, username=username, password=password)
-        transport = ssh.get_transport()
+        ssh_obj = ssh.build_ssh_object()
+        ssh_obj.connect(host, port, username=username, password=password)
+        transport = ssh_obj.get_transport()
 
         if "hmac-md5" not in transport.remote_cipher:
             show_close('SSH does not have insecure HMAC encryption algorithms',
@@ -127,7 +127,7 @@ def is_version_visible(ip_address: str, port: int = PORT) -> bool:
     :param ip_address: IP address to test.
     :param port: If necessary, specify port to connect to (default: 22).
     """
-    service = banner_helper.SSHService(port)
+    service = banner.SSHService(port)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
 
