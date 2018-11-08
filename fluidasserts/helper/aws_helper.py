@@ -199,3 +199,41 @@ def list_volumes(key_id: str, secret: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def list_buckets(key_id: str, secret: str) -> dict:
+    """
+    List S3 buckets.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('s3',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.list_buckets()
+        return response['Buckets']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
+def get_bucket_logging(key_id: str, secret: str, bucket: str) -> dict:
+    """
+    List S3 bucket logging config.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('s3',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.get_bucket_logging(Bucket=bucket)
+        return response
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
