@@ -256,3 +256,22 @@ def list_db_instances(key_id: str, secret: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def list_clusters(key_id: str, secret: str) -> dict:
+    """
+    List Redshift clusters.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('redshift',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.describe_clusters()
+        return response['Clusters']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
