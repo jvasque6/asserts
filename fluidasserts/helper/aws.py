@@ -237,3 +237,22 @@ def get_bucket_logging(key_id: str, secret: str, bucket: str) -> dict:
         raise ConnError
     except botocore.exceptions.ClientError:
         raise ClientErr
+
+
+def list_db_instances(key_id: str, secret: str) -> dict:
+    """
+    List RDS DB instances.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('rds',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.describe_db_instances()
+        return response['DBInstances']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
