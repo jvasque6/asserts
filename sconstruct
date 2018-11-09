@@ -87,6 +87,16 @@ env.Command(
 )
 env.Alias('pylint', pylint_results)
 
+# Builder para bandit
+bandit_results = ['#build/bandit/bandit.txt']
+env.Command(
+    source=[source_files],
+    action=['tox -c conf/tox.ini -e bandit'],
+    target=bandit_results,
+)
+env.Alias('bandit', bandit_results)
+
+
 # Builder para flake8
 flake8_results = ['#build/lint/flake8.txt']
 env.Command(
