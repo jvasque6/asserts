@@ -72,7 +72,6 @@ setup(
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.20.1',          # fluidasserts.proto.http
         'requests-oauthlib==1.0.0',  # fluidasserts.proto.http
-        'cryptography==2.3.1',       # fluidasserts.proto.ssl
         'certifi==2018.10.15',       # fluidasserts.proto.ssl
         'ldap3==2.5.1',              # fluidasserts.proto.ldap
         'paramiko==2.4.2',           # fluidasserts.helper.ssh_helper
