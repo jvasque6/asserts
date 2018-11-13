@@ -9,6 +9,7 @@ Jared Stafford (jspenguin@jspenguin.org)
 
 # standard imports
 from __future__ import absolute_import
+import copy
 import errno
 import socket
 import ssl
@@ -29,6 +30,42 @@ from fluidasserts.helper.ssl import connect_legacy
 
 PORT = 443
 TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
+
+# pylint: disable=protected-access
+
+
+def _my_send_finished(self, master_secret, cipher_suite=None, next_p=None):
+    """Duck-tapped TLSConnection._sendFinished function."""
+    self.sock.buffer_writes = True
+
+    for result in self._sendMsg(tlslite.messages.ChangeCipherSpec()):
+        yield result
+
+    self._changeWriteState()
+
+    if next_p is not None:
+        next_proto_msg = tlslite.messages.NextProtocol().create(next_p)
+        for result in self._sendMsg(next_proto_msg):
+            yield result
+
+    verify_data = tlslite.mathtls.calcFinished(self.version,
+                                               master_secret,
+                                               cipher_suite,
+                                               self._handshake_hash,
+                                               self._client)
+    if self.fault == tlslite.constants.Fault.badFinished:
+        verify_data[0] = (verify_data[0] + 1) % 256
+
+    if self.macTweak:
+        tweak_len = min(len(verify_data), len(self.macTweak))
+        for i in range(0, tweak_len):
+            verify_data[i] ^= self.macTweak[i]
+
+    finished = tlslite.messages.Finished(self.version).create(verify_data)
+    for result in self._sendMsg(finished):
+        yield result
+    self.sock.flush()
+    self.sock.buffer_writes = False
 
 
 def _rcv_tls_record(sock: socket.socket) -> TYPRECEIVE:
@@ -517,4 +554,49 @@ but it\'s not vulnerable to Heartbleed.',
         show_unknown('Could not connect',
                      details=dict(site=site, port=port, error=str(exc)))
         result = False
+    return result
+
+
+@level('high')
+@track
+def allows_modified_mac(site: str, port: int = PORT) -> bool:
+    """
+    Check if site allows messages with modified MAC.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    orig_method = \
+        copy.deepcopy(tlslite.tlsconnection.TLSConnection._sendFinished)
+    tlslite.tlsconnection.TLSConnection._sendFinished = _my_send_finished
+    result = False
+    failed_bits = list()
+    for mask_bit in range(0, 96):
+        mask = bytearray([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+        mask_index = int((mask_bit - (mask_bit % 8)) / 8)
+        mask[mask_index] = (0x80 >> (mask_bit % 8))
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.connect((site, port))
+            tls = tlslite.TLSConnection(sock)
+            tls.macTweak = bytearray(mask)
+            tls.handshakeClientCert()
+            tls.send(b"GET / HTTP/1.0\n\n\n")
+            tls.read()
+        except (tlslite.TLSRemoteAlert, tlslite.TLSAbruptCloseError,
+                socket.error):
+            continue
+        else:
+            result = True
+            failed_bits.append(mask_bit)
+
+    tlslite.tlsconnection.TLSConnection._sendFinished = orig_method
+
+    if result:
+        show_open('Server allowed messages with modified MAC',
+                  details=dict(server=site, failed_bits=failed_bits))
+    else:
+        show_close('Server allowed messages with modified MAC',
+                   details=dict(server=site,
+                                failed_bits=",".join(failed_bits)))
     return result

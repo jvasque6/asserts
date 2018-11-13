@@ -360,7 +360,7 @@ ssl.allows_anon_ciphers('__ip__')
 ssl.allows_weak_ciphers('__ip__')
 ssl.has_beast('__ip__')
 ssl.has_heartbleed('__ip__')
-
+ssl.allows_modified_mac('__ip__')
 """.replace('__ip__', ip_addr)
 
     (_, exploitfile) = tempfile.mkstemp(suffix='.py')

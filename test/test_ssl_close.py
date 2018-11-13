@@ -94,3 +94,10 @@ def test_has_heartbleed_close(get_mock_ip):
     """Presencia de la vulnerabilidad Heartbleed?."""
     assert not ssl.has_heartbleed(get_mock_ip, SSL_PORT)
     assert not ssl.has_heartbleed(NON_EXISTANT, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_allows_modified_mac_close(get_mock_ip):
+    """Host allows messages with modified MAC?."""
+    assert not ssl.allows_modified_mac(get_mock_ip, SSL_PORT)
+    assert not ssl.allows_modified_mac(NON_EXISTANT, SSL_PORT)
