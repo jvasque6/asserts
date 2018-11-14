@@ -594,9 +594,9 @@ def allows_modified_mac(site: str, port: int = PORT) -> bool:
 
     if result:
         show_open('Server allowed messages with modified MAC',
-                  details=dict(server=site,
+                  details=dict(server=site, port=port,
                                failed_bits=",".join(failed_bits)))
     else:
         show_close('Server rejected messages with modified MAC',
-                   details=dict(server=site))
+                   details=dict(server=site, port=port))
     return result
