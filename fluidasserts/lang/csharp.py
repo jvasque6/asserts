@@ -58,7 +58,7 @@ def has_generic_exceptions(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(generic_exception, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -100,7 +100,7 @@ def swallows_exceptions(csharp_dest: str) -> bool:
     result = False
     try:
         catches = lang.check_grammar(parser_catch, csharp_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -149,7 +149,7 @@ def has_switch_without_default(csharp_dest: str) -> bool:
     result = False
     try:
         switches = lang.check_grammar(switch_head, csharp_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -194,7 +194,7 @@ def has_insecure_randoms(csharp_dest: str) -> bool:
     try:
         random_new = lang.check_grammar(call_function, csharp_dest,
                                         LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -236,7 +236,7 @@ def has_if_without_else(csharp_dest: str) -> bool:
     result = False
     try:
         conds = lang.check_grammar(if_head, csharp_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -287,7 +287,7 @@ def uses_md5_hash(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -329,7 +329,7 @@ def uses_sha1_hash(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -369,7 +369,7 @@ def uses_ecb_encryption_mode(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -407,7 +407,7 @@ def uses_debug_writeline(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
@@ -445,7 +445,7 @@ def uses_console_writeline(csharp_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, csharp_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False

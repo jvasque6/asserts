@@ -64,7 +64,7 @@ def has_generic_exceptions(py_dest: str) -> bool:
     try:
         matches = lang.check_grammar(generic_exception, py_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
     for code_file, vulns in matches.items():
@@ -110,7 +110,7 @@ def swallows_exceptions(py_dest: str) -> bool:
     try:
         matches = lang.check_grammar(parser_exception, py_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
     for code_file, lines in matches.items():

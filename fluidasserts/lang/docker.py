@@ -41,7 +41,7 @@ def not_pinned(file_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=file_dest))
         return False
     for code_file, vulns in matches.items():

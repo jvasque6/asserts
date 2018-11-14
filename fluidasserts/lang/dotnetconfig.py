@@ -53,7 +53,7 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     try:
         custom_headers = lang.check_grammar(tk_tag_s, webconf_dest,
                                             LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
         return False
@@ -100,7 +100,7 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
     try:
         sec_tag = lang.check_grammar(tk_tag_s, apphostconf_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=apphostconf_dest))
         return False
@@ -150,7 +150,7 @@ def has_debug_enabled(webconf_dest: str) -> bool:
     try:
         sysweb_tag = lang.check_grammar(tk_tag_s, webconf_dest,
                                         LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
         return False

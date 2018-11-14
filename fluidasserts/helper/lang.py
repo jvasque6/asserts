@@ -168,18 +168,20 @@ def check_grammar(grammar: ParserElement, code_dest: str,
     :return: Maps files to their found vulnerabilites.
     """
     vulns = {}
-    if os.path.isfile(code_dest):
-        vulns[code_dest] = _get_match_lines(grammar, code_dest, lang_spec)
-        return vulns
-
-    for root, _, files in os.walk(code_dest):
-        for code_file in files:
-            full_path = os.path.join(root, code_file)
-            if lang_spec.get('extensions'):
-                if code_file.split('.')[-1] in lang_spec.get('extensions'):
+    try:
+        open(code_dest)
+    except IsADirectoryError:
+        for root, _, files in os.walk(code_dest):
+            for code_file in files:
+                full_path = os.path.join(root, code_file)
+                if lang_spec.get('extensions'):
+                    if code_file.split('.')[-1] in lang_spec.get('extensions'):
+                        vulns[full_path] = _get_match_lines(grammar, full_path,
+                                                            lang_spec)
+                else:
                     vulns[full_path] = _get_match_lines(grammar, full_path,
                                                         lang_spec)
-            else:
-                vulns[full_path] = _get_match_lines(grammar, full_path,
-                                                    lang_spec)
-    return vulns
+        return vulns
+    else:
+        vulns[code_dest] = _get_match_lines(grammar, code_dest, lang_spec)
+        return vulns

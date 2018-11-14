@@ -50,7 +50,7 @@ def uses_console_log(js_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(clog, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, vulns in matches.items():
@@ -85,7 +85,7 @@ def uses_eval(js_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, js_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, vulns in matches.items():
@@ -122,7 +122,7 @@ def uses_localstorage(js_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(lsto, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, vulns in matches.items():
@@ -161,7 +161,7 @@ def has_insecure_randoms(js_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(call_function, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, vulns in matches.items():
@@ -199,7 +199,7 @@ def swallows_exceptions(js_dest: str) -> bool:
     result = False
     try:
         catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in catches.items():
@@ -248,7 +248,7 @@ def has_switch_without_default(js_dest: str) -> bool:
     result = False
     try:
         switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in switches.items():
@@ -292,7 +292,7 @@ def has_if_without_else(js_dest: str) -> bool:
     result = False
     try:
         conds = lang.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
     for code_file, lines in conds.items():

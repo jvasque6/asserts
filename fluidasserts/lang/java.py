@@ -57,7 +57,7 @@ def has_generic_exceptions(java_dest: str) -> bool:
     try:
         matches = lang.check_grammar(generic_exception, java_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, vulns in matches.items():
@@ -93,7 +93,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, vulns in matches.items():
@@ -134,7 +134,7 @@ def swallows_exceptions(java_dest: str) -> bool:
     result = False
     try:
         catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in catches.items():
@@ -182,7 +182,7 @@ def has_switch_without_default(java_dest: str) -> bool:
     result = False
     try:
         switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in switches.items():
@@ -225,7 +225,7 @@ def has_insecure_randoms(java_dest: str) -> bool:
     try:
         matches = lang.check_grammar(call_function, java_dest,
                                      LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, vulns in matches.items():
@@ -266,7 +266,7 @@ def has_if_without_else(java_dest: str) -> bool:
     result = False
     try:
         conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, lines in conds.items():
@@ -310,7 +310,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(instance_md5, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, vulns in matches.items():
@@ -378,7 +378,7 @@ def uses_des_algorithm(java_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(instance_des, java_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
     for code_file, vulns in matches.items():

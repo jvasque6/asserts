@@ -180,7 +180,7 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
     result = False
     try:
         b64_matches = lang.check_grammar(prs_base64, code_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
     for code_file, vulns in b64_matches.items():

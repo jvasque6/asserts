@@ -52,7 +52,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(dos_dow_sqlcod, rpg_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
     for code_file, vulns in matches.items():
@@ -97,7 +97,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
     for code_file, vulns in matches.items():
@@ -137,7 +137,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
     for code_file, vulns in matches.items():
@@ -178,7 +178,7 @@ def swallows_exceptions(rpg_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
-    except AssertionError:
+    except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
     for code_file, lines in matches.items():
