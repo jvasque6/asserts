@@ -63,6 +63,13 @@ def test_cli_dns():
         assert not cli.main()
 
 
+def test_cli_lang():
+    """Run CLI lang option."""
+    testargs = ["asserts", "-L", 'test/static/lang/csharp/']
+    with patch.object(sys, 'argv', testargs):
+        assert not cli.main()
+
+
 def test_cli_filtered():
     """Run CLI with filtered results."""
     testargs = ["asserts", "-cou", ASSERTS_EXPLOIT]

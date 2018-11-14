@@ -401,6 +401,65 @@ dns.can_amplify('__ip__')
     return exec_wrapper(exploitfile)
 
 
+def exec_lang_package(codes):
+    """Execute generic checks of LANG package."""
+    template = """
+from fluidasserts.lang import csharp
+from fluidasserts.lang import docker
+from fluidasserts.lang import dotnetconfig
+from fluidasserts.lang import html
+from fluidasserts.lang import java
+from fluidasserts.lang import javascript
+from fluidasserts.lang import python
+from fluidasserts.lang import rpgle
+"""
+    for code in codes:
+        template += """
+csharp.has_generic_exceptions('__code__')
+csharp.swallows_exceptions('__code__')
+csharp.has_switch_without_default('__code__')
+csharp.has_insecure_randoms('__code__')
+csharp.has_if_without_else('__code__')
+csharp.uses_md5_hash('__code__')
+csharp.uses_sha1_hash('__code__')
+csharp.uses_ecb_encryption_mode('__code__')
+csharp.uses_debug_writeline('__code__')
+csharp.uses_console_writeline('__code__')
+docker.not_pinned('__code__')
+dotnetconfig.is_header_x_powered_by_present('__code__')
+dotnetconfig.has_ssl_disabled('__code__')
+dotnetconfig.has_debug_enabled('__code__')
+java.has_generic_exceptions('__code__')
+java.uses_print_stack_trace('__code__')
+java.swallows_exceptions('__code__')
+java.has_switch_without_default('__code__')
+java.has_insecure_randoms('__code__')
+java.has_if_without_else('__code__')
+java.uses_md5_hash('__code__')
+java.uses_sha1_hash('__code__')
+java.uses_des_algorithm('__code__')
+javascript.uses_console_log('__code__')
+javascript.uses_eval('__code__')
+javascript.uses_localstorage('__code__')
+javascript.has_insecure_randoms('__code__')
+javascript.swallows_exceptions('__code__')
+javascript.has_switch_without_default('__code__')
+javascript.has_if_without_else('__code__')
+python.has_generic_exceptions('__code__')
+python.swallows_exceptions('__code__')
+rpgle.has_dos_dow_sqlcod('__code__')
+rpgle.has_unitialized_vars('__code__')
+rpgle.has_generic_exceptions('__code__')
+rpgle.swallows_exceptions('__code__')
+""".replace('__code__', code)
+
+    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
+    with open(exploitfile, 'w+') as exploitfd:
+        exploitfd.write(template)
+
+    return exec_wrapper(exploitfile)
+
+
 def get_content(args):
     """Get raw content according to args parameter."""
     content = ''
@@ -412,6 +471,9 @@ def get_content(args):
         content += _content
     if args.dns:
         (ret, _content) = exec_dns_package(args.dns)
+        content += _content
+    if args.lang:
+        (ret, _content) = exec_lang_package(args.lang)
         content += _content
     elif args.exploit:
         (ret, _content) = exec_wrapper(args.exploit)
@@ -443,11 +505,15 @@ def main():
     argparser.add_argument('-D', '--dns', nargs='+', metavar='NS',
                            help='perform generic DNS checks \
 over given nameserver')
+    argparser.add_argument('-L', '--lang', nargs='+', metavar='FILE/DIR',
+                           help='perform static security checks over \
+given files or directories')
     argparser.add_argument('exploit', nargs='?', help='exploit to execute')
 
     args = argparser.parse_args()
 
-    if not args.exploit and not args.http and not args.ssl and not args.dns:
+    if not args.exploit and not args.http \
+       and not args.ssl and not args.dns and not args.lang:
         argparser.print_help()
         sys.exit(-1)
 
