@@ -10,8 +10,6 @@ from typing import Optional, Tuple
 from urllib.parse import quote
 
 from bs4 import BeautifulSoup
-from requests_oauthlib import OAuth1
-from requests_ntlm import HttpNtlmAuth
 import requests
 # pylint: disable=import-error
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -186,8 +184,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             'application/x-www-form-urlencoded'
 
         http_req = self.do_request()
-        if http_req is None:
-            return None
         self.is_auth = bool(http_req.text.find(text) >= 0)
 
         if http_req.cookies == {}:
@@ -200,60 +196,6 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         self.data = ''
         del self.headers['Content-Type']
         return http_req
-
-    def basic_auth(self, user: str, passw: str) -> None:
-        """
-        Authenticate using BASIC.
-
-        :param user: Username for authentication.
-        :param passw: Password for authentication.
-        """
-        self.__do_auth('BASIC', user, passw)
-
-    def ntlm_auth(self, user: str, passw: str) -> None:
-        """
-        Authenticate using NTLM.
-
-        :param user: Username for authentication.
-        :param passw: Password for authentication.
-        """
-        self.__do_auth('NTLM', user, passw)
-
-    def oauth_auth(self, user: str, passw: str) -> None:
-        """
-        Authenticate using OAUTH.
-
-        :param user: Username for authentication.
-        :param passw: Password for authentication.
-        """
-        self.__do_auth('OAUTH', user, passw)
-
-    def __do_auth(self, method: str, user: str, passw: str) -> None:
-        """
-        Authenticate using HTTP.
-
-        :param user: Username for authentication.
-        :param passw: Password for authentication.
-        """
-        if method == 'BASIC':
-            self.auth = (user, passw)
-        elif method == 'NTLM':
-            self.auth = HttpNtlmAuth(user, passw)
-        elif method == 'OAUTH':
-            self.auth = OAuth1(user, passw)
-        resp = self.do_request()
-
-        self.auth = None
-        request_no_auth = self.do_request()
-        if request_no_auth.status_code == 401:
-            if resp.status_code == 200:
-                self.cookies = resp.cookies
-                self.response = resp
-                self.is_auth = True
-            else:
-                self.is_auth = False
-        else:
-            self.is_auth = False
 
     def get_html_value(self, field_type: str, field_name: str,
                        field_id: str = 'name',

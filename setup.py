@@ -71,7 +71,6 @@ setup(
         'configobj==5.0.6',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.20.1',          # fluidasserts.proto.http
-        'requests-oauthlib==1.0.0',  # fluidasserts.proto.http
         'certifi==2018.10.15',       # fluidasserts.proto.ssl
         'ldap3==2.5.1',              # fluidasserts.proto.ldap
         'paramiko==2.4.2',           # fluidasserts.helper.ssh_helper
@@ -83,7 +82,6 @@ setup(
         'colorama==0.4.0',           # logging
         'pysmb==1.1.25',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
-        'requests_ntlm==1.1.0',      # fluidasserts.helper.http_helper
         'pytesseract==0.2.5',        # fluidasserts.format.captcha
         'pillow==5.3.0',             # fluidasserts.format.captcha
         'pyparsing==2.3.0',          # fluidasserts.lang
