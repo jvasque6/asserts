@@ -395,9 +395,16 @@ def test_found_string_close():
 def test_userenum_post_close():
     """Enumeracion de usuarios posible?."""
     data = 'username=pepe&password=grillo'
+    data_bad = 'a=pepe&b=grillo'
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (MOCK_SERVICE),
         'username', data=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/ok' % (MOCK_SERVICE),
+        'username', data=data_bad)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/ok' % (MOCK_SERVICE),
+        'username')
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (NONEXISTANT_SERVICE),
         'username', data=data)
@@ -446,6 +453,13 @@ def test_bruteforce_close():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+    assert not http.can_brute_force(
+        '%s/bruteforce/ok' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'])
     assert not http.can_brute_force(
         '%s/bruteforce/ok' % (NONEXISTANT_SERVICE),
         'admin',
@@ -549,3 +563,10 @@ def test_is_date_unsyncd_close():
         '%s/date/fail' % (NONEXISTANT_SERVICE))
     assert not http.is_date_unsyncd(
         '%s/date/fail' % (BAD_FORMAT_SERVICE))
+
+
+def test_is_not_https_required_close():
+    """El servidor no requiere usar HTTPS?."""
+    assert not http.is_not_https_required(NONEXISTANT_SERVICE)
+    assert not http.is_not_https_required(BAD_FORMAT_SERVICE)
+    assert not http.is_not_https_required('https://127.0.0.1')

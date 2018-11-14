@@ -47,6 +47,7 @@ def get_bwapp_cookies(cont_ip):
 # Open tests
 #
 
+
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_sqli_open(get_mock_ip):
     """App vulnerable a SQLi?."""
@@ -165,7 +166,8 @@ def test_a4_insecure_dor_open(get_mock_ip):
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '0'
 
-    vulnerable_url = 'http://' + get_mock_ip + '/insecure_direct_object_ref_2.php'
+    vulnerable_url = 'http://' + get_mock_ip + \
+        '/insecure_direct_object_ref_2.php'
 
     data = {'ticket_quantity': '1', 'ticket_price': '31337',
             'action': 'order'}
@@ -374,12 +376,6 @@ def test_is_not_https_required_open():
         '%s/' % (MOCK_SERVICE))
 
 
-def test_is_not_https_required_unknown():
-    """El servidor no requiere usar HTTPS?."""
-    url = 'http://0.0.0.0/'
-    assert not http.is_not_https_required(url)
-
-
 def test_is_header_server_present_open():
     """Header Server esta presente?."""
     assert http.is_header_server_present(
@@ -399,7 +395,7 @@ def test_is_header_perm_cross_dom_pol_missing_open():
 
 
 def test_has_clear_viewstate_open():
-    """ViewState cifrado?."""
+    """Esta ViewState cifrado?."""
     assert http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/fail' % (MOCK_SERVICE))
 
@@ -411,5 +407,5 @@ def test_is_date_unsyncd_open():
 
 
 def test_is_version_visible_open():
-   """Server header contains version?."""
-   assert http.is_version_visible('%s/version/fail' % (BASE_URL))
+    """Server header contains version?."""
+    assert http.is_version_visible('%s/version/fail' % (BASE_URL))

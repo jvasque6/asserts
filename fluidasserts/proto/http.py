@@ -1034,11 +1034,6 @@ def is_not_https_required(url: str) -> bool:
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
-    except http.ParameterError as exc:
-        show_unknown('An invalid parameter was passed',
-                     details=dict(url=url,
-                                  error=str(exc).replace(':', ',')))
-        return False
 
 
 @level('low')
@@ -1285,6 +1280,10 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
+    if 'data' not in kwargs and 'params' not in kwargs:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url))
+        return False
     try:
         query_string = kwargs.get('data')
     except AttributeError:
@@ -1303,9 +1302,6 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
             kwargs['params'] = _datas
         elif 'data' in kwargs:
             kwargs['data'] = _datas
-        else:
-            show_unknown('No param were given', details=dict(url=url))
-            return False
         try:
             sess = http.HTTPSession(url, *args, **kwargs)
             fingerprint = sess.get_fingerprint()
