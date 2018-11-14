@@ -382,6 +382,25 @@ x509.is_md5_used('__ip__')
     return exec_wrapper(exploitfile)
 
 
+def exec_dns_package(nameservers):
+    """Execute generic checks of DNS package."""
+    template = """
+from fluidasserts.proto import dns
+"""
+    for nameserver in nameservers:
+        template += """
+dns.has_cache_snooping('__ip__')
+dns.has_recursion('__ip__')
+dns.can_amplify('__ip__')
+""".replace('__ip__', nameserver)
+
+    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
+    with open(exploitfile, 'w+') as exploitfd:
+        exploitfd.write(template)
+
+    return exec_wrapper(exploitfile)
+
+
 def get_content(args):
     """Get raw content according to args parameter."""
     content = ''
@@ -390,6 +409,9 @@ def get_content(args):
         content += _content
     if args.ssl:
         (ret, _content) = exec_ssl_package(args.ssl)
+        content += _content
+    if args.dns:
+        (ret, _content) = exec_dns_package(args.dns)
         content += _content
     elif args.exploit:
         (ret, _content) = exec_wrapper(args.exploit)
@@ -418,11 +440,14 @@ def main():
                            help='perform generic HTTP checks over given URL')
     argparser.add_argument('-S', '--ssl', nargs='+', metavar='IP',
                            help='perform generic SSL checks over given IP')
+    argparser.add_argument('-D', '--dns', nargs='+', metavar='NS',
+                           help='perform generic DNS checks \
+over given nameserver')
     argparser.add_argument('exploit', nargs='?', help='exploit to execute')
 
     args = argparser.parse_args()
 
-    if not args.exploit and not args.http and not args.ssl:
+    if not args.exploit and not args.http and not args.ssl and not args.dns:
         argparser.print_help()
         sys.exit(-1)
 
