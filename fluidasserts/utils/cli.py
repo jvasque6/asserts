@@ -347,6 +347,7 @@ def exec_ssl_package(ip_addresses):
     """Execute generic checks of SSL package."""
     template = """
 from fluidasserts.proto import ssl
+from fluidasserts.format import x509
 """
     for ip_addr in ip_addresses:
         template += """
@@ -361,6 +362,11 @@ ssl.allows_weak_ciphers('__ip__')
 ssl.has_beast('__ip__')
 ssl.has_heartbleed('__ip__')
 ssl.allows_modified_mac('__ip__')
+x509.is_cert_cn_not_equal_to_site('__ip__')
+x509.is_cert_inactive('__ip__')
+x509.is_cert_validity_lifespan_unsafe('__ip__')
+x509.is_sha1_used('__ip__')
+x509.is_md5_used('__ip__')
 """.replace('__ip__', ip_addr)
 
     (_, exploitfile) = tempfile.mkstemp(suffix='.py')
