@@ -4,7 +4,6 @@
 
 # standard imports
 import re
-import json
 from copy import deepcopy
 from datetime import datetime
 from typing import Optional, List, Union
@@ -976,7 +975,10 @@ def is_not_https_required(url: str) -> bool:
 
     :param url: URL to test.
     """
-    assert url.startswith('http://')
+    if not url.startswith('http://'):
+        show_unknown('URL should start with "http://"',
+                     details=dict(url=url))
+        return False
     try:
         http_session = http.HTTPSession(url)
         fingerprint = http_session.get_fingerprint()
@@ -1124,14 +1126,15 @@ def has_user_enumeration(url: str, user_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
-    assert 'params' in kwargs or 'data' in kwargs or 'json' in kwargs
     if 'params' in kwargs:
         query_string = kwargs['params']
     elif 'data' in kwargs:
         query_string = kwargs['data']
     elif 'json' in kwargs:
         query_string = kwargs['json']
-        assert user_field in json.dumps(query_string)
+    else:
+        show_unknown('No params were given', details=dict(url=url))
+        return False
 
     if 'json' not in kwargs and user_field not in query_string:
         show_unknown('Given user_field not in query string',
@@ -1211,15 +1214,10 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
-    assert 'params' in kwargs or 'data' in kwargs
-
     try:
         query_string = kwargs.get('data')
     except AttributeError:
         query_string = kwargs.get('params')
-
-    assert isinstance(user_list, list)
-    assert isinstance(pass_list, list)
 
     users_dataset = _create_dataset(user_field, user_list, query_string)
 
@@ -1234,6 +1232,9 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
             kwargs['params'] = _datas
         elif 'data' in kwargs:
             kwargs['data'] = _datas
+        else:
+            show_unknown('No param were given', details=dict(url=url))
+            return False
         try:
             sess = http.HTTPSession(url, *args, **kwargs)
             fingerprint = sess.get_fingerprint()

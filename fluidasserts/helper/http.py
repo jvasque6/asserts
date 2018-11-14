@@ -73,8 +73,6 @@ class HTTPSession():
         self.auth = auth
         self.files = files
         self.method = method
-        if self.method:
-            assert self.method in ['PUT', 'DELETE']
         self.response = None  # type: requests.Response
         self.is_auth = False
         self.stream = stream

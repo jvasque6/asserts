@@ -31,6 +31,7 @@ NON_EXISTANT = '0.0.0.0'
 def test_port_open_close(get_mock_ip):
     """Check open port."""
     assert not tcp.is_port_open(get_mock_ip, WEAK_PORT)
+    assert not tcp.is_port_open(get_mock_ip, -1)
     assert not tcp.is_port_open(NON_EXISTANT, WEAK_PORT)
 
 
@@ -38,4 +39,5 @@ def test_port_open_close(get_mock_ip):
 def test_port_insecure_close(get_mock_ip):
     """Check secure port."""
     assert not tcp.is_port_insecure(get_mock_ip, HARD_PORT)
+    assert not tcp.is_port_insecure(get_mock_ip, -1)
     assert not tcp.is_port_insecure(NON_EXISTANT, HARD_PORT)

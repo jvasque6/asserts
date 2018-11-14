@@ -167,7 +167,6 @@ def check_grammar(grammar: ParserElement, code_dest: str,
                        acceptable file extensions and comment delimiters.
     :return: Maps files to their found vulnerabilites.
     """
-    assert os.path.exists(code_dest)
     vulns = {}
     if os.path.isfile(code_dest):
         vulns[code_dest] = _get_match_lines(grammar, code_dest, lang_spec)

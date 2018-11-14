@@ -192,8 +192,6 @@ class Message():
 
     def __build_message(self):
         """Build message dict."""
-        assert self.status in self.__status_codes
-        assert self.message is not None
         if self.details is None:
             details = 'None'
         else:

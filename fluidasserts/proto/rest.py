@@ -46,7 +46,8 @@ def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
     """
     if 'headers' in kwargs:
-        assert 'Content-Type' not in kwargs['headers']
+        if 'Content-Type' in kwargs['headers']:
+            kwargs['headers'].pop('Content-Type', None)
     expected_codes = [406, 415]
     try:
         session = http.HTTPSession(url, *args, **kwargs)
