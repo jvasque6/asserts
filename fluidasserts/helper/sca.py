@@ -54,7 +54,8 @@ def get_vulns(package_manager: str, package: str, version: str) -> bool:
             raise PackageNotFoundException
         if int(resp['vulnerability-matches']) > 0:
             vulns = resp['vulnerabilities']
-            vuln_titles = [[x['title'], x['versions']] for x in vulns]
+            vuln_titles = [[x['title'], ", ".join(x['versions'])]
+                           for x in vulns]
             vuln_titles = reduce(lambda l, x: l.append(x) or
                                  l if x not in l else l, vuln_titles, [])
         else:
