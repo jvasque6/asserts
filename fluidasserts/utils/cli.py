@@ -182,7 +182,7 @@ def show_banner():
 
 def get_parsed_output(content):
     """Get parsed YAML output."""
-    return [x for x in yaml.load_all(content)]
+    return [x for x in yaml.safe_load_all(content)]
 
 
 def get_total_checks(output_list):
@@ -264,8 +264,8 @@ def colorize(parsed_content):
         else:
             style = SUMMARY_COLORS
 
-        message = yaml.dump(node, default_flow_style=False,
-                            explicit_start=True)
+        message = yaml.safe_dump(node, default_flow_style=False,
+                                 explicit_start=True)
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=style),
                   OUTFILE)
@@ -274,14 +274,14 @@ def colorize(parsed_content):
 def print_message(message, args):
     """Print message according to args."""
     if args.no_color:
-        print(yaml.dump(message, default_flow_style=False,
-                        explicit_start=True), flush=True)
+        print(yaml.safe_dump(message, default_flow_style=False,
+                             explicit_start=True), flush=True)
     else:
         colorize(message)
 
 
 def exec_wrapper(exploit):
-    """Wrapper executor exploit."""
+    """Execute exploit wrapper."""
     (_, logfile) = tempfile.mkstemp(suffix='.log')
 
     my_env = {**os.environ, 'FA_CLI': 'true'}
@@ -392,7 +392,7 @@ def get_content(args):
 
 
 def main():
-    """Package CLI."""
+    """Run CLI."""
     init()
     show_banner()
     argparser = argparse.ArgumentParser()
@@ -453,8 +453,8 @@ def main():
         }
     }
 
-    message = yaml.dump(final_message, default_flow_style=False,
-                        explicit_start=True)
+    message = yaml.safe_dump(final_message, default_flow_style=False,
+                             explicit_start=True)
 
     highlight(message, PropertiesLexer(),
               TerminalFormatter(colorscheme=SUMMARY_COLORS), OUTFILE)

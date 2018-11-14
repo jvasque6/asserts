@@ -44,8 +44,8 @@ def level(risk_level: str) -> Callable:
             """
             ret_val = func(*args, **kwargs)
             risk = {'risk-level': risk_level}
-            message = yaml.dump(risk, default_flow_style=False,
-                                explicit_start=False)
+            message = yaml.safe_dump(risk, default_flow_style=False,
+                                     explicit_start=False)
             print(message, flush=True)
             return ret_val
         return decorated

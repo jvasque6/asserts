@@ -213,8 +213,8 @@ class Message():
 
     def as_yaml(self):
         """Get YAML representation of message."""
-        return yaml.dump(self.__build_message(), default_flow_style=False,
-                         explicit_start=True)
+        return yaml.safe_dump(self.__build_message(), default_flow_style=False,
+                              explicit_start=True)
 
 
 def show_close(message, details=None, refs=None):
