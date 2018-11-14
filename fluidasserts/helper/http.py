@@ -37,6 +37,16 @@ class ConnError(Exception):
     pass
 
 
+class ParameterError(Exception):
+    """
+    A parameter (user input) error occurred.
+
+    :py:exc:`requests.ConnectionError` wrapper exception.
+    """
+
+    pass
+
+
 class HTTPSession():
     """Class of HTTP request objects."""
 
@@ -115,6 +125,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects) as exc:
                 raise ConnError(exc)
+            except requests.exceptions.MissingSchema as exc:
+                raise ParameterError(exc)
         else:
             try:
                 if self.data == '':
@@ -160,6 +172,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects) as exc:
                 raise ConnError(exc)
+            except requests.exceptions.MissingSchema as exc:
+                raise ParameterError(exc)
         return ret
 
     def formauth_by_response(self, text: str) -> requests.Response:

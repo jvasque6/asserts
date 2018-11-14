@@ -195,6 +195,8 @@ def _options_request(url: str, *args, **kwargs) -> Optional[requests.Response]:
         return requests.options(url, verify=False, *args, **kwargs)
     except requests.ConnectionError as exc:
         raise http.ConnError(exc)
+    except requests.exceptions.MissingSchema as exc:
+        raise http.ParameterError(exc)
 
 
 def _has_method(url: str, method: str, *args, **kwargs) -> bool:
@@ -210,6 +212,11 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
         is_method_present = _options_request(url, *args, **kwargs).headers
     except http.ConnError as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
@@ -249,6 +256,11 @@ def _has_insecure_header(url: str, header: str,     # noqa
         fingerprint = http_session.get_fingerprint()
     except http.ConnError as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
@@ -402,6 +414,11 @@ def _generic_has_multiple_text(url: str, regex_list: List[str],
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
 
 
 def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
@@ -437,6 +454,11 @@ def _generic_has_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         return False
     except http.ConnError as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
@@ -500,6 +522,11 @@ def has_not_text(url: str, expected_text: str, *args, **kwargs) -> bool:
         return False
     except http.ConnError as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
@@ -914,6 +941,11 @@ def is_sessionid_exposed(url: str, argument: str = 'sessionid',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
 
     regex = r'\b(' + argument + r')\b=([a-zA-Z0-9_-]+)'
 
@@ -947,6 +979,11 @@ def is_version_visible(url) -> bool:
     except http.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(url=url, error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
     version = service.get_version()
     fingerprint = service.get_fingerprint()
@@ -997,6 +1034,11 @@ def is_not_https_required(url: str) -> bool:
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
 
 
 @level('low')
@@ -1032,6 +1074,11 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
 
 
 @level('medium')
@@ -1051,6 +1098,11 @@ def is_resource_accessible(url: str, *args, **kwargs) -> bool:
         show_close('Could not connnect to resource',
                    details=dict(url=url,
                                 message=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
         return False
     if re.search(r'[4-5]\d\d', str(http_session.response.status_code)):
         show_close('Resource not available',
@@ -1084,6 +1136,11 @@ def is_response_delayed(url: str, *args, **kwargs) -> bool:
         fingerprint = http_session.get_fingerprint()
     except http.ConnError as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
@@ -1161,34 +1218,48 @@ def has_user_enumeration(url: str, user_field: str,
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
     true_datasets = _create_dataset(user_field, user_list, query_string)
 
+    result = False
     try:
         user_res = _request_dataset(url, true_datasets, *args, **kwargs)
     except http.ConnError as exc:
         show_unknown('Could not connect',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
-        return False
-    num_comp = len(fake_res) * len(user_res)
+        result = False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        result = False
+    else:
+        num_comp = len(fake_res) * len(user_res)
 
-    merged = [(x, y) for x in fake_res for y in user_res]
+        merged = [(x, y) for x in fake_res for y in user_res]
 
-    from difflib import SequenceMatcher
-    res = 0.0
+        from difflib import SequenceMatcher
+        res = 0.0
 
-    for resp_text, resp_time in merged:
-        res += SequenceMatcher(None, resp_text, resp_time).ratio()
+        for resp_text, resp_time in merged:
+            res += SequenceMatcher(None, resp_text, resp_time).ratio()
 
-    rat = round(res / num_comp, 2)
+        rat = round(res / num_comp, 2)
 
-    if rat > 0.95:
-        show_close('User enumeration not possible',
-                   details=dict(url=url, similar_answers_ratio=rat))
-        return False
-    show_open('User enumeration possible',
-              details=dict(url=url, similar_answers_ratio=rat))
-    return True
+        if rat > 0.95:
+            show_close('User enumeration not possible',
+                       details=dict(url=url, similar_answers_ratio=rat))
+            result = False
+        else:
+            show_open('User enumeration possible',
+                      details=dict(url=url, similar_answers_ratio=rat))
+            result = True
+    return result
 
 
 # pylint: disable=keyword-arg-before-vararg
@@ -1243,6 +1314,11 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
                          details=dict(url=url, data_used=_datas,
                                       error=str(exc).replace(':', ',')))
             return False
+        except http.ParameterError as exc:
+            show_unknown('An invalid parameter was passed',
+                         details=dict(url=url,
+                                      error=str(exc).replace(':', ',')))
+            return False
         if ok_regex in sess.response.text:
             show_open('Brute forcing possible',
                       details=dict(url=url, data_used=_datas,
@@ -1271,7 +1347,11 @@ def has_clear_viewstate(url: str, *args, **kwargs) -> bool:
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False
-
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
     vsb64 = http_session.get_html_value('input', '__VIEWSTATE')
 
     if not vsb64:
@@ -1317,6 +1397,11 @@ def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
         ntp_ts = datetime.utcfromtimestamp(ntp_date.timestamp()).timestamp()
     except (KeyError, http.ConnError) as exc:
         show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
                      details=dict(url=url,
                                   error=str(exc).replace(':', ',')))
         return False

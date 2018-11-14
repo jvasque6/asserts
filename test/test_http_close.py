@@ -25,6 +25,7 @@ MOCK_SERVICE = 'http://localhost:5000'
 BASE_URL = MOCK_SERVICE + '/http/headers'
 BWAPP_PORT = 80
 NONEXISTANT_SERVICE = 'http://nonexistant.fluidattacks.com'
+BAD_FORMAT_SERVICE = 'fluidattacks'
 
 
 def get_bwapp_cookies(cont_ip):
@@ -47,6 +48,7 @@ def get_bwapp_cookies(cont_ip):
 # Close tests
 #
 
+
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
 def test_a1_sqli_close(get_mock_ip):
     """App vulnerable a SQLi?."""
@@ -58,6 +60,7 @@ def test_a1_sqli_close(get_mock_ip):
 
     assert not http.has_sqli(vulnerable_url, params, cookies=bwapp_cookie)
     assert not http.has_sqli(NONEXISTANT_SERVICE, params, cookies=bwapp_cookie)
+    assert not http.has_sqli(BAD_FORMAT_SERVICE, params, cookies=bwapp_cookie)
     assert not http.has_sqli('%s/response/fail' % (MOCK_SERVICE),
                              params, cookies=bwapp_cookie)
 
@@ -80,6 +83,9 @@ def test_a1_os_injection_close(get_mock_ip):
     assert not http.has_command_injection(NONEXISTANT_SERVICE, expected,
                                           data=data,
                                           cookies=bwapp_cookie)
+    assert not http.has_command_injection(BAD_FORMAT_SERVICE, expected,
+                                          data=data,
+                                          cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -100,6 +106,9 @@ def test_a1_php_injection_close(get_mock_ip):
     assert not http.has_php_command_injection(NONEXISTANT_SERVICE, expected,
                                               params=params,
                                               cookies=bwapp_cookie)
+    assert not http.has_php_command_injection(BAD_FORMAT_SERVICE, expected,
+                                              params=params,
+                                              cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -114,7 +123,10 @@ def test_a1_hpp_close(get_mock_ip):
     expected = 'HTTP Parameter Pollution detected'
 
     assert http.has_hpp(vulnerable_url, expected, cookies=bwapp_cookie)
-    assert not http.has_hpp(NONEXISTANT_SERVICE, expected, cookies=bwapp_cookie)
+    assert not http.has_hpp(NONEXISTANT_SERVICE, expected,
+                            cookies=bwapp_cookie)
+    assert not http.has_hpp(BAD_FORMAT_SERVICE, expected,
+                            cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -137,6 +149,9 @@ def test_a1_insecure_upload_close(get_mock_ip):
     assert not http.has_insecure_upload(NONEXISTANT_SERVICE, expected,
                                         file_param, file_path, data=data,
                                         cookies=bwapp_cookie)
+    assert not http.has_insecure_upload(BAD_FORMAT_SERVICE, expected,
+                                        file_param, file_path, data=data,
+                                        cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -153,6 +168,9 @@ def test_a2_sessionid_exposed_close(get_mock_ip):
     assert not http.is_sessionid_exposed(NONEXISTANT_SERVICE,
                                          argument='PHPSESSID',
                                          cookies=bwapp_cookie)
+    assert not http.is_sessionid_exposed(BAD_FORMAT_SERVICE,
+                                         argument='PHPSESSID',
+                                         cookies=bwapp_cookie)
 
 
 def test_a2_session_fixation_close():
@@ -161,6 +179,8 @@ def test_a2_session_fixation_close():
         '%s/session_fixation_close' % (BASE_URL), 'Login required')
     assert not http.has_session_fixation(
         '%s/session_fixation_close' % (NONEXISTANT_SERVICE), 'Login required')
+    assert not http.has_session_fixation(
+        '%s/session_fixation_close' % (BAD_FORMAT_SERVICE), 'Login required')
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -180,7 +200,9 @@ def test_a3_xss_close(get_mock_ip):
                         cookies=bwapp_cookie)
 
     assert not http.has_xss(NONEXISTANT_SERVICE, expected, params,
-                        cookies=bwapp_cookie)
+                            cookies=bwapp_cookie)
+    assert not http.has_xss(BAD_FORMAT_SERVICE, expected, params,
+                            cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -189,7 +211,8 @@ def test_a4_insecure_dor_close(get_mock_ip):
     bwapp_cookie = get_bwapp_cookies(get_mock_ip)
     bwapp_cookie['security_level'] = '2'
 
-    vulnerable_url = 'http://' + get_mock_ip + '/insecure_direct_object_ref_2.php'
+    vulnerable_url = 'http://' + get_mock_ip + \
+        '/insecure_direct_object_ref_2.php'
 
     data = {'ticket_quantity': '1', 'ticket_price': '31337',
             'action': 'order'}
@@ -199,6 +222,8 @@ def test_a4_insecure_dor_close(get_mock_ip):
     assert http.has_insecure_dor(vulnerable_url, expected, data=data,
                                  cookies=bwapp_cookie)
     assert not http.has_insecure_dor(NONEXISTANT_SERVICE, expected, data=data,
+                                     cookies=bwapp_cookie)
+    assert not http.has_insecure_dor(BAD_FORMAT_SERVICE, expected, data=data,
                                      cookies=bwapp_cookie)
 
 
@@ -220,6 +245,9 @@ def test_a7_dirtraversal_close(get_mock_ip):
     assert not http.has_dirtraversal(NONEXISTANT_SERVICE, expected,
                                      params=params,
                                      cookies=bwapp_cookie)
+    assert not http.has_dirtraversal(BAD_FORMAT_SERVICE, expected,
+                                     params=params,
+                                     cookies=bwapp_cookie)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['bwapp'], indirect=True)
@@ -237,6 +265,8 @@ def test_a7_lfi_close(get_mock_ip):
     assert not http.has_lfi(vulnerable_url, expected, params=params,
                             cookies=bwapp_cookie)
     assert not http.has_lfi(NONEXISTANT_SERVICE, expected, params=params,
+                            cookies=bwapp_cookie)
+    assert not http.has_lfi(BAD_FORMAT_SERVICE, expected, params=params,
                             cookies=bwapp_cookie)
 
 
@@ -256,7 +286,9 @@ def test_a8_csrf_close(get_mock_ip):
     assert http.has_csrf(vulnerable_url, expected, params=params,
                          cookies=bwapp_cookie)
     assert not http.has_csrf(NONEXISTANT_SERVICE, expected, params=params,
-                         cookies=bwapp_cookie)
+                             cookies=bwapp_cookie)
+    assert not http.has_csrf(BAD_FORMAT_SERVICE, expected, params=params,
+                             cookies=bwapp_cookie)
 
 
 def test_access_control_allow_origin_close():
@@ -265,6 +297,8 @@ def test_access_control_allow_origin_close():
         '%s/access_control_allow_origin/ok' % (BASE_URL))
     assert not http.is_header_access_control_allow_origin_missing(
         '%s/access_control_allow_origin/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_access_control_allow_origin_missing(
+        '%s/access_control_allow_origin/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_cache_control_close():
@@ -273,6 +307,8 @@ def test_cache_control_close():
         '%s/cache_control/ok' % (BASE_URL))
     assert not http.is_header_cache_control_missing(
         '%s/cache_control/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_cache_control_missing(
+        '%s/cache_control/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_hsts_close():
@@ -281,6 +317,8 @@ def test_hsts_close():
         '%s/hsts/ok' % (BASE_URL))
     assert not http.is_header_hsts_missing(
         '%s/hsts/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_hsts_missing(
+        '%s/hsts/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_basic_close():
@@ -289,6 +327,8 @@ def test_basic_close():
         '%s/basic/ok' % (BASE_URL))
     assert not http.is_basic_auth_enabled(
         '%s/basic/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_basic_auth_enabled(
+        '%s/basic/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_put_ok():
@@ -296,6 +336,8 @@ def test_put_ok():
     assert not http.has_not_text('%s/put_ok' % (MOCK_SERVICE),
                                  'Method PUT Allowed', method='PUT')
     assert not http.has_not_text('%s/put_ok' % (NONEXISTANT_SERVICE),
+                                 'Method PUT Allowed', method='PUT')
+    assert not http.has_not_text('%s/put_ok' % (BAD_FORMAT_SERVICE),
                                  'Method PUT Allowed', method='PUT')
 
 
@@ -305,24 +347,31 @@ def test_delete_ok():
                                  'Method DELETE Allowed', method='DELETE')
     assert not http.has_not_text('%s/delete_ok' % (NONEXISTANT_SERVICE),
                                  'Method DELETE Allowed', method='DELETE')
+    assert not http.has_not_text('%s/delete_ok' % (BAD_FORMAT_SERVICE),
+                                 'Method DELETE Allowed', method='DELETE')
 
 
 def test_put_close():
     """HTTP PUT Not Allowed."""
     assert not http.has_put_method('%s/put_close' % (BASE_URL))
     assert not http.has_put_method('%s/put_close' % (NONEXISTANT_SERVICE))
+    assert not http.has_put_method('%s/put_close' % (BAD_FORMAT_SERVICE))
 
 
 def test_trace_close():
     """HTTP TRACE Not Allowed."""
     assert not http.has_trace_method('%s/trace_close' % (BASE_URL))
     assert not http.has_trace_method('%s/trace_close' % (NONEXISTANT_SERVICE))
+    assert not http.has_trace_method('%s/trace_close' % (BAD_FORMAT_SERVICE))
 
 
 def test_delete_close():
     """HTTP DELETE Not Allowed."""
     assert not http.has_delete_method('%s/delete_close' % (BASE_URL))
-    assert not http.has_delete_method('%s/delete_close' % (NONEXISTANT_SERVICE))
+    assert not http.has_delete_method('%s/delete_close' %
+                                      (NONEXISTANT_SERVICE))
+    assert not http.has_delete_method('%s/delete_close' %
+                                      (BAD_FORMAT_SERVICE))
 
 
 def test_notfound_string_close():
@@ -331,6 +380,7 @@ def test_notfound_string_close():
     expected = 'Expected string'
     assert not http.has_text(url, expected)
     assert not http.has_text(NONEXISTANT_SERVICE, expected)
+    assert not http.has_text(BAD_FORMAT_SERVICE, expected)
 
 
 def test_found_string_close():
@@ -339,6 +389,7 @@ def test_found_string_close():
     expected = 'Expected string'
     assert not http.has_not_text(url, expected)
     assert not http.has_not_text(NONEXISTANT_SERVICE, expected)
+    assert not http.has_not_text(BAD_FORMAT_SERVICE, expected)
 
 
 def test_userenum_post_close():
@@ -346,6 +397,12 @@ def test_userenum_post_close():
     data = 'username=pepe&password=grillo'
     assert not http.has_user_enumeration(
         '%s/userenum_post/ok' % (MOCK_SERVICE),
+        'username', data=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/ok' % (NONEXISTANT_SERVICE),
+        'username', data=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/ok' % (BAD_FORMAT_SERVICE),
         'username', data=data)
 
 
@@ -355,6 +412,12 @@ def test_userenum_post_json_close():
             'password': 'grillo'}
     assert not http.has_user_enumeration(
         '%s/userenum_post/json/ok' % (MOCK_SERVICE),
+        'username', json=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/json/ok' % (NONEXISTANT_SERVICE),
+        'username', json=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_post/json/ok' % (BAD_FORMAT_SERVICE),
         'username', json=data)
 
 
@@ -366,6 +429,9 @@ def test_userenum_get_close():
         'username', params=data)
     assert not http.has_user_enumeration(
         '%s/userenum_get/ok' % (NONEXISTANT_SERVICE),
+        'username', params=data)
+    assert not http.has_user_enumeration(
+        '%s/userenum_get/ok' % (BAD_FORMAT_SERVICE),
         'username', params=data)
 
 
@@ -388,6 +454,14 @@ def test_bruteforce_close():
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+    assert not http.can_brute_force(
+        '%s/bruteforce/ok' % (BAD_FORMAT_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        data=data)
 
 
 def test_responsetime_close():
@@ -396,6 +470,8 @@ def test_responsetime_close():
         '%s/responsetime/ok' % (MOCK_SERVICE))
     assert not http.is_response_delayed(
         '%s/responsetime/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_response_delayed(
+        '%s/responsetime/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_dirlisting_close():
@@ -404,6 +480,8 @@ def test_dirlisting_close():
         '%s/dirlisting/ok' % (MOCK_SERVICE))
     assert not http.has_dirlisting(
         '%s/dirlisting/ok' % (NONEXISTANT_SERVICE))
+    assert not http.has_dirlisting(
+        '%s/dirlisting/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_http_response_close():
@@ -412,6 +490,8 @@ def test_http_response_close():
         '%s/response/ok' % (MOCK_SERVICE))
     assert not http.is_resource_accessible(
         '%s/response/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_resource_accessible(
+        '%s/response/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_is_header_x_asp_net_version_present_close():
@@ -420,12 +500,15 @@ def test_is_header_x_asp_net_version_present_close():
         '%s/x_aspnet_version/ok' % (BASE_URL))
     assert not http.is_header_x_asp_net_version_present(
         '%s/x_aspnet_version/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_x_asp_net_version_present(
+        '%s/x_aspnet_version/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_is_version_visible_close():
-   """Server header contains version?."""
-   assert not http.is_version_visible('%s/version/ok' % (BASE_URL))
-   assert not http.is_version_visible('%s/version/ok' % (NONEXISTANT_SERVICE))
+    """Server header contains version?."""
+    assert not http.is_version_visible('%s/version/ok' % (BASE_URL))
+    assert not http.is_version_visible('%s/version/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_version_visible('%s/version/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_is_header_x_xxs_protection_missing_close():
@@ -434,6 +517,8 @@ def test_is_header_x_xxs_protection_missing_close():
         '%s/xxs_protection/ok' % (BASE_URL))
     assert not http.is_header_x_xxs_protection_missing(
         '%s/xxs_protection/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_x_xxs_protection_missing(
+        '%s/xxs_protection/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_is_header_perm_cross_dom_pol_missing_close():
@@ -442,18 +527,25 @@ def test_is_header_perm_cross_dom_pol_missing_close():
         '%s/perm_cross_dom_pol/ok' % (BASE_URL))
     assert not http.is_header_perm_cross_dom_pol_missing(
         '%s/perm_cross_dom_pol/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_perm_cross_dom_pol_missing(
+        '%s/perm_cross_dom_pol/ok' % (BAD_FORMAT_SERVICE))
 
 
 def test_has_clear_viewstate_close():
-    """ViewState cifrado?."""
+    """Esta el ViewState cifrado?."""
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/ok' % (MOCK_SERVICE))
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/not_found' % (MOCK_SERVICE))
     assert not http.has_clear_viewstate(
         '%s/http/viewstate/encrypted/not_found' % (NONEXISTANT_SERVICE))
+    assert not http.has_clear_viewstate(
+        '%s/http/viewstate/encrypted/not_found' % (BAD_FORMAT_SERVICE))
+
 
 def test_is_date_unsyncd_close():
     """Hora desincronizada?."""
     assert not http.is_date_unsyncd(
         '%s/date/fail' % (NONEXISTANT_SERVICE))
+    assert not http.is_date_unsyncd(
+        '%s/date/fail' % (BAD_FORMAT_SERVICE))
