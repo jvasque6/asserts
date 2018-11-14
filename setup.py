@@ -92,14 +92,15 @@ setup(
         'viewstate==0.4.3',          # fluidasserts.proto.http
         'ntplib==0.3.3',             # fluidasserts.proto.http
         'pytz==2018.7',              # fluidasserts.proto.http
-        'requirements-detector==0.6',  #  fluidasserts.sca
+        'requirements-detector==0.6',  # fluidasserts.sca
+        'defusedxml==0.5.0',         # fluidasserts.sca
         'boto3==1.9.40',             # fluidasserts.cloud.aws
         'python-dateutil==2.7.5',    # fluidasserts.cloud.aws
         'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
         'pycrypto==2.6.1; platform_system == "Linux"',
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
-    entry_points=
-        {'console_scripts': ['asserts=fluidasserts.utils.cli:main'],
-    },
+    entry_points={
+            'console_scripts': ['asserts=fluidasserts.utils.cli:main'],
+        },
 )

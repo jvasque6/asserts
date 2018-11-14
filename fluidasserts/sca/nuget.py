@@ -6,7 +6,7 @@
 import os
 
 # 3rd party imports
-from xml.etree import ElementTree
+from defusedxml.ElementTree import parse
 
 # local imports
 from fluidasserts.helper import sca
@@ -32,7 +32,7 @@ def _get_requirements(path: str) -> list:
             if pom_file != 'packages.config':
                 continue
             full_path = os.path.join(root, pom_file)
-            tree = ElementTree.parse(full_path)
+            tree = parse(full_path)
             deps = tree.findall(".//package")
             for dep in deps:
                 artifact_id = dep.attrib['id']

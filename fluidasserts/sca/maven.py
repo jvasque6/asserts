@@ -6,7 +6,7 @@
 import os
 
 # 3rd party imports
-from xml.etree import ElementTree
+from defusedxml.ElementTree import parse
 
 # local imports
 from fluidasserts.helper import sca
@@ -33,7 +33,7 @@ def _get_requirements(path: str) -> list:
             if pom_file != 'pom.xml':
                 continue
             full_path = os.path.join(root, pom_file)
-            tree = ElementTree.parse(full_path)
+            tree = parse(full_path)
             root = tree.getroot()
             deps = root.findall(".//xmlns:dependency",
                                 namespaces=namespaces)
