@@ -27,6 +27,11 @@ HARD_PORT = 53
 # Open tests
 #
 
+@pytest.mark.parametrize('get_mock_ip', ['dns_weak'], indirect=True)
+def test_is_dynupdate_enabled_open(get_mock_ip):
+    """Dynamic update enabled?."""
+    assert dns.is_dynupdate_enabled(TEST_ZONE, get_mock_ip)
+
 
 @pytest.mark.parametrize('get_mock_ip', ['dns_weak'], indirect=True)
 def test_is_xfr_enabled_open(get_mock_ip):
