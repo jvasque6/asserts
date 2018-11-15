@@ -110,14 +110,10 @@ class FTPService(Service):
     def __init__(self, port: int = 21, is_active: bool = False,
                  is_ssl: bool = False, payload: str = None) -> None:
         """Build a new FTPService object."""
-        try:
-            super(FTPService, self).__init__(port=port,
-                                             is_active=is_active,
-                                             is_ssl=is_ssl,
-                                             payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
+        super(FTPService, self).__init__(port=port,
+                                         is_active=is_active,
+                                         is_ssl=is_ssl,
+                                         payload=payload)
 
     def get_version(self, server: str) -> Optional[str]:
         """
@@ -139,14 +135,10 @@ class SMTPService(Service):
     def __init__(self, port: int = 25, is_active: bool = False,
                  is_ssl: bool = False, payload: str = None) -> None:
         """Build a new Service object."""
-        try:
-            super(SMTPService, self).__init__(port=port,
-                                              is_active=is_active,
-                                              is_ssl=is_ssl,
-                                              payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
+        super(SMTPService, self).__init__(port=port,
+                                          is_active=is_active,
+                                          is_ssl=is_ssl,
+                                          payload=payload)
 
     def get_version(self, server: str) -> Optional[str]:
         """
@@ -201,14 +193,10 @@ class SSHService(Service):
     def __init__(self, port: int = 22, is_active: bool = False,
                  is_ssl: bool = False, payload=None) -> None:
         """Build a new SSHService object."""
-        try:
-            super(SSHService, self).__init__(port=port,
-                                             is_active=is_active,
-                                             is_ssl=is_ssl,
-                                             payload=payload)
-        except TypeError:
-            super().__init__(port=port, is_active=is_active,
-                             is_ssl=is_ssl, payload=payload)
+        super(SSHService, self).__init__(port=port,
+                                         is_active=is_active,
+                                         is_ssl=is_ssl,
+                                         payload=payload)
 
     def get_version(self, server: str) -> Optional[str]:
         """
