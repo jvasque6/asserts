@@ -181,7 +181,12 @@ def check_grammar(grammar: ParserElement, code_dest: str,
                 else:
                     vulns[full_path] = _get_match_lines(grammar, full_path,
                                                         lang_spec)
-        return vulns
     else:
-        vulns[code_dest] = _get_match_lines(grammar, code_dest, lang_spec)
-        return vulns
+        if lang_spec.get('extensions'):
+            if code_dest.split('.')[-1] in lang_spec.get('extensions'):
+                vulns[code_dest] = _get_match_lines(grammar, code_dest,
+                                                    lang_spec)
+        else:
+            vulns[code_dest] = _get_match_lines(grammar, code_dest,
+                                                lang_spec)
+    return vulns

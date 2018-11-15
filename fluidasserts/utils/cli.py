@@ -183,7 +183,7 @@ def show_banner():
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
-        ret = [x for x in yaml.safe_load_all(content)]
+        ret = [x for x in yaml.safe_load_all(content) if len(x) > 1]
     except yaml.scanner.ScannerError:  # pragma: no cover
         print(content, flush=True)
         sys.exit(-1)
