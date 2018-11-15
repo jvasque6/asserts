@@ -56,8 +56,6 @@ def check_cli():
 
 def trim(docstring):
     """Trim function from PEP-257."""
-    if not docstring:
-        return ""
     # Convert tabs to spaces (following the normal Python rules)
     # and split into a list of lines:
     lines = docstring.expandtabs().splitlines()
@@ -149,6 +147,8 @@ def get_module_description(package, module):
     docstring = parse_docstring(mod.__doc__)
     desc = '\n'.join(filter(None, (docstring['short_description'],
                                    docstring['long_description'])))
+    desc = re.sub(r'`_.', '', desc)
+    desc = re.sub(r'[`<>\\]', '', desc)
     return desc
 
 
