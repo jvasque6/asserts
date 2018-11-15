@@ -8,6 +8,8 @@ RUN apk update && apk upgrade && apk add samba
 RUN adduser -D -s /bin/sh nonpriv && \
     echo "root:Puef8poh2tei9AeB" | chpasswd && \
     echo "nonpriv:ahgh7xee9eewaeGh" | chpasswd && \
+    (echo "Puef8poh2tei9AeB"; echo "Puef8poh2tei9AeB") | smbpasswd -a root && \
+    (echo "ahgh7xee9eewaeGh"; echo "ahgh7xee9eewaeGh") | smbpasswd -a nonpriv && \
     mkdir -p /samba/public && \
     mkdir -p /samba/private && \
     touch /samba/public/public_file.txt && \

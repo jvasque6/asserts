@@ -37,7 +37,11 @@ def test_has_dirlisting_close(get_mock_ip):
                                   user="root",
                                   password='Puef8poh2tei9AeB',
                                   domain='WORKGROUP')
-    assert not smb.has_dirlisting(NON_EXISTANT,'public',
+    assert not smb.has_dirlisting(get_mock_ip, 'public',
+                                  user="root",
+                                  password='bad',
+                                  domain='WORKGROUP')
+    assert not smb.has_dirlisting(NON_EXISTANT, 'public',
                                   user="root",
                                   password='Puef8poh2tei9AeB',
                                   domain='WORKGROUP')
@@ -49,6 +53,10 @@ def test_is_signing_disabled_close(get_mock_ip):
     assert not smb.is_signing_disabled(server=get_mock_ip,
                                        user="root",
                                        password='Puef8poh2tei9AeB',
+                                       domain='WORKGROUP')
+    assert not smb.is_signing_disabled(server=get_mock_ip,
+                                       user="root",
+                                       password='bad',
                                        domain='WORKGROUP')
     assert not smb.is_signing_disabled(server=NON_EXISTANT,
                                        user="root",
