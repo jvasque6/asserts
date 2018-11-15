@@ -65,3 +65,9 @@ def test_allows_weak_alg_open(get_mock_ip):
 def test_allows_anon_alg_open(get_mock_ip):
     """Sitio permite algoritmos anonimos?."""
     assert ssl.allows_anon_ciphers(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_has_heartbleed_open(get_mock_ip):
+    """Heartbleed enabled?."""
+    assert ssl.has_heartbleed(get_mock_ip)

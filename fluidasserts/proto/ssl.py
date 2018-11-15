@@ -34,7 +34,9 @@ TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
 # pylint: disable=protected-access
 
 
-def _my_send_finished(self, master_secret, cipher_suite=None, next_p=None):
+def _my_send_finished(self, master_secret,
+                      cipher_suite=None,
+                      next_p=None):  # pragma: no cover
     """Duck-tapped TLSConnection._sendFinished function."""
     self.sock.buffer_writes = True
 
@@ -226,7 +228,7 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
             show_open('Forward Secrecy not enabled on site',
                       details=dict(site=site, port=port))
             return True
-    except socket.error as exc:
+    except (tlslite.errors.TLSLocalAlert, socket.error) as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port, error=str(exc)))
         result = False
@@ -248,10 +250,13 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
             show_open('SSLv3 enabled on site',
                       details=dict(site=site, port=port))
             result = True
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('SSLv3 not enabled on site',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -279,10 +284,13 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
             show_open('TLSv1 enabled on site',
                       details=dict(site=site, port=port))
             result = True
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('TLSv1 not enabled on site',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -316,10 +324,13 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
                       details=dict(site=site, port=port))
             result = True
     except (tlslite.errors.TLSRemoteAlert,
-            tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+            tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE TLS attack',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -359,6 +370,10 @@ be vulnerable to POODLE SSLv3 attack',
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE SSLv3 attack',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -421,10 +436,13 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
             show_open('Site allows anonymous cipher suites',
                       details=dict(site=site, port=port))
             result = True
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not allows anonymous cipher suites',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -453,10 +471,13 @@ def allows_weak_ciphers(site: str, port: int = PORT) -> bool:
             show_open('Site allows weak (RC4, 3DES and NULL) cipher \
 suites', details=dict(site=site, port=port))
             result = True
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
 suites', details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
@@ -493,10 +514,13 @@ def has_beast(site: str, port: int = PORT) -> bool:
                 show_close('Site allows TLSv1.0. However, it seems \
 to be not an enabler to BEAST attack', details=dict(site=site, port=port))
                 result = False
-    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError,
-            tlslite.errors.TLSLocalAlert):
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not enables to BEAST attack to clients',
                    details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         show_unknown('Could not connect',
@@ -584,7 +608,7 @@ def allows_modified_mac(site: str, port: int = PORT) -> bool:
             tls.send(b"GET / HTTP/1.0\n\n\n")
             tls.read()
         except (tlslite.TLSRemoteAlert, tlslite.TLSAbruptCloseError,
-                socket.error):
+                tlslite.errors.TLSLocalAlert, socket.error):
             continue
         else:
             result = True

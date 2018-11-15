@@ -48,18 +48,16 @@ def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
     :param ciphers: Encryption algorithms. Defaults to (as per Python's SSL)
                     ``'DEFAULT:!aNULL:!eNULL:!LOW:!EXPORT:!SSLv2'``.
     """
-    try:
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(5)
-        wrapped_socket = ssl.SSLSocket(sock=sock,
-                                       ca_certs=certifi.where(),
-                                       cert_reqs=ssl.CERT_NONE,
-                                       server_hostname=hostname,
-                                       ciphers=ciphers)
-        wrapped_socket.connect((hostname, port))
-        yield wrapped_socket
-    finally:
-        wrapped_socket.close()
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.settimeout(5)
+    wrapped_socket = ssl.SSLSocket(sock=sock,
+                                   ca_certs=certifi.where(),
+                                   cert_reqs=ssl.CERT_NONE,
+                                   server_hostname=hostname,
+                                   ciphers=ciphers)
+    wrapped_socket.connect((hostname, port))
+    yield wrapped_socket
+    wrapped_socket.close()
 
 
 # pylint: disable=too-many-arguments
