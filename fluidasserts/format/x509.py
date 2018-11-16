@@ -49,6 +49,10 @@ def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
         except socket.error:
             show_unknown('Port closed', details=dict(site=site, port=port))
             return False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
+        return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
 
@@ -63,7 +67,7 @@ def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
         show_close('Certificate does not use {} as signature algorithm'.
                    format(alg.upper()),
                    details=dict(site=site, port=port,
-                                algorithm=sign_algorith.upper()))
+                                cert_algorithm=sign_algorith.upper()))
         result = False
     return result
 
@@ -98,7 +102,10 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
         except socket.error:
             show_unknown('Port closed', details=dict(site=site, port=port))
             return False
-
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
+        return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
     cert_cn = \
@@ -157,7 +164,10 @@ def is_cert_inactive(site: str, port: int = PORT) -> bool:
         except socket.error:
             show_unknown('Port closed', details=dict(site=site, port=port))
             return False
-
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
+        return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
 
@@ -207,7 +217,10 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
         except socket.error:
             show_unknown('Port closed', details=dict(site=site, port=port))
             return False
-
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
+        return False
     cert_obj = load_pem_x509_certificate(cert.encode('utf-8'),
                                          default_backend())
 

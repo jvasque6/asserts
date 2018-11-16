@@ -29,7 +29,7 @@ NON_EXISTANT = '0.0.0.0'
 @pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
 def test_cn_equal_to_site_close(get_mock_ip):
     """CN del cert concuerda con el nombre del sitio?."""
-    #assert not x509.is_cert_cn_not_equal_to_site(get_mock_ip)
+    assert not x509.is_cert_cn_not_equal_to_site(get_mock_ip, 80)
     assert not x509.is_cert_cn_not_equal_to_site('0.0.0.0')
 
 
@@ -37,6 +37,7 @@ def test_cn_equal_to_site_close(get_mock_ip):
 def test_cert_active_close(get_mock_ip):
     """Certificado aun esta vigente?."""
     assert not x509.is_cert_inactive(get_mock_ip)
+    assert not x509.is_cert_inactive(get_mock_ip, 80)
     assert not x509.is_cert_inactive(NON_EXISTANT)
 
 
@@ -44,6 +45,7 @@ def test_cert_active_close(get_mock_ip):
 def test_cert_lifespan_safe_close(get_mock_ip):
     """Vigencia del certificado es segura?."""
     assert not x509.is_cert_validity_lifespan_unsafe(get_mock_ip)
+    assert not x509.is_cert_validity_lifespan_unsafe(get_mock_ip, 80)
     assert not x509.is_cert_validity_lifespan_unsafe(NON_EXISTANT)
 
 
@@ -51,6 +53,7 @@ def test_cert_lifespan_safe_close(get_mock_ip):
 def test_is_sha1_used_close(get_mock_ip):
     """Presencia de SHA1 en los algoritmos de cifrado?."""
     assert not x509.is_sha1_used(get_mock_ip, SSL_PORT)
+    assert not x509.is_sha1_used(get_mock_ip, 80)
     assert not x509.is_sha1_used(NON_EXISTANT, SSL_PORT)
 
 
@@ -58,4 +61,5 @@ def test_is_sha1_used_close(get_mock_ip):
 def test_is_md5_used_close(get_mock_ip):
     """Presencia de MD5 en los algoritmos de cifrado?."""
     assert not x509.is_md5_used(get_mock_ip, SSL_PORT)
+    assert not x509.is_md5_used(get_mock_ip, 80)
     assert not x509.is_md5_used(NON_EXISTANT, SSL_PORT)
