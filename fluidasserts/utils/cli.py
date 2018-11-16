@@ -406,13 +406,15 @@ def exec_lang_package(codes):
     """Execute generic checks of LANG package."""
     template = """
 from fluidasserts.lang import csharp
-from fluidasserts.lang import docker
 from fluidasserts.lang import dotnetconfig
 from fluidasserts.lang import html
 from fluidasserts.lang import java
 from fluidasserts.lang import javascript
 from fluidasserts.lang import python
 from fluidasserts.lang import rpgle
+from fluidasserts.sca import maven
+from fluidasserts.sca import nuget
+from fluidasserts.sca import pypi
 """
     for code in codes:
         template += """
@@ -426,7 +428,6 @@ csharp.uses_sha1_hash('__code__')
 csharp.uses_ecb_encryption_mode('__code__')
 csharp.uses_debug_writeline('__code__')
 csharp.uses_console_writeline('__code__')
-docker.not_pinned('__code__')
 dotnetconfig.is_header_x_powered_by_present('__code__')
 dotnetconfig.has_ssl_disabled('__code__')
 dotnetconfig.has_debug_enabled('__code__')
@@ -452,6 +453,9 @@ rpgle.has_dos_dow_sqlcod('__code__')
 rpgle.has_unitialized_vars('__code__')
 rpgle.has_generic_exceptions('__code__')
 rpgle.swallows_exceptions('__code__')
+maven.project_has_vulnerabilities('__code__')
+nuget.project_has_vulnerabilities('__code__')
+pypi.project_has_vulnerabilities('__code__')
 """.replace('__code__', code)
 
     (_, exploitfile) = tempfile.mkstemp(suffix='.py')

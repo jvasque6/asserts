@@ -80,7 +80,6 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
         return False
 
 
-@level('high')
 @track
 def project_has_vulnerabilities(path: str) -> bool:
     """
