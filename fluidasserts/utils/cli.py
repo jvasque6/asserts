@@ -10,7 +10,6 @@ import contextlib
 import argparse
 import os
 import sys
-import tempfile
 
 # pylint: disable=no-name-in-module
 # pylint: disable=global-statement
@@ -300,7 +299,8 @@ def std_redir(stdout=None):
 def exec_wrapper(exploit):
     """Execute exploit wrapper."""
     with std_redir() as exploit_result:
-        exec(open(exploit).read())
+        code = compile(exploit, 'exploit', 'exec', optimize=1)
+        exec(code)
     return exploit_result.getvalue()
 
 
@@ -337,12 +337,7 @@ http.has_clear_viewstate('__url__')
 http.is_date_unsyncd('__url__')
 
 """.replace('__url__', url)
-
-    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
-    with open(exploitfile, 'w+') as exploitfd:
-        exploitfd.write(template)
-
-    return exec_wrapper(exploitfile)
+    return exec_wrapper(template)
 
 
 def exec_ssl_package(ip_addresses):
@@ -371,12 +366,7 @@ x509.is_cert_validity_lifespan_unsafe('__ip__')
 x509.is_sha1_used('__ip__')
 x509.is_md5_used('__ip__')
 """.replace('__ip__', ip_addr)
-
-    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
-    with open(exploitfile, 'w+') as exploitfd:
-        exploitfd.write(template)
-
-    return exec_wrapper(exploitfile)
+    return exec_wrapper(template)
 
 
 def exec_dns_package(nameservers):
@@ -390,12 +380,7 @@ dns.has_cache_snooping('__ip__')
 dns.has_recursion('__ip__')
 dns.can_amplify('__ip__')
 """.replace('__ip__', nameserver)
-
-    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
-    with open(exploitfile, 'w+') as exploitfd:
-        exploitfd.write(template)
-
-    return exec_wrapper(exploitfile)
+    return exec_wrapper(template)
 
 
 def exec_lang_package(codes):
@@ -453,12 +438,12 @@ maven.project_has_vulnerabilities('__code__')
 nuget.project_has_vulnerabilities('__code__')
 pypi.project_has_vulnerabilities('__code__')
 """.replace('__code__', code)
+    return exec_wrapper(template)
 
-    (_, exploitfile) = tempfile.mkstemp(suffix='.py')
-    with open(exploitfile, 'w+') as exploitfd:
-        exploitfd.write(template)
 
-    return exec_wrapper(exploitfile)
+def exec_exploit(exploit):
+    """Execute exploit file."""
+    return exec_wrapper(open(exploit).read())
 
 
 def get_content(args):
@@ -473,7 +458,7 @@ def get_content(args):
     if args.lang:
         content += exec_lang_package(args.lang)
     elif args.exploit:
-        content += exec_wrapper(args.exploit)
+        content += exec_exploit(args.exploit)
     return content
 
 
