@@ -5,14 +5,16 @@
 """Asserts CLI."""
 
 # standard imports
+from io import StringIO
+import contextlib
 import argparse
 import os
 import sys
 import tempfile
-from subprocess import call
 
 # pylint: disable=no-name-in-module
 # pylint: disable=global-statement
+# pylint: disable=exec-used
 
 # 3rd party imports
 import yaml
@@ -284,26 +286,22 @@ def print_message(message, args):
         colorize(message)
 
 
+@contextlib.contextmanager
+def std_redir(stdout=None):
+    """Redirect stdout."""
+    old = sys.stdout
+    if stdout is None:
+        stdout = StringIO()
+    sys.stdout = stdout
+    yield stdout
+    sys.stdout = old
+
+
 def exec_wrapper(exploit):
     """Execute exploit wrapper."""
-    (_, logfile) = tempfile.mkstemp(suffix='.log')
-
-    my_env = {**os.environ, 'FA_CLI': 'true'}
-
-    with open(logfile, 'w') as outfile:
-        ret = call([sys.executable, exploit],
-                   stdout=outfile, stderr=outfile, env=my_env)
-
-    with open(logfile, 'r') as infile:
-        content = infile.read()
-
-    if os.path.exists(logfile):
-        try:
-            os.remove(logfile)
-        except PermissionError:
-            pass
-
-    return (ret, content)
+    with std_redir() as exploit_result:
+        exec(open(exploit).read())
+    return exploit_result.getvalue()
 
 
 def exec_http_package(urls):
@@ -467,21 +465,16 @@ def get_content(args):
     """Get raw content according to args parameter."""
     content = ''
     if args.http:
-        (ret, _content) = exec_http_package(args.http)
-        content += _content
+        content += exec_http_package(args.http)
     if args.ssl:
-        (ret, _content) = exec_ssl_package(args.ssl)
-        content += _content
+        content += exec_ssl_package(args.ssl)
     if args.dns:
-        (ret, _content) = exec_dns_package(args.dns)
-        content += _content
+        content += exec_dns_package(args.dns)
     if args.lang:
-        (ret, _content) = exec_lang_package(args.lang)
-        content += _content
+        content += exec_lang_package(args.lang)
     elif args.exploit:
-        (ret, _content) = exec_wrapper(args.exploit)
-        content += _content
-    return (ret, content)
+        content += exec_wrapper(args.exploit)
+    return content
 
 
 def check_boolean_env_var(var_name):
@@ -533,7 +526,7 @@ given files or directories')
     check_boolean_env_var('FA_STRICT')
     check_boolean_env_var('FA_NOTRACK')
 
-    (ret, content) = get_content(args)
+    content = get_content(args)
 
     parsed = get_parsed_output(content)
 
@@ -576,4 +569,3 @@ given files or directories')
         if os.environ['FA_STRICT'] == 'true':
             if 'OPEN' in content:
                 sys.exit(1)
-    return ret
