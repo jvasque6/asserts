@@ -40,6 +40,15 @@ def test_cli_strict():
                 assert cli.main()
 
 
+def test_cli_strict_bad():
+    """Run CLI with a bad FA_STRICT value."""
+    os.environ['FA_STRICT'] = 'badvalue'
+    testargs = ["asserts", ASSERTS_EXPLOIT]
+    with patch.object(sys, 'argv', testargs):
+        with pytest.raises(SystemExit):
+                assert cli.main()
+
+
 def test_cli_noargs():
     """Run CLI with no args."""
     os.environ['FA_STRICT'] = 'false'
@@ -60,7 +69,7 @@ def test_cli_quiet():
 def test_cli_color():
     """Run CLI in without colors."""
     os.environ['FA_STRICT'] = 'false'
-    testargs = ["asserts", "-c", ASSERTS_EXPLOIT]
+    testargs = ["asserts", "-n", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
         assert not cli.main()
 

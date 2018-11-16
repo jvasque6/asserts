@@ -35,13 +35,6 @@ PARAM_REGEX = re.compile(r":param (?P<name>[\*\w]+): (?P<doc>.*?)"
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 
-# Remove support for py2
-
-if sys.version_info < (3,):
-    print('Py2 is not longer supported. Please, use a Py3 interpreter to run \
-Fluid Asserts')
-    sys.exit(-1)
-
 
 def check_cli():
     """Check execution from CLI."""
@@ -236,16 +229,6 @@ def show_unknown(message, details=None, refs=None):
     print(message.as_yaml(), end='', flush=True)
 
 
-def check_boolean_env_var(var_name):
-    """Check value of boolean environment variable."""
-    if var_name in os.environ:
-        accepted_values = ['true', 'false']
-        if os.environ[var_name] not in accepted_values:
-            print(var_name + ' env variable is \
-    set but with an unknown value. It must be "true" or "false".')
-            sys.exit(-1)
-
-
 # Set __version__
 try:
     _DIST = get_distribution('fluidasserts')
@@ -259,6 +242,3 @@ except DistributionNotFound:
     __version__ = 'Please install this project with setup.py'
 else:  # pragma: no cover
     __version__ = _DIST.version
-
-check_boolean_env_var('FA_STRICT')
-check_boolean_env_var('FA_NOTRACK')

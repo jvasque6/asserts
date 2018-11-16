@@ -484,6 +484,16 @@ def get_content(args):
     return (ret, content)
 
 
+def check_boolean_env_var(var_name):
+    """Check value of boolean environment variable."""
+    if var_name in os.environ:
+        accepted_values = ['true', 'false']
+        if os.environ[var_name] not in accepted_values:
+            print(var_name + ' env variable is \
+set but with an unknown value. It must be "true" or "false".')
+            sys.exit(-1)
+
+
 def main():
     """Run CLI."""
     init()
@@ -519,6 +529,9 @@ given files or directories')
        and not args.ssl and not args.dns and not args.lang:
         argparser.print_help()
         sys.exit(-1)
+
+    check_boolean_env_var('FA_STRICT')
+    check_boolean_env_var('FA_NOTRACK')
 
     (ret, content) = get_content(args)
 
