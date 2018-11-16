@@ -267,8 +267,6 @@ def colorize(parsed_content):
             style = CLOSE_COLORS
         elif node['status'] == 'UNKNOWN':
             style = UNKNOWN_COLORS
-        else:
-            style = SUMMARY_COLORS
 
         message = yaml.safe_dump(node, default_flow_style=False,
                                  explicit_start=True)
