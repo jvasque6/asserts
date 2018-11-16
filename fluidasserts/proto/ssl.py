@@ -303,6 +303,40 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
     return result
 
 
+@level('low')
+@track
+def is_tlsv11_enabled(site: str, port: int = PORT) -> bool:
+    """
+    Check if TLSv1.1 suites are enabled.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    result = True
+    try:
+        with connect(site, port=port, min_version=(3, 2), max_version=(3, 2)):
+            show_open('TLSv1.1 enabled on site',
+                      details=dict(site=site, port=port))
+            result = True
+    except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
+        show_close('TLSv1.1 not enabled on site',
+                   details=dict(site=site, port=port))
+        result = False
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port seems not to support SSL',
+                     details=dict(site=site, port=port))
+        result = False
+    except socket.error as exc:
+        result = False
+        if exc.errno == errno.ECONNRESET:
+            show_close('TLSv1.1 not enabled on site',
+                       details=dict(site=site, port=port))
+        else:
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
+    return result
+
+
 @level('high')
 @track
 def has_poodle_tls(site: str, port: int = PORT) -> bool:

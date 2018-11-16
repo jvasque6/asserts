@@ -360,6 +360,7 @@ from fluidasserts.format import x509
 ssl.is_pfs_disabled('__ip__')
 ssl.is_sslv3_enabled('__ip__')
 ssl.is_tlsv1_enabled('__ip__')
+ssl.is_tlsv11_enabled('__ip__')
 ssl.has_poodle_tls('__ip__')
 ssl.has_poodle_sslv3('__ip__')
 ssl.has_breach('__ip__')

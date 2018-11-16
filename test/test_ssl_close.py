@@ -51,6 +51,14 @@ def test_tlsv1_enabled_close(get_mock_ip):
 
 
 @pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_tlsv11_enabled_close(get_mock_ip):
+    """TLSv1.1 habilitado en sitio?."""
+    assert not ssl.is_tlsv11_enabled(get_mock_ip)
+    assert not ssl.is_tlsv11_enabled(get_mock_ip, 80)
+    assert not ssl.is_tlsv11_enabled(NON_EXISTANT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
 def test_has_poodle_sslv3_close(get_mock_ip):
     """Sitio vulnerable a POODLE?."""
     assert not ssl.has_poodle_sslv3(get_mock_ip)
