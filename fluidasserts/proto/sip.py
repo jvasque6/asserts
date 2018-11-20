@@ -15,6 +15,7 @@ import socket
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.helper import http
 from fluidasserts.utils.decorators import track, level
 
 
@@ -84,8 +85,8 @@ Max-Forwards: 70
     _, headers_alone = recv_data.split('\r\n', 1)
     message = email.message_from_file(io.StringIO(headers_alone))
     headers = dict(message.items())
-    if 'Server' not in headers:
-        show_close('Server header was not returned',
+    if 'Server' not in headers or 'User-Agent' not in headers:
+        show_close('Server or User-Agent header were not returned',
                    details=dict(server=server, port=port, proto=proto))
         return False
     regex_match = re.search(r'([a-z-A-Z]+)[^a-zA-Z0-9](.*)',
@@ -99,5 +100,38 @@ Max-Forwards: 70
     else:
         show_close('SIP server version not visible',
                    details=dict(server=server, port=port, proto=proto))
+        result = False
+    return result
+
+
+@level('low')
+@track
+def unify_phone_has_default_credentials(hostname: str,
+                                        password: str = '123456') -> bool:
+    """
+    Check if Unify OpenScape Desk Phone IP 55G has default credentials.
+
+    :param hostname: IP or host of phone.
+    :param password: Default password.
+    """
+    url = 'https://{}/index.cmd?user=Admin'.format(hostname)
+    sess = http.HTTPSession(url)
+
+    sess.data = 'page_submit=WEBMp_Admin_Login&lang=es&AdminPassword={}'\
+        .format(password)
+    sess.url = 'https://{}/page.cmd'.format(hostname)
+    sess.do_request()
+
+    failed = "action='./page.cmd'"
+
+    if failed not in sess.response.text:
+        show_open('Phone has default credentials',
+                  details=dict(host=hostname, username='Admin',
+                               password=password))
+        result = True
+    else:
+        show_close('Phone has not default credentials',
+                   details=dict(host=hostname, username='Admin',
+                                password=password))
         result = False
     return result
