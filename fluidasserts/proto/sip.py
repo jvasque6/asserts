@@ -3,6 +3,7 @@
 """This module allows to check SIP vulnerabilities."""
 
 # standard imports
+import base64
 import email
 import io
 import re
@@ -104,7 +105,7 @@ Max-Forwards: 70
     return result
 
 
-@level('low')
+@level('high')
 @track
 def unify_phone_has_default_credentials(hostname: str,
                                         password: str = '123456') -> bool:
@@ -125,6 +126,43 @@ def unify_phone_has_default_credentials(hostname: str,
     failed = "action='./page.cmd'"
 
     if failed not in sess.response.text:
+        show_open('Phone has default credentials',
+                  details=dict(host=hostname, username='Admin',
+                               password=password))
+        result = True
+    else:
+        show_close('Phone has not default credentials',
+                   details=dict(host=hostname, username='Admin',
+                                password=password))
+        result = False
+    return result
+
+
+@level('high')
+@track
+def polycom_phone_has_default_credentials(hostname: str,
+                                          password: str = '456') -> bool:
+    """
+    Check if Polycom SoundStation IP 6000 has default credentials.
+
+    :param hostname: IP or host of phone.
+    :param password: Default password.
+    """
+    url = 'https://{}/login.htm'.format(hostname)
+    sess = http.HTTPSession(url)
+
+    creds = 'Polycom:{}'.format(password)
+    encoded = base64.b64encode(creds.encode())
+
+    sess.headers.update({'X-Requested-With': 'XMLHttpRequest'})
+    sess.headers.update({'Authorization': 'Basic {}'.format(encoded.decode())})
+    sess.url = 'https://{}/auth.htm?t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'\
+        .format(hostname)
+    sess.do_request()
+
+    expected = "SoundStation IP 6000"
+
+    if expected in sess.response.text:
         show_open('Phone has default credentials',
                   details=dict(host=hostname, username='Admin',
                                password=password))
