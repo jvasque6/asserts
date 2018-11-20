@@ -365,6 +365,7 @@ x509.is_cert_inactive('__ip__')
 x509.is_cert_validity_lifespan_unsafe('__ip__')
 x509.is_sha1_used('__ip__')
 x509.is_md5_used('__ip__')
+x509.is_cert_untrusted('__ip__')
 """.replace('__ip__', ip_addr)
     return exec_wrapper(template)
 

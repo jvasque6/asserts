@@ -10,7 +10,6 @@ import socket
 import ssl
 
 # 3rd party imports
-import certifi
 import tlslite
 
 # local imports
@@ -38,7 +37,9 @@ def _my_add_padding(self, data: bytes) -> bytes:
 
 
 @contextmanager
-def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
+def connect_legacy(hostname: str, port: int = PORT,
+                   ciphers: str = 'HIGH:!DH:!aNULL',
+                   validate_cert: bool = False) \
         -> Generator[ssl.SSLSocket, None, None]:
     """
     Establish a legacy SSL/TLS connection.
@@ -48,16 +49,25 @@ def connect_legacy(hostname: str, port: int = PORT, ciphers: str = None) \
     :param ciphers: Encryption algorithms. Defaults to (as per Python's SSL)
                     ``'DEFAULT:!aNULL:!eNULL:!LOW:!EXPORT:!SSLv2'``.
     """
+    if validate_cert:
+        flags = ssl.VERIFY_X509_STRICT
+    else:
+        flags = ssl.VERIFY_DEFAULT
+
+    context = ssl.create_default_context()
+    context.verify_flags = flags
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_OPTIONAL
+    if ciphers:
+        context.set_ciphers(ciphers)
+    context.load_default_certs()
+
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.settimeout(5)
-    wrapped_socket = ssl.SSLSocket(sock=sock,
-                                   ca_certs=certifi.where(),
-                                   cert_reqs=ssl.CERT_NONE,
-                                   server_hostname=hostname,
-                                   ciphers=ciphers)
-    wrapped_socket.connect((hostname, port))
-    yield wrapped_socket
-    wrapped_socket.close()
+    ssock = context.wrap_socket(sock=sock, server_hostname=hostname)
+    ssock.connect((hostname, port))
+    yield ssock
+    ssock.close()
 
 
 # pylint: disable=too-many-arguments
@@ -89,22 +99,20 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((hostname, port))
 
-    try:
-        connection = tlslite.TLSConnection(sock)
-        connection.ignoreAbruptClose = True
+    connection = tlslite.TLSConnection(sock)
+    connection.ignoreAbruptClose = True
 
-        settings = tlslite.HandshakeSettings()
-        settings.minVersion = min_version
-        settings.maxVersion = max_version
-        if cipher_names:
-            settings.cipherNames = cipher_names
-        if key_exchange_names:
-            settings.keyExchangeNames = key_exchange_names
+    settings = tlslite.HandshakeSettings()
+    settings.minVersion = min_version
+    settings.maxVersion = max_version
+    if cipher_names:
+        settings.cipherNames = cipher_names
+    if key_exchange_names:
+        settings.keyExchangeNames = key_exchange_names
 
-        if anon:
-            connection.handshakeClientAnonymous(settings=settings)
-        else:
-            connection.handshakeClientCert(settings=settings)
-        yield connection
-    finally:
-        connection.close()
+    if anon:
+        connection.handshakeClientAnonymous(settings=settings)
+    else:
+        connection.handshakeClientCert(settings=settings)
+    yield connection
+    connection.close()

@@ -3,12 +3,10 @@
 """This module allows to check TCP-specific vulnerabilities."""
 
 # standard imports
-import ssl
 import socket
 
-
 # third party imports
-# None
+import tlslite
 
 # local imports
 from fluidasserts import show_close
@@ -52,14 +50,15 @@ def is_port_insecure(ipaddress: str, port: int) -> bool:
     :param port: Port to connect to.
     """
     try:
-        with ssl_helper.connect_legacy(ipaddress, port):
+        with ssl_helper.connect(ipaddress, port):
             show_close('Port is secure', details=dict(ip=ipaddress, port=port))
             return False
     except (ConnectionRefusedError, socket.timeout):
         show_unknown('Could not connect',
                      details=dict(ip=ipaddress, port=port))
         return False
-    except ssl.SSLError:
+    except (tlslite.errors.TLSIllegalParameterException,
+            tlslite.errors.TLSLocalAlert):
         show_open('Port is not secure', details=dict(ip=ipaddress, port=port))
         return True
     except OverflowError:

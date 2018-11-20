@@ -35,3 +35,9 @@ def test_cn_equal_to_site_open(get_mock_ip):
 def test_cert_lifespan_safe_open(get_mock_ip):
     """Vigencia del certificado es segura?."""
     assert x509.is_cert_validity_lifespan_unsafe(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_is_cert_trusted_open(get_mock_ip):
+    """Check if cert is trusted."""
+    assert x509.is_cert_untrusted(get_mock_ip)

@@ -192,6 +192,38 @@ def is_cert_inactive(site: str, port: int = PORT) -> bool:
 
 @level('medium')
 @track
+def is_cert_untrusted(site: str, port: int = PORT) -> bool:
+    """
+    Check if certificate is trusted (signed by recognized CA).
+
+    :param site: Site address.
+    :param port: Port to connect to.
+    """
+    result = True
+    try:
+        with connect_legacy(site, port, validate_cert=True):
+            show_close('Cert is trusted',
+                       details=dict(server=site, port=port))
+            result = False
+    except socket.error as exc:
+        if exc.errno == 1 and 'verify failed' in str(exc.strerror):
+            show_open('Cert is not trusted',
+                      details=dict(server=site, port=port))
+        elif exc.errno == 1 and 'verify failed' not in str(exc.strerror):
+            show_unknown('Port not seem to support SSL',
+                         details=dict(server=site, port=port,
+                                      reason=str(exc).replace(':', ',')))
+            result = False
+        else:
+            show_unknown('Could not connect',
+                         details=dict(server=site, port=port,
+                                      reason=str(exc).replace(':', ',')))
+            result = False
+    return result
+
+
+@level('medium')
+@track
 def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     """
     Check if certificate lifespan is larger than two years which is insecure.
