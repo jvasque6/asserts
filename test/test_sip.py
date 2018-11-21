@@ -3,7 +3,7 @@
 """Test methods of fluidasserts.cloud packages."""
 
 # standard imports
-import os
+# None
 
 # 3rd party imports
 # None
@@ -16,12 +16,24 @@ from fluidasserts.proto import sip
 # Constants
 #
 
-MOCK_SERVICE = '192.168.253.23'
-
+MOCK_SERVICE = 'localhost'
 #
 # Open tests
 #
 
+
+def test_unify_password_open():
+    """Check if Unify phone has default credentials."""
+    assert sip.unify_phone_has_default_credentials(MOCK_SERVICE,
+                                                   proto='http',
+                                                   port=8001)
+
+
+def test_polycom_password_open():
+    """Check if Polycom phone has default credentials."""
+    assert sip.polycom_phone_has_default_credentials(MOCK_SERVICE,
+                                                     proto='http',
+                                                     port=8001)
 
 #
 # Closing tests

@@ -16,6 +16,7 @@ import wait
 
 # local imports
 from test.mock import httpserver
+from test.mock import sip
 
 # Constants
 NETWORK_NAME = 'bridge'
@@ -39,14 +40,20 @@ def get_ip(con):
 
 
 @pytest.fixture(scope='session', autouse=True)
+def mock_sip(request):
+    """Start SIP mock endpoints."""
+    prcs = Process(target=sip.start, name='MockHTTPServer')
+    prcs.daemon = True
+    prcs.start()
+    time.sleep(1)
+
+
+@pytest.fixture(scope='session', autouse=True)
 def mock_http(request):
     """Inicia y detiene el servidor HTTP antes de ejecutar una prueba."""
-    # Inicia el servidor HTTP en background
     prcs = Process(target=httpserver.start, name='MockHTTPServer')
     prcs.daemon = True
     prcs.start()
-
-    # Espera que inicie servidor antes de recibir conexiones
     time.sleep(1)
 
 
@@ -63,8 +70,8 @@ def run_mocks(request):
         'tcp:hard': {'443/tcp': 443},
         'dns:hard': {'53/tcp': 53, '53/udp': 53},
         'dns:weak': {'53/tcp': 53, '53/udp': 53},
-        #'ftp:weak': {'21/tcp': 21},
-        #'ftp:hard': {'21/tcp': 21},
+        # 'ftp:weak': {'21/tcp': 21},
+        # 'ftp:hard': {'21/tcp': 21},
         'ldap:weak': {'389/tcp': 389},
         'ldap:hard': {'389/tcp': 389},
         'mysql_os:hard': {'22/tcp': 22},
@@ -80,8 +87,8 @@ def run_mocks(request):
     client = docker.from_env()
 
     client.login(registry='registry.gitlab.com',
-                username=os.environ['DOCKER_USER'],
-                password=os.environ['DOCKER_PASS'])
+                 username=os.environ['DOCKER_USER'],
+                 password=os.environ['DOCKER_PASS'])
 
     for mock in mocks:
         try:

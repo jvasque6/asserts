@@ -108,6 +108,8 @@ Max-Forwards: 70
 @level('high')
 @track
 def unify_phone_has_default_credentials(hostname: str,
+                                        proto: str = 'https',
+                                        port: int = '443',
                                         password: str = '123456') -> bool:
     """
     Check if Unify OpenScape Desk Phone IP 55G has default credentials.
@@ -116,12 +118,12 @@ def unify_phone_has_default_credentials(hostname: str,
     :param password: Default password.
     """
     try:
-        url = 'https://{}/index.cmd?user=Admin'.format(hostname)
+        url = '{}://{}:{}/index.cmd?user=Admin'.format(proto, hostname, port)
         sess = http.HTTPSession(url)
 
         sess.data = 'page_submit=WEBMp_Admin_Login&lang=es&AdminPassword={}'\
             .format(password)
-        sess.url = 'https://{}/page.cmd'.format(hostname)
+        sess.url = '{}://{}:{}/page.cmd'.format(proto, hostname, port)
         sess.do_request()
     except http.ConnError as exc:
         show_unknown('Could not connect',
@@ -147,6 +149,8 @@ def unify_phone_has_default_credentials(hostname: str,
 @level('high')
 @track
 def polycom_phone_has_default_credentials(hostname: str,
+                                          proto: str = 'https',
+                                          port: int = '443',
                                           password: str = '456') -> bool:
     """
     Check if Polycom SoundStation IP 6000 has default credentials.
@@ -155,7 +159,7 @@ def polycom_phone_has_default_credentials(hostname: str,
     :param password: Default password.
     """
     try:
-        url = 'https://{}/login.htm'.format(hostname)
+        url = '{}://{}:{}/login.htm'.format(proto, hostname, port)
         sess = http.HTTPSession(url)
 
         creds = 'Polycom:{}'.format(password)
@@ -164,8 +168,8 @@ def polycom_phone_has_default_credentials(hostname: str,
         sess.headers.update({'X-Requested-With': 'XMLHttpRequest'})
         sess.headers.update({'Authorization': 'Basic {}'
                                               .format(encoded.decode())})
-        sess.url = 'https://{}/auth.htm?\
-t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'.format(hostname)
+        sess.url = '{}://{}:{}/auth.htm?\
+t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'.format(proto, hostname, port)
         sess.do_request()
     except http.ConnError as exc:
         show_unknown('Could not connect',
