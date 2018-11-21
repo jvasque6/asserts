@@ -115,13 +115,19 @@ def unify_phone_has_default_credentials(hostname: str,
     :param hostname: IP or host of phone.
     :param password: Default password.
     """
-    url = 'https://{}/index.cmd?user=Admin'.format(hostname)
-    sess = http.HTTPSession(url)
+    try:
+        url = 'https://{}/index.cmd?user=Admin'.format(hostname)
+        sess = http.HTTPSession(url)
 
-    sess.data = 'page_submit=WEBMp_Admin_Login&lang=es&AdminPassword={}'\
-        .format(password)
-    sess.url = 'https://{}/page.cmd'.format(hostname)
-    sess.do_request()
+        sess.data = 'page_submit=WEBMp_Admin_Login&lang=es&AdminPassword={}'\
+            .format(password)
+        sess.url = 'https://{}/page.cmd'.format(hostname)
+        sess.do_request()
+    except http.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(hostname=hostname, url=url,
+                                  reason=str(exc).replace(':', ',')))
+        return False
 
     failed = "action='./page.cmd'"
 
@@ -148,18 +154,24 @@ def polycom_phone_has_default_credentials(hostname: str,
     :param hostname: IP or host of phone.
     :param password: Default password.
     """
-    url = 'https://{}/login.htm'.format(hostname)
-    sess = http.HTTPSession(url)
+    try:
+        url = 'https://{}/login.htm'.format(hostname)
+        sess = http.HTTPSession(url)
 
-    creds = 'Polycom:{}'.format(password)
-    encoded = base64.b64encode(creds.encode())
+        creds = 'Polycom:{}'.format(password)
+        encoded = base64.b64encode(creds.encode())
 
-    sess.headers.update({'X-Requested-With': 'XMLHttpRequest'})
-    sess.headers.update({'Authorization': 'Basic {}'.format(encoded.decode())})
-    sess.url = 'https://{}/auth.htm?t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'\
-        .format(hostname)
-    sess.do_request()
-
+        sess.headers.update({'X-Requested-With': 'XMLHttpRequest'})
+        sess.headers.update({'Authorization': 'Basic {}'
+                                              .format(encoded.decode())})
+        sess.url = 'https://{}/auth.htm?\
+t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'.format(hostname)
+        sess.do_request()
+    except http.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(hostname=hostname, url=url,
+                                  reason=str(exc).replace(':', ',')))
+        return False
     expected = "SoundStation IP 6000"
 
     if expected in sess.response.text:
