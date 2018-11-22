@@ -26,6 +26,7 @@ HARD_PORT = 53
 # Closing tests
 #
 
+
 @pytest.mark.parametrize('get_mock_ip', ['dns_hard'], indirect=True)
 def test_is_xfr_enabled_close(get_mock_ip):
     """Transferencia de zonas habilitado en server?."""

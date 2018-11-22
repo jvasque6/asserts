@@ -166,7 +166,7 @@ class Message():
     """Output message class."""
 
     def __init__(self, status, message, details, references):
-        """Constructor method."""
+        """Create constructor method."""
         self.__ref_base = 'https://fluidattacks.com/web/es/defends/'
         self.__status_codes = ['OPEN', 'CLOSED', 'UNKNOWN', 'ERROR']
         self.date = datetime.datetime.now()

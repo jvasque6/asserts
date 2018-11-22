@@ -14,8 +14,6 @@ from __future__ import print_function
 # local imports
 from fluidasserts.syst import win
 
-
-
 # Constants
 
 NONPRIV_USER = 'nonpriv'
@@ -23,11 +21,9 @@ NONPRIV_PASS = 'ahgh7xee9eewaeGh'
 OS_PORT = 22
 NON_EXISTANT = '0.0.0.0'
 
-
 #
 # Open tests
 #
-
 
 
 def test_compilers_installed_close():

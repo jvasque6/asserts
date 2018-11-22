@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""""This module allows to check FTP-specific vulnerabilities."""
+"""This module allows to check FTP-specific vulnerabilities."""
 
 # standard imports
 from ftplib import error_perm

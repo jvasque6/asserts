@@ -13,9 +13,9 @@ from fluidasserts.cloud.aws import ec2
 
 
 # Constants
-AWS_ACCESS_KEY_ID="AKIAIHT6LQIROIL7LKYQ"
-AWS_SECRET_ACCESS_KEY="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"
-AWS_SECRET_ACCESS_KEY_BAD="bad"
+AWS_ACCESS_KEY_ID = "AKIAIHT6LQIROIL7LKYQ"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_SECRET_ACCESS_KEY_BAD = "bad"
 
 #
 # Open tests
@@ -36,10 +36,10 @@ def test_unencrypted_volumes_open():
                                     AWS_SECRET_ACCESS_KEY)
 
 
-
 #
 # Closing tests
 #
+
 
 def test_anyone_to_ssh_close():
     """Seg group allows anyone to connect to SSH?."""

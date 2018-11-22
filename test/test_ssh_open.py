@@ -15,8 +15,6 @@ import pytest
 # local imports
 from fluidasserts.proto import ssh
 
-
-
 #
 # Constants
 #

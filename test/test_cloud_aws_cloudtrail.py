@@ -13,9 +13,9 @@ from fluidasserts.cloud.aws import cloudtrail
 
 
 # Constants
-AWS_ACCESS_KEY_ID="AKIAIHT6LQIROIL7LKYQ"
-AWS_SECRET_ACCESS_KEY="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"
-AWS_SECRET_ACCESS_KEY_BAD="bad"
+AWS_ACCESS_KEY_ID = "AKIAIHT6LQIROIL7LKYQ"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_SECRET_ACCESS_KEY_BAD = "bad"
 
 #
 # Open tests
@@ -24,6 +24,7 @@ AWS_SECRET_ACCESS_KEY_BAD="bad"
 #
 # Closing tests
 #
+
 
 def test_trails_not_multiregion_close():
     """Search if trails are multiregion."""

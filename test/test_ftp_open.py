@@ -20,8 +20,6 @@ import pytest
 # local imports
 from fluidasserts.proto import ftp
 
-
-
 #
 # Constants
 #

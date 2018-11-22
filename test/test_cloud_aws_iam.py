@@ -13,9 +13,9 @@ from fluidasserts.cloud.aws import iam
 
 
 # Constants
-AWS_ACCESS_KEY_ID="AKIAIHT6LQIROIL7LKYQ"
-AWS_SECRET_ACCESS_KEY="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"
-AWS_SECRET_ACCESS_KEY_BAD="bad"
+AWS_ACCESS_KEY_ID = "AKIAIHT6LQIROIL7LKYQ"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_SECRET_ACCESS_KEY_BAD = "bad"
 
 #
 # Open tests
@@ -47,6 +47,7 @@ def test_root_mfa_open():
 #
 # Closing tests
 #
+
 
 def test_has_mfa_disabled_close():
     """Search MFA on IAM users."""

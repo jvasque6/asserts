@@ -48,11 +48,10 @@ def test_package_has_vulnerabilities_open():
     assert pypi.package_has_vulnerabilities('pip')
     assert pypi.project_has_vulnerabilities(PYPI_PROJECT_OPEN)
 
-
-
 #
 # Closing tests
 #
+
 
 def test_package_has_vulnerabilities_close():
     """Search vulnerabilities."""

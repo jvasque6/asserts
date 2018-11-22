@@ -86,4 +86,4 @@ def test_has_not_secure_in_cookiejar_close():
     sess = http.HTTPSession(url)
     assert not cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
     assert not cookie.has_not_secure_in_cookiejar(cookie_name, None)
-    assert not  cookie.has_not_secure_in_cookiejar(None, sess.cookies)
+    assert not cookie.has_not_secure_in_cookiejar(None, sess.cookies)

@@ -15,8 +15,6 @@ import pytest
 # local imports
 from fluidasserts.syst import linux
 
-
-
 # Constants
 
 ADMIN_USER = 'root'

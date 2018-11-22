@@ -38,7 +38,7 @@ def test_has_generic_exceptions_open():
     """Code uses generic exceptions."""
     capt_out = io.StringIO()
     temp_stdout = sys.stdout
-    sys.stdout =  capt_out
+    sys.stdout = capt_out
     expected = LINES_FORMAT + '44, 54'
     assert csharp.has_generic_exceptions(INSECURE_CODE)
     sys.stdout = temp_stdout

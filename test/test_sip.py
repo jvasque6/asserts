@@ -11,7 +11,6 @@
 # local imports
 from fluidasserts.proto import sip
 
-
 #
 # Constants
 #
