@@ -4,14 +4,10 @@
 
 # standard imports
 import base64
-import time
 
 # 3rd party imports
 from flask import Flask
-from flask import redirect
 from flask import request
-from flask import Response
-from flask import url_for
 
 
 # local imports

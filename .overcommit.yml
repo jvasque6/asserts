@@ -200,6 +200,15 @@ PreCommit:
     install_command: 'pip install pycodestyle'
     include: 'fluidasserts/**/*.py'
 
+
+  Pydocstyle:
+    enabled: true
+    description: 'Analyze docstrings with pydocstyle'
+    required_executable: 'pydocstyle'
+    install_command: 'pip install pydocstyle'
+    include: 'fluidasserts/**/*.py'
+
+
   Pyflakes:
     enabled: true
     description: 'Analyze with pyflakes'
