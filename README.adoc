@@ -8,8 +8,8 @@
 :source-highlighter:     pygments
 :keywords:               fluidasserts, fluidsignal, fsg, unit testing
 
-image:https://gitlab.com/fluidsignal/asserts/badges/master/pipeline.svg[link="https://gitlab.com/fluidsignal/asserts/commits/master",title="pipeline status"]
-image:https://gitlab.com/fluidsignal/asserts/badges/master/coverage.svg[link="https://gitlab.com/fluidsignal/asserts/commits/master",title="coverage report"]
+image:https://gitlab.com/fluidattacks/asserts/badges/master/pipeline.svg[link="https://gitlab.com/fluidattacks/asserts/commits/master",title="pipeline status"]
+image:https://gitlab.com/fluidattacks/asserts/badges/master/coverage.svg[link="https://gitlab.com/fluidattacks/asserts/commits/master",title="coverage report"]
 
 Please refer to
 link:https://fluidsignal.gitlab.io/asserts/[Fluid Asserts documentation].

@@ -1,4 +1,4 @@
-FROM registry.gitlab.com/fluidsignal/asserts/mocks/dns:weak
+FROM registry.gitlab.com/fluidattacks/asserts/mocks/dns:weak
 
 ENV FLAVOR hard
 

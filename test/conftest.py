@@ -101,7 +101,7 @@ def run_mocks(request):
     for mock, port_mapping in mocks.items():
         print('Running {} ... '.format(mock))
 
-        image = 'registry.gitlab.com/fluidsignal/asserts/mocks/' + mock
+        image = 'registry.gitlab.com/fluidattacks/asserts/mocks/' + mock
         if ':' in mock:
             mock_dir = 'test/provision/' + mock.replace(':', '/')
         else:

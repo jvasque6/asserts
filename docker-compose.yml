@@ -13,7 +13,7 @@ services:
     tty: true
     command: scons deps
     container_name: asserts
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/usr/src/asserts
@@ -25,7 +25,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   lint:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
     network_mode: bridge
@@ -42,7 +42,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   overcommit:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
     network_mode: bridge
@@ -60,7 +60,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   bandit:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
     network_mode: bridge
@@ -77,7 +77,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   dist:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
     network_mode: bridge
@@ -94,7 +94,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   test:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
     network_mode: bridge
@@ -111,7 +111,7 @@ services:
       - CI_COMMIT_REF_NAME=$CI_COMMIT_REF_NAME
 
   deploy:
-    image: registry.gitlab.com/fluidsignal/asserts:builder
+    image: registry.gitlab.com/fluidattacks/asserts:builder
     depends_on:
       - deps
       - dist

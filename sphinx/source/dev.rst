@@ -208,7 +208,7 @@ Among other things, the CI pipeline:
 You can run this pipeline locally before pushing using the
 `Nix <https://nixos.wiki/wiki/Nix_Installation_Guide>`_ shell
 and the
-`local-integration.nix <https://gitlab.com/fluidsignal/asserts/blob/master/local-integration.nix>`_
+`local-integration.nix <https://gitlab.com/fluidattacks/asserts/blob/master/local-integration.nix>`_
 script in the repo.
 
 As a developer,
