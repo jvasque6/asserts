@@ -1,6 +1,6 @@
 ---
 
-image: registry.gitlab.com/fluidsignal/asserts:base
+image: registry.gitlab.com/fluidattacks/asserts:base
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -11,8 +11,8 @@ services:
 before_script:
   - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
   - docker build
-    --cache-from registry.gitlab.com/fluidsignal/asserts:base
-    -f Dockerfile.base -t registry.gitlab.com/fluidsignal/asserts:base .
+    --cache-from registry.gitlab.com/fluidattacks/asserts:base
+    -f Dockerfile.base -t registry.gitlab.com/fluidattacks/asserts:base .
 
 stages:
   - build
@@ -28,8 +28,8 @@ build:
     - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
     - docker build
-      --cache-from registry.gitlab.com/fluidsignal/asserts:builder
-      -f Dockerfile.builder -t registry.gitlab.com/fluidsignal/asserts:builder .
+      --cache-from registry.gitlab.com/fluidattacks/asserts:builder
+      -f Dockerfile.builder -t registry.gitlab.com/fluidattacks/asserts:builder .
   retry: 2
 
 lint:
@@ -72,7 +72,7 @@ deploy:
     - docker-compose run deploy
     - mkdir -p dist && cp -a ${SRC}/build/dist/*.zip dist/
     - docker build --no-cache -f Dockerfile.runner
-      -t registry.gitlab.com/fluidsignal/asserts:runner .
+      -t registry.gitlab.com/fluidattacks/asserts:runner .
   retry: 2
   only:
     - master
@@ -82,10 +82,10 @@ push_container:
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker login -u $HUB_USER -p $HUB_PASS
-    - docker push registry.gitlab.com/fluidsignal/asserts:base
-    - docker push registry.gitlab.com/fluidsignal/asserts:builder
-    - docker push registry.gitlab.com/fluidsignal/asserts:runner
-    - docker tag registry.gitlab.com/fluidsignal/asserts:runner
+    - docker push registry.gitlab.com/fluidattacks/asserts:base
+    - docker push registry.gitlab.com/fluidattacks/asserts:builder
+    - docker push registry.gitlab.com/fluidattacks/asserts:runner
+    - docker tag registry.gitlab.com/fluidattacks/asserts:runner
       fluidattacks/asserts
     - docker push fluidattacks/asserts
   after_script:
@@ -95,7 +95,7 @@ push_container:
     - master
 
 pages:
-  image: registry.gitlab.com/fluidsignal/asserts:builder
+  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
   script:
     - scons sphinxdoc
