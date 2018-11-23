@@ -23,10 +23,10 @@ def home():
     return 'Mock SIP'
 
 
-@APP.route('/index.cmd?user=Admin')
+@APP.route('/index.cmd')
 def unify_login_home():
     """Return Unify login home."""
-    return 'OK'
+    return 'OpenScape Desk Phone IP Admin'
 
 
 @APP.route('/page.cmd', methods=['POST'])
@@ -40,7 +40,7 @@ def unify_login_action_ok():
 @APP.route('/login.htm')
 def polycom_login_home():
     """Return Polycom login home."""
-    return 'OK'
+    return 'Polycom Web Configuration Utility'
 
 
 @APP.route('/auth.htm')

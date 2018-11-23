@@ -121,6 +121,12 @@ def unify_phone_has_default_credentials(hostname: str,
         url = '{}://{}:{}/index.cmd?user=Admin'.format(proto, hostname, port)
         sess = http.HTTPSession(url)
 
+        if 'OpenScape Desk Phone IP Admin' not in sess.response.text:
+            show_unknown('Resources not found. Is it a valid phone version?',
+                         details=dict(host=hostname, url=url,
+                                      status_code=sess.response.status_code))
+            return False
+
         sess.data = 'page_submit=WEBMp_Admin_Login&lang=es&AdminPassword={}'\
             .format(password)
         sess.url = '{}://{}:{}/page.cmd'.format(proto, hostname, port)
@@ -133,6 +139,11 @@ def unify_phone_has_default_credentials(hostname: str,
 
     failed = "action='./page.cmd'"
 
+    if sess.response.status_code > 400:
+        show_unknown('Resources not found. Is it a valid phone version?',
+                     details=dict(host=hostname, url=url,
+                                  status_code=sess.response.status_code))
+        return False
     if failed not in sess.response.text:
         show_open('Phone has default credentials',
                   details=dict(host=hostname, username='Admin',
@@ -161,7 +172,11 @@ def polycom_phone_has_default_credentials(hostname: str,
     try:
         url = '{}://{}:{}/login.htm'.format(proto, hostname, port)
         sess = http.HTTPSession(url)
-
+        if 'Polycom Web Configuration Utility' not in sess.response.text:
+            show_unknown('Resources not found. Is it a valid phone version?',
+                         details=dict(host=hostname, url=url,
+                                      status_code=sess.response.status_code))
+            return False
         creds = 'Polycom:{}'.format(password)
         encoded = base64.b64encode(creds.encode())
 
@@ -178,6 +193,11 @@ t=Tue,%2020%20Nov%202018%2019:48:43%20GMT'.format(proto, hostname, port)
         return False
     expected = "SoundStation IP 6000"
 
+    if sess.response.status_code > 401:
+        show_unknown('Resources not found. Is it a valid phone version?',
+                     details=dict(host=hostname, url=url,
+                                  status_code=sess.response.status_code))
+        return False
     if expected in sess.response.text:
         show_open('Phone has default credentials',
                   details=dict(host=hostname, username='Admin',
