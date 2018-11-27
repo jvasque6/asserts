@@ -31,7 +31,7 @@ setup(
     long_description=_get_readme(),
     version=_get_version(),
     url='https://fluidattacks.com/web/en/products/asserts',
-    project_urls={'Documentation': 'https://fluidsignal.gitlab.io/asserts/'},
+    project_urls={'Documentation': 'https://fluidattacks.gitlab.io/asserts/'},
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='Fluid Attacks Engineering Team',
     author_email='engineering@fluidattacks.com',
