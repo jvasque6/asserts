@@ -719,6 +719,9 @@ def is_basic_auth_enabled(url: str, *args, **kwargs) -> bool:
     :param \*args: Optional arguments for :class:`.HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
+    if url.startswith('https'):
+        show_close('URL uses HTTPS', details=dict(url=url))
+        return False
     return _has_insecure_header(url, 'WWW-Authenticate', *args, **kwargs)
 
 
