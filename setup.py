@@ -69,6 +69,7 @@ setup(
     ],
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
+        'typed-ast==1.1.0',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.20.1',          # fluidasserts.proto.http
         'certifi==2018.10.15',       # fluidasserts.proto.ssl
@@ -79,6 +80,10 @@ setup(
         'dnspython==1.15.0',         # fluidasserts.proto.dns
         'tlslite-ng==0.7.5',         # fluidasserts.proto.ssl
         'pyOpenSSL==18.0.0',         # fluidasserts.proto.ssl
+        'cffi==1.11.5',              # fluidasserts.proto.ssl
+        'cryptography==2.4.2',       # fluidasserts.proto.ssl
+        'bcrypt==3.1.4',             # fluidasserts.proto.ssl
+        'pynacl==1.3.0',             # fluidasserts.proto.ssl
         'colorama==0.4.0',           # logging
         'pysmb==1.1.25',             # fluidasserts.proto.smb
         'mixpanel==4.3.2',           # fluidasserts.utils.decorators
