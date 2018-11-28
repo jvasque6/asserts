@@ -20,6 +20,7 @@ stages:
   - deploy
   - postdeploy
   - cleanup
+  - remove-branches
 
 build:
   stage: build
@@ -40,6 +41,7 @@ lint:
   retry: 2
   except:
     - master
+    - schedules
 
 bandit:
   stage: test
@@ -48,12 +50,15 @@ bandit:
   retry: 2
   except:
     - master
+    - schedules
 
 test:
   stage: test
   script:
     - docker-compose run test
   retry: 2
+  except:
+    - schedules
 
 fluidasserts:
   script:
@@ -63,6 +68,7 @@ fluidasserts:
       fluidattacks/asserts asserts -o /code/deploy/container/exploit.py
   except:
     - master
+    - schedules
 
 deploy:
   stage: deploy
@@ -76,6 +82,8 @@ deploy:
   retry: 2
   only:
     - master
+  except:
+    - schedules
 
 push_container:
   stage: postdeploy
@@ -93,6 +101,8 @@ push_container:
   retry: 2
   only:
     - master
+  except:
+    - schedules
 
 pages:
   image: registry.gitlab.com/fluidattacks/asserts:builder
@@ -103,9 +113,26 @@ pages:
     paths: [public/]
   only:
     - master
+  except:
+    - schedules
 
 cleanup_job:
   stage: cleanup
   script:
     - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   when: always
+  except:
+    - schedules
+
+remove-branches:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
+  stage: remove-branches
+  variables:
+    GIT_STRATEGY: fetch
+  script:
+    - url_host=$(git remote get-url origin
+      | sed -e "s/https:\/\/gitlab-ci-token:.*@//g")
+    - git remote set-url origin "https://gitlab-ci-token:${API_TKN}@${url_host}"
+    - ./remove-branches.sh
+  only:
+    - schedules
