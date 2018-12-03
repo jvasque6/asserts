@@ -1,6 +1,6 @@
 ---
 
-image: registry.gitlab.com/fluidattacks/asserts:base
+image: docker:18
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -10,9 +10,6 @@ services:
 
 before_script:
   - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
-  - docker build
-    --cache-from registry.gitlab.com/fluidattacks/asserts:base
-    -f Dockerfile.base -t registry.gitlab.com/fluidattacks/asserts:base .
 
 stages:
   - build
@@ -34,28 +31,31 @@ build:
   retry: 2
 
 lint:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   script:
-    - docker-compose run lint
-    - docker-compose run overcommit
+    - scons lint
+    - overcommit -s && overcommit -s pre-commit && overcommit -r
   retry: 2
   except:
     - master
     - schedules
 
 bandit:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   script:
-    - docker-compose run bandit
+    - scons bandit
   retry: 2
   except:
     - master
     - schedules
 
 test:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   script:
-    - docker-compose run test
+    - scons test
   retry: 2
   except:
     - schedules
@@ -71,12 +71,12 @@ fluidasserts:
     - schedules
 
 deploy:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
-  variables:
-    SRC: /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
-    - docker-compose run deploy
-    - mkdir -p dist && cp -a ${SRC}/build/dist/*.zip dist/
+    - scons dist
+    - scons deploy
+    - mkdir -p dist && cp -a build/dist/*.zip dist/
     - docker build --no-cache -f Dockerfile.runner
       -t registry.gitlab.com/fluidattacks/asserts:runner .
   retry: 2
@@ -106,14 +106,11 @@ push_container:
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker login -u $HUB_USER -p $HUB_PASS
-    - docker push registry.gitlab.com/fluidattacks/asserts:base
     - docker push registry.gitlab.com/fluidattacks/asserts:builder
     - docker push registry.gitlab.com/fluidattacks/asserts:runner
     - docker tag registry.gitlab.com/fluidattacks/asserts:runner
       fluidattacks/asserts
     - docker push fluidattacks/asserts
-  after_script:
-    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   retry: 2
   only:
     - master
