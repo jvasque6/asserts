@@ -88,10 +88,9 @@ deploy:
 create_installer:
   image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
-  variables:
-    SRC: /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
-    - python3 ${SRC}/deploy/download.py 2> /dev/null
+    - scons dist
+    - python3 deploy/download.py 2> /dev/null
   retry: 2
   artifacts:
     name: "fluidasserts_${CI_COMMIT_SHA:0:8}"

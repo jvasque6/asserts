@@ -39,7 +39,6 @@ RUN apt-get update -qq && \
         libc6-dev \
         make \
         docker-ce \
-        zip \
         git && \
     python3 -m pip install -U  setuptools \
         wheel \

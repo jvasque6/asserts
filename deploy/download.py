@@ -8,9 +8,8 @@ import os
 ARCHS = ['x86_64', 'i686', 'armv6l', 'armv7l']
 PLATFORMS = ['linux', 'manylinux1', 'win32']
 VERSIONS = ['35', '36', '37']
-PROJECT_DIR = os.environ['SRC']
-DEST_DIR = PROJECT_DIR + '/deploy/installer/packages'
-PROJECT_NAME = glob.glob(PROJECT_DIR + '/build/dist/*.zip')[0]
+DEST_DIR = 'deploy/installer/packages'
+PROJECT_NAME = glob.glob('build/dist/*.zip')[0]
 
 
 def download(package):
@@ -44,7 +43,7 @@ def get_reqs(path):
             reqs.append('{}'.format(req[0]))
     return reqs
 
-reqs = get_reqs(PROJECT_DIR)
+reqs = get_reqs('.')
 download('pip')
 download('setuptools')
 download(PROJECT_NAME)
