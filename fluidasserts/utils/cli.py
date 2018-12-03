@@ -164,23 +164,6 @@ def enable_win_colors():
                                                       wrap=True)
 
 
-def show_banner():
-    """Show Asserts banner."""
-    enable_win_colors()
-    header = """
----
-# Fluid Asserts (v. {})
-#  ___
-# | >>|> fluid
-# |___|  attacks, we hack your software
-#
-# Loading attack modules ...
-""".format(fluidasserts.__version__)
-
-    highlight(header, PropertiesLexer(),
-              TerminalFormatter(colorscheme=OPEN_COLORS), OUTFILE)
-
-
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
@@ -258,6 +241,17 @@ def get_risk_levels(parsed_content):
     return risk_level
 
 
+def colorize_text(message, args):
+    """Colorize text content."""
+    if args.no_color:
+        print(message)
+    else:
+        enable_win_colors()
+        highlight(message, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=SUMMARY_COLORS),
+                  OUTFILE)
+
+
 def colorize(parsed_content):
     """Colorize content."""
     enable_win_colors()
@@ -268,6 +262,8 @@ def colorize(parsed_content):
             style = CLOSE_COLORS
         elif node['status'] == 'UNKNOWN':
             style = UNKNOWN_COLORS
+        else:
+            style = SUMMARY_COLORS
 
         message = yaml.safe_dump(node, default_flow_style=False,
                                  explicit_start=True)
@@ -283,6 +279,22 @@ def print_message(message, args):
                              explicit_start=True), flush=True)
     else:
         colorize(message)
+
+
+def show_banner(args):
+    """Show Asserts banner."""
+    enable_win_colors()
+    header = """
+---
+# Fluid Asserts (v. {})
+#  ___
+# | >>|> fluid
+# |___|  attacks, we hack your software
+#
+# Loading attack modules ...
+""".format(fluidasserts.__version__)
+
+    colorize_text(header, args)
 
 
 @contextlib.contextmanager
@@ -475,7 +487,6 @@ set but with an unknown value. It must be "true" or "false".')
 def main():
     """Run CLI."""
     init()
-    show_banner()
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-q', '--quiet', help='decrease output verbosity',
                            action='store_true')
@@ -502,6 +513,7 @@ given files or directories')
     argparser.add_argument('exploit', nargs='?', help='exploit to execute')
 
     args = argparser.parse_args()
+    show_banner(args)
 
     if not args.exploit and not args.http \
        and not args.ssl and not args.dns and not args.lang:
@@ -547,8 +559,7 @@ given files or directories')
     message = yaml.safe_dump(final_message, default_flow_style=False,
                              explicit_start=True)
 
-    highlight(message, PropertiesLexer(),
-              TerminalFormatter(colorscheme=SUMMARY_COLORS), OUTFILE)
+    colorize_text(message, args)
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
