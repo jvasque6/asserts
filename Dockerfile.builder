@@ -19,6 +19,7 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
         python3 \
         python3-dev \
+        python3-pip \
         libssl-dev \
         libffi-dev \
         scons \
@@ -28,7 +29,6 @@ RUN apt-get update -qq && \
         gawk \
         lsb-release \
         netcat-traditional \
-        python3-pip \
         python3-setuptools \
         tesseract-ocr \
         ruby \
@@ -39,10 +39,12 @@ RUN apt-get update -qq && \
         libc6-dev \
         make \
         docker-ce \
+        zip \
         git && \
-    pip3 install -U  setuptools \
-        wheel && \
-    pip3 install -U \
+    python3 -m pip install -U  setuptools \
+        wheel \
+        pip && \
+    python3 -m pip install -U \
         wheel \
         setuptools \
         tox \
@@ -60,6 +62,7 @@ RUN apt-get update -qq && \
         smmap2 \
         gitpython \
         pyflakes \
+        requirements-detector \
         mypy && \
     gem install overcommit && \
     dpkg --clear-avail && \
