@@ -13,6 +13,15 @@ RUN apk update \
     make \
     jpeg-dev \
     curl && \
-    rm -rf /var/cache/apk/* && \
     pip3 install -U pip && pip3 install --no-cache-dir -U /*.zip && \
-    rm -f /*.zip
+    rm -f /*.zip && \
+    apk del -r --purge python3-dev \
+    libffi-dev \
+    gcc \
+    openssl-dev \
+    make \
+    libc-dev \
+    jpeg-dev && \
+    apk add -u --no-cache libssl1.0 \
+    libcrypto1.0 && \
+    rm -rf /var/cache/apk/*
