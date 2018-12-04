@@ -1,8 +1,10 @@
 FROM alpine:3.8
 
+COPY dist/*.zip /
+
 RUN apk update \
     && apk upgrade \
-    && apk add py3-pip \
+    && apk add -u --no-cache py3-pip \
     python3-dev \
     libffi-dev \
     gcc \
@@ -10,10 +12,7 @@ RUN apk update \
     openssl-dev \
     make \
     jpeg-dev \
-    curl \
-    && rm -rf /var/cache/apk/*
-
-COPY dist/*.zip /
-
-RUN pip3 install -U pip && pip3 install --no-cache-dir -U /*.zip
-RUN rm -f /*.zip
+    curl && \
+    rm -rf /var/cache/apk/* && \
+    pip3 install -U pip && pip3 install --no-cache-dir -U /*.zip && \
+    rm -f /*.zip
