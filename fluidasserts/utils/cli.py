@@ -244,7 +244,7 @@ def get_risk_levels(parsed_content):
 def colorize_text(message, args):
     """Colorize text content."""
     if args.no_color:
-        print(message)
+        print(message, end='')
     else:
         enable_win_colors()
         highlight(message, PropertiesLexer(),
@@ -275,8 +275,9 @@ def colorize(parsed_content):
 def print_message(message, args):
     """Print message according to args."""
     if args.no_color:
-        print(yaml.safe_dump(message, default_flow_style=False,
-                             explicit_start=True), flush=True)
+        for node in message:
+            print(yaml.safe_dump(node, default_flow_style=False,
+                                 explicit_start=True), flush=True, end='')
     else:
         colorize(message)
 
@@ -284,8 +285,7 @@ def print_message(message, args):
 def show_banner(args):
     """Show Asserts banner."""
     enable_win_colors()
-    header = """
-# Fluid Asserts (v. {})
+    header = """# Fluid Asserts (v. {})
 #  ___
 # | >>|> fluid
 # |___|  attacks, we hack your software
