@@ -21,9 +21,6 @@ stages:
 
 build:
   stage: build
-  before_script:
-    - mkdir -p /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
-    - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
     - docker build
       --cache-from registry.gitlab.com/fluidattacks/asserts:builder
@@ -61,11 +58,16 @@ test:
     - schedules
 
 fluidasserts:
+  before_script:
+    - mkdir -p /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
+    - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
     - docker pull fluidattacks/asserts
     - docker run -t -e FA_STRICT="false" -w /code
       -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
       fluidattacks/asserts asserts -o /code/deploy/container/exploit.py
+  after_script:
+    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   except:
     - master
     - schedules
@@ -126,14 +128,6 @@ pages:
     paths: [public/]
   only:
     - master
-  except:
-    - schedules
-
-cleanup_job:
-  stage: cleanup
-  script:
-    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
-  when: always
   except:
     - schedules
 
