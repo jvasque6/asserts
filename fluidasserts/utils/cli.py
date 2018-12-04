@@ -285,7 +285,6 @@ def show_banner(args):
     """Show Asserts banner."""
     enable_win_colors()
     header = """
----
 # Fluid Asserts (v. {})
 #  ___
 # | >>|> fluid

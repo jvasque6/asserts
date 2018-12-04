@@ -4,6 +4,7 @@
 
 # standard imports
 import hashlib
+from collections import OrderedDict
 from typing import Optional, Tuple
 
 # 3rd party imports
@@ -226,11 +227,11 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                  as per :meth:`Service.get_fingerprint()`.
         """
         sha256 = hashlib.sha256()
-        fp_headers = self.response.headers.copy()
+        fp_headers = OrderedDict(self.response.headers.copy())
         fp_headers.pop('Date', None)
         fp_headers.pop('Set-Cookie', None)
 
-        banner = '\r\n'.join(['{}: {}'.format(x, y)
-                              for x, y in fp_headers.items()])
+        banner = '\r\n'.join(['{}: {}'.format(x, x)
+                              for x in fp_headers])
         sha256.update(banner.encode('utf-8'))
-        return dict(sha256=sha256.hexdigest(), banner=banner)
+        return dict(sha256=sha256.hexdigest(), banner=fp_headers)
