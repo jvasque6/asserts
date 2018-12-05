@@ -29,7 +29,10 @@ NUGET_PROJECT_EMPTY = 'test/static/sca/nuget/empty'
 PYPI_PROJECT_OPEN = 'test/static/sca/pypi/open'
 PYPI_PROJECT_CLOSE = 'test/static/sca/pypi/close'
 PYPI_PROJECT_NOT_FOUND = 'test/static/sca/pypi/not_found'
-
+NPM_PROJECT_OPEN = 'test/static/sca/npm/open'
+NPM_PROJECT_CLOSE = 'test/static/sca/npm/close'
+NPM_PROJECT_NOT_FOUND = 'test/static/sca/npm/not_found'
+NPM_PROJECT_EMPTY = 'test/static/sca/npm/empty'
 
 #
 # Open tests
@@ -43,6 +46,7 @@ def test_package_has_vulnerabilities_open():
     assert maven.package_has_vulnerabilities('maven')
     assert maven.project_has_vulnerabilities(MAVEN_PROJECT_OPEN)
     assert npm.package_has_vulnerabilities('npm')
+    assert npm.project_has_vulnerabilities(NPM_PROJECT_OPEN)
     assert nuget.package_has_vulnerabilities('jquery')
     assert nuget.project_has_vulnerabilities(NUGET_PROJECT_OPEN)
     assert pypi.package_has_vulnerabilities('pip')
@@ -66,6 +70,9 @@ def test_package_has_vulnerabilities_close():
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_EMPTY)
     assert not npm.package_has_vulnerabilities('npm', '10.0.0')
     assert not npm.package_has_vulnerabilities('npasdasdasm', '10.0.0')
+    assert not npm.project_has_vulnerabilities(NPM_PROJECT_CLOSE)
+    assert not npm.project_has_vulnerabilities(NPM_PROJECT_NOT_FOUND)
+    assert not npm.project_has_vulnerabilities(NPM_PROJECT_EMPTY)
     assert not nuget.package_has_vulnerabilities('jquery', '10.0.0')
     assert not nuget.package_has_vulnerabilities('jqueryasdasd', '10.0.0')
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_CLOSE)
@@ -84,6 +91,7 @@ def test_package_has_vulnerabilities_close():
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not npm.package_has_vulnerabilities('npm')
+    assert not npm.project_has_vulnerabilities(NPM_PROJECT_CLOSE)
     assert not nuget.package_has_vulnerabilities('jquery')
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_CLOSE)
     assert not pypi.package_has_vulnerabilities('pip')

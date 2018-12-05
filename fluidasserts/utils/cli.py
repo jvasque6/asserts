@@ -407,6 +407,7 @@ from fluidasserts.lang import rpgle
 from fluidasserts.sca import maven
 from fluidasserts.sca import nuget
 from fluidasserts.sca import pypi
+from fluidasserts.sca import npm
 """
     for code in codes:
         template += """
@@ -448,6 +449,7 @@ rpgle.swallows_exceptions('__code__')
 maven.project_has_vulnerabilities('__code__')
 nuget.project_has_vulnerabilities('__code__')
 pypi.project_has_vulnerabilities('__code__')
+npm.project_has_vulnerabilities('__code__')
 """.replace('__code__', code)
     return exec_wrapper(template)
 

@@ -1,0 +1,16 @@
+{
+  "name": "Test Project",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://gitlab.com/fluidattacks/asserts",
+  "author": "Fluid Attacks",
+  "dependencies": {
+    "angular": "1.1.0"
+  },
+  "resolutions": {
+    "graceful-fs": "4.1.13"
+  },
+  "scripts": {
+    "test": "gulp compile && ./runTests.sh"
+  }
+}

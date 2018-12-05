@@ -1,0 +1,17 @@
+{
+  "name": "Test Project",
+  "version": "1.0.0",
+  "description": "",
+  "repository": "https://gitlab.com/fluidattacks/asserts",
+  "author": "Fluid Attacks",
+  "dependencies": {
+    "react-i18next": "8.3.8",
+    "notexists": "8.3.8"
+  },
+  "resolutions": {
+    "graceful-fs": "4.1.13"
+  },
+  "scripts": {
+    "test": "gulp compile && ./runTests.sh"
+  }
+}
