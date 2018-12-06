@@ -21,6 +21,10 @@ RUN apk update \
     openssl-dev \
     make \
     libc-dev \
+    musl-utils libc-utils \
+    ssl_client \
+    scanelf \
+    libressl2.7-libtls \
     jpeg-dev && \
     apk add -u --no-cache libssl1.0 \
     libcrypto1.0 && \
