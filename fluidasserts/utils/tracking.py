@@ -10,7 +10,8 @@ import platform
 
 # 3rd party imports
 from mixpanel import Mixpanel, MixpanelException
-import requests
+
+FA_EMAIL = 'engineering@fluidattacks.com'
 
 
 def get_os_fingerprint():
@@ -21,16 +22,6 @@ def get_os_fingerprint():
     return sha256.hexdigest()
 
 
-def get_public_ip():
-    """Get public IP of system."""
-    my_ip = 'Private IP'
-    try:
-        my_ip = requests.get('https://api.ipify.org').text
-    except requests.exceptions.ConnectionError:
-        pass
-    return my_ip
-
-
 def mp_track(func_to_track):
     """Track a function."""
     if os.environ.get('FA_NOTRACK') != 'true':
@@ -38,7 +29,7 @@ def mp_track(func_to_track):
         user_id = get_os_fingerprint()
         mix_pan = Mixpanel(project_token)
         try:
-            mix_pan.people_set(user_id, {'$ip': get_public_ip()})
+            mix_pan.people_set(user_id, {'$email': FA_EMAIL})
             mix_pan.track(user_id, func_to_track, {
                 'python_version': platform.python_version(),
                 'platform': platform.system()})
