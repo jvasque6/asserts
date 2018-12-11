@@ -13,8 +13,8 @@ from fluidasserts.cloud.aws import cloudtrail
 
 
 # Constants
-AWS_ACCESS_KEY_ID = "AKIAIHT6LQIROIL7LKYQ"
-AWS_SECRET_ACCESS_KEY = "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"
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 AWS_SECRET_ACCESS_KEY_BAD = "bad"
 
 #
