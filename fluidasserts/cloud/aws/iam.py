@@ -87,7 +87,8 @@ def have_old_creds_enabled(key_id: str, secret: str) -> bool:
             client = aws.get_aws_client('iam', key_id, secret)
             user_info = client.get_user(UserName=user[0])
             pass_last_used = user_info['User']['PasswordLastUsed']
-            if pass_last_used > datetime.now() + timedelta(days=90):
+            now_minus_90 = datetime.now() - timedelta(days=90)
+            if pass_last_used < now_minus_90.replace(tzinfo=pytz.UTC):
                 show_open('User does not have used the password in more than \
                     90 days and it\'s still active',
                           details=dict(user=user[0],
