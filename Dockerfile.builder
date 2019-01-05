@@ -63,6 +63,7 @@ RUN apt-get update -qq && \
         pyflakes \
         requirements-detector \
         mypy && \
-    gem install overcommit && \
+    gem install overcommit \
+        bundler && \
     dpkg --clear-avail && \
     apt-get clean
