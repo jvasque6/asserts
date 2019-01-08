@@ -28,6 +28,17 @@ build:
       -f Dockerfile.builder -t registry.gitlab.com/fluidattacks/asserts:builder .
   retry: 2
 
+commitlint:
+  stage: test
+  before_script:
+    - npm install
+  image: node:10
+  script:
+    - ./ci-scripts/commitlint-checks.sh
+  except:
+    - master
+    - schedules
+
 lint:
   image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
@@ -158,6 +169,6 @@ remove-branches:
     - url_host=$(git remote get-url origin
       | sed -e "s/https:\/\/gitlab-ci-token:.*@//g")
     - git remote set-url origin "https://gitlab-ci-token:${API_TKN}@${url_host}"
-    - ./remove-branches.sh
+    - ./ci-scripts/remove-branches.sh
   only:
     - schedules
