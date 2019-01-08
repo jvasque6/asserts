@@ -30,3 +30,6 @@ tmp/
 
 # mypy cache
 .mypy_cache/
+
+# Bundler
+Gemfile.lock
