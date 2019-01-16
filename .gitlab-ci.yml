@@ -66,8 +66,6 @@ test:
   script:
     - scons test
   retry: 2
-  except:
-    - schedules
 
 fluidasserts:
   before_script:
