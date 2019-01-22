@@ -55,7 +55,7 @@ RUN apt-get update -qq && \
         pydocstyle \
         pep257 \
         twine \
-        mandrill \
+        mandrill-really-maintained \
         certifi \
         gitdb2 \
         smmap2 \
