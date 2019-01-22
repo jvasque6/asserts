@@ -20,8 +20,6 @@ class ConnError(http.ConnError):
     :py:exc:`http.ConnError` wrapper exception.
     """
 
-    pass
-
 
 class PackageNotFoundException(Exception):
     """
@@ -29,8 +27,6 @@ class PackageNotFoundException(Exception):
 
     :py:exc:`Exception` wrapper exception.
     """
-
-    pass
 
 
 def get_vulns(package_manager: str, package: str, version: str) -> bool:

@@ -33,8 +33,6 @@ class ConnError(Exception):
     :py:exc:`requests.ConnectionError` wrapper exception.
     """
 
-    pass
-
 
 class ParameterError(Exception):
     """
@@ -42,8 +40,6 @@ class ParameterError(Exception):
 
     :py:exc:`requests.ConnectionError` wrapper exception.
     """
-
-    pass
 
 
 class HTTPSession():
@@ -231,7 +227,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         fp_headers.pop('Date', None)
         fp_headers.pop('Set-Cookie', None)
 
-        banner = '\r\n'.join(['{}: {}'.format(x, x)
+        banner = '\r\n'.join(['{key}: {key}'.format(key=x)
                               for x in fp_headers])
         sha256.update(banner.encode('utf-8'))
         return dict(sha256=sha256.hexdigest(), banner=fp_headers)

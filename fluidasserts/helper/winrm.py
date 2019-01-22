@@ -29,8 +29,6 @@ class ConnError(Exception):
     :py:exc:`requests.exceptions.ConnectionError` wrapper exception.
     """
 
-    pass
-
 
 def winrm_exec_command(server: str, username: str, password: str,
                        command: str) -> str:

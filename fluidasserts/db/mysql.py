@@ -22,8 +22,6 @@ class ConnError(Exception):
     :py:exc:`mysql.connector.errors.InterfaceError` wrapper exception.
     """
 
-    pass
-
 
 def _get_mysql_cursor(server: str,
                       username: str,

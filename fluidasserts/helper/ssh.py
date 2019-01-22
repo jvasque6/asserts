@@ -24,8 +24,6 @@ class ConnError(Exception):
     :py:exc:`paramiko.ssh_exception.AuthenticationException` wrapper exception.
     """
 
-    pass
-
 
 def build_ssh_object() -> paramiko.client.SSHClient:
     """Build a Paramiko SSHClient object."""

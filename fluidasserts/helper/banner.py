@@ -101,7 +101,6 @@ class Service():
 
         Return the product and version of the service.
         """
-        pass
 
 
 class FTPService(Service):

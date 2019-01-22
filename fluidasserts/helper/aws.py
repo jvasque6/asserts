@@ -20,8 +20,6 @@ class ConnError(botocore.vendored.requests.exceptions.ConnectionError):
     :py:exc:`ConnectionError` wrapper exception.
     """
 
-    pass
-
 
 class ClientErr(botocore.exceptions.BotoCoreError):
     """
@@ -29,8 +27,6 @@ class ClientErr(botocore.exceptions.BotoCoreError):
 
     :py:exc:`ClientError` wrapper exception.
     """
-
-    pass
 
 
 def get_aws_client(service: str, key_id: str, secret: str) -> object:
