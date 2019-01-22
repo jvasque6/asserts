@@ -37,3 +37,7 @@ Gemfile.lock
 # npm
 node_modules/
 package-lock.json
+
+# Commitlint
+commitlint.config.js
+parser-preset.js
