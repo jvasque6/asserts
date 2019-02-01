@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.9
 
 COPY dist/*.zip /
 
@@ -12,8 +12,9 @@ RUN apk update \
     openssl-dev \
     make \
     jpeg-dev \
+    zlib-dev \
     curl && \
-    pip3 install -U pip && pip3 install --no-cache-dir -U /*.zip && \
+    pip3 install -U pip==18.1 && pip3 install --no-cache-dir -U /*.zip && \
     rm -f /*.zip && \
     apk del -r --purge python3-dev \
     libffi-dev \
@@ -25,7 +26,8 @@ RUN apk update \
     ssl_client \
     scanelf \
     libressl2.7-libtls \
+    zlib-dev \
     jpeg-dev && \
-    apk add -u --no-cache libssl1.0 \
-    libcrypto1.0 && \
+    apk add -u --no-cache libssl1.1 \
+    libcrypto1.1 && \
     rm -rf /var/cache/apk/*
