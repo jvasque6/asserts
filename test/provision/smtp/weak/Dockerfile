@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.9
 
 ENV FLAVOR weak
 
@@ -8,4 +8,4 @@ RUN apk update && apk upgrade && apk add postfix
 
 COPY etc_postfix_main.cf-weak /etc/postfix/main.cf
 
-ENTRYPOINT ["/usr/lib/postfix/master", "-c", "/etc/postfix", "-d"]
+ENTRYPOINT ["/usr/libexec/postfix/master", "-c", "/etc/postfix", "-d"]
