@@ -63,7 +63,7 @@ def connect_legacy(hostname: str, port: int = PORT,
     context.load_default_certs()
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.settimeout(5)
+    sock.settimeout(10)
     ssock = context.wrap_socket(sock=sock, server_hostname=hostname)
     ssock.connect((hostname, port))
     yield ssock

@@ -106,7 +106,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                        data=self.data,
                                        json=self.json,
                                        headers=self.headers,
-                                       timeout=5)
+                                       timeout=10)
                 if self.method == 'DELETE':
                     ret = requests.delete(self.url, verify=False,
                                           auth=self.auth,
@@ -115,7 +115,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           data=self.data,
                                           json=self.json,
                                           headers=self.headers,
-                                          timeout=5)
+                                          timeout=10)
                 self.response = ret
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects) as exc:
@@ -132,7 +132,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                             cookies=self.cookies,
                                             headers=self.headers,
                                             stream=self.stream,
-                                            timeout=5)
+                                            timeout=10)
                     else:
                         ret = requests.get(self.url, verify=False,
                                            auth=self.auth,
@@ -140,7 +140,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                            cookies=self.cookies,
                                            headers=self.headers,
                                            stream=self.stream,
-                                           timeout=5)
+                                           timeout=10)
                 else:
                     ret = requests.post(self.url, verify=False,
                                         data=self.data,
@@ -150,7 +150,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                         headers=self.headers,
                                         files=self.files,
                                         stream=self.stream,
-                                        timeout=5)
+                                        timeout=10)
                 self.response = ret
                 if 'Location' in self.response.headers:
                     self.headers['Referer'] = self.response.headers['Location']
