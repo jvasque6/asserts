@@ -65,6 +65,7 @@ test:
   stage: test
   script:
     - scons test
+    - scons codecov
   retry: 2
 
 fluidasserts:
