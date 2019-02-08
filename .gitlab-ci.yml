@@ -19,6 +19,7 @@ stages:
   - postdeploy
   - cleanup
   - remove-branches
+  - coverage
 
 build:
   stage: build
@@ -63,9 +64,16 @@ bandit:
 test:
   image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
+  only:
+    - /^.*$/
+    - merge_requests
   script:
     - scons test
-    - scons codecov
+    - cp build/coverage/results.xml coverage.xml
+  artifacts:
+    name: "coverage_xml_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA:0:8}"
+    paths:
+      - coverage.xml
   retry: 2
 
 fluidasserts:
@@ -182,3 +190,17 @@ remove-branches:
     - ./ci-scripts/remove-branches.sh
   only:
     - schedules
+
+coverage-report:
+  image: registry.gitlab.com/fluidattacks/asserts:builder
+  stage: coverage
+  only:
+    - merge_requests
+  dependencies:
+    - test
+  script:
+    - scons codecov
+  retry: 2
+  except:
+    - master
+
