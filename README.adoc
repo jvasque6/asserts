@@ -10,6 +10,7 @@
 
 image:https://gitlab.com/fluidattacks/asserts/badges/master/pipeline.svg[link="https://gitlab.com/fluidattacks/asserts/commits/master",title="pipeline status"]
 image:https://gitlab.com/fluidattacks/asserts/badges/master/coverage.svg[link="https://gitlab.com/fluidattacks/asserts/commits/master",title="coverage report"]
+image:https://codecov.io/gl/fluidattacks/asserts/branch/master/graph/badge.svg[link="https://codecov.io/gl/fluidattacks/asserts"]
 
 Please refer to
 link:https://fluidattacks.gitlab.io/asserts/[Fluid Asserts documentation].
