@@ -133,6 +133,14 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                             headers=self.headers,
                                             stream=self.stream,
                                             timeout=10)
+                    elif self.files:
+                        ret = requests.post(self.url, verify=False,
+                                            auth=self.auth,
+                                            files=self.files,
+                                            cookies=self.cookies,
+                                            headers=self.headers,
+                                            stream=self.stream,
+                                            timeout=10)
                     else:
                         ret = requests.get(self.url, verify=False,
                                            auth=self.auth,
