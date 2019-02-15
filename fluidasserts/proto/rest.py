@@ -12,8 +12,17 @@
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.proto.http import _has_insecure_header
 from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper import http
+
+HDR_RGX = {
+    'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
+    'strict-transport-security': '^\\s*max-age=\\s*\\d+;\
+    (\\s)*includesubdomains;(\\s)*preload',
+    'x-content-type-options': '^\\s*nosniff\\s*$',
+    'x-frame-options': '^\\s*deny.*$',
+}  # type: dict
 
 
 @level('low')
@@ -94,3 +103,58 @@ def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     show_close('URL {} rejects insecure Accept request header value'.
                format(url))
     return False
+
+
+@level('medium')
+@track
+def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if X-Frame-Options HTTP header is properly set.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    return _has_insecure_header(url, 'X-Frame-Options', *args, **kwargs)
+
+
+@level('low')
+@track
+def is_header_x_content_type_options_missing(url: str, *args,
+                                             **kwargs) -> bool:
+    r"""
+    Check if X-Content-Type-Options HTTP header is properly set.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    return _has_insecure_header(url, 'X-Content-Type-Options',
+                                *args, **kwargs)
+
+
+@level('medium')
+@track
+def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if Strict-Transport-Security HTTP header is properly set.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    return _has_insecure_header(url, 'Strict-Transport-Security',
+                                *args, **kwargs)
+
+
+@level('low')
+@track
+def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if Content-Type HTTP header is properly set.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    return _has_insecure_header(url, 'Content-Type', *args, **kwargs)

@@ -554,6 +554,23 @@ def rest_insecure_accept_ok():
     return resp
 
 
+@APP.route('/rest/hsts/ok')
+def rest_hsts_ok():
+    """Header que define bien la implementacion de HSTS."""
+    resp = Response('Expires OK')
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000; \
+        includeSubDomains; preload'
+    return resp
+
+
+@APP.route('/rest/hsts/fail')
+def rest_hsts_fail():
+    """Header que define mal implementacion de HSTS."""
+    resp = Response('Expires FAIL')
+    resp.headers['Strict-Transport-Security'] = 'Fail'
+    return resp
+
+
 def start():
     """Inicia el servidor de pruebas."""
     try:
