@@ -33,7 +33,7 @@ HDR_RGX = {
     'expires': '^\\s*0\\s*$',
     'pragma': '^\\s*no-cache\\s*$',
     'strict-transport-security': '^\\s*max-age=\\s*\\d+;\
-    (\\s)*includesubdomains;(\\s)*preload',
+    (\\s)*includesubdomains',
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',

@@ -3,7 +3,7 @@
 """This module allows to check REST vulnerabilities."""
 
 # standard imports
-# None
+import re
 
 # third party imports
 # None
@@ -18,8 +18,7 @@ from fluidasserts.helper import http
 
 HDR_RGX = {
     'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
-    'strict-transport-security': '^\\s*max-age=\\s*\\d+;\
-    (\\s)*includesubdomains;(\\s)*preload',
+    'strict-transport-security': '^\\s*max-age=\\s*\\d+',
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*deny.*$',
 }  # type: dict
@@ -143,8 +142,52 @@ def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
     :param \*args: Optional arguments for :class:`.HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
-    return _has_insecure_header(url, 'Strict-Transport-Security',
-                                *args, **kwargs)
+    try:
+        http_session = http.HTTPSession(url, *args, **kwargs)
+        headers_info = http_session.response.headers
+        fingerprint = http_session.get_fingerprint()
+    except http.ConnError as exc:
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+
+    header = 'Strict-Transport-Security'
+    if header in headers_info:
+        value = headers_info[header]
+        if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
+            hdr_attrs = value.split(';')
+            max_age = list(filter(lambda x: x.startswith('max-age'),
+                                  hdr_attrs))[0]
+            max_age_val = max_age.split('=')[1]
+            if int(max_age_val) >= 31536000:
+                show_close('HTTP header {} is secure'.format(header),
+                           details=dict(url=url,
+                                        header=header,
+                                        value=value,
+                                        fingerprint=fingerprint),
+                           refs='apache/habilitar-headers-seguridad')
+                result = False
+            else:
+                show_open('{} HTTP header is insecure'.
+                          format(header),
+                          details=dict(url=url, header=header, value=value,
+                                       fingerprint=fingerprint),
+                          refs='apache/habilitar-headers-seguridad')
+                result = True
+        else:
+            show_open('{} HTTP header is insecure'.
+                      format(header),
+                      details=dict(url=url, header=header, value=value,
+                                   fingerprint=fingerprint),
+                      refs='apache/habilitar-headers-seguridad')
+            result = True
+    return result
 
 
 @level('low')
