@@ -175,7 +175,8 @@ def check_grammar(grammar: ParserElement, code_dest: str,
             for code_file in files:
                 full_path = os.path.join(root, code_file)
                 if lang_spec.get('extensions'):
-                    if code_file.split('.')[-1] in lang_spec.get('extensions'):
+                    if code_file.split('.')[-1].lower() in \
+                            lang_spec.get('extensions'):
                         vulns[full_path] = _get_match_lines(grammar, full_path,
                                                             lang_spec)
                 else:
@@ -183,7 +184,7 @@ def check_grammar(grammar: ParserElement, code_dest: str,
                                                         lang_spec)
     else:
         if lang_spec.get('extensions'):
-            if code_dest.split('.')[-1] in lang_spec.get('extensions'):
+            if code_dest.split('.')[-1].lower() in lang_spec.get('extensions'):
                 vulns[code_dest] = _get_match_lines(grammar, code_dest,
                                                     lang_spec)
         else:
