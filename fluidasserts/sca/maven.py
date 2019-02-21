@@ -61,7 +61,7 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param version: Package version.
     """
     try:
-        vulns = sca.get_vulns(PACKAGE_MANAGER, package, version)
+        vulns = sca.get_vulns_ossindex(PACKAGE_MANAGER, package, version)
         if vulns:
             show_open('Software has vulnerabilities',
                       details=dict(package=package, version=version,
