@@ -35,7 +35,7 @@ def has_access(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`HTTPSession`.
     """
     http_session = http.HTTPSession(url, *args, **kwargs)
-    ok_access_list = [200]
+    ok_access_list = [200, 202, 204, 301, 302, 307]
     if http_session.response.status_code in ok_access_list:
         show_open('Access available to {}'.format(url))
         return True

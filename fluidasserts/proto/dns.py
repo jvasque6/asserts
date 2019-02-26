@@ -155,7 +155,7 @@ def has_cache_snooping(nameserver: str) -> bool:
     (supports non recursive queries)
     :param nameserver: IPv4 or 6 to test.
     """
-    domain = 'isc.org.'
+    domain = 'google.com.'
     name = dns.name.from_text(domain)
 
     try:
@@ -201,7 +201,7 @@ def has_recursion(nameserver: str) -> bool:
 
     :param nameserver: IPv4 or 6 to test.
     """
-    domain = 'isc.org.'
+    domain = 'google.com.'
     name = dns.name.from_text(domain)
 
     try:
@@ -239,7 +239,7 @@ def can_amplify(nameserver: str) -> bool:
 
     :param nameserver: IPv4 or 6 to test.
     """
-    domain = 'isc.org.'
+    domain = 'google.com.'
     name = dns.name.from_text(domain)
 
     try:
