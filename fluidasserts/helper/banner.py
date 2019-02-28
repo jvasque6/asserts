@@ -71,7 +71,7 @@ class Service():
                 sock = raw_socket
             sock.connect((server, self.port))
             if self.payload is not None:
-                sent_bytes = sock.send(self.payload)
+                sent_bytes = sock.send(self.payload.encode())
                 if sent_bytes < len(self.payload):
                     raise socket.error
             banner = sock.recv(5096).decode('ISO-8859-1')
@@ -145,10 +145,13 @@ class SMTPService(Service):
 
         :param server: Server to connect to.
         """
+        regex_list = [r'220.*ESMTP (.*)',
+                      r'214-2.0.0 This is sendmail version (.*)']
         banner = self.get_banner(server)
-        regex_match = re.search(r'220.*ESMTP (.*)', banner)
-        if regex_match:
-            return regex_match.group(1)
+        for regex in regex_list:
+            regex_match = re.search(regex, banner)
+            if regex_match:
+                return regex_match.group(1)
         return None
 
 

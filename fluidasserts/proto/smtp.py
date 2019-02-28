@@ -49,14 +49,15 @@ def has_vrfy(ip_address: str, port: int = PORT) -> bool:
 
 @level('low')
 @track
-def is_version_visible(ip_address: str, port: int = PORT) -> bool:
+def is_version_visible(ip_address: str, port: int = PORT,
+                       payload: bool = None) -> bool:
     """
     Check if banner is visible.
 
     :param ip_address: IP address to test.
     :param port: If necessary, specify port to connect to (default: 25).
     """
-    service = banner.SMTPService(port)
+    service = banner.SMTPService(port, payload=payload)
     version = service.get_version(ip_address)
     fingerprint = service.get_fingerprint(ip_address)
 
