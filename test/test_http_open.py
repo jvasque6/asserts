@@ -370,6 +370,12 @@ def test_is_header_x_asp_net_version_present_open():
         '%s/x_aspnet_version/fail' % (BASE_URL))
 
 
+def test_is_header_x_powered_by_present_open():
+    """Header X-Powered-By establecido?."""
+    assert http.is_header_x_powered_by_present(
+        '%s/x_powered_by/fail' % (BASE_URL))
+
+
 def test_is_not_https_required_open():
     """El servidor no requiere usar HTTPS?."""
     assert http.is_not_https_required(

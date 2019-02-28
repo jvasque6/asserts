@@ -518,6 +518,16 @@ def test_is_header_x_asp_net_version_present_close():
         '%s/x_aspnet_version/ok' % (BAD_FORMAT_SERVICE))
 
 
+def test_is_header_x_powered_by_present_close():
+    """Header X-Powered-By establecido?."""
+    assert not http.is_header_x_powered_by_present(
+        '%s/x_powered_by/ok' % (BASE_URL))
+    assert not http.is_header_x_powered_by_present(
+        '%s/x_powered_by/ok' % (NONEXISTANT_SERVICE))
+    assert not http.is_header_x_powered_by_present(
+        '%s/x_powered_by/ok' % (BAD_FORMAT_SERVICE))
+
+
 def test_is_version_visible_close():
     """Server header contains version?."""
     assert not http.is_version_visible('%s/version/ok' % (BASE_URL))

@@ -296,7 +296,7 @@ by default'.format(header),
 
     result = True
 
-    if header in ('X-AspNet-Version', 'Server'):
+    if header in ('X-AspNet-Version', 'Server', 'X-Powered-By'):
         if header in headers_info:
             value = headers_info[header]
             show_open('{} HTTP insecure header present'.
@@ -543,6 +543,19 @@ def is_header_x_asp_net_version_present(url: str, *args, **kwargs) -> bool:
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
     return _has_insecure_header(url, 'X-AspNet-Version', *args, **kwargs)
+
+
+@level('low')
+@track
+def is_header_x_powered_by_present(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if X-Powered-By header is missing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    return _has_insecure_header(url, 'X-Powered-By', *args, **kwargs)
 
 
 @level('low')

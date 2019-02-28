@@ -443,6 +443,21 @@ def x_aspnet_version_fail():
     return resp
 
 
+@APP.route('/http/headers/x_powered_by/ok')
+def x_powered_by_ok():
+    """Encabezado X-Powered-By no presente."""
+    resp = Response('Login successful')
+    return resp
+
+
+@APP.route('/http/headers/x_powered_by/fail')
+def x_powered_by_fail():
+    """Encabezado X-Powered-By presente."""
+    resp = Response('Login successful')
+    resp.headers['X-Powered-By'] = 'ASP.NET'
+    return resp
+
+
 @APP.route('/http/headers/xxs_protection/ok')
 def xxs_protection_ok():
     """Encabezado X-XSS-Protection presente."""

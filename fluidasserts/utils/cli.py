@@ -323,6 +323,7 @@ from fluidasserts.proto import http
     for url in urls:
         template += """
 http.is_header_x_asp_net_version_present('__url__')
+http.is_header_x_powered_by_present('__url__')
 http.is_header_access_control_allow_origin_missing('__url__')
 http.is_header_cache_control_missing('__url__')
 http.is_header_content_security_policy_missing('__url__')
