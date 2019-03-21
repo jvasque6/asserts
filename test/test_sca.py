@@ -52,7 +52,6 @@ def test_package_has_vulnerabilities_open():
     assert nuget.project_has_vulnerabilities(NUGET_PROJECT_OPEN)
     assert pypi.package_has_vulnerabilities('pip')
     assert pypi.project_has_vulnerabilities(PYPI_PROJECT_OPEN)
-    assert generic.package_has_vulnerabilities('nginx')
 
 #
 # Closing tests
@@ -84,7 +83,6 @@ def test_package_has_vulnerabilities_close():
     assert not pypi.package_has_vulnerabilities('pipasdiahsds')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_NOT_FOUND)
-    assert not generic.package_has_vulnerabilities('noexistingsoftware')
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
