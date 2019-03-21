@@ -69,7 +69,7 @@ setup(
     ],
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
-        'typed-ast==1.2.0',          # fluidasserts
+        'typed-ast==1.3.1',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.21.0',          # fluidasserts.proto.http
         'certifi==2018.11.29',       # fluidasserts.proto.ssl
