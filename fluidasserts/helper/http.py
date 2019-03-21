@@ -52,6 +52,8 @@ class HTTPSession():
                  json: Optional[dict] = None,
                  files: Optional[dict] = None,
                  auth: Optional[Tuple[str, str]] = None,
+                 redirect: Optional[bool] = True,
+                 timeout: Optional[int] = 10,
                  stream: Optional[bool] = False) -> None:
         """
         Construct method.
@@ -81,6 +83,8 @@ class HTTPSession():
         self.response = None  # type: requests.Response
         self.is_auth = False
         self.stream = stream
+        self.redirect = redirect
+        self.timeout = timeout
         if self.headers is None:
             self.headers = dict()
         if 'User-Agent' not in self.headers:
@@ -106,7 +110,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                        data=self.data,
                                        json=self.json,
                                        headers=self.headers,
-                                       timeout=10)
+                                       allow_redirects=self.redirect,
+                                       timeout=self.timeout)
                 if self.method == 'DELETE':
                     ret = requests.delete(self.url, verify=False,
                                           auth=self.auth,
@@ -115,7 +120,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           data=self.data,
                                           json=self.json,
                                           headers=self.headers,
-                                          timeout=10)
+                                          allow_redirects=self.redirect,
+                                          timeout=self.timeout)
                 self.response = ret
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects) as exc:
@@ -132,7 +138,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                             cookies=self.cookies,
                                             headers=self.headers,
                                             stream=self.stream,
-                                            timeout=10)
+                                            allow_redirects=self.redirect,
+                                            timeout=self.timeout)
                     elif self.files:
                         ret = requests.post(self.url, verify=False,
                                             auth=self.auth,
@@ -140,7 +147,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                             cookies=self.cookies,
                                             headers=self.headers,
                                             stream=self.stream,
-                                            timeout=10)
+                                            allow_redirects=self.redirect,
+                                            timeout=self.timeout)
                     else:
                         ret = requests.get(self.url, verify=False,
                                            auth=self.auth,
@@ -148,7 +156,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                            cookies=self.cookies,
                                            headers=self.headers,
                                            stream=self.stream,
-                                           timeout=10)
+                                           allow_redirects=self.redirect,
+                                           timeout=self.timeout)
                 else:
                     ret = requests.post(self.url, verify=False,
                                         data=self.data,
@@ -158,7 +167,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                         headers=self.headers,
                                         files=self.files,
                                         stream=self.stream,
-                                        timeout=10)
+                                        allow_redirects=self.redirect,
+                                        timeout=self.timeout)
                 self.response = ret
                 if 'Location' in self.response.headers:
                     self.headers['Referer'] = self.response.headers['Location']
