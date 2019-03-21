@@ -82,9 +82,6 @@ fluidasserts:
     - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
   script:
     - docker pull fluidattacks/asserts
-    - docker run -t -e FA_STRICT="false" -w /code
-      -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
-      fluidattacks/asserts asserts -o /code/deploy/container/exploit.py
   after_script:
     - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
   except:
