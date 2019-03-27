@@ -10,7 +10,6 @@ HTTP se encuentra adecuadamente implementado.
 from __future__ import print_function
 
 # 3rd party imports
-
 import pytest
 
 # local imports
@@ -324,26 +323,43 @@ def test_userenum_get_open():
         'username', params=data)
 
 
-def test_bruteforce_open():
+def test_bruteforce_post_open():
     """Bruteforce posible?."""
-    data = 'username=pepe&password=grillo'
+    data = {'username': 'pepe', 'password': 'grillo'}
     assert http.can_brute_force(
-        '%s/bruteforce/fail' % (MOCK_SERVICE),
+        '%s/bruteforce/fail_post' % (MOCK_SERVICE),
         'admin',
         'username',
         'password',
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
         data=data)
+
+
+def test_bruteforce_get_open():
+    """Bruteforce posible?."""
+    data = {'username': 'pepe', 'password': 'grillo'}
     assert http.can_brute_force(
-        '%s/bruteforce/fail' % (MOCK_SERVICE),
+        '%s/bruteforce/fail_get' % (MOCK_SERVICE),
         'admin',
         'username',
         'password',
         user_list=['root', 'admin'],
         pass_list=['pass', 'password'],
-        data=data,
-        params='')
+        params=data)
+
+
+def test_bruteforce_json_open():
+    """Bruteforce posible?."""
+    data = {'username': 'pepe', 'password': 'grillo'}
+    assert http.can_brute_force(
+        '%s/bruteforce/fail_json' % (MOCK_SERVICE),
+        'admin',
+        'username',
+        'password',
+        user_list=['root', 'admin'],
+        pass_list=['pass', 'password'],
+        json=data)
 
 
 def test_responsetime_open():

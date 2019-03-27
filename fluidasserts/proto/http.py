@@ -169,13 +169,10 @@ def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
     """
     kw_new = kwargs.copy()
     resp = list()
+    qs_params = list(filter(lambda x: kwargs.get(x),
+                            ['data', 'json', 'params']))[0]
     for dataset in dataset_list:
-        if 'data' in kw_new:
-            kw_new['data'] = dataset
-        elif 'params' in kw_new:
-            kw_new['params'] = dataset
-        elif 'json' in kw_new:
-            kw_new['json'] = dataset
+        kw_new[qs_params] = dataset
         sess = http.HTTPSession(url, *args, **kw_new)
         resp.append((len(sess.response.text), sess.response.status_code))
     return resp
@@ -1194,15 +1191,13 @@ def has_user_enumeration(url: str, user_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
-    if 'params' in kwargs:
-        query_string = kwargs['params']
-    elif 'data' in kwargs:
-        query_string = kwargs['data']
-    elif 'json' in kwargs:
-        query_string = kwargs['json']
-    else:
+    qs_params = list(filter(lambda x: kwargs.get(x),
+                            ['data', 'json', 'params']))
+    if not qs_params:
         show_unknown('No params were given', details=dict(url=url))
         return False
+
+    query_string = kwargs.get(qs_params[0])
 
     if 'json' not in kwargs and user_field not in query_string:
         show_unknown('Given user_field not in query string',
@@ -1275,7 +1270,7 @@ def has_user_enumeration(url: str, user_field: str,
 
 # pylint: disable=keyword-arg-before-vararg
 # pylint: disable=too-many-arguments
-@level('medium')  # noqa
+@level('medium')
 @track
 def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
                     user_list: List[str] = None, pass_list: List[str] = None,
@@ -1296,14 +1291,15 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
-    if 'data' not in kwargs and 'params' not in kwargs:
+    if 'data' not in kwargs and 'params' not in kwargs and \
+            'json' not in kwargs:
         show_unknown('An invalid parameter was passed',
                      details=dict(url=url))
         return False
-    try:
-        query_string = kwargs.get('data')
-    except AttributeError:
-        query_string = kwargs.get('params')
+
+    qs_params = list(filter(lambda x: kwargs.get(x),
+                            ['data', 'json', 'params']))[0]
+    query_string = kwargs.get(qs_params)
 
     users_dataset = _create_dataset(user_field, user_list, query_string)
 
@@ -1314,10 +1310,7 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
             dataset.append(_datas[0])
 
     for _datas in dataset:
-        if 'params' in kwargs:
-            kwargs['params'] = _datas
-        elif 'data' in kwargs:
-            kwargs['data'] = _datas
+        kwargs[qs_params] = _datas
         try:
             sess = http.HTTPSession(url, *args, **kwargs)
             fingerprint = sess.get_fingerprint()

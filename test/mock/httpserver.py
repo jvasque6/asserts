@@ -139,11 +139,29 @@ def user_enumeration_get_ok():
     return 'Login incorrect'
 
 
-@APP.route('/bruteforce/fail', methods=['POST'])
-def brute_force_fail():
+@APP.route('/bruteforce/fail_get', methods=['GET'])
+def brute_force_get_fail():
     """Form con brute forcing."""
     if request.values['username'] == 'admin' and \
        request.values['password'] == 'password':
+        return 'You are admin now'
+    return 'Login incorrect'
+
+
+@APP.route('/bruteforce/fail_post', methods=['POST'])
+def brute_force_post_fail():
+    """Form con brute forcing."""
+    if request.values['username'] == 'admin' and \
+       request.values['password'] == 'password':
+        return 'You are admin now'
+    return 'Login incorrect'
+
+
+@APP.route('/bruteforce/fail_json', methods=['POST'])
+def brute_force_json_fail():
+    """Form con brute forcing."""
+    if request.get_json()['username'] == 'admin' and \
+       request.get_json()['password'] == 'password':
         return 'You are admin now'
     return 'Login incorrect'
 
