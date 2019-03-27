@@ -72,16 +72,16 @@ setup(
         'typed-ast==1.3.1',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.21.0',          # fluidasserts.proto.http
-        'certifi==2018.11.29',       # fluidasserts.proto.ssl
-        'ldap3==2.5.2',              # fluidasserts.proto.ldap
+        'certifi==2019.3.9',       # fluidasserts.proto.ssl
+        'ldap3==2.6',              # fluidasserts.proto.ldap
         'paramiko==2.4.2',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
         'beautifulsoup4==4.7.1',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.proto.dns
         'tlslite-ng==0.7.5',         # fluidasserts.proto.ssl
         'pyOpenSSL==19.0.0',         # fluidasserts.proto.ssl
-        'cffi==1.11.5',              # fluidasserts.proto.ssl
-        'cryptography==2.4.2',       # fluidasserts.proto.ssl
+        'cffi==1.12.2',              # fluidasserts.proto.ssl
+        'cryptography==2.6.1',       # fluidasserts.proto.ssl
         'bcrypt==3.1.6',             # fluidasserts.proto.ssl
         'pynacl==1.3.0',             # fluidasserts.proto.ssl
         'colorama==0.4.1',           # logging
@@ -90,15 +90,15 @@ setup(
         'pytesseract==0.2.6',        # fluidasserts.format.captcha
         'pillow==5.4.1',             # fluidasserts.format.captcha
         'pyparsing==2.3.1',          # fluidasserts.lang
-        'oyaml==0.7',                # fluidasserts
+        'oyaml==0.8',                # fluidasserts
         'pygments==2.3.1',           # fluidasserts
         'viewstate==0.4.3',          # fluidasserts.proto.http
         'ntplib==0.3.3',             # fluidasserts.proto.http
         'pytz==2018.9',              # fluidasserts.proto.http
         'requirements-detector==0.6',  # fluidasserts.sca
         'defusedxml==0.5.0',         # fluidasserts.sca
-        'boto3==1.9.83',             # fluidasserts.cloud.aws
-        'python-dateutil==2.7.5',    # fluidasserts.cloud.aws
+        'boto3==1.9.122',             # fluidasserts.cloud.aws
+        'python-dateutil==2.8.0',    # fluidasserts.cloud.aws
         'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
         'pycrypto==2.6.1; platform_system == "Linux"',
     ],
