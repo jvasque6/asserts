@@ -3,7 +3,7 @@
 """Software Composition Analysis helper."""
 
 # standard imports
-# None
+import re
 
 # 3rd party imports
 import json
@@ -94,6 +94,39 @@ def get_vulns_ossindex(package_manager: str, package: str,
                                  l if x not in l else l, vuln_titles, [])
         else:
             vuln_titles = []
+        return vuln_titles
+    except http.ConnError:
+        raise ConnError
+
+
+def get_vulns_synk(package_manager: str, package: str, version: str) -> bool:
+    """
+    Search vulnerabilities on given package_manager/package/version.
+
+    :param package_manager: Package manager.
+    :param package: Package name.
+    :param version: Package version.
+    """
+    base_url = 'https://snyk.io'
+    url = base_url + '/vuln/{}:{}'.format(package_manager, package)
+
+    try:
+        sess = http.HTTPSession(url, timeout=20)
+        vulns_re = re.search('embedded = ([^;]+)', sess.response.text)
+        vulns_raw = vulns_re.groups()[0]
+        vulns_json = json.loads(vulns_raw)
+
+        if not vulns_json:
+            return []
+        vulns = vulns_json['packageVersions']
+        if version:
+            vuln_titles = {x['version']: x['severityList']
+                           for x in vulns if x['hasVuln'] and
+                           x['version'] == version}
+        else:
+            vuln_titles = {x['version']: x['severityList']
+                           for x in vulns if x['hasVuln']}
+
         return vuln_titles
     except http.ConnError:
         raise ConnError
