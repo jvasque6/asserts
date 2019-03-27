@@ -169,7 +169,7 @@ def _request_dataset(url: str, dataset_list: List, *args, **kwargs) -> List:
     """
     kw_new = kwargs.copy()
     resp = list()
-    qs_params = list(filter(lambda x: kwargs.get(x),
+    qs_params = list(filter(kwargs.get,
                             ['data', 'json', 'params']))[0]
     for dataset in dataset_list:
         kw_new[qs_params] = dataset
@@ -1191,7 +1191,7 @@ def has_user_enumeration(url: str, user_field: str,
     if the request is ``GET`` or ``POST``, respectively.
     They must be strings as they would appear in the request.
     """
-    qs_params = list(filter(lambda x: kwargs.get(x),
+    qs_params = list(filter(kwargs.get,
                             ['data', 'json', 'params']))
     if not qs_params:
         show_unknown('No params were given', details=dict(url=url))
@@ -1297,7 +1297,7 @@ def can_brute_force(url: str, ok_regex: str, user_field: str, pass_field: str,
                      details=dict(url=url))
         return False
 
-    qs_params = list(filter(lambda x: kwargs.get(x),
+    qs_params = list(filter(kwargs.get,
                             ['data', 'json', 'params']))[0]
     query_string = kwargs.get(qs_params)
 

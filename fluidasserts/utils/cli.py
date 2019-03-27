@@ -563,5 +563,5 @@ given files or directories')
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
-            if open_checks > 0:
+            if open_checks:
                 sys.exit(1)
