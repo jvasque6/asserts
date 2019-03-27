@@ -310,7 +310,7 @@ def std_redir(stdout=None):
 def exec_wrapper(exploit):
     """Execute exploit wrapper."""
     with std_redir() as exploit_result:
-        code = compile(exploit, 'exploit', 'exec', optimize=1)
+        code = compile(exploit, 'exploit', 'exec', optimize=0)
         exec(code)
     return exploit_result.getvalue()
 
@@ -473,7 +473,7 @@ def get_content(args):
         content += exec_lang_package(args.lang)
     elif args.exploit:
         content += exec_exploit(args.exploit)
-    return content
+    return get_parsed_output(content)
 
 
 def check_boolean_env_var(var_name):
@@ -525,9 +525,7 @@ given files or directories')
     check_boolean_env_var('FA_STRICT')
     check_boolean_env_var('FA_NOTRACK')
 
-    content = get_content(args)
-
-    parsed = get_parsed_output(content)
+    parsed = get_content(args)
 
     if not args.quiet:
         if args.show_open or args.show_closed or args.show_unknown:
@@ -565,5 +563,5 @@ given files or directories')
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
-            if 'OPEN' in content:
+            if open_checks > 0:
                 sys.exit(1)
