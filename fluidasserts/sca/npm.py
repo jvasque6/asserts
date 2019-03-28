@@ -53,15 +53,11 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param version: Package version.
     """
     try:
-        vulns = sca.get_vulns_synk(PACKAGE_MANAGER, package, version)
+        vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, package, version)
         if vulns:
-            total = sum(vulns[x]['low'] for x in vulns) + \
-                sum(vulns[x]['medium'] for x in vulns) + \
-                sum(vulns[x]['high'] for x in vulns)
-
             show_open('Software has vulnerabilities',
                       details=dict(package=package, version=version,
-                                   vuln_num=total,
+                                   vuln_num=len(vulns),
                                    vulns=vulns))
             return True
         show_close('Software doesn\'t have vulnerabilities',

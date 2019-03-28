@@ -3,10 +3,10 @@
 """Software Composition Analysis helper."""
 
 # standard imports
-import re
+import json
 
 # 3rd party imports
-import json
+from bs4 import BeautifulSoup
 from functools import reduce
 
 # local imports
@@ -27,6 +27,21 @@ class PackageNotFoundException(Exception):
 
     :py:exc:`Exception` wrapper exception.
     """
+
+
+def _parse_snyk_vulns(html):
+    """Parse Snyk HTML content for retrieve vulnerabilities."""
+    soup = BeautifulSoup(html, 'html.parser')
+    vuln_table = soup.find_all('table',
+                               attrs={'class': ['table--comfortable']})
+    if not vuln_table:
+        return {}
+    fields = [field.text.strip()
+              for field in vuln_table[0].find_all('span',
+                                                  attrs={'class':
+                                                         ['l-push-left--sm',
+                                                          'semver']})]
+    return {x: y for x in fields[0::2] for y in fields[1::2]}
 
 
 def get_vulns_vulners(package: str, version: str) -> bool:
@@ -99,7 +114,7 @@ def get_vulns_ossindex(package_manager: str, package: str,
         raise ConnError
 
 
-def get_vulns_synk(package_manager: str, package: str, version: str) -> bool:
+def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
     """
     Search vulnerabilities on given package_manager/package/version.
 
@@ -108,26 +123,18 @@ def get_vulns_synk(package_manager: str, package: str, version: str) -> bool:
     :param version: Package version.
     """
     base_url = 'https://snyk.io'
-    url = base_url + '/vuln/{}:{}'.format(package_manager, package)
-
+    if version:
+        url = base_url + '/vuln/{}:{}@{}'.format(package_manager,
+                                                 package, version)
+    else:
+        url = base_url + '/vuln/{}:{}'.format(package_manager, package)
     try:
         sess = http.HTTPSession(url, timeout=20)
-        vulns_re = re.search('embedded = ([^;]+)', sess.response.text)
-        vulns_raw = vulns_re.groups()[0]
-        vulns_json = json.loads(vulns_raw)
+        vuln_names = _parse_snyk_vulns(sess.response.text)
 
-        if not vulns_json:
+        if not vuln_names:
             return []
-        vulns = vulns_json['packageVersions']
-        if version:
-            vuln_titles = {x['version']: x['severityList']
-                           for x in vulns if x['hasVuln'] and
-                           x['version'] == version}
-        else:
-            vuln_titles = {x['version']: x['severityList']
-                           for x in vulns if x['hasVuln']}
-
-        return vuln_titles
+        return vuln_names
     except http.ConnError:
         raise ConnError
 
