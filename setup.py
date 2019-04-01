@@ -99,7 +99,7 @@ setup(
         'defusedxml==0.5.0',         # fluidasserts.sca
         'boto3==1.9.122',             # fluidasserts.cloud.aws
         'python-dateutil==2.8.0',    # fluidasserts.cloud.aws
-        'mysql-connector==2.1.6',    # fluidasserts.db.mysql_db
+        'mysql-connector==2.2.9',    # fluidasserts.db.mysql_db
         'pycrypto==2.6.1; platform_system == "Linux"',
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
