@@ -247,3 +247,19 @@ def test_policies_attached_close():
                                               AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
+
+
+def test_full_access_policies_close():
+    """Search IAM policies: Full access policies."""
+    assert not iam.have_full_access_policies(AWS_ACCESS_KEY_ID,
+                                             AWS_SECRET_ACCESS_KEY)
+    assert not iam.have_full_access_policies(AWS_ACCESS_KEY_ID,
+                                             AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not iam.have_full_access_policies(AWS_ACCESS_KEY_ID,
+                                             AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)

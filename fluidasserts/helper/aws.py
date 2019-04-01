@@ -120,9 +120,51 @@ def list_users(key_id: str, secret: str) -> dict:
         raise ClientErr
 
 
+def list_policies(key_id: str, secret: str) -> dict:
+    """
+    List IAM policies.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.list_policies()
+        return response['Policies']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
+def get_policy_version(key_id: str, secret: str,
+                       policy: str, version: str) -> dict:
+    """
+    Get IAM policy versions.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    :param policy: AWS Policy
+    :param version: AWS Policy version
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.get_policy_version(PolicyArn=policy,
+                                             VersionId=version)
+        return response['PolicyVersion']['Document']['Statement']
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
 def list_attached_user_policies(key_id: str, secret: str, user: str) -> dict:
     """
-    List attacked user policies.
+    List attached user policies.
 
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret

@@ -21,6 +21,15 @@ from fluidasserts.utils.decorators import track, level
 from fluidasserts.helper import aws
 
 
+def _any_to_list(input):
+    """Convert anything to list."""
+    if isinstance(input, str):
+        res = [input]
+    else:
+        res = list(input)
+    return res
+
+
 @level('high')
 @track
 def has_mfa_disabled(key_id: str, secret: str) -> bool:
@@ -494,4 +503,47 @@ def policies_attached_to_users(key_id: str, secret: str) -> bool:
         else:
             show_close('User does not have policies attached',
                        details=(dict(user=user['UserName'])))
+    return result
+
+
+@level('low')
+@track
+def have_full_access_policies(key_id: str, secret: str) -> bool:
+    """
+    Check if there are policies that allow full administrative privileges.
+
+    CIS 1.22: Ensure IAM policies that allow full "*:*" administrative
+    privileges are not created (Scored)
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        policies = aws.list_policies(key_id, secret)
+    except aws.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    for policy in policies:
+        pol_ver = list(aws.get_policy_version(key_id, secret, policy['Arn'],
+                                              policy['DefaultVersionId']))
+        try:
+            count = sum(x['Effect'] == 'Allow' and
+                        '*' in _any_to_list(x['Action']) and
+                        '*' in _any_to_list(x['Resource']) for x in pol_ver)
+        except TypeError:
+            count = 0
+        if count:
+            show_open('Policy allows full admin access',
+                      details=(dict(policy=policy['PolicyName'],
+                                    access=pol_ver)))
+            result = True
+        else:
+            show_close('Policy avoid full admin access',
+                       details=(dict(policy=policy['PolicyName'])))
     return result
