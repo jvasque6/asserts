@@ -182,6 +182,26 @@ def list_attached_user_policies(key_id: str, secret: str, user: str) -> dict:
         raise ClientErr
 
 
+def list_entities_for_policy(key_id: str, secret: str, policy: str) -> dict:
+    """
+    List entities attached to policy.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    :param policy: AWS Policy
+    """
+    try:
+        client = get_aws_client('iam',
+                                key_id=key_id,
+                                secret=secret)
+        response = client.list_entities_for_policy(PolicyArn=policy)
+        return response
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
 def list_trails(key_id: str, secret: str) -> dict:
     """
     List CLOUDTRAIL trails.

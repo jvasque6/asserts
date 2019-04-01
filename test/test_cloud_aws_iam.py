@@ -44,6 +44,11 @@ def test_root_mfa_open():
     """Search IAM summary: MFA for root."""
     assert iam.root_without_mfa(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
+
+def test_not_support_role_open():
+    """Search IAM policy: Support role."""
+    assert iam.has_not_support_role(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+
 #
 # Closing tests
 #

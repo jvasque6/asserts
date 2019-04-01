@@ -506,7 +506,7 @@ def policies_attached_to_users(key_id: str, secret: str) -> bool:
     return result
 
 
-@level('low')
+@level('medium')
 @track
 def have_full_access_policies(key_id: str, secret: str) -> bool:
     """
@@ -546,4 +546,52 @@ def have_full_access_policies(key_id: str, secret: str) -> bool:
         else:
             show_close('Policy avoid full admin access',
                        details=(dict(policy=policy['PolicyName'])))
+    return result
+
+
+@level('low')
+@track
+def has_not_support_role(key_id: str, secret: str) -> bool:
+    """
+    Check if there are a support role.
+
+    CIS 1.20 Ensure a support role has been created to manage incidents with
+    AWS Support (Scored)
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        res_policies = aws.list_policies(key_id, secret)
+    except aws.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    policies = list(filter(lambda x: x['PolicyName'] == 'AWSSupportAccess',
+                    res_policies))
+    if not policies:
+        show_open('There is not a AWSSupportAccess policy')
+        return True
+
+    for policy in policies:
+        entities = aws.list_entities_for_policy(key_id, secret, policy['Arn'])
+        attached_users = len(list(filter(None, entities['PolicyUsers'])))
+        attached_groups = len(list(filter(None, entities['PolicyGroups'])))
+        attached_roles = len(list(filter(None, entities['PolicyRoles'])))
+
+        total = attached_groups + attached_roles + attached_users
+
+        if total:
+            show_close('There are entities attached to support policy',
+                       details=dict(policy=policy['PolicyName'],
+                                    entities=entities))
+        else:
+            show_open('There are not entities attached to support policy',
+                      details=dict(policy=policy['PolicyName'],
+                                   entities=entities))
     return result
