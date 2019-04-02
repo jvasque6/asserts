@@ -38,7 +38,7 @@ def _get_block(file_lines, line) -> str:
 
 @level('low')
 @track
-def has_generic_exceptions(java_dest: str) -> bool:
+def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
     """
     Search for generic exceptions in a Java source file or package.
 
@@ -56,7 +56,11 @@ def has_generic_exceptions(java_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(generic_exception, java_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -79,7 +83,7 @@ def has_generic_exceptions(java_dest: str) -> bool:
 
 @level('low')
 @track
-def uses_print_stack_trace(java_dest: str) -> bool:
+def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
     """
     Search for ``printStackTrace`` calls in a  or package.
 
@@ -92,7 +96,11 @@ def uses_print_stack_trace(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -115,7 +123,7 @@ def uses_print_stack_trace(java_dest: str) -> bool:
 
 @level('low')
 @track
-def swallows_exceptions(java_dest: str) -> bool:
+def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
@@ -133,7 +141,12 @@ def swallows_exceptions(java_dest: str) -> bool:
 
     result = False
     try:
-        catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS)
+        catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not catches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -159,7 +172,7 @@ def swallows_exceptions(java_dest: str) -> bool:
 
 @level('low')
 @track
-def has_switch_without_default(java_dest: str) -> bool:
+def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
@@ -181,7 +194,12 @@ def has_switch_without_default(java_dest: str) -> bool:
 
     result = False
     try:
-        switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS)
+        switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS,
+                                      exclude)
+        if not switches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -207,7 +225,7 @@ def has_switch_without_default(java_dest: str) -> bool:
 
 @level('low')
 @track
-def has_insecure_randoms(java_dest: str) -> bool:
+def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if code uses ``Math.Random()``\ .
 
@@ -224,7 +242,11 @@ def has_insecure_randoms(java_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(call_function, java_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -247,7 +269,7 @@ def has_insecure_randoms(java_dest: str) -> bool:
 
 @level('low')
 @track
-def has_if_without_else(java_dest: str) -> bool:
+def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
@@ -265,7 +287,11 @@ def has_if_without_else(java_dest: str) -> bool:
 
     result = False
     try:
-        conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS)
+        conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS, exclude)
+        if not conds:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -291,7 +317,8 @@ def has_if_without_else(java_dest: str) -> bool:
 
 @level('medium')
 @track
-def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
+def uses_insecure_hash(java_dest: str, algorithm: str,
+                       exclude: list = None) -> bool:
     """
     Check if code uses an insecure hashing algorithm.
 
@@ -309,7 +336,12 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(instance_md5, java_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(instance_md5, java_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
@@ -332,7 +364,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str) -> bool:
 
 @level('medium')
 @track
-def uses_md5_hash(java_dest: str) -> bool:
+def uses_md5_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
@@ -340,13 +372,13 @@ def uses_md5_hash(java_dest: str) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    result = uses_insecure_hash(java_dest, 'md5')
+    result = uses_insecure_hash(java_dest, 'md5', exclude)
     return result
 
 
 @level('medium')
 @track
-def uses_sha1_hash(java_dest: str) -> bool:
+def uses_sha1_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
@@ -354,13 +386,13 @@ def uses_sha1_hash(java_dest: str) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    result = uses_insecure_hash(java_dest, 'sha-1')
+    result = uses_insecure_hash(java_dest, 'sha-1', exclude)
     return result
 
 
 @level('medium')
 @track
-def uses_des_algorithm(java_dest: str) -> bool:
+def uses_des_algorithm(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses DES as encryption algorithm.
 
@@ -377,7 +409,12 @@ def uses_des_algorithm(java_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(instance_des, java_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(instance_des, java_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
