@@ -27,7 +27,10 @@ build:
     - docker build
       --cache-from registry.gitlab.com/fluidattacks/asserts:builder
       -f Dockerfile.builder -t registry.gitlab.com/fluidattacks/asserts:builder .
+    - docker push registry.gitlab.com/fluidattacks/asserts:builder
   retry: 2
+  only:
+    - schedules
 
 commitlint:
   image: starefossen/ruby-node:2-10
@@ -155,7 +158,6 @@ push_container:
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker login -u $HUB_USER -p $HUB_PASS
-    - docker push registry.gitlab.com/fluidattacks/asserts:builder
     - docker push registry.gitlab.com/fluidattacks/asserts:runner
     - docker tag registry.gitlab.com/fluidattacks/asserts:runner
       fluidattacks/asserts
