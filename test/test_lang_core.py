@@ -69,6 +69,7 @@ def test_has_weak_cipher_open_in_dir():
 def test_has_text_close():
     """Test code has text."""
     assert not core.has_text(SECURE_CODE, 'strcpy')
+    assert not core.has_text(CODE_DIR, 'strcpy', exclude=['test'])
     assert not core.has_text(NON_EXISTANT_CODE, 'strcpy')
     assert not core.has_text(SECURE_CODE, 'user: root; pass: password123')
 
@@ -76,6 +77,7 @@ def test_has_text_close():
 def test_has_not_text_close():
     """Test code does not have text."""
     assert not core.has_not_text(SECURE_CODE, 'strncpy')
+    assert not core.has_not_text(CODE_DIR, 'strcpy', exclude=['test'])
     assert not core.has_not_text(NON_EXISTANT_CODE, 'strncpy')
 
 
@@ -87,4 +89,5 @@ def test_file_exists_close():
 def test_has_weak_cipher_close():
     """Check if base64 is used to cipher confidential data."""
     assert not core.has_weak_cipher(SECURE_CODE, 'password123')
+    assert not core.has_weak_cipher(CODE_DIR, 'password123', exclude=['test'])
     assert not core.has_weak_cipher(NON_EXISTANT_CODE, 'password123')

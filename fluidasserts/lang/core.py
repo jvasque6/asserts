@@ -88,7 +88,7 @@ def _show_has_not_text(vulns: Dict[str, List[str]], code_file: str,
 
 @level('low')
 @track
-def has_text(code_dest: str, expected_text: str) -> bool:
+def has_text(code_dest: str, expected_text: str, exclude: list = None) -> bool:
     """
     Check if a bad text is present in given source file.
 
@@ -97,6 +97,8 @@ def has_text(code_dest: str, expected_text: str) -> bool:
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not exclude:
+        exclude = []
     if not os.path.exists(code_dest):
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
@@ -109,6 +111,8 @@ def has_text(code_dest: str, expected_text: str) -> bool:
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
+            if sum(x in full_path for x in exclude):
+                continue
             vulns = _generic_lang_assert(full_path, expected_text)
             _show_has_text(vulns, full_path, expected_text)
             ret_fin = ret_fin or bool(vulns[full_path])
@@ -117,7 +121,8 @@ def has_text(code_dest: str, expected_text: str) -> bool:
 
 @level('low')
 @track
-def has_not_text(code_dest: str, expected_text: str) -> bool:
+def has_not_text(code_dest: str, expected_text: str,
+                 exclude: list = None) -> bool:
     """
     Check if a required text is not present in given source file.
 
@@ -126,6 +131,8 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not exclude:
+        exclude = []
     if not os.path.exists(code_dest):
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
@@ -138,6 +145,8 @@ def has_not_text(code_dest: str, expected_text: str) -> bool:
     for root, _, files in os.walk(code_dest):
         for code_file in files:
             full_path = os.path.join(root, code_file)
+            if sum(x in full_path for x in exclude):
+                continue
             vulns = _generic_lang_assert(full_path, expected_text)
             _show_has_not_text(vulns, full_path, expected_text)
             ret_fin = ret_fin or not bool(vulns[full_path])
@@ -165,7 +174,8 @@ def file_exists(code_file: str) -> bool:
 
 @level('medium')
 @track
-def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
+def has_weak_cipher(code_dest: str, expected_text: str,
+                    exclude: list = None) -> bool:
     """
     Check if code uses base 64 to cipher confidential data.
 
@@ -179,7 +189,8 @@ def has_weak_cipher(code_dest: str, expected_text: str) -> bool:
 
     result = False
     try:
-        b64_matches = lang.check_grammar(prs_base64, code_dest, LANGUAGE_SPECS)
+        b64_matches = lang.check_grammar(prs_base64, code_dest,
+                                         LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False

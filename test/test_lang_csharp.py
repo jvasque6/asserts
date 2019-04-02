@@ -153,58 +153,68 @@ def test_uses_console_writeline_in_dir_open():
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not csharp.has_generic_exceptions(SECURE_CODE)
+    assert not csharp.has_generic_exceptions(CODE_DIR, exclude=['test'])
     assert not csharp.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_swallows_exceptions_close():
     """Search empty catches."""
     assert not csharp.swallows_exceptions(SECURE_EMPTY_CATCH)
+    assert not csharp.swallows_exceptions(CODE_DIR, exclude=['test'])
     assert not csharp.swallows_exceptions(NON_EXISTANT_CODE)
 
 
 def test_has_switch_without_default_close():
     """Search switch without default clause."""
     assert not csharp.has_switch_without_default(SECURE_SWITCH)
+    assert not csharp.has_switch_without_default(CODE_DIR, exclude=['test'])
     assert not csharp.has_switch_without_default(NON_EXISTANT_CODE)
 
 
 def test_has_insecure_randoms_close():
     """Search class Random instantiation."""
     assert not csharp.has_insecure_randoms(SECURE_RANDOM)
+    assert not csharp.has_insecure_randoms(CODE_DIR, exclude=['test'])
     assert not csharp.has_insecure_randoms(NON_EXISTANT_CODE)
 
 
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not csharp.has_if_without_else(SECURE_CODE)
+    assert not csharp.has_if_without_else(CODE_DIR, exclude=['test'])
     assert not csharp.has_if_without_else(NON_EXISTANT_CODE)
 
 
 def test_uses_md5_hash_close():
     """Search MD5 hash calls."""
     assert not csharp.uses_md5_hash(SECURE_CODE)
+    assert not csharp.uses_md5_hash(CODE_DIR, exclude=['test'])
     assert not csharp.uses_md5_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_sha1_hash_close():
     """Search MD5 hash calls."""
     assert not csharp.uses_sha1_hash(SECURE_CODE)
+    assert not csharp.uses_sha1_hash(CODE_DIR, exclude=['test'])
     assert not csharp.uses_sha1_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_ecb_encryption_mode_close():
     """Search ECB Encryption Mode usage."""
     assert not csharp.uses_ecb_encryption_mode(SECURE_CODE)
+    assert not csharp.uses_ecb_encryption_mode(CODE_DIR, exclude=['test'])
     assert not csharp.uses_ecb_encryption_mode(NON_EXISTANT_CODE)
 
 
 def test_uses_debug_writeline_close():
     """Search Debug.WriteLine usage."""
     assert not csharp.uses_debug_writeline(SECURE_WRITELINE)
+    assert not csharp.uses_debug_writeline(CODE_DIR, exclude=['test'])
     assert not csharp.uses_debug_writeline(NON_EXISTANT_CODE)
 
 
 def test_uses_console_writeline_close():
     """Search Console.WriteLine usage."""
     assert not csharp.uses_console_writeline(SECURE_WRITELINE)
+    assert not csharp.uses_console_writeline(CODE_DIR, exclude=['test'])
     assert not csharp.uses_console_writeline(NON_EXISTANT_CODE)

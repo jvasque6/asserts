@@ -139,52 +139,61 @@ def test_uses_des_algorithm_open_in_dir():
 def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not java.has_generic_exceptions(SECURE_CODE)
+    assert not java.has_generic_exceptions(CODE_DIR, exclude=['test'])
     assert not java.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_uses_print_stack_trace_close():
     """Search printStackTrace calls."""
     assert not java.uses_print_stack_trace(SECURE_CODE)
+    assert not java.uses_print_stack_trace(CODE_DIR, exclude=['test'])
     assert not java.uses_print_stack_trace(NON_EXISTANT_CODE)
 
 
 def test_has_empty_catches_close():
     """Search empty catches."""
     assert not java.swallows_exceptions(SECURE_EMPTY_CATCH)
+    assert not java.swallows_exceptions(CODE_DIR, exclude=['test'])
     assert not java.swallows_exceptions(NON_EXISTANT_CODE)
 
 
 def test_has_switch_without_default_close():
     """Search switch without default clause."""
     assert not java.has_switch_without_default(SECURE_SWITCH)
+    assert not java.has_switch_without_default(CODE_DIR, exclude=['test'])
     assert not java.has_switch_without_default(NON_EXISTANT_CODE)
 
 
 def test_has_insecure_randoms_close():
     """Search insecure randoms."""
     assert not java.has_insecure_randoms(SECURE_CODE)
+    assert not java.has_insecure_randoms(CODE_DIR, exclude=['test'])
     assert not java.has_insecure_randoms(NON_EXISTANT_CODE)
 
 
 def test_has_if_without_else_close():
     """Search conditionals without an else option."""
     assert not java.has_if_without_else(SECURE_CODE)
+    assert not java.has_if_without_else(CODE_DIR, exclude=['test'])
     assert not java.has_if_without_else(NON_EXISTANT_CODE)
 
 
 def test_uses_md5_hash_close():
     """Search MD5 hash algorithm."""
     assert not java.uses_md5_hash(SECURE_HASH)
+    assert not java.uses_md5_hash(CODE_DIR, exclude=['test'])
     assert not java.uses_md5_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_sha1_hash_close():
     """Search SHA-1 hash algorithm."""
     assert not java.uses_sha1_hash(SECURE_HASH)
+    assert not java.uses_sha1_hash(CODE_DIR, exclude=['test'])
     assert not java.uses_sha1_hash(NON_EXISTANT_CODE)
 
 
 def test_uses_des_algorithm_close():
     """Search DES hash algorithm."""
     assert not java.uses_des_algorithm(SECURE_CIPHER)
+    assert not java.uses_des_algorithm(CODE_DIR, exclude=['test'])
     assert not java.uses_des_algorithm(NON_EXISTANT_CODE)
