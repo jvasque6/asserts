@@ -26,6 +26,8 @@ def trails_not_multiregion(key_id: str, secret: str) -> bool:
     """
     Check if trails are multiregion.
 
+    CIS 2.1 Ensure CloudTrail is enabled in all regions (Scored)
+
     :param key_id: AWS Key Id
     :param secret: AWS Key Secret
     """
@@ -51,5 +53,42 @@ def trails_not_multiregion(key_id: str, secret: str) -> bool:
             result = True
         else:
             show_close('Trail is multiregion',
+                       details=dict(trail_arn=trail['TrailARN']))
+    return result
+
+
+@level('low')
+@track
+def files_not_validated(key_id: str, secret: str) -> bool:
+    """
+    Check if trails are multiregion.
+
+    CIS 2.2 Ensure CloudTrail log file validation is enabled (Scored)
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    result = False
+    try:
+        trails = aws.list_trails(key_id, secret)
+    except aws.ConnError as exc:
+        show_unknown('Could not connect',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    except aws.ClientErr as exc:
+        show_unknown('Error retrieving info. Check credentials.',
+                     details=dict(error=str(exc).replace(':', '')))
+        return False
+    if not trails:
+        show_close('Not trails were found')
+        return False
+
+    for trail in trails:
+        if not trail['LogFileValidationEnabled']:
+            show_open('File validation not enabled',
+                      details=dict(trail_arn=trail['TrailARN']))
+            result = True
+        else:
+            show_close('File validation enabled',
                        details=dict(trail_arn=trail['TrailARN']))
     return result
