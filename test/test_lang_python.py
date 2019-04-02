@@ -60,9 +60,11 @@ def test_has_generic_exceptions_close():
     """Code uses generic exceptions."""
     assert not python.has_generic_exceptions(SECURE_CODE)
     assert not python.has_generic_exceptions(NON_EXISTANT_CODE)
+    assert not python.has_generic_exceptions(CODE_DIR, exclude=['test'])
 
 
 def test_swallows_exceptions_close():
     """Code swallows exceptions."""
     assert not python.swallows_exceptions(SECURE_CODE)
     assert not python.swallows_exceptions(NON_EXISTANT_CODE)
+    assert not python.swallows_exceptions(CODE_DIR, exclude=['test'])

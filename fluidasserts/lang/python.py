@@ -51,7 +51,7 @@ def _get_block(file_lines, line) -> str:
 
 @level('low')
 @track
-def has_generic_exceptions(py_dest: str) -> bool:
+def has_generic_exceptions(py_dest: str, exclude: list = None) -> bool:
     """
     Search for generic exceptions in a Python script or package.
 
@@ -63,7 +63,10 @@ def has_generic_exceptions(py_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(generic_exception, py_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=py_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
@@ -86,7 +89,7 @@ def has_generic_exceptions(py_dest: str) -> bool:
 
 @level('low')
 @track
-def swallows_exceptions(py_dest: str) -> bool:
+def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
     """
     Search for swallowed exceptions.
 
@@ -109,7 +112,10 @@ def swallows_exceptions(py_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(parser_exception, py_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=py_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
