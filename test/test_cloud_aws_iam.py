@@ -268,3 +268,17 @@ def test_full_access_policies_close():
                                              AWS_SECRET_ACCESS_KEY)
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
+
+
+def test_not_support_role_close():
+    """Search IAM policy: Support role."""
+    assert not iam.has_not_support_role(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY_BAD)
+
+    os.environ['http_proxy'] = 'https://0.0.0.0:8080'
+    os.environ['https_proxy'] = 'https://0.0.0.0:8080'
+
+    assert not iam.has_not_support_role(AWS_ACCESS_KEY_ID,
+                                        AWS_SECRET_ACCESS_KEY)
+    os.environ.pop('http_proxy', None)
+    os.environ.pop('https_proxy', None)
