@@ -98,7 +98,7 @@ def have_old_creds_enabled(key_id: str, secret: str) -> bool:
             pass_last_used = user_info['User']['PasswordLastUsed']
             now_minus_90 = datetime.now() - timedelta(days=90)
             if pass_last_used < now_minus_90.replace(tzinfo=pytz.UTC):
-                show_open('User does not have used the password in more than \
+                show_open('User has not used the password in more than \
                     90 days and it\'s still active',
                           details=dict(user=user[0],
                                        password_last_used=pass_last_used))
@@ -137,8 +137,8 @@ def have_old_access_keys(key_id: str, secret: str) -> bool:
             ak_last_change = parser.parse(user[9]).replace(tzinfo=pytz.UTC)
             now_plus_90 = datetime.now() - timedelta(days=90)
             if ak_last_change < now_plus_90.replace(tzinfo=pytz.UTC):
-                show_open('User\'s access key does not have been rotated in \
-                    the last 90 days',
+                show_open('User\'s access key have not been rotated in \
+the last 90 days',
                           details=dict(user=user[0],
                                        last_rotated=ak_last_change,
                                        expected_rotation_time=now_plus_90))
