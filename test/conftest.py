@@ -90,17 +90,7 @@ def run_mocks(request):
                  username=os.environ['DOCKER_USER'],
                  password=os.environ['DOCKER_PASS'])
 
-    for mock in mocks:
-        try:
-            mock_name = get_mock_name(mock)
-            cont = client.containers.get(mock_name)
-            cont.remove(force=True)
-        except (docker.errors.NotFound, docker.errors.APIError):
-            pass
-
     for mock, port_mapping in mocks.items():
-        print('Running {} ... '.format(mock))
-
         image = 'registry.gitlab.com/fluidattacks/asserts/mocks/' + mock
         if ':' in mock:
             mock_dir = 'test/provision/' + mock.replace(':', '/')
@@ -110,10 +100,20 @@ def run_mocks(request):
         mock_name = get_mock_name(mock)
 
         try:
+            cont = client.containers.get(mock_name)
+        except docker.errors.NotFound:
+            print('Building {} ... '.format(image))
             client.images.build(path=mock_dir, tag=image)
-            client.containers.run(image, name=mock_name, tty=True, detach=True)
-        except docker.errors.APIError:
-            pass
+        try:
+            cont = client.containers.get(mock_name)
+        except docker.errors.NotFound:
+            try:
+                print('Running {} ... '.format(mock))
+                client.containers.run(image, name=mock_name,
+                                      tty=True, detach=True)
+            except docker.errors.APIError:
+                print('Starting {} ... '.format(mock_name))
+                cont.start()
 
     for mock, port_mapping in mocks.items():
         ip = get_ip(client.containers.get(get_mock_name(mock)))
