@@ -36,7 +36,8 @@ def _get_block(file_lines, line) -> str:
 
 @level('low')
 @track
-def is_header_x_powered_by_present(webconf_dest: str) -> bool:
+def is_header_x_powered_by_present(webconf_dest: str,
+                                   exclude: list = None) -> bool:
     """
     Search for X-Powered-By headers in a Web.config source file or package.
 
@@ -52,7 +53,11 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
     result = False
     try:
         custom_headers = lang.check_grammar(tk_tag_s, webconf_dest,
-                                            LANGUAGE_SPECS)
+                                            LANGUAGE_SPECS, exclude)
+        if not custom_headers:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=webconf_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))
@@ -81,7 +86,7 @@ def is_header_x_powered_by_present(webconf_dest: str) -> bool:
 
 @level('medium')
 @track
-def has_ssl_disabled(apphostconf_dest: str) -> bool:
+def has_ssl_disabled(apphostconf_dest: str, exclude: list = None) -> bool:
     """
     Check if SSL is disabled in ``ApplicationHost.config``.
 
@@ -99,12 +104,15 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
     result = False
     try:
         sec_tag = lang.check_grammar(tk_tag_s, apphostconf_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not sec_tag:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=apphostconf_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=apphostconf_dest))
         return False
-
     for code_file, lines in sec_tag.items():
         access_tags = lang.block_contains_grammar(tk_access,
                                                   code_file,
@@ -132,7 +140,7 @@ def has_ssl_disabled(apphostconf_dest: str) -> bool:
 
 @level('low')
 @track
-def has_debug_enabled(webconf_dest: str) -> bool:
+def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
     """
     Check if debug flag is enabled in Web.config.
 
@@ -149,7 +157,11 @@ def has_debug_enabled(webconf_dest: str) -> bool:
     result = False
     try:
         sysweb_tag = lang.check_grammar(tk_tag_s, webconf_dest,
-                                        LANGUAGE_SPECS)
+                                        LANGUAGE_SPECS, exclude)
+        if not sysweb_tag:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=webconf_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=webconf_dest))

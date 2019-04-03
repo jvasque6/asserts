@@ -72,22 +72,26 @@ def test_swallows_exceptions_in_dir_open():
 def test_has_dos_dow_sqlcod_close():
     """Code has DoS for using DoW SQLCOD = 0."""
     assert not rpgle.has_dos_dow_sqlcod(SECURE_CODE)
+    assert not rpgle.has_dos_dow_sqlcod(CODE_DIR, exclude=['test'])
     assert not rpgle.has_dos_dow_sqlcod(NON_EXISTANT_CODE)
 
 
 def test_has_unitialized_close():
     """Code has unitialized variables."""
     assert not rpgle.has_unitialized_vars(SECURE_CODE)
+    assert not rpgle.has_unitialized_vars(CODE_DIR, exclude=['test'])
     assert not rpgle.has_unitialized_vars(NON_EXISTANT_CODE)
 
 
 def test_has_generic_exceptions_close():
     """Code has empty on-error."""
     assert not rpgle.has_generic_exceptions(SECURE_CODE)
+    assert not rpgle.has_generic_exceptions(CODE_DIR, exclude=['test'])
     assert not rpgle.has_generic_exceptions(NON_EXISTANT_CODE)
 
 
 def test_swallows_exceptions_close():
     """Code swallows exceptions."""
     assert not rpgle.swallows_exceptions(SECURE_CODE)
+    assert not rpgle.swallows_exceptions(CODE_DIR, exclude=['test'])
     assert not rpgle.swallows_exceptions(NON_EXISTANT_CODE)

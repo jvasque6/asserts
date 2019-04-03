@@ -25,7 +25,7 @@ LANGUAGE_SPECS = {
 
 @level('low')
 @track
-def not_pinned(file_dest: str) -> bool:
+def not_pinned(file_dest: str, exclude: list = None) -> bool:
     """
     Check if the Dockerfile uses a ``FROM:...latest`` (unpinned) base image.
 
@@ -40,7 +40,12 @@ def not_pinned(file_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(pinned, file_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(pinned, file_dest,
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=file_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=file_dest))
         return False

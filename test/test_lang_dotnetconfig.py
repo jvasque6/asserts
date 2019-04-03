@@ -63,16 +63,20 @@ def test_has_debug_enabled_in_dir_open():
 def test_is_header_x_powered_by_present_close():
     """Config file has X-Powered present."""
     assert not dotnetconfig.is_header_x_powered_by_present(SECURE_WEBCONF)
+    assert not dotnetconfig.is_header_x_powered_by_present(CODE_DIR,
+                                                           exclude=['test'])
     assert not dotnetconfig.is_header_x_powered_by_present(NON_EXISTANT_CODE)
 
 
 def test_has_ssl_disabled_close():
     """Config file has SSL disabled."""
     assert not dotnetconfig.has_ssl_disabled(SECURE_APPHOSTCONF)
+    assert not dotnetconfig.has_ssl_disabled(CODE_DIR, exclude=['test'])
     assert not dotnetconfig.has_ssl_disabled(NON_EXISTANT_CODE)
 
 
 def test_has_debug_enabled_close():
     """Config file has debug enabled."""
     assert not dotnetconfig.has_debug_enabled(SECURE_WEBCONF)
+    assert not dotnetconfig.has_debug_enabled(CODE_DIR, exclude=['test'])
     assert not dotnetconfig.has_debug_enabled(NON_EXISTANT_CODE)

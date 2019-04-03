@@ -36,7 +36,7 @@ def _get_block(file_lines, line) -> str:
 
 @level('medium')
 @track
-def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
+def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
     r"""
     Search for DoS for using ``DoW SQLCOD = <ZERO>``\ .
 
@@ -51,7 +51,11 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(dos_dow_sqlcod, rpg_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(dos_dow_sqlcod, rpg_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -74,7 +78,7 @@ def has_dos_dow_sqlcod(rpg_dest: str) -> bool:
 
 @level('low')
 @track
-def has_unitialized_vars(rpg_dest: str) -> bool:
+def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for unitialized variables.
 
@@ -96,7 +100,11 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -121,7 +129,7 @@ def has_unitialized_vars(rpg_dest: str) -> bool:
 
 @level('low')
 @track
-def has_generic_exceptions(rpg_dest: str) -> bool:
+def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for on-error empty.
 
@@ -136,7 +144,11 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
@@ -159,7 +171,7 @@ def has_generic_exceptions(rpg_dest: str) -> bool:
 
 @level('low')
 @track
-def swallows_exceptions(rpg_dest: str) -> bool:
+def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for on-error without code.
 
@@ -177,7 +189,11 @@ def swallows_exceptions(rpg_dest: str) -> bool:
     prs_sw = (tk_monitor + tk_end_mon).ignore(cppStyleComment)
     result = False
     try:
-        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False

@@ -37,4 +37,5 @@ def test_not_pinned_open():
 def test_not_pinned_close():
     """Search for pinned dockerfile."""
     assert not docker.not_pinned(SECURE_CODE)
+    assert not docker.not_pinned(CODE_DIR, exclude=['test'])
     assert not docker.not_pinned(NOT_EXISTANT_CODE)

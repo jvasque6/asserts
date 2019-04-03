@@ -36,7 +36,7 @@ def _get_block(file_lines, line) -> str:
 
 @level('low')
 @track
-def uses_console_log(js_dest: str) -> bool:
+def uses_console_log(js_dest: str, exclude: list = None) -> bool:
     """
     Search for ``console.log()`` calls in a JavaScript file or directory.
 
@@ -49,7 +49,10 @@ def uses_console_log(js_dest: str) -> bool:
     clog = tk_object + Literal('.') + tk_method + Suppress(nestedExpr())
     result = False
     try:
-        matches = lang.check_grammar(clog, js_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(clog, js_dest, LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -72,7 +75,7 @@ def uses_console_log(js_dest: str) -> bool:
 
 @level('medium')
 @track
-def uses_eval(js_dest: str) -> bool:
+def uses_eval(js_dest: str, exclude: list = None) -> bool:
     """
     Search for ``eval()`` calls in a JavaScript file or directory.
 
@@ -84,7 +87,10 @@ def uses_eval(js_dest: str) -> bool:
     result = False
     try:
         matches = lang.check_grammar(call_function, js_dest,
-                                     LANGUAGE_SPECS)
+                                     LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -107,7 +113,7 @@ def uses_eval(js_dest: str) -> bool:
 
 @level('low')
 @track
-def uses_localstorage(js_dest: str) -> bool:
+def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
     """
     Search for ``localStorage`` calls in a JavaScript source file or directory.
 
@@ -121,7 +127,10 @@ def uses_localstorage(js_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(lsto, js_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(lsto, js_dest, LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -144,7 +153,7 @@ def uses_localstorage(js_dest: str) -> bool:
 
 @level('low')
 @track
-def has_insecure_randoms(js_dest: str) -> bool:
+def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if code uses ``Math.Random()``\ .
 
@@ -160,7 +169,11 @@ def has_insecure_randoms(js_dest: str) -> bool:
 
     result = False
     try:
-        matches = lang.check_grammar(call_function, js_dest, LANGUAGE_SPECS)
+        matches = lang.check_grammar(call_function, js_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -183,7 +196,7 @@ def has_insecure_randoms(js_dest: str) -> bool:
 
 @level('low')
 @track
-def swallows_exceptions(js_dest: str) -> bool:
+def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
@@ -198,7 +211,11 @@ def swallows_exceptions(js_dest: str) -> bool:
 
     result = False
     try:
-        catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS)
+        catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not catches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -224,7 +241,7 @@ def swallows_exceptions(js_dest: str) -> bool:
 
 @level('low')
 @track
-def has_switch_without_default(js_dest: str) -> bool:
+def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
@@ -247,7 +264,11 @@ def has_switch_without_default(js_dest: str) -> bool:
 
     result = False
     try:
-        switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS)
+        switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS,
+                                      exclude)
+        if not switches:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
@@ -273,7 +294,7 @@ def has_switch_without_default(js_dest: str) -> bool:
 
 @level('low')
 @track
-def has_if_without_else(js_dest: str) -> bool:
+def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
@@ -291,7 +312,10 @@ def has_if_without_else(js_dest: str) -> bool:
 
     result = False
     try:
-        conds = lang.check_grammar(if_head, js_dest, LANGUAGE_SPECS)
+        conds = lang.check_grammar(if_head, js_dest, LANGUAGE_SPECS, exclude)
+        if not conds:
+            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
