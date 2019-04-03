@@ -129,8 +129,7 @@ deploy:
     - scons dist
     - scons deploy
     - mkdir -p dist && cp -a build/dist/*.zip dist/
-    - docker build --no-cache -f Dockerfile.runner
-      -t registry.gitlab.com/fluidattacks/asserts:runner .
+
   retry: 2
   only:
     - master
@@ -158,6 +157,8 @@ push_container:
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
     - docker login -u $HUB_USER -p $HUB_PASS
+    - docker build --no-cache -f Dockerfile.runner
+      -t registry.gitlab.com/fluidattacks/asserts:runner .
     - docker push registry.gitlab.com/fluidattacks/asserts:runner
     - docker tag registry.gitlab.com/fluidattacks/asserts:runner
       fluidattacks/asserts
