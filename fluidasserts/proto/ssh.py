@@ -41,14 +41,14 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
         transport = ssh_obj.get_transport()
 
         if "-cbc" not in transport.remote_cipher:
-            show_close('SSH does not have insecure CBC encription algorithms',
+            show_close('SSH does not have insecure CBC encryption algorithms',
                        details=dict(host=host,
                                     port=port,
                                     remote_cipher=transport.remote_cipher,
                                     fingerprint=fingerprint))
             result = False
         else:
-            show_open('SSH has insecure CBC encription algorithms',
+            show_open('SSH has insecure CBC encryption algorithms',
                       details=dict(host=host,
                                    port=port,
                                    remote_cipher=transport.remote_cipher,

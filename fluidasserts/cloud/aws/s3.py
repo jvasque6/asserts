@@ -51,6 +51,6 @@ def has_server_access_logging_disabled(key_id: str, secret: str) -> bool:
                       details=dict(bucket=bucket))
             result = True
         else:
-            show_close('Logging not enabled on bucket',
+            show_close('Logging enabled on bucket',
                        details=dict(bucket=bucket))
     return result

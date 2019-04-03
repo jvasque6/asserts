@@ -70,11 +70,11 @@ def is_sudo_disabled(server: str, username: str, password: str,
                                   error=str(exc)))
         return False
     if out:
-        show_close('{} server has sudo (or like) installed'.
+        show_close('{} server has "sudo" (or like) installed'.
                    format(server), details=dict(paths=out.decode('utf-8')))
         result = False
     else:
-        show_open('{} server does not have sudo (or like) installed'.
+        show_open('{} server does not have "sudo" (or like) installed'.
                   format(server), details=dict(paths=out.decode('utf-8')))
         result = True
     return result

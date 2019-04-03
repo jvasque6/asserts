@@ -123,12 +123,12 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
         vulns = lang.block_contains_grammar(empty_exception, code_file,
                                             lines, _get_block)
         if not vulns:
-            show_close('Code does not have empty catches',
+            show_close('Code does not have empty "catches"',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))
         else:
-            show_open('Code has empty catches',
+            show_open('Code has empty "catches"',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),

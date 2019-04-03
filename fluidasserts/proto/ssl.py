@@ -255,7 +255,7 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -289,7 +289,7 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -323,7 +323,7 @@ def is_tlsv11_enabled(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -363,7 +363,7 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -397,7 +397,7 @@ def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
                 show_open('Site vulnerable to POODLE SSLv3 attack',
                           details=dict(site=site, port=port))
                 return True
-            show_close('Site allows SSLv3. However, it seems not to \
+            show_close('Site allows SSLv3. However, it doesn\'t seem to \
 be vulnerable to POODLE SSLv3 attack',
                        details=dict(site=site, port=port))
             return False
@@ -406,7 +406,7 @@ be vulnerable to POODLE SSLv3 attack',
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -475,7 +475,7 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -510,7 +510,7 @@ suites', details=dict(site=site, port=port))
 suites', details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
@@ -549,11 +549,11 @@ def has_beast(site: str, port: int = PORT) -> bool:
 to be not an enabler to BEAST attack', details=dict(site=site, port=port))
                 result = False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
-        show_close('Site not enables to BEAST attack to clients',
+        show_close('Site not enables BEAST attack to clients',
                    details=dict(site=site, port=port))
         result = False
     except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port seems not to support SSL',
+        show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))
         result = False
     except socket.error as exc:

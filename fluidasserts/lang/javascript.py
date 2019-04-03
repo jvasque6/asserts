@@ -224,12 +224,12 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
                                                   code_file, lines,
                                                   _get_block)
         if not vulns:
-            show_close('Code does not have empty catches',
+            show_close('Code does not have empty "catches"',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))
         else:
-            show_open('Code has empty catches',
+            show_open('Code has empty "catches"',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
@@ -277,12 +277,12 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
                                                   code_file, lines,
                                                   _get_block)
         if not vulns:
-            show_close('Code has switch with default clause',
+            show_close('Code has "switch" with "default" clause',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not have switch with default clause',
+            show_open('Code does not have "switch" with "default" clause',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
@@ -324,12 +324,12 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
                                                   code_file, lines,
                                                   _get_block)
         if not vulns:
-            show_close('Code has if with else clause',
+            show_close('Code has "if" with "else" clauses',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))
         else:
-            show_open('Code does not have if with else clause',
+            show_open('Code does not have "if" with "else" clause',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),

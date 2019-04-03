@@ -90,7 +90,7 @@ def local_infile_enabled(server: str, username: str, password: str) -> bool:
             show_open('Parameter "local_infile" is ON on server',
                       details=dict(server=server))
         else:
-            show_close('Parameter "local_infile" is ON on server',
+            show_close('Parameter "local_infile" is OFF on server',
                        details=dict(server=server))
         return result
 
@@ -296,7 +296,7 @@ def logs_verbosity_low(server: str, username: str, password: str) -> bool:
             show_open('Logs verbosity not enough',
                       details=dict(server=server, verbosity=verbosity))
         else:
-            show_close('Logs verbosity are sufficient',
+            show_close('Logs verbosity is sufficient',
                        details=dict(server=server, verbosity=verbosity))
         return result
 

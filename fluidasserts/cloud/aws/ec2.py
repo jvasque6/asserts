@@ -53,13 +53,13 @@ def seggroup_allows_anyone_to_ssh(key_id: str, secret: str) -> bool:
             except KeyError:
                 pass
         if vuln:
-            show_open('Security group allows connection \
+            show_open('Security group allows connections \
 from anyone to port 22',
                       details=dict(group=group['Description'],
                                    ip_ranges=vuln))
             result = True
         else:
-            show_close('Security group not allows connection \
+            show_close('Security group not allows connections \
 from anyone to port 22',
                        details=dict(group=group['Description']))
     return result
@@ -98,13 +98,13 @@ def seggroup_allows_anyone_to_rdp(key_id: str, secret: str) -> bool:
             except KeyError:
                 pass
         if vuln:
-            show_open('Security group allows connection \
+            show_open('Security group allows connections \
 from anyone to port 3389',
                       details=dict(group=group['Description'],
                                    ip_ranges=vuln))
             result = True
         else:
-            show_close('Security group not allows connection \
+            show_close('Security group not allows connections \
 from anyone to port 3389',
                        details=dict(group=group['Description']))
     return result
@@ -142,13 +142,13 @@ def default_seggroup_allows_all_traffic(key_id: str, secret: str) -> bool:
             vuln = [ip_perm for x in ip_perm['IpRanges']
                     if x['CidrIp'] == '0.0.0.0/0']
         if vuln:
-            show_open('Default security groups allows connection \
+            show_open('Default security groups allows connections \
 to or from anyone',
                       details=dict(group=group['Description'],
                                    ip_ranges=vuln))
             result = True
         else:
-            show_close('Default security groups not allows connection \
+            show_close('Default security groups not allows connections \
 to or from anyone',
                        details=dict(group=group['Description']))
 

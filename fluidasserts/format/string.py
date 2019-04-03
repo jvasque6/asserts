@@ -144,7 +144,7 @@ def is_ssid_insecure(ssid: str) -> bool:
 
     result = True
     if ssid in words:
-        show_open('{} is a dictionary password.'.format(ssid))
+        show_open('{} is a dictionary word.'.format(ssid))
         result = True
     else:
         show_close('{} is a secure SSID.'.format(ssid))

@@ -70,14 +70,14 @@ def is_header_x_powered_by_present(webconf_dest: str,
                                                   code_file, lines,
                                                   _get_block)
         if vulns:
-            show_open('Header X-Powered-By is present',
+            show_open('Header "X-Powered-By" is present',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns])))
             result = True
         else:
-            show_close('Header X-Powered-By is not present',
+            show_close('Header "X-Powered-By" is not present',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))

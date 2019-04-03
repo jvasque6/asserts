@@ -206,7 +206,7 @@ def has_weak_cipher(code_dest: str, expected_text: str,
             result = True
         else:
             show_close('Code does not have confidential data encoded in \
-                base64',
+base64',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))

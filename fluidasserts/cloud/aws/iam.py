@@ -56,7 +56,7 @@ def has_mfa_disabled(key_id: str, secret: str) -> bool:
     for user in users:
         if user[3] == 'true':
             if user[7] == 'false':
-                show_open('User has password enabled but without MFA',
+                show_open('User has password enabled without MFA',
                           details=dict(user=user[0]))
                 result = True
             else:
@@ -99,7 +99,7 @@ def have_old_creds_enabled(key_id: str, secret: str) -> bool:
             now_minus_90 = datetime.now() - timedelta(days=90)
             if pass_last_used < now_minus_90.replace(tzinfo=pytz.UTC):
                 show_open('User has not used the password in more than \
-                    90 days and it\'s still active',
+90 days and it\'s still active',
                           details=dict(user=user[0],
                                        password_last_used=pass_last_used))
                 result = True
@@ -422,11 +422,11 @@ def password_expiration_unsafe(key_id: str, secret: str, max_days=90) -> bool:
         return False
     if 'MaxPasswordAge' in policy:
         if policy['MaxPasswordAge'] <= max_days:
-            show_close('Password policy expiration policy is safe',
+            show_close('Password expiration policy is safe',
                        details=dict(max_days=max_days, policy=policy))
             result = False
         else:
-            show_open('Password policy expiration policy is not safe',
+            show_open('Password expiration policy is not safe',
                       details=dict(max_days=max_days, policy=policy))
             result = True
     else:
