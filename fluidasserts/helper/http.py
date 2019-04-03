@@ -245,6 +245,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         fp_headers = OrderedDict(self.response.headers.copy())
         fp_headers.pop('Date', None)
         fp_headers.pop('Set-Cookie', None)
+        fp_headers.pop('x-amz-id-2', None)
+        fp_headers.pop('x-amz-request-id', None)
 
         banner = '\r\n'.join(['{key}: {key}'.format(key=x)
                               for x in fp_headers])
