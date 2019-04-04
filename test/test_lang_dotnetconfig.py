@@ -55,6 +55,11 @@ def test_has_debug_enabled_in_dir_open():
     """Config file has debug enabled."""
     assert dotnetconfig.has_debug_enabled(CODE_DIR)
 
+
+def test_not_custom_error_open():
+    """Config file has custom error page."""
+    assert dotnetconfig.not_custom_errors(INSECURE_WEBCONF)
+
 #
 # Closing tests
 #
@@ -80,3 +85,10 @@ def test_has_debug_enabled_close():
     assert not dotnetconfig.has_debug_enabled(SECURE_WEBCONF)
     assert not dotnetconfig.has_debug_enabled(CODE_DIR, exclude=['test'])
     assert not dotnetconfig.has_debug_enabled(NON_EXISTANT_CODE)
+
+
+def test_not_custom_error_close():
+    """Config file has custom error page."""
+    assert not dotnetconfig.not_custom_errors(SECURE_WEBCONF)
+    assert not dotnetconfig.not_custom_errors(CODE_DIR, exclude=['test'])
+    assert not dotnetconfig.not_custom_errors(NON_EXISTANT_CODE)

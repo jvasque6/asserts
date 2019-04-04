@@ -185,3 +185,51 @@ def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
                                     fingerprint=lang.
                                     file_hash(code_file)))
     return result
+
+
+@level('low')
+@track
+def not_custom_errors(webconf_dest: str, exclude: list = None) -> bool:
+    """
+    Check if customErrors flag is set to off in Web.config.
+
+    CWE-12: ASP.NET Misconfiguration: Missing Custom Error Page
+
+    :param webconf_dest: Path to a Web.config source file or package.
+    """
+    tk_tag_s, _ = makeXMLTags('system.web')
+    tk_custom_errors, _ = makeXMLTags('customErrors')
+    tag_no_comm = tk_custom_errors.ignore(htmlComment)
+    tk_comp_custom_errors = copy(tag_no_comm)
+    tk_comp_custom_errors.setParseAction(withAttribute(mode='Off'))
+    result = False
+    try:
+        sysweb_tag = lang.check_grammar(tk_tag_s, webconf_dest,
+                                        LANGUAGE_SPECS, exclude)
+        if not sysweb_tag:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=webconf_dest))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=webconf_dest))
+        return False
+
+    for code_file, lines in sysweb_tag.items():
+        custom_error_tags = lang.block_contains_grammar(tk_comp_custom_errors,
+                                                        code_file,
+                                                        lines,
+                                                        _get_block)
+        if custom_error_tags:
+            show_open('Custom errors are not enabled',
+                      details=dict(file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in lines])))
+            result = True
+        else:
+            show_close('Custom errors are enabled',
+                       details=dict(file=code_file,
+                                    fingerprint=lang.
+                                    file_hash(code_file)))
+    return result
