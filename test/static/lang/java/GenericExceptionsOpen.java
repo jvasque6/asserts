@@ -36,6 +36,9 @@ class GenericExceptionsOpen{
       catch(Exception e){
          System.out.println("Warning: Some Other exception");
       }
+      catch(Exception e){
+         log.info("The error was" + e);
+      }
     try {
         System.out.println("Out of try-catch block...");
     }

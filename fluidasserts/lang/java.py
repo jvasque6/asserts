@@ -8,7 +8,7 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
-                       SkipTo)
+                       SkipTo, QuotedString, oneOf)
 
 # local imports
 from fluidasserts.helper import lang
@@ -429,6 +429,53 @@ def uses_des_algorithm(java_dest: str, exclude: list = None) -> bool:
             result = True
         else:
             show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang.
+                                    file_hash(code_file)))
+    return result
+
+
+@level('low')
+@track
+def has_log_injection(java_dest: str, exclude: list = None) -> bool:
+    """
+    Search code injection.
+
+    Check if the code does not neutralize or incorrectly neutralizes
+    output that is written to logs (CWE-117).
+
+    :param java_dest: Path to a Java source file or package.
+    """
+    log_variable = CaselessKeyword('log')
+    log_level = oneOf('trace debug info warn error fatal')
+
+    log_object = log_variable + Literal('.') + log_level
+
+    tk_string = QuotedString('"')
+    tk_var = Word(alphanums)
+
+    pst = log_object + Literal('(') + tk_string + Literal('+') + tk_var
+    result = False
+    try:
+        matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code allows logs injection',
+                      details=dict(file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not allow logs injection',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))
