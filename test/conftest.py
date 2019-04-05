@@ -113,6 +113,7 @@ def run_mocks(request):
                                       tty=True, detach=True)
             except docker.errors.APIError:
                 print('Starting {} ... '.format(mock_name))
+                cont = client.containers.get(mock_name)
                 cont.start()
 
     for mock, port_mapping in mocks.items():
