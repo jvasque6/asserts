@@ -346,7 +346,7 @@ http.has_clear_viewstate('__url__')
 http.is_response_delayed('__url__')
 http.has_clear_viewstate('__url__')
 http.is_date_unsyncd('__url__')
-
+http.has_host_header_injection('__url__')
 """.replace('__url__', url)
     return exec_wrapper(template)
 
@@ -405,6 +405,7 @@ from fluidasserts.lang import java
 from fluidasserts.lang import javascript
 from fluidasserts.lang import python
 from fluidasserts.lang import rpgle
+from fluidasserts.lang import php
 from fluidasserts.sca import maven
 from fluidasserts.sca import nuget
 from fluidasserts.sca import pypi
@@ -449,6 +450,7 @@ rpgle.has_dos_dow_sqlcod('__code__')
 rpgle.has_unitialized_vars('__code__')
 rpgle.has_generic_exceptions('__code__')
 rpgle.swallows_exceptions('__code__')
+php.has_preg_ce('__code__')
 maven.project_has_vulnerabilities('__code__')
 nuget.project_has_vulnerabilities('__code__')
 pypi.project_has_vulnerabilities('__code__')
