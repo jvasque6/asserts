@@ -431,3 +431,9 @@ def test_is_date_unsyncd_open():
 def test_is_version_visible_open():
     """Server header contains version?."""
     assert http.is_version_visible('%s/version/fail' % (BASE_URL))
+
+
+def test_host_injection_open():
+    """Server vulnerable to Host header injection?."""
+    assert http.has_host_header_injection(
+        '%s/host_injection_fail' % (BASE_URL))

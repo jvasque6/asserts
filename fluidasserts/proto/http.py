@@ -1427,3 +1427,43 @@ def is_date_unsyncd(url: str, *args, **kwargs) -> bool:
                             offset=diff,
                             fingerprint=fingerprint))
     return False
+
+
+@level('medium')
+@track
+def has_host_header_injection(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if server is vulnerable to 'Host' header injection.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    hostname = 'hackedbyfluidattacks.com'
+    if 'headers' in kwargs:
+        kwargs['headers'].update({'Host': hostname})
+    else:
+        kwargs['headers'] = {'Host': hostname}
+
+    kwargs['redirect'] = False
+    try:
+        sess = http.HTTPSession(url, *args, **kwargs)
+        fingerprint = sess.get_fingerprint()
+    except (KeyError, http.ConnError) as exc:
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    if 'location' in sess.response.headers:
+        if hostname in sess.response.headers['Location']:
+            show_open('Server is vulnerable to Host header injection',
+                      details=dict(url=url, fingerprint=fingerprint))
+            return True
+    show_close('Server not vulnerable to Host header injection',
+               details=dict(url=url, fingerprint=fingerprint))
+    return False

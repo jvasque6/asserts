@@ -539,6 +539,22 @@ def date_fail():
     return resp
 
 
+@APP.route('/http/headers/host_injection_fail')
+def host_injection_fail():
+    """Vulnerable a Host injection."""
+    resp = Response()
+    resp.headers['Location'] = 'http://' + request.headers['Host']
+    return resp
+
+
+@APP.route('/http/headers/host_injection_ok')
+def host_injection_ok():
+    """Vulnerable a Host injection."""
+    resp = Response()
+    resp.headers['Location'] = 'http://legitsite.com'
+    return resp
+
+
 @APP.route('/rest/access/fail')
 def rest_access_fail():
     """Recurso rest accesible."""

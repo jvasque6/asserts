@@ -580,3 +580,15 @@ def test_is_not_https_required_close():
     assert not http.is_not_https_required(NONEXISTANT_SERVICE)
     assert not http.is_not_https_required(BAD_FORMAT_SERVICE)
     assert not http.is_not_https_required('https://127.0.0.1')
+
+
+def test_host_injection_close():
+    """Server vulnerable to Host header injection?."""
+    assert not http.has_host_header_injection(
+        '%s/host_injection_ok' % (BASE_URL))
+    assert not http.has_host_header_injection(
+        '%s/host_not_found' % (BASE_URL))
+    assert not http.has_host_header_injection(
+        '%s/host_injection_ok' % (NONEXISTANT_SERVICE))
+    assert not http.has_host_header_injection(
+        '%s/host_injection_ok' % (BAD_FORMAT_SERVICE))
