@@ -61,7 +61,9 @@ class HTTPSession():
         :param method: Must be either ``PUT`` or ``DELETE``.
         :param url: URL for the new :class:`.HTTPSession` object.
         :param params: Parameters to send with the :class:`requests.Request`.
-        :param data: Dictionary to be sent in
+        :param data: Payload to be sent in
+                     the :class:`~requests.Request` body.
+        :param json: Dictionary to be sent in
                      the :class:`~requests.Request` body.
         :param headers: Dict of HTTP headers to send with the Request.
         :param cookies: Dict or CookieJar object to send with the Request.
