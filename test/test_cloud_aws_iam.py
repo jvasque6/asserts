@@ -49,6 +49,12 @@ def test_not_support_role_open():
     """Search IAM policy: Support role."""
     assert iam.has_not_support_role(AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
 
+
+def test_policies_attached_open():
+    """Search IAM policies: Policies attached directly to users."""
+    assert iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
+                                          AWS_SECRET_ACCESS_KEY)
+
 #
 # Closing tests
 #
@@ -240,8 +246,6 @@ def test_root_mfa_close():
 
 def test_policies_attached_close():
     """Search IAM policies: Policies attached directly to users."""
-    assert not iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
-                                              AWS_SECRET_ACCESS_KEY)
     assert not iam.policies_attached_to_users(AWS_ACCESS_KEY_ID,
                                               AWS_SECRET_ACCESS_KEY_BAD)
 
