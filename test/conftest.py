@@ -104,13 +104,10 @@ def run_mocks(request):
         except docker.errors.NotFound:
             print('Building {} ... '.format(image))
             client.images.build(path=mock_dir, tag=image)
-        try:
-            cont = client.containers.get(mock_name)
-        except docker.errors.NotFound:
             try:
-                print('Running {} ... '.format(mock))
+                print('Running {} ... '.format(mock_name))
                 client.containers.run(image, name=mock_name,
-                                      tty=True, detach=True)
+                                      tty=True, detach=False)
             except docker.errors.APIError:
                 print('Starting {} ... '.format(mock_name))
                 cont = client.containers.get(mock_name)
