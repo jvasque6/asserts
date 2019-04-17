@@ -57,7 +57,7 @@ def mock_http(request):
     time.sleep(1)
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture()
 def run_mocks(request):
     """Run mock with given parameters."""
     mocks = {
@@ -107,7 +107,7 @@ def run_mocks(request):
             try:
                 print('Running {} ... '.format(mock_name))
                 client.containers.run(image, name=mock_name,
-                                      tty=True, detach=False)
+                                      tty=True, detach=True)
             except docker.errors.APIError:
                 print('Starting {} ... '.format(mock_name))
                 cont = client.containers.get(mock_name)
