@@ -79,17 +79,37 @@ bandit:
 
 test:
   stage: test
-  only:
-    - /^.*$/
-    - merge_requests
   script:
     - scons test
     - cp build/coverage/results.xml coverage.xml
+    - cp build/coverage/html/index.html coverage.html
   artifacts:
-    name: "coverage_xml_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA:0:8}"
+    name: "coverage_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA:0:8}"
     paths:
       - coverage.xml
+      - coverage.html
   retry: 2
+
+coverage-report:
+  stage: coverage
+  variables:
+    GITLAB_API: "${CI_API_V4_URL}"
+    PROJECT_ID: "${CI_PROJECT_ID}"
+    BRANCH: "${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}"
+    TOKEN: "${CI_JOB_TOKEN}"
+  script:
+    - curl -Lo artifacts.zip
+        "${GITLAB_API}/projects/${PROJECT_ID}/jobs/artifacts/${BRANCH}/download?job=test&job_token=${TOKEN}"
+    - unzip artifacts.zip
+    - scons codecov
+    - cat coverage.html |
+        grep -Po '(?<=pc_cov">)\d+%' |
+        xargs echo 'Coverage:'
+  retry: 2
+  only:
+    - merge_requests
+  except:
+    - master
 
 fluidasserts:
   image: fluidattacks/asserts
@@ -197,15 +217,3 @@ remove-branches:
     - ./ci-scripts/remove-branches.sh
   only:
     - schedules
-
-coverage-report:
-  stage: coverage
-  only:
-    - merge_requests
-  dependencies:
-    - test
-  script:
-    - scons codecov
-  retry: 2
-  except:
-    - master
