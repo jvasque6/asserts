@@ -1,6 +1,6 @@
 ---
 
-image: docker:18
+image: "${CI_REGISTRY_IMAGE}:builder"
 
 variables:
   DOCKER_DRIVER: overlay2
@@ -9,7 +9,8 @@ services:
   - docker:dind
 
 before_script:
-  - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS
+  - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS ||
+      echo 'Docker not needed in this stage.'
 
 stages:
   - build
@@ -58,7 +59,6 @@ commitlint:
     - schedules
 
 lint:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   script:
     - scons lint
@@ -69,7 +69,6 @@ lint:
     - schedules
 
 bandit:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   script:
     - scons bandit
@@ -79,7 +78,6 @@ bandit:
     - schedules
 
 test:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: test
   only:
     - /^.*$/
@@ -94,22 +92,17 @@ test:
   retry: 2
 
 fluidasserts:
-  before_script:
-    - mkdir -p /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
-    - cp -a ${CI_PROJECT_DIR} /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src
+  image: fluidattacks/asserts
+  services: []
+  variables:
+    FA_STRICT: "false"
   script:
-    - docker pull fluidattacks/asserts
-  after_script:
-    - docker run -t -e FA_STRICT="false" -w /code
-      -v /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}/src:/code
-      fluidattacks/asserts asserts -o /code/deploy/container/exploit.py
-    - rm -rf /tmp${CI_PROJECT_DIR}/${CI_COMMIT_SHA}
+    - asserts -o deploy/container/exploit.py
   except:
     - master
     - schedules
 
 mr-test:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: mr-check
   variables:
     GIT_STRATEGY: clone
@@ -137,13 +130,11 @@ danger:
     - merge_requests
 
 deploy:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
   script:
     - scons dist
     - scons deploy
     - mkdir -p dist && cp -a build/dist/*.zip dist/
-
   retry: 2
   only:
     - master
@@ -151,7 +142,6 @@ deploy:
     - schedules
 
 create_installer:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
   script:
     - scons dist
@@ -167,7 +157,6 @@ create_installer:
     - schedules
 
 push_container:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: postdeploy
   script:
     - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
@@ -187,7 +176,6 @@ push_container:
     - schedules
 
 pages:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: deploy
   script:
     - scons sphinxdoc
@@ -199,7 +187,6 @@ pages:
     - schedules
 
 remove-branches:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: remove-branches
   variables:
     GIT_STRATEGY: fetch
@@ -212,7 +199,6 @@ remove-branches:
     - schedules
 
 coverage-report:
-  image: registry.gitlab.com/fluidattacks/asserts:builder
   stage: coverage
   only:
     - merge_requests
@@ -223,4 +209,3 @@ coverage-report:
   retry: 2
   except:
     - master
-
