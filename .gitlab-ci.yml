@@ -21,13 +21,27 @@ stages:
   - remove-branches
   - coverage
 
+.kaniko_config: &kaniko_config
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - echo '{"auths":{"'"${CI_REGISTRY}"'":{"username":"'"${CI_REGISTRY_USER}"'","password":"'"${CI_REGISTRY_PASSWORD}"'"}}}'
+        > /kaniko/.docker/config.json
+
 build:
   stage: build
+  <<: *kaniko_config
+  services: []
   script:
-    - docker build
-      --cache-from registry.gitlab.com/fluidattacks/asserts:builder
-      -f Dockerfile.builder -t registry.gitlab.com/fluidattacks/asserts:builder .
-    - docker push registry.gitlab.com/fluidattacks/asserts:builder
+    - /kaniko/executor
+        --dockerfile Dockerfile.builder
+        --context .
+        --destination "${CI_REGISTRY_IMAGE}:builder"
+        --cache true
+        --cache-repo "${CI_REGISTRY_IMAGE}"/builder-cache
+        --cleanup
+        --verbosity warn
   retry: 2
   only:
     - schedules
