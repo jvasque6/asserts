@@ -18,9 +18,7 @@ stages:
   - mr-check
   - deploy
   - postdeploy
-  - cleanup
   - remove-branches
-  - coverage
 
 .kaniko_config: &kaniko_config
   image:
@@ -90,8 +88,20 @@ test:
       - coverage.html
   retry: 2
 
+fluidasserts:
+  stage: test
+  image: fluidattacks/asserts
+  services: []
+  variables:
+    FA_STRICT: "false"
+  script:
+    - asserts -o deploy/container/exploit.py
+  except:
+    - master
+    - schedules
+
 coverage-report:
-  stage: coverage
+  stage: mr-check
   variables:
     GITLAB_API: "${CI_API_V4_URL}"
     PROJECT_ID: "${CI_PROJECT_ID}"
@@ -110,17 +120,6 @@ coverage-report:
     - merge_requests
   except:
     - master
-
-fluidasserts:
-  image: fluidattacks/asserts
-  services: []
-  variables:
-    FA_STRICT: "false"
-  script:
-    - asserts -o deploy/container/exploit.py
-  except:
-    - master
-    - schedules
 
 mr-test:
   stage: mr-check
@@ -176,6 +175,17 @@ create_installer:
   except:
     - schedules
 
+pages:
+  stage: deploy
+  script:
+    - scons sphinxdoc
+  artifacts:
+    paths: [public/]
+  only:
+    - master
+  except:
+    - schedules
+
 push_container:
   stage: postdeploy
   script:
@@ -190,17 +200,6 @@ push_container:
       fluidattacks/asserts
     - docker push fluidattacks/asserts
   retry: 2
-  only:
-    - master
-  except:
-    - schedules
-
-pages:
-  stage: deploy
-  script:
-    - scons sphinxdoc
-  artifacts:
-    paths: [public/]
   only:
     - master
   except:
