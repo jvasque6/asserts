@@ -8,10 +8,6 @@ variables:
 services:
   - docker:dind
 
-before_script:
-  - docker login registry.gitlab.com -u $DOCKER_USER -p $DOCKER_PASS ||
-      echo 'Docker not needed in this stage.'
-
 stages:
   - build
   - test
@@ -25,8 +21,9 @@ stages:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   before_script:
-    - echo '{"auths":{"'"${CI_REGISTRY}"'":{"username":"'"${CI_REGISTRY_USER}"'","password":"'"${CI_REGISTRY_PASSWORD}"'"}}}'
-        > /kaniko/.docker/config.json
+    - echo '{"auths":{"'"${CI_REGISTRY}"'":{"username":"'"${CI_REGISTRY_USER}"'","password":"'"${CI_REGISTRY_PASSWORD}"'"},
+        "'"${HUB_REGISTRY}"'":{"username":"'"${HUB_USER}"'","password":"'"${HUB_PASSWORD}"'"}}}'
+          > /kaniko/.docker/config.json
 
 build:
   stage: build
@@ -118,8 +115,6 @@ coverage-report:
   retry: 2
   only:
     - merge_requests
-  except:
-    - master
 
 mr-test:
   stage: mr-check
@@ -155,6 +150,11 @@ deploy:
     - scons deploy
     - mkdir -p dist && cp -a build/dist/*.zip dist/
   retry: 2
+  artifacts:
+    name: "fluidasserts_dist_${CI_COMMIT_SHA:0:8}"
+    paths:
+      - dist/*
+    expire_in: 30 min
   only:
     - master
   except:
@@ -188,17 +188,18 @@ pages:
 
 push_container:
   stage: postdeploy
+  <<: *kaniko_config
+  services: []
+  dependencies:
+    - deploy
   script:
-    - docker login fluid-docker.jfrog.io -u $JFROG_USER -p $JFROG_PASS
-    - docker login -u $HUB_USER -p $HUB_PASS
-    - scons dist
-    - mkdir -p dist && cp -a build/dist/*.zip dist/
-    - docker build --no-cache -f Dockerfile.runner
-      -t registry.gitlab.com/fluidattacks/asserts:runner .
-    - docker push registry.gitlab.com/fluidattacks/asserts:runner
-    - docker tag registry.gitlab.com/fluidattacks/asserts:runner
-      fluidattacks/asserts
-    - docker push fluidattacks/asserts
+    - /kaniko/executor
+        --dockerfile Dockerfile.runner
+        --context .
+        --destination "${CI_REGISTRY_IMAGE}:runner"
+        --destination "fluidattacks/asserts"
+        --cleanup
+        --verbosity warn
   retry: 2
   only:
     - master
