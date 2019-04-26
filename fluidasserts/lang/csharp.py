@@ -471,7 +471,7 @@ def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
 @track
 def uses_console_writeline(csharp_dest: str, exclude: list = None) -> bool:
     """
-    Check if code uses Debug.WriteLine method.
+    Check if code uses Console.WriteLine method.
 
     :param csharp_dest: Path to a C# source file or package.
     """
