@@ -150,11 +150,6 @@ deploy:
     - scons deploy
     - mkdir -p dist && cp -a build/dist/*.zip dist/
   retry: 2
-  artifacts:
-    name: "fluidasserts_dist_${CI_COMMIT_SHA:0:8}"
-    paths:
-      - dist/*
-    expire_in: 30 min
   only:
     - master
   except:
@@ -190,10 +185,12 @@ push_container:
   stage: postdeploy
   <<: *kaniko_config
   services: []
-  dependencies:
-    - deploy
+  dependencies: []
   script:
     - /kaniko/executor
+        --build-arg BUILDER_IMAGE="${CI_REGISTRY_IMAGE}:builder"
+        --build-arg CI_COMMIT_REF_NAME="${CI_COMMIT_REF_NAME}"
+        --build-arg CI_REPOSITORY_URL="${CI_REPOSITORY_URL}"
         --dockerfile Dockerfile.runner
         --context .
         --destination "${CI_REGISTRY_IMAGE}:runner"

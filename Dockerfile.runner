@@ -1,33 +1,61 @@
+ARG BUILDER_IMAGE
+
+FROM "${BUILDER_IMAGE}" as deps
+
+ARG CI_COMMIT_REF_NAME
+ARG CI_REPOSITORY_URL
+
+# Variables must be defined to run SCons, but their value is not used
+ENV DOCKER_USER="value"
+ENV DOCKER_PASS="value"
+ENV PYPI_USER="value"
+ENV PYPI_PASS="value"
+ENV AWS_ACCESS_KEY_ID="value"
+ENV AWS_SECRET_ACCESS_KEY="value"
+ENV CODECOV_TOKEN="value"
+
+RUN git clone --depth 1 \
+        -b "${CI_COMMIT_REF_NAME}" "${CI_REPOSITORY_URL}" /home/asserts \
+    && cd /home/asserts \
+    && scons dist
+
+
 FROM alpine:3.9
 
-COPY dist/*.zip /
+WORKDIR /home
+COPY --from=deps /home/asserts/build/dist/* /home/
 
 RUN apk update \
     && apk upgrade \
-    && apk add -u --no-cache py3-pip \
-    python3-dev \
-    libffi-dev \
-    gcc \
-    libc-dev \
-    openssl-dev \
-    make \
-    jpeg-dev \
-    zlib-dev \
-    curl && \
-    pip3 install -U pip==18.1 && pip3 install --no-cache-dir -U /*.zip && \
-    rm -f /*.zip && \
-    apk del -r --purge python3-dev \
-    libffi-dev \
-    gcc \
-    openssl-dev \
-    make \
-    libc-dev \
-    musl-utils libc-utils \
-    ssl_client \
-    scanelf \
-    libressl2.7-libtls \
-    zlib-dev \
-    jpeg-dev && \
-    apk add -u --no-cache libssl1.1 \
-    libcrypto1.1 && \
-    rm -rf /var/cache/apk/*
+    && apk add -u --no-cache \
+        curl \
+        gcc \
+        jpeg-dev \
+        libc-dev \
+        libffi-dev \
+        make \
+        openssl-dev \
+        py3-pip \
+        python3-dev \
+        zlib-dev \
+    && pip3 install -U pip==18.1 \
+    && pip3 install --no-cache-dir -U ./*.zip \
+    && apk del -r --purge \
+        gcc \
+        jpeg-dev \
+        libc-dev \
+        libffi-dev \
+        libressl2.7-libtls \
+        make \
+        musl-utils libc-utils \
+        openssl-dev \
+        python3-dev \
+        scanelf \
+        ssl_client \
+        zlib-dev \
+    && apk add -u --no-cache \
+        libssl1.1 \
+        libcrypto1.1 \
+    && rm -rf \
+        /var/cache/apk/* \
+        /home/*
