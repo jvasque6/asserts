@@ -20,6 +20,7 @@ from fluidasserts.lang import html
 CODE_DIR = 'test/static/lang/html/'
 SECURE_CODE = CODE_DIR + 'non-vulnerable.html'
 INSECURE_CODE = CODE_DIR + 'vulnerable.html'
+NOT_CODE = CODE_DIR + 'notexists.html'
 
 #
 # Open tests
@@ -66,6 +67,7 @@ def test_form_autocomplete_close():
     codigo HTML de non-vulnerable.html?
     """
     assert not html.has_not_autocomplete(SECURE_CODE)
+    assert not html.has_not_autocomplete(NOT_CODE)
 
 
 def test_is_cacheable_close():
@@ -76,6 +78,7 @@ def test_is_cacheable_close():
     non-vulnerable.html
     """
     assert not html.is_cacheable(SECURE_CODE)
+    assert not html.is_cacheable(NOT_CODE)
 
 
 def test_is_header_content_type_missing_close():
@@ -85,3 +88,4 @@ def test_is_header_content_type_missing_close():
     estan definidas en el codigo HTML de non-vulnerable.html
     """
     assert not html.is_header_content_type_missing(SECURE_CODE)
+    assert not html.is_header_content_type_missing(NOT_CODE)

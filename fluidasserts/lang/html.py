@@ -9,6 +9,7 @@ from pyparsing import (makeHTMLTags, CaselessKeyword, ParseException,
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
 
 
@@ -62,8 +63,13 @@ def has_not_autocomplete(filename: str) -> bool:
     attr = {'autocomplete': tk_off}
     tag_i = 'input'
     tag_f = 'form'
-    has_input = _has_attributes(filename, tag_i, attr)
-    has_form = _has_attributes(filename, tag_f, attr)
+    try:
+        has_input = _has_attributes(filename, tag_i, attr)
+        has_form = _has_attributes(filename, tag_f, attr)
+    except FileNotFoundError as exc:
+        show_unknown('There was an error',
+                     details=dict(error=str(exc)))
+        return False
 
     if not (has_input or has_form):
         result = True
@@ -94,13 +100,18 @@ def is_cacheable(filename: str) -> bool:
     tk_nocache = CaselessKeyword('no-cache')
     attrs = {'http-equiv': tk_pragma,
              'content': tk_nocache}
-    has_pragma = _has_attributes(filename, tag, attrs)
 
     tk_expires = CaselessKeyword('expires')
     tk_minusone = CaselessKeyword('-1')
     attrs = {'http-equiv': tk_expires,
              'content': tk_minusone}
-    has_expires = _has_attributes(filename, tag, attrs)
+    try:
+        has_pragma = _has_attributes(filename, tag, attrs)
+        has_expires = _has_attributes(filename, tag, attrs)
+    except FileNotFoundError as exc:
+        show_unknown('There was an error',
+                     details=dict(error=str(exc)))
+        return False
 
     if not has_pragma or not has_expires:
         result = True
@@ -142,7 +153,12 @@ def is_header_content_type_missing(filename: str) -> bool:
 
     attrs = {'http-equiv': prs_cont_typ,
              'content': prs_content_val}
-    has_content_type = _has_attributes(filename, tag, attrs)
+    try:
+        has_content_type = _has_attributes(filename, tag, attrs)
+    except FileNotFoundError as exc:
+        show_unknown('There was an error',
+                     details=dict(error=str(exc)))
+        return False
 
     if not has_content_type:
         result = True
