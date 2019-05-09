@@ -61,6 +61,12 @@ def test_has_weak_cipher_open_in_dir():
     """Check if base64 is used to cipher confidential data."""
     assert core.has_weak_cipher(CODE_DIR, 'password123')
 
+
+def test_has_secret_open():
+    """Code has secret."""
+    assert core.has_secret(INSECURE_CODE, 'user: root; pass: password123')
+
+
 #
 # Closing tests
 #
@@ -91,3 +97,9 @@ def test_has_weak_cipher_close():
     assert not core.has_weak_cipher(SECURE_CODE, 'password123')
     assert not core.has_weak_cipher(CODE_DIR, 'password123', exclude=['test'])
     assert not core.has_weak_cipher(NON_EXISTANT_CODE, 'password123')
+
+
+def test_has_secret_close():
+    """Code has secret."""
+    assert not core.has_secret(NON_EXISTANT_CODE, 'password123')
+    assert not core.has_secret(SECURE_CODE, 'user: root; pass: password123')

@@ -211,3 +211,36 @@ base64',
                                     fingerprint=lang.
                                     file_hash(code_file)))
     return result
+
+
+@level('high')
+@track
+def has_secret(code_dest: str, secret: str, exclude: list = None) -> bool:
+    """
+    Check if a secret is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param secret: Secret to look for in the file.
+    :param exclude: Files to exclude.
+    """
+    result = False
+    secret_regex = Regex(secret)
+    try:
+        matches = lang.check_grammar(secret_regex, code_dest,
+                                     LANGUAGE_SPECS, exclude)
+    except FileNotFoundError:
+        show_unknown('File does not exist', details=dict(location=code_dest))
+        return False
+
+    result = [(f, v) for f, v in matches.items() if v]
+    if result:
+        show_open('Secret found in code',
+                  details=dict(location=result,
+                               fingerprint=lang.file_hash(code_dest),
+                               total_vulns=len(result)))
+    else:
+        show_close('Secret not found in code', details=dict(location=code_dest,
+                   fingerprint=lang.file_hash(code_dest)))
+    return bool(result)

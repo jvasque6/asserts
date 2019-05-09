@@ -151,8 +151,8 @@ def file_hash(filename: str) -> dict:
         with open(filename, 'rb', buffering=0) as code_fd:
             for code_byte in iter(lambda: code_fd.read(128 * 1024), b''):
                 sha256.update(code_byte)
-    except FileNotFoundError:
-        pass
+    except (FileNotFoundError, IsADirectoryError):
+        return None
     return dict(sha256=sha256.hexdigest())
 
 
