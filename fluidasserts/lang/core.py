@@ -234,13 +234,15 @@ def has_secret(code_dest: str, secret: str, exclude: list = None) -> bool:
         show_unknown('File does not exist', details=dict(location=code_dest))
         return False
 
-    result = [(f, v) for f, v in matches.items() if v]
+    result = [{'file': f, 'lines': v, 'fingerprint': lang.file_hash(f)}
+              for f, v in matches.items() if v]
     if result:
         show_open('Secret found in code',
                   details=dict(location=result,
-                               fingerprint=lang.file_hash(code_dest),
+                               secret=secret,
                                total_vulns=len(result)))
     else:
         show_close('Secret not found in code', details=dict(location=code_dest,
+                   secret=secret,
                    fingerprint=lang.file_hash(code_dest)))
     return bool(result)
