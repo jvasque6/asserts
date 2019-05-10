@@ -42,6 +42,25 @@ def get_aws_client(service: str, key_id: str, secret: str) -> object:
                         region_name='us-east-1')
 
 
+def get_caller_identity(key_id: str, secret: str) -> dict:
+    """
+    Get caller identity.
+
+    :param key_id: AWS Key Id
+    :param secret: AWS Key Secret
+    """
+    try:
+        client = get_aws_client('sts',
+                                key_id=key_id,
+                                secret=secret)
+        identity = client.get_caller_identity()
+        return identity
+    except botocore.vendored.requests.exceptions.ConnectionError:
+        raise ConnError
+    except botocore.exceptions.ClientError:
+        raise ClientErr
+
+
 def get_credentials_report(key_id: str, secret: str) -> dict:
     """
     Get IAM credentials report.
