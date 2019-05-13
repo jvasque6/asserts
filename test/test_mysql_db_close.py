@@ -146,7 +146,7 @@ def test_wildcard_hosts_close(get_mock_ip):
 def test_uses_ssl_close(get_mock_ip):
     """Check if MySQL uses SSL."""
     # assert not mysql_db.uses_ssl(get_mock_ip, ADMIN_USER, ADMIN_PASS)
-    assert not mysql.uses_ssl(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
+    assert not mysql.not_use_ssl(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
 
 
 @pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)

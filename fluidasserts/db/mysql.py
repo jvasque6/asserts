@@ -469,7 +469,7 @@ def users_have_wildcard_host(server: str, username: str,
 
 @level('high')
 @track
-def uses_ssl(server: str, username: str, password: str) -> bool:
+def not_use_ssl(server: str, username: str, password: str) -> bool:
     """Check if MySQL server uses SSL."""
     try:
         mydb = _get_mysql_cursor(server, username, password)
