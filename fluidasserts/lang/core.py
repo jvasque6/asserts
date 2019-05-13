@@ -97,6 +97,51 @@ def has_not_text(code_dest: str, expected_text: str,
 
 @level('low')
 @track
+def has_multiple_text(code_dest: str, expected_list: list,
+                      exclude: list = None) -> bool:
+    """
+    Check if a list of bad text is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param expected_text: Bad text to look for in the file.
+    """
+    matches = {}
+    for expected in expected_list:
+        exected_regex = Regex(expected)
+        result = False
+        try:
+            __matches = lang.check_grammar(exected_regex, code_dest,
+                                           LANGUAGE_SPECS, exclude)
+            try:
+                matches = {x: matches[x] + y for x, y in __matches.items()}
+            except KeyError:
+                matches.update(__matches)
+        except FileNotFoundError:
+            show_unknown('File does not exist',
+                         details=dict(code_dest=code_dest))
+            return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('A bad text from list was found in code',
+                      details=dict(file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   text_list=expected_list,
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('All bad text in list was not found in code',
+                       details=dict(file=code_file,
+                                    fingerprint=lang.
+                                    file_hash(code_file)))
+    return result
+
+
+@level('low')
+@track
 def file_exists(code_file: str) -> bool:
     """
     Check if the given file exists.
