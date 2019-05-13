@@ -13,7 +13,11 @@ from typing import Callable
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
+
+
+# pylint: disable=broad-except
 
 
 @level('low')
@@ -29,15 +33,23 @@ def check_function(func: Callable, *args, **kwargs):
     :param *args: Positional parameters that will be passed to func.
     :param *kwargs: Keyword parameters that will be passed to func.
     """
-    ret = func(*args, **kwargs)
-    if ret:
-        show_open('Function check was found open',
-                  details=dict(function=func.__name__,
-                               args=args, kwargs=kwargs,
-                               ret=ret))
+    try:
+        ret = func(*args, **kwargs)
+    except Exception as exc:
+        show_unknown('Function returned an error',
+                     details=dict(function=func.__name__,
+                                  args=args, kwargs=kwargs,
+                                  error=str(exc).replace(':', ',')))
+        return False
     else:
-        show_close('Function check was found closed',
-                   details=dict(function=func.__name__,
-                                args=args, kwargs=kwargs,
-                                ret=ret))
-    return bool(ret)
+        if ret:
+            show_open('Function check was found open',
+                      details=dict(function=func.__name__,
+                                   args=args, kwargs=kwargs,
+                                   ret=ret))
+        else:
+            show_close('Function check was found closed',
+                       details=dict(function=func.__name__,
+                                    args=args, kwargs=kwargs,
+                                    ret=ret))
+        return bool(ret)

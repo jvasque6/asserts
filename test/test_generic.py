@@ -34,3 +34,4 @@ def test_generic_open():
 def test_generic_close():
     """Test a function that will return closed."""
     assert not generic.check_function(is_greater, 1, 2)
+    assert not generic.check_function(is_greater, 'a', 2)
