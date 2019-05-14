@@ -76,7 +76,13 @@ def test_db_exists(server: str, username: str, password: str,
     else:
         mycursor = mydb.cursor()
 
-        mycursor.execute("SHOW DATABASES")
+        try:
+            mycursor.execute("SHOW DATABASES")
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = ('test',) in list(mycursor)
 
@@ -105,8 +111,13 @@ def local_infile_enabled(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = "SHOW VARIABLES WHERE Variable_name = 'local_infile'"
-        mycursor.execute(query)
-
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
         result = ('local_infile', 'ON') in list(mycursor)
 
         if result:
@@ -134,7 +145,13 @@ def symlinks_enabled(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = "SHOW variables LIKE 'have_symlink'"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = ('have_symlink', 'DISABLED') not in list(mycursor)
 
@@ -164,7 +181,13 @@ def memcached_enabled(server: str, username: str, password: str,
 
         query = "SELECT * FROM information_schema.plugins WHERE \
 PLUGIN_NAME='daemon_memcached'"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = len(list(mycursor)) != 0
 
@@ -194,7 +217,13 @@ def secure_file_priv_disabled(server: str, username: str,
 
         query = "SHOW GLOBAL VARIABLES WHERE \
 Variable_name = 'secure_file_priv' AND Value<>''"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = len(list(mycursor)) == 0
 
@@ -223,7 +252,13 @@ def strict_all_tables_disabled(server: str, username: str,
         mycursor = mydb.cursor()
 
         query = "SHOW VARIABLES LIKE 'sql_mode'"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = 'STRICT_ALL_TABLES' not in list(mycursor)[0][1]
 
@@ -252,7 +287,13 @@ def log_error_disabled(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = "SHOW variables LIKE 'log_error'"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         result = ('log_error', '') in list(mycursor)
 
@@ -281,7 +322,13 @@ def logs_on_system_fs(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = "SELECT @@global.log_bin_basename"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)[0][0]
         result = _result.startswith('/var') or _result.startswith('/usr')
@@ -311,10 +358,18 @@ def logs_verbosity_low(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = "SHOW GLOBAL VARIABLES LIKE 'log_error_verbosity'"
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
-        if list(mycursor):
-            verbosity = list(mycursor)[0][1]
+        res = list(mycursor)
+        if res:
+            print(res)
+            verbosity = res[0][1]
             result = verbosity not in ('2', '3')
         else:
             verbosity = 'empty'
@@ -347,7 +402,13 @@ def auto_creates_users(server: str, username: str, password: str,
         queries = ['SELECT @@global.sql_mode', 'SELECT @@session.sql_mode']
         result = False
         for query in queries:
-            mycursor.execute(query)
+            try:
+                mycursor.execute(query)
+            except mysql.connector.errors.ProgrammingError as exc:
+                show_unknown('There was an error executing query',
+                             details=dict(server=server, username=username,
+                                          error=str(exc).replace(':', ',')))
+                return False
 
             _result = list(mycursor)[0][0]
             result = 'NO_AUTO_CREATE_USER' not in _result
@@ -379,7 +440,13 @@ def has_users_without_password(server: str, username: str,
         mycursor = mydb.cursor()
 
         query = 'select user from mysql.user where password=""'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         result = len(_result) != 0
@@ -411,7 +478,13 @@ def password_expiration_unsafe(server: str, username: str,
         mycursor = mydb.cursor()
 
         query = 'SHOW VARIABLES LIKE "default_password_lifetime"'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         if not _result:
@@ -448,7 +521,13 @@ def password_equals_to_user(server: str, username: str,
 
         query = 'SELECT User,password FROM mysql.user \
 WHERE BINARY password=CONCAT("*", UPPER(SHA1(UNHEX(SHA1(user)))))'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         result = len(_result) != 0
@@ -480,7 +559,13 @@ def users_have_wildcard_host(server: str, username: str,
         mycursor = mydb.cursor()
 
         query = 'SELECT user FROM mysql.user WHERE host = "%"'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         result = len(_result) != 0
@@ -512,7 +597,13 @@ def not_use_ssl(server: str, username: str, password: str,
         mycursor = mydb.cursor()
 
         query = 'SHOW variables WHERE variable_name = "have_ssl"'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         result = _result[0][1] == 'DISABLED'
@@ -544,7 +635,13 @@ def ssl_unforced(server: str, username: str, password: str,
         query = 'SELECT user, ssl_type FROM mysql.user WHERE NOT HOST \
 IN ("::1", "127.0.0.1", "localhost") AND \
 NOT ssl_type IN ("ANY", "X509", "SPECIFIED")'
-        mycursor.execute(query)
+        try:
+            mycursor.execute(query)
+        except mysql.connector.errors.ProgrammingError as exc:
+            show_unknown('There was an error executing query',
+                         details=dict(server=server, username=username,
+                                      error=str(exc).replace(':', ',')))
+            return False
 
         _result = list(mycursor)
         result = len(_result) != 0
