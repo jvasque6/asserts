@@ -22,7 +22,8 @@ LANGUAGE_SPECS = {}  # type: dict
 
 @level('low')
 @track
-def has_text(code_dest: str, expected_text: str, exclude: list = None) -> bool:
+def has_text(code_dest: str, expected_text: str, exclude: list = None,
+             lang_specs: dict = None) -> bool:
     """
     Check if a bad text is present in given source file.
 
@@ -31,11 +32,13 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None) -> bool:
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
     exected_regex = Regex(expected_text)
     result = False
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
-                                     LANGUAGE_SPECS, exclude)
+                                     lang_specs, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
@@ -60,7 +63,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None) -> bool:
 @level('low')
 @track
 def has_not_text(code_dest: str, expected_text: str,
-                 exclude: list = None) -> bool:
+                 exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a required text is not present in given source file.
 
@@ -69,11 +72,13 @@ def has_not_text(code_dest: str, expected_text: str,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
     exected_regex = Regex(expected_text)
     result = False
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
-                                     LANGUAGE_SPECS, exclude)
+                                     lang_specs, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
@@ -98,7 +103,7 @@ def has_not_text(code_dest: str, expected_text: str,
 @level('low')
 @track
 def has_multiple_text(code_dest: str, expected_list: list,
-                      exclude: list = None) -> bool:
+                      exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a list of bad text is present in given source file.
 
@@ -107,13 +112,15 @@ def has_multiple_text(code_dest: str, expected_list: list,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
     matches = {}
     for expected in expected_list:
         exected_regex = Regex(expected)
         result = False
         try:
             __matches = lang.check_grammar(exected_regex, code_dest,
-                                           LANGUAGE_SPECS, exclude)
+                                           lang_specs, exclude)
             try:
                 matches = {x: matches[x] + y for x, y in __matches.items()}
             except KeyError:
@@ -162,7 +169,7 @@ def file_exists(code_file: str) -> bool:
 @level('medium')
 @track
 def has_weak_cipher(code_dest: str, expected_text: str,
-                    exclude: list = None) -> bool:
+                    exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if code uses base 64 to cipher confidential data.
 
@@ -171,13 +178,15 @@ def has_weak_cipher(code_dest: str, expected_text: str,
     :param code_dest: Path to a code source file or package.
     :param expected_text: Text that might be in source file or package
     """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
     enc_text = base64.b64encode(expected_text.encode('utf-8'))
     prs_base64 = Literal(enc_text.decode('utf-8'))
 
     result = False
     try:
         b64_matches = lang.check_grammar(prs_base64, code_dest,
-                                         LANGUAGE_SPECS, exclude)
+                                         lang_specs, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
@@ -202,7 +211,8 @@ base64',
 
 @level('high')
 @track
-def has_secret(code_dest: str, secret: str, exclude: list = None) -> bool:
+def has_secret(code_dest: str, secret: str, exclude: list = None,
+               lang_specs: dict = None) -> bool:
     """
     Check if a secret is present in given source file.
 
@@ -212,11 +222,13 @@ def has_secret(code_dest: str, secret: str, exclude: list = None) -> bool:
     :param secret: Secret to look for in the file.
     :param exclude: Files to exclude.
     """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
     result = False
     secret_regex = Regex(secret)
     try:
         matches = lang.check_grammar(secret_regex, code_dest,
-                                     LANGUAGE_SPECS, exclude)
+                                     lang_specs, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(location=code_dest))
         return False
