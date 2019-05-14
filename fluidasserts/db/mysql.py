@@ -25,13 +25,15 @@ class ConnError(Exception):
 
 def _get_mysql_cursor(server: str,
                       username: str,
-                      password: str) -> mysql.connector.MySQLConnection:
+                      password: str,
+                      port: int) -> mysql.connector.MySQLConnection:
     """Get MySQL cursor."""
     try:
         mydb = mysql.connector.connect(
             host=server,
             user=username,
-            passwd=password
+            passwd=password,
+            port=port
         )
     except (mysql.connector.errors.InterfaceError,
             mysql.connector.errors.ProgrammingError) as exc:
@@ -42,10 +44,30 @@ def _get_mysql_cursor(server: str,
 
 @level('low')
 @track
-def test_db_exists(server: str, username: str, password: str) -> bool:
+def have_access(server: str, username: str, password: str,
+                port: int = 3306) -> bool:
+    """Check if there is access to database server."""
+    result = True
+    try:
+        _get_mysql_cursor(server, username, password, port)
+    except ConnError as exc:
+        show_unknown('Not access to server',
+                     details=dict(server=server, user=username,
+                                  error=str(exc)))
+        result = False
+    else:
+        show_open('Access to server verified',
+                  details=dict(server=server))
+    return result
+
+
+@level('low')
+@track
+def test_db_exists(server: str, username: str, password: str,
+                   port: int = 3306) -> bool:
     """Check if "test" database exists."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -69,10 +91,11 @@ def test_db_exists(server: str, username: str, password: str) -> bool:
 
 @level('medium')
 @track
-def local_infile_enabled(server: str, username: str, password: str) -> bool:
+def local_infile_enabled(server: str, username: str, password: str,
+                         port: int = 3306) -> bool:
     """Check if 'local_infile' parameter is set to ON."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -97,10 +120,11 @@ def local_infile_enabled(server: str, username: str, password: str) -> bool:
 
 @level('low')
 @track
-def symlinks_enabled(server: str, username: str, password: str) -> bool:
+def symlinks_enabled(server: str, username: str, password: str,
+                     port: str = 3306) -> bool:
     """Check if symbolic links are enabled on MySQL server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -125,10 +149,11 @@ def symlinks_enabled(server: str, username: str, password: str) -> bool:
 
 @level('low')
 @track
-def memcached_enabled(server: str, username: str, password: str) -> bool:
+def memcached_enabled(server: str, username: str, password: str,
+                      port: str = 3306) -> bool:
     """Check if memcached daemon is enabled on server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -155,10 +180,10 @@ PLUGIN_NAME='daemon_memcached'"
 @level('medium')
 @track
 def secure_file_priv_disabled(server: str, username: str,
-                              password: str) -> bool:
+                              password: str, port: int = 3306) -> bool:
     """Check if secure_file_priv is configured on server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -185,10 +210,10 @@ Variable_name = 'secure_file_priv' AND Value<>''"
 @level('medium')
 @track
 def strict_all_tables_disabled(server: str, username: str,
-                               password: str) -> bool:
+                               password: str, port: int = 3306) -> bool:
     """Check if STRICT_ALL_TABLES is enabled on MySQL server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -213,10 +238,11 @@ def strict_all_tables_disabled(server: str, username: str,
 
 @level('medium')
 @track
-def log_error_disabled(server: str, username: str, password: str) -> bool:
+def log_error_disabled(server: str, username: str, password: str,
+                       port: int = 3306) -> bool:
     """Check if 'log_error' parameter is set on MySQL server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -241,10 +267,11 @@ def log_error_disabled(server: str, username: str, password: str) -> bool:
 
 @level('medium')
 @track
-def logs_on_system_fs(server: str, username: str, password: str) -> bool:
+def logs_on_system_fs(server: str, username: str, password: str,
+                      port: int = 3306) -> bool:
     """Check if logs are stored on a system filesystem on server."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -270,10 +297,11 @@ def logs_on_system_fs(server: str, username: str, password: str) -> bool:
 
 @level('low')
 @track
-def logs_verbosity_low(server: str, username: str, password: str) -> bool:
+def logs_verbosity_low(server: str, username: str, password: str,
+                       port: int = 3306) -> bool:
     """Check if logs verbosity includes errors, warnings and notes."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -303,10 +331,11 @@ def logs_verbosity_low(server: str, username: str, password: str) -> bool:
 
 @level('high')
 @track
-def auto_creates_users(server: str, username: str, password: str) -> bool:
+def auto_creates_users(server: str, username: str, password: str,
+                       port: int = 3306) -> bool:
     """Check if 'NO_AUTO_CREATE_USER' param is set."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -337,10 +366,10 @@ def auto_creates_users(server: str, username: str, password: str) -> bool:
 @level('high')
 @track
 def has_users_without_password(server: str, username: str,
-                               password: str) -> bool:
+                               password: str, port: int = 3306) -> bool:
     """Check if users have a password set."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -369,10 +398,10 @@ def has_users_without_password(server: str, username: str,
 @level('high')
 @track
 def password_expiration_unsafe(server: str, username: str,
-                               password: str) -> bool:
+                               password: str, port: int = 3306) -> bool:
     """Check if password expiration time is safe."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -405,10 +434,10 @@ def password_expiration_unsafe(server: str, username: str,
 @level('high')
 @track
 def password_equals_to_user(server: str, username: str,
-                            password: str) -> bool:
+                            password: str, port: int = 3006) -> bool:
     """Check if users' password is the same username."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -438,10 +467,10 @@ WHERE BINARY password=CONCAT("*", UPPER(SHA1(UNHEX(SHA1(user)))))'
 @level('high')
 @track
 def users_have_wildcard_host(server: str, username: str,
-                             password: str) -> bool:
+                             password: str, port: int = 3306) -> bool:
     """Check if users have a wildcard host grants."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -469,10 +498,11 @@ def users_have_wildcard_host(server: str, username: str,
 
 @level('high')
 @track
-def not_use_ssl(server: str, username: str, password: str) -> bool:
+def not_use_ssl(server: str, username: str, password: str,
+                port: int = 3306) -> bool:
     """Check if MySQL server uses SSL."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,
@@ -498,10 +528,11 @@ def not_use_ssl(server: str, username: str, password: str) -> bool:
 
 @level('high')
 @track
-def ssl_unforced(server: str, username: str, password: str) -> bool:
+def ssl_unforced(server: str, username: str, password: str,
+                 port: int = 3306) -> bool:
     """Check if users are forced to use SSL."""
     try:
-        mydb = _get_mysql_cursor(server, username, password)
+        mydb = _get_mysql_cursor(server, username, password, port)
     except ConnError as exc:
         show_unknown('There was an error connecting to MySQL engine',
                      details=dict(server=server, user=username,

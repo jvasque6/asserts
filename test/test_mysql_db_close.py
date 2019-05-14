@@ -21,8 +21,15 @@ NON_EXISTANT = '0.0.0.0'
 
 
 #
-# Open tests
+# Close tests
 #
+
+
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
+def test_have_access_close(get_mock_ip):
+    """Check if there is access to MySQL server."""
+    assert not mysql.have_access(NON_EXISTANT, ADMIN_USER, ADMIN_PASS)
+
 
 @pytest.mark.parametrize('get_mock_ip', ['mysql_db_hard'], indirect=True)
 def test_test_db_present_close(get_mock_ip):

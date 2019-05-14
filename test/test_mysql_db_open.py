@@ -23,6 +23,11 @@ OS_PORT = 3306
 # Open tests
 #
 
+@pytest.mark.parametrize('get_mock_ip', ['mysql_db_weak'], indirect=True)
+def test_have_access_open(get_mock_ip):
+    """Check if there is access to MySQL server."""
+    assert mysql.have_access(get_mock_ip, ADMIN_USER, ADMIN_PASS)
+
 
 @pytest.mark.parametrize('get_mock_ip', ['mysql_db_weak'], indirect=True)
 def test_test_db_present_open(get_mock_ip):
