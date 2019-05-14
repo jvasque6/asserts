@@ -28,7 +28,8 @@ def test_cli():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_strict():
@@ -63,7 +64,8 @@ def test_cli_quiet():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-q", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_color():
@@ -71,7 +73,8 @@ def test_cli_color():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-n", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_http():
@@ -79,7 +82,8 @@ def test_cli_http():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-H", 'https://127.0.0.1']
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_ssl():
@@ -87,7 +91,8 @@ def test_cli_ssl():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-S", '127.0.0.1']
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_dns():
@@ -95,7 +100,8 @@ def test_cli_dns():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-D", '127.0.0.1']
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_lang():
@@ -103,7 +109,8 @@ def test_cli_lang():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-L", 'test/static/lang/csharp/']
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()
 
 
 def test_cli_filtered():
@@ -111,4 +118,5 @@ def test_cli_filtered():
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-cou", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
-        assert not cli.main()
+        with pytest.raises(SystemExit):
+            assert not cli.main()

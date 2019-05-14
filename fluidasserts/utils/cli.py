@@ -195,13 +195,22 @@ def colorize(parsed_content):
                   OUTFILE)
 
 
+def return_strict(condition):
+    """Return according to FA_STRICT value."""
+    if 'FA_STRICT' in os.environ:
+        if os.environ['FA_STRICT'] == 'true':
+            if condition:
+                return 1
+    return 0
+
+
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
         ret = [x for x in yaml.safe_load_all(content) if len(x) > 1]
     except yaml.scanner.ScannerError:  # pragma: no cover
         print(content, flush=True)
-        sys.exit(-1)
+        sys.exit(return_strict(True))
     else:
         return ret
 
@@ -335,11 +344,11 @@ def lint_exploit(exploit):
     if warnings:
         enable_win_colors()
         message = """
+---
+linting: warnings
+  {}
 
-- Asserts exploit linting warnings:
-  - {}
-
-""".format("\n  - ".join(warnings))
+""".format("\n  ".join(warnings))
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=UNKNOWN_COLORS),
                   sys.stderr)
@@ -500,7 +509,11 @@ npm.project_has_vulnerabilities('__code__')
 
 def exec_exploit(exploit):
     """Execute exploit file."""
-    return exec_wrapper(open(exploit).read())
+    try:
+        return exec_wrapper(open(exploit).read())
+    except FileNotFoundError:
+        print('Exploit not found')
+        sys.exit(return_strict(True))
 
 
 def get_content(args):
@@ -604,7 +617,4 @@ given files or directories')
 
     colorize_text(message, args.no_color)
 
-    if 'FA_STRICT' in os.environ:
-        if os.environ['FA_STRICT'] == 'true':
-            if open_checks:
-                sys.exit(1)
+    sys.exit(return_strict(open_checks))
