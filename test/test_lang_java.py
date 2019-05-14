@@ -123,18 +123,24 @@ def test_uses_sha1_hash_open_in_dir():
 
 
 def test_uses_des_algorithm_open():
-    """Search DES hash algorithm."""
+    """Search DES encryption algorithm."""
     assert java.uses_des_algorithm(INSECURE_CIPHER)
 
 
 def test_uses_des_algorithm_open_in_dir():
-    """Search DES hash algorithm."""
+    """Search DES encryption algorithm."""
     assert java.uses_des_algorithm(CODE_DIR)
 
 
 def test_has_log_injection_open():
     """Search log injection."""
     assert java.has_log_injection(INSECURE_CODE)
+
+
+def test_uses_insecure_cipher_open():
+    """Search DES encryption algorithm."""
+    assert java.uses_insecure_cipher(INSECURE_CIPHER, 'DES')
+
 
 #
 # Closing tests
@@ -198,7 +204,7 @@ def test_uses_sha1_hash_close():
 
 
 def test_uses_des_algorithm_close():
-    """Search DES hash algorithm."""
+    """Search DES encryption algorithm."""
     assert not java.uses_des_algorithm(SECURE_CIPHER)
     assert not java.uses_des_algorithm(CODE_DIR, exclude=['test'])
     assert not java.uses_des_algorithm(NON_EXISTANT_CODE)
@@ -209,3 +215,10 @@ def test_has_log_injection_close():
     assert not java.has_log_injection(SECURE_CODE)
     assert not java.has_log_injection(CODE_DIR, exclude=['test'])
     assert not java.has_log_injection(NON_EXISTANT_CODE)
+
+
+def test_uses_insecure_cipher_close():
+    """Search DES encryption algorithm."""
+    assert not java.uses_insecure_cipher(SECURE_CIPHER, 'DES')
+    assert not java.uses_insecure_cipher(CODE_DIR, 'DES', exclude=['test'])
+    assert not java.uses_insecure_cipher(NON_EXISTANT_CODE, 'DES')

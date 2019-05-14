@@ -22,7 +22,7 @@ class GenericExceptionsOpen{
       messageDigest2.update(data.getBytes());
       byte[] messageDigestSHA1 = messageDigest2.digest();
 
-      Cipher des = Cipher.getInstance("DES");
+      Cipher des = Cipher.getInstance("DES/ECB/PKCS5Padding");
       des.init(Cipher.ENCRYPT_MODE, secretKeySpec);
       byte[] encrypted = des.doFinal(input.getBytes("UTF-8"));
 

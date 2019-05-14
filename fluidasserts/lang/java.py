@@ -317,13 +317,65 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
 
 @level('medium')
 @track
+def uses_insecure_cipher(java_dest: str, algorithm: str,
+                         exclude: list = None) -> bool:
+    """
+    Check if code uses an insecure cipher algorithm.
+
+    See `REQ.148`_.
+    .. _REQ. 148: https://fluidattacks.com/web/en/rules/148/
+    See `REQ.149`_.
+    .. _REQ. 149: https://fluidattacks.com/web/en/rules/149/
+    :param java_dest: Path to a Java source file or package.
+    :param algorithm: Insecure algorithm.
+    """
+    method = 'Cipher.getInstance("{}")'.format(algorithm.upper())
+    tk_algo = CaselessKeyword(algorithm)
+    tk_mode = Literal('/') + oneOf('CBC ECB', caseless=True)
+    tk_padd = Literal('/') + oneOf('NoPadding PKCS5Padding', caseless=True)
+    tk_method = CaselessKeyword('cipher') + \
+        Literal('.') + CaselessKeyword('getinstance')
+    tk_arguments = Literal('"') + tk_algo + \
+        Optional(tk_mode + Optional(tk_padd)) + Literal('"')
+    instance = tk_method + Literal('(') + tk_arguments + Literal(')')
+
+    result = False
+    try:
+        matches = lang.check_grammar(instance, java_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_unknown('Not files matched',
+                         details=dict(code_dest=java_dest))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    for code_file, vulns in matches.items():
+        if vulns:
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   lines=", ".join([str(x) for x in vulns]),
+                                   total_vulns=len(vulns)))
+            result = True
+        else:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(file=code_file,
+                                    fingerprint=lang.
+                                    file_hash(code_file)))
+    return result
+
+
+@level('medium')
+@track
 def uses_insecure_hash(java_dest: str, algorithm: str,
                        exclude: list = None) -> bool:
     """
     Check if code uses an insecure hashing algorithm.
 
     See `REQ.150`_.
-    .. _REQ. 150: https://fluidattacks.com/web/es/rules/150/
+    .. _REQ. 150: https://fluidattacks.com/web/en/rules/150/
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
     """
@@ -332,11 +384,11 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
     tk_get_inst = CaselessKeyword('getinstance')
     tk_alg = Literal('"') + CaselessKeyword(algorithm.lower()) + Literal('"')
     tk_params = Literal('(') + tk_alg + Literal(')')
-    instance_md5 = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
+    instance = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
 
     result = False
     try:
-        matches = lang.check_grammar(instance_md5, java_dest, LANGUAGE_SPECS,
+        matches = lang.check_grammar(instance, java_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
             show_unknown('Not files matched',
@@ -396,42 +448,11 @@ def uses_des_algorithm(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses DES as encryption algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/149/>`_.
+    See `REQ.149 <https://fluidattacks.com/web/en/rules/149/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
-    method = 'Cipher.getInstance("DES")'
-    tk_mess_dig = CaselessKeyword('cipher')
-    tk_get_inst = CaselessKeyword('getinstance')
-    tk_alg = Literal('"') + CaselessKeyword('des') + Literal('"')
-    tk_params = Literal('(') + tk_alg + Literal(')')
-    instance_des = tk_mess_dig + Literal('.') + tk_get_inst + tk_params
-
-    result = False
-    try:
-        matches = lang.check_grammar(instance_des, java_dest, LANGUAGE_SPECS,
-                                     exclude)
-        if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
-            return False
-    except FileNotFoundError:
-        show_unknown('File does not exist', details=dict(code_dest=java_dest))
-        return False
-    for code_file, vulns in matches.items():
-        if vulns:
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    result: bool = uses_insecure_cipher(java_dest, 'DES', exclude)
     return result
 
 

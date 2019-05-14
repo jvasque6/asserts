@@ -17,7 +17,7 @@ class GenericExceptionsClose{
          messageDigest.update(data.getBytes());
          byte[] messageDigestSHA256 = messageDigest.digest();
 
-         Cipher aes = Cipher.getInstance("AES");
+         Cipher aes = Cipher.getInstance("AES/ECB/PKCS5Padding");
          aes.init(Cipher.ENCRYPT_MODE, secretKeySpec);
          byte[] encrypted = aes.doFinal(input.getBytes("UTF-8"));
 
