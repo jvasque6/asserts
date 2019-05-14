@@ -164,6 +164,37 @@ def enable_win_colors():
                                                       wrap=True)
 
 
+def colorize_text(message, without_color=False):
+    """Colorize text content."""
+    if without_color:
+        print(message, end='')
+    else:
+        enable_win_colors()
+        highlight(message, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=SUMMARY_COLORS),
+                  OUTFILE)
+
+
+def colorize(parsed_content):
+    """Colorize content."""
+    enable_win_colors()
+    for node in parsed_content:
+        if node['status'] == 'OPEN':
+            style = OPEN_COLORS
+        elif node['status'] == 'CLOSED':
+            style = CLOSE_COLORS
+        elif node['status'] == 'UNKNOWN':
+            style = UNKNOWN_COLORS
+        else:
+            style = SUMMARY_COLORS
+
+        message = yaml.safe_dump(node, default_flow_style=False,
+                                 explicit_start=True)
+        highlight(message, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=style),
+                  OUTFILE)
+
+
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
@@ -241,37 +272,6 @@ def get_risk_levels(parsed_content):
     return risk_level
 
 
-def colorize_text(message, args):
-    """Colorize text content."""
-    if args.no_color:
-        print(message, end='')
-    else:
-        enable_win_colors()
-        highlight(message, PropertiesLexer(),
-                  TerminalFormatter(colorscheme=SUMMARY_COLORS),
-                  OUTFILE)
-
-
-def colorize(parsed_content):
-    """Colorize content."""
-    enable_win_colors()
-    for node in parsed_content:
-        if node['status'] == 'OPEN':
-            style = OPEN_COLORS
-        elif node['status'] == 'CLOSED':
-            style = CLOSE_COLORS
-        elif node['status'] == 'UNKNOWN':
-            style = UNKNOWN_COLORS
-        else:
-            style = SUMMARY_COLORS
-
-        message = yaml.safe_dump(node, default_flow_style=False,
-                                 explicit_start=True)
-        highlight(message, PropertiesLexer(),
-                  TerminalFormatter(colorscheme=style),
-                  OUTFILE)
-
-
 def print_message(message, args):
     """Print message according to args."""
     if args.no_color:
@@ -293,7 +293,7 @@ def show_banner(args):
 # Loading attack modules ...
 """.format(fluidasserts.__version__)
 
-    colorize_text(header, args)
+    colorize_text(header, args.no_color)
 
 
 @contextlib.contextmanager
@@ -307,8 +307,47 @@ def std_redir(stdout=None):
     sys.stdout = old
 
 
+def lint_exploit(exploit):
+    """Verify Asserts exploit guidelines against given exploit code."""
+    import re
+    rules = {
+        '001': {
+            'description':
+            'Avoid importing requests. Use fluidasserts.helper.http instead.',
+            'regexes':
+                ['import requests', 'from requests import']
+        },
+        '002': {
+            'description':
+            'Avoid hardcoding session cookies.',
+            'regexes':
+                ['[cC]ookie: ']
+        }
+    }
+    warnings = []
+    for rule in rules:
+        for regex in rules[rule]['regexes']:
+            match = re.search(regex, exploit)
+            if match:
+                warnings.append('{}: {}'.format(rule,
+                                                rules[rule]['description']))
+
+    if warnings:
+        enable_win_colors()
+        message = """
+
+- Asserts exploit linting warnings:
+  - {}
+
+""".format("\n  - ".join(warnings))
+        highlight(message, PropertiesLexer(),
+                  TerminalFormatter(colorscheme=UNKNOWN_COLORS),
+                  sys.stderr)
+
+
 def exec_wrapper(exploit):
     """Execute exploit wrapper."""
+    lint_exploit(exploit)
     with std_redir() as exploit_result:
         code = compile(exploit, 'exploit', 'exec', optimize=0)
         exec(code)
@@ -563,7 +602,7 @@ given files or directories')
     message = yaml.safe_dump(final_message, default_flow_style=False,
                              explicit_start=True)
 
-    colorize_text(message, args)
+    colorize_text(message, args.no_color)
 
     if 'FA_STRICT' in os.environ:
         if os.environ['FA_STRICT'] == 'true':
