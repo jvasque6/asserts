@@ -273,7 +273,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -322,10 +322,9 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
     """
     Check if code uses an insecure cipher algorithm.
 
-    See `REQ.148`_.
-    .. _REQ. 148: https://fluidattacks.com/web/en/rules/148/
-    See `REQ.149`_.
-    .. _REQ. 149: https://fluidattacks.com/web/en/rules/149/
+    See `REQ.148 <https://fluidattacks.com/web/en/rules/148/>`_.
+    See `REQ.149 <https://fluidattacks.com/web/en/rules/149/>`_.
+
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
     """
@@ -374,8 +373,8 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
     """
     Check if code uses an insecure hashing algorithm.
 
-    See `REQ.150`_.
-    .. _REQ. 150: https://fluidattacks.com/web/en/rules/150/
+    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
+
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
     """
@@ -420,7 +419,7 @@ def uses_md5_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150`_.
+    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -434,7 +433,7 @@ def uses_sha1_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150`_.
+    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -463,7 +462,9 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
     Search code injection.
 
     Check if the code does not neutralize or incorrectly neutralizes
-    output that is written to logs (CWE-117).
+    output that is written to logs.
+
+    See `CWE-117 <https://cwe.mitre.org/data/definitions/117.html>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
