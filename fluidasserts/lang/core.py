@@ -155,7 +155,7 @@ def file_exists(code_file: str) -> bool:
 
     :param code_file: Path to the file to be tested.
     """
-    if os.path.isfile(code_file):
+    if os.path.exists(code_file):
         show_open('File exists',
                   details=dict(path=code_file,
                                fingerprint=lang.file_hash(code_file)))
