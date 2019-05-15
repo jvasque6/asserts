@@ -1056,8 +1056,6 @@ def has_dirlisting(url: str, *args, **kwargs) -> bool:
     Check if the given URL has directory listing enabled.
 
     Looks for the text "Index of" to test if directories can be listed.
-    See our `blog entry on the topic
-    <https://fluidattacks.com/web/es/blog/apache-ocultar-tienda/>`_.
 
     :param url: URL to test.
     :param \*args: Optional arguments for :class:`.HTTPSession`.

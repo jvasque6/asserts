@@ -89,7 +89,7 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """
@@ -139,7 +139,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """
@@ -193,7 +193,7 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
     """
     Check if code instantiates ``Random`` class.
 
-    See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
+    See `REQ.224 <https://fluidattacks.com/web/en/rules/224/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """
@@ -239,7 +239,7 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """
@@ -289,7 +289,7 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """
@@ -341,7 +341,7 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses SHA1 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/es/rules/150/>`_.
+    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
     """

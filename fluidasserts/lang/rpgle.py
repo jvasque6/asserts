@@ -82,9 +82,6 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for unitialized variables.
 
-    See `FLUIDDefends
-    <https://fluidattacks.com/web/es/defends/rpg/inicializar-variables/>`_.
-
     :param rpg_dest: Path to a RPG source or directory.
     """
     tk_data = Keyword('D')
@@ -133,8 +130,8 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for on-error empty.
 
-    See `FLUIDRules
-    <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ. 161
+    <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
     """
@@ -175,8 +172,8 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     """
     Search for on-error without code.
 
-    See `FLUIDRules
-    <https://fluidattacks.com/web/es/rules/075>`_.
+    See `REQ.075
+    <https://fluidattacks.com/web/en/rules/075>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
     """

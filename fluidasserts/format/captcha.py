@@ -47,8 +47,6 @@ def is_insecure_in_url(image_url: str, expected_text: str,
 
     The check is performed by converting the image to text and
     comparing with the given expected text.
-    See `our blog entry on the topic
-    <https://fluidattacks.com/web/es/blog/captcha-misteriosa/>`_.
 
     :param image_url: Path to the image to be tested.
     :param expected_text: Text the image might contain.

@@ -157,7 +157,7 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if code uses ``Math.Random()``\ .
 
-    See `REQ.224 <https://fluidattacks.com/web/es/rules/224/>`_.
+    See `REQ.224 <https://fluidattacks.com/web/en/rules/224/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
     """
@@ -200,7 +200,7 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
     """
@@ -245,7 +245,7 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
     """
@@ -298,7 +298,7 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/es/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
     """
