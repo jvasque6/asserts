@@ -331,6 +331,12 @@ def lint_exploit(exploit):
             'Avoid hardcoding session cookies.',
             'regexes':
                 ['[cC]ookie: ']
+        },
+        '003': {
+            'description':
+            'Avoid printing aditional info in asserts using print().',
+            'regexes':
+                [r'print[\s]*\(']
         }
     }
     warnings = []
