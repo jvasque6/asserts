@@ -179,13 +179,14 @@ def colorize(parsed_content):
     """Colorize content."""
     enable_win_colors()
     for node in parsed_content:
-        if node['status'] == 'OPEN':
-            style = OPEN_COLORS
-        elif node['status'] == 'CLOSED':
-            style = CLOSE_COLORS
-        elif node['status'] == 'UNKNOWN':
-            style = UNKNOWN_COLORS
-        else:
+        try:
+            if node['status'] == 'OPEN':
+                style = OPEN_COLORS
+            elif node['status'] == 'CLOSED':
+                style = CLOSE_COLORS
+            elif node['status'] == 'UNKNOWN':
+                style = UNKNOWN_COLORS
+        except KeyError:
             style = SUMMARY_COLORS
 
         message = yaml.safe_dump(node, default_flow_style=False,
@@ -207,7 +208,7 @@ def return_strict(condition):
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
-        ret = [x for x in yaml.safe_load_all(content) if len(x) > 1]
+        ret = [x for x in yaml.safe_load_all(content) if len(x) > 0]
     except yaml.scanner.ScannerError:  # pragma: no cover
         print(content, flush=True)
         sys.exit(return_strict(True))
@@ -222,17 +223,20 @@ def get_total_checks(output_list):
 
 def get_total_open_checks(output_list):
     """Get total open checks."""
-    return sum(output['status'] == 'OPEN' for output in output_list)
+    return sum(output['status'] == 'OPEN' for output in output_list
+               if 'status' in output)
 
 
 def get_total_closed_checks(output_list):
     """Get total closed checks."""
-    return sum(output['status'] == 'CLOSED' for output in output_list)
+    return sum(output['status'] == 'CLOSED' for output in output_list
+               if 'status' in output)
 
 
 def get_total_unknown_checks(output_list):
     """Get total unknown checks."""
-    return sum(output['status'] == 'UNKNOWN' for output in output_list)
+    return sum(output['status'] == 'UNKNOWN' for output in output_list
+               if 'status' in output)
 
 
 def filter_content(parsed_content, args):
@@ -253,11 +257,14 @@ def get_risk_levels(parsed_content):
     """Get risk levels of opened checks."""
     try:
         high_risk = sum(x['status'] == 'OPEN' and
-                        x['risk-level'] == 'high' for x in parsed_content)
+                        x['risk-level'] == 'high' for x in parsed_content
+                        if 'status' and 'risk-level' in x)
         medium_risk = sum(x['status'] == 'OPEN' and
-                          x['risk-level'] == 'medium' for x in parsed_content)
+                          x['risk-level'] == 'medium' for x in parsed_content
+                          if 'status' and 'risk-level' in x)
         low_risk = sum(x['status'] == 'OPEN' and
-                       x['risk-level'] == 'low' for x in parsed_content)
+                       x['risk-level'] == 'low' for x in parsed_content
+                       if 'status' and 'risk-level' in x)
 
         opened = get_total_open_checks(parsed_content)
 
@@ -334,7 +341,7 @@ def lint_exploit(exploit):
         },
         '003': {
             'description':
-            'Avoid printing aditional info in asserts using print().',
+            'Avoid printing aditional info in Asserts using print().',
             'regexes':
                 [r'print[\s]*\(']
         }

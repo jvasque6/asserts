@@ -14,6 +14,7 @@ from typing import Callable
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts import show_metadata
 from fluidasserts.utils.decorators import track, level
 
 
@@ -53,3 +54,20 @@ def check_function(func: Callable, *args, **kwargs):
                                     args=args, kwargs=kwargs,
                                     ret=ret))
         return bool(ret)
+
+
+def add_info(metadata: dict):
+    """Print arbitrary info in the Asserts output.
+
+    :param metadata: Dict with data to be printed.
+    """
+    show_metadata(metadata)
+    return True
+
+
+def add_finding(finding: str):
+    """Print finding as part of the Asserts output.
+
+    :param finding: Current project context.
+    """
+    return add_info({'finding': finding})
