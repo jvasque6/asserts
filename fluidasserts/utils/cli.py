@@ -219,7 +219,7 @@ def get_parsed_output(content):
 
 def get_total_checks(output_list):
     """Get total checks."""
-    return len(output_list)
+    return sum(1 for output in output_list if 'status' in output)
 
 
 def get_total_open_checks(output_list):
