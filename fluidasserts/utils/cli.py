@@ -6,6 +6,7 @@
 
 # standard imports
 from io import StringIO
+from timeit import default_timer as timer
 import contextlib
 import argparse
 import os
@@ -594,7 +595,10 @@ given files or directories')
     check_boolean_env_var('FA_STRICT')
     check_boolean_env_var('FA_NOTRACK')
 
+    start_time = timer()
     parsed = get_content(args)
+    end_time = timer()
+    elapsed_time = end_time - start_time
 
     if not args.quiet:
         if args.show_open or args.show_closed or args.show_unknown:
@@ -609,6 +613,7 @@ given files or directories')
 
     final_message = {
         'summary': {
+            'test time': '%.4f seconds' % elapsed_time,
             'checks': {
                 'total': '{} ({}%)'.format(total_checks, '100'),
                 'unknown':
