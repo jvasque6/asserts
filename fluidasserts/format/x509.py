@@ -79,7 +79,7 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     Check if certificate Common Name (CN) is different from given sitename.
 
     Name in certificate should be coherent with organization name, see
-    `REQ. 093 <https://fluidattacks.com/web/es/rules/093/>`_
+    `REQ. 093 <https://fluidattacks.com/web/en/rules/093/>`_
 
     :param site: Site address.
     :param port: Port to connect to.
