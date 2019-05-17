@@ -68,6 +68,18 @@ def test_cli_quiet():
             assert not cli.main()
 
 
+def test_cli_output():
+    """Run CLI output option."""
+    log_file = "log.asserts"
+    os.environ['FA_STRICT'] = 'false'
+    testargs = ["asserts", "-q", "-O", log_file, ASSERTS_EXPLOIT]
+    with patch.object(sys, 'argv', testargs):
+        with pytest.raises(SystemExit):
+            cli.main()
+            assert os.path.exists(log_file)
+            os.unlink(log_file)
+
+
 def test_cli_color():
     """Run CLI in without colors."""
     os.environ['FA_STRICT'] = 'false'

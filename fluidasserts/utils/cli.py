@@ -574,6 +574,8 @@ def main():
     argparser.add_argument('-u', '--show-unknown',
                            help='show only unknown (error) checks',
                            action='store_true')
+    argparser.add_argument('-O', '--output', nargs=1, metavar='FILE',
+                           help='save output in FILE')
     argparser.add_argument('-H', '--http', nargs='+', metavar='URL',
                            help='perform generic HTTP checks over given URL')
     argparser.add_argument('-S', '--ssl', nargs='+', metavar='IP',
@@ -636,5 +638,12 @@ given files or directories')
                              explicit_start=True)
 
     colorize_text(message, args.no_color)
+
+    if args.output:
+        with open(args.output[0], 'a+') as fd_out:
+            result = yaml.safe_dump(parsed, default_flow_style=False,
+                                    explicit_start=True)
+            fd_out.write(result)
+            fd_out.write(message)
 
     sys.exit(return_strict(open_checks))
