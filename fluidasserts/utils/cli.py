@@ -242,15 +242,17 @@ def get_total_unknown_checks(output_list):
 
 def filter_content(parsed_content, args):
     """Show filtered content according to args."""
-    opened_nodes = filter(lambda x: x['status'] == 'OPEN' and args.show_open,
-                          parsed_content)
+    only_checks = filter(lambda x: 'status' in x, parsed_content)
+
+    opened_nodes = filter(lambda x: x['status'] == 'OPEN' and
+                          args.show_open,
+                          only_checks)
     closed_nodes = filter(lambda x: x['status'] == 'CLOSED' and
                           args.show_closed,
-                          parsed_content)
+                          only_checks)
     unknown_nodes = filter(lambda x: x['status'] == 'UNKNOWN' and
                            args.show_unknown,
-                           parsed_content)
-
+                           only_checks)
     return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
 
 
