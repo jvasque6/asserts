@@ -47,6 +47,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
         if vulns:
             show_open('Bad text present in code',
                       details=dict(file=code_file,
+                                   bad_text=expected_text,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
@@ -87,6 +88,7 @@ def has_not_text(code_dest: str, expected_text: str,
         if not vulns:
             show_open('Expected text not present in code',
                       details=dict(file=code_file,
+                                   expected_text=expected_text,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
