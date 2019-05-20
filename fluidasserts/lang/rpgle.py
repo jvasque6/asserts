@@ -113,14 +113,14 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
                                    file_hash(code_file),
                                    lines=", ".join([str(x) for x in vulns]),
                                    total_vulns=len(vulns)),
-                      refs='rpg/inicializar-variables/')
+                      refs=None)
             result = True
         else:
             show_close('Code does not have unitialized variables',
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)),
-                       refs='rpg/inicializar-variables/')
+                       refs=None)
     return result
 
 
