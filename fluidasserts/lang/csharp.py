@@ -8,7 +8,7 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        alphanums, Suppress, nestedExpr, cppStyleComment,
-                       SkipTo)
+                       SkipTo, Keyword)
 
 # local imports
 from fluidasserts.helper import lang
@@ -197,16 +197,19 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
 
     :param csharp_dest: Path to a C# source file or package.
     """
-    tk_class = CaselessKeyword('random')
-    tk_variable = Word(alphanums)
-    tk_new = CaselessKeyword('new')
+    tk_new = Keyword('new')
+    tk_var = Keyword('var')
+    tk_equal = Literal('=')
     tk_params = nestedExpr()
-    call_function = tk_class + tk_variable + Literal('=') + tk_new + \
-        tk_class + Suppress(tk_params)
+    tk_random = Keyword('Random')
+    tk_variable = Word(alphas + '_', alphanums + '_')
+
+    instantiation = (tk_var | tk_random) + tk_variable + tk_equal + tk_new + \
+        tk_random + Suppress(tk_params)
 
     result = False
     try:
-        random_new = lang.check_grammar(call_function, csharp_dest,
+        random_new = lang.check_grammar(instantiation, csharp_dest,
                                         LANGUAGE_SPECS, exclude)
         if not random_new:
             show_unknown('Not files matched',

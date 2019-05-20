@@ -6,7 +6,7 @@ public class SwitchDefaultOpen{
 
       byte[] bytes1 = new byte[100];
       byte[] bytes2 = new byte[100];
-      Random rnd1 = new Random();
+      var rnd1 = new Random();
       Random rnd2 = new Random();
 
       rnd1.NextBytes(bytes1);
