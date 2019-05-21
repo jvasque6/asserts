@@ -8,7 +8,7 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
-                       SkipTo, QuotedString, oneOf)
+                       SkipTo, QuotedString, oneOf, Keyword, MatchFirst)
 
 # local imports
 from fluidasserts.helper import lang
@@ -227,32 +227,41 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
 @track
 def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
     r"""
-    Check if code uses ``Math.Random()``\ .
+    Check if code uses insecure random generators.
+
+    - ``java.util.Random()``.
+    - ``java.lang.Math.random()``.
 
     See `REQ.224 <https://fluidattacks.com/web/en/rules/224/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
-    method = "Math.random()"
-    tk_class = CaselessKeyword('math')
-    tk_method = CaselessKeyword('random')
-    tk_params = nestedExpr()
-    call_function = tk_class + Literal('.') + tk_method + Suppress(tk_params)
+    tk_dot = Literal('.')
+    tk_new = Keyword('new')
+    tk_math = Keyword('Math')
+    tk_equal = Literal('=')
+    tk_params = Suppress(nestedExpr())
+    tk_random = CaselessKeyword('random')
+    tk_javavar = Word(alphas + '$_', alphanums + '_')
+    insecure_methods = 'java.util.Random() or java.lang.Math.random()'
+    insecure_randoms = [
+        tk_random + tk_javavar + tk_equal + tk_new + tk_random + tk_params,
+        tk_math + tk_dot + tk_random + tk_params,
+    ]
 
     result = False
     try:
-        matches = lang.check_grammar(call_function, java_dest,
-                                     LANGUAGE_SPECS, exclude)
-        if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
-            return False
+        matches = lang.check_grammar(
+            MatchFirst(insecure_randoms), java_dest, LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
+    if not matches:
+        show_unknown('Not files matched', details=dict(code_dest=java_dest))
+        return False
     for code_file, vulns in matches.items():
         if vulns:
-            show_open('Code uses {} method'.format(method),
+            show_open('Code uses {} method'.format(insecure_methods),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
@@ -260,7 +269,7 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
                                    total_vulns=len(vulns)))
             result = True
         else:
-            show_close('Code does not use {} method'.format(method),
+            show_close('Code does not use {} method'.format(insecure_methods),
                        details=dict(file=code_file,
                                     fingerprint=lang.
                                     file_hash(code_file)))

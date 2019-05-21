@@ -61,7 +61,11 @@ def test_swallows_exceptions_open():
     capt_out = io.StringIO()
     temp_stdout = sys.stdout
     sys.stdout = capt_out
-    expected = LINES_FORMAT + '12, 15'
+    # Given this test fails
+    # And you didn't modified this method
+    # But you touched test/static/lang/java/EmptyCatchOpen.java
+    # Then update the line below accordingly
+    expected = LINES_FORMAT + '18, 21'
     assert java.swallows_exceptions(INSECURE_EMPTY_CATCH)
     sys.stdout = temp_stdout
     assert expected in capt_out.getvalue()
