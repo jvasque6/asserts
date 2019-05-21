@@ -142,6 +142,7 @@ def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
     :param \*args: Optional arguments for :class:`.HTTPSession`.
     :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
     """
+    result = True
     try:
         http_session = http.HTTPSession(url, *args, **kwargs)
         headers_info = http_session.response.headers
