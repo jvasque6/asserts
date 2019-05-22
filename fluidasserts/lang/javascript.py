@@ -51,25 +51,21 @@ def uses_console_log(js_dest: str, exclude: list = None) -> bool:
     try:
         matches = lang.check_grammar(clog, js_dest, LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -89,25 +85,21 @@ def uses_eval(js_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(call_function, js_dest,
                                      LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -129,25 +121,21 @@ def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
     try:
         matches = lang.check_grammar(lsto, js_dest, LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -172,25 +160,21 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(call_function, js_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -214,7 +198,8 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
         catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS,
                                      exclude)
         if not catches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not have catches',
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
@@ -267,7 +252,8 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
         switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS,
                                       exclude)
         if not switches:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not have switches',
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
@@ -314,7 +300,8 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     try:
         conds = lang.check_grammar(if_head, js_dest, LANGUAGE_SPECS, exclude)
         if not conds:
-            show_unknown('Not files matched', details=dict(code_dest=js_dest))
+            show_close('Code does not have conditionals',
+                       details=dict(code_dest=js_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))

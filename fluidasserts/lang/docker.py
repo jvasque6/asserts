@@ -43,24 +43,19 @@ def not_pinned(file_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(pinned, file_dest,
                                      LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=file_dest))
+            show_close('Dockerfile has pinned base image(s)',
+                       details=dict(code_dest=file_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=file_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Dockerfile uses unpinned base image(s)',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Dockerfile has pinned base image(s)',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result

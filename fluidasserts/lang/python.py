@@ -65,25 +65,21 @@ def has_generic_exceptions(py_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(generic_exception, py_dest,
                                      LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=py_dest))
+            show_close('Code does not use generic exceptions',
+                       details=dict(code_dest=py_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use generic exceptions',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -114,7 +110,8 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(parser_exception, py_dest,
                                      LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=py_dest))
+            show_close('Code does not have excepts',
+                       details=dict(code_dest=py_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=py_dest))

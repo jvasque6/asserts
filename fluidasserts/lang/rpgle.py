@@ -54,25 +54,21 @@ def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(dos_dow_sqlcod, rpg_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            show_close('Code does not have DoS for using "DoW SQLCOD = 0"',
+                       details=dict(code_dest=rpg_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code has DoS for using "DoW SQLCOD = 0"',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not have DoS for using "DoW SQLCOD = 0"',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -100,13 +96,15 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(unitialized, rpg_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            show_close('Code does not have unitialized variables',
+                       details=dict(code_dest=rpg_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code has unitialized variables',
                       details=dict(file=code_file,
                                    fingerprint=lang.
@@ -114,13 +112,6 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)),
                       refs=None)
-            result = True
-        else:
-            show_close('Code does not have unitialized variables',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)),
-                       refs=None)
     return result
 
 
@@ -144,25 +135,21 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            show_close('Code does not have empty monitors',
+                       details=dict(code_dest=rpg_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code has empty monitors',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not have empty monitors',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -189,7 +176,8 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(tk_monitor, rpg_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched', details=dict(code_dest=rpg_dest))
+            show_unknown('Code does not have error handling',
+                         details=dict(code_dest=rpg_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
