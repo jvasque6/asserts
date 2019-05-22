@@ -141,48 +141,62 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
 
     See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
 
+    See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
+
     :param csharp_dest: Path to a C# source file or package.
     """
-    tk_switch = CaselessKeyword('switch')
-    tk_case = CaselessKeyword('case') + (Word(alphanums))
-    tk_default = CaselessKeyword('default')
-    tk_break = CaselessKeyword('break') + Literal(';')
+    # I'm disabling this in the local scope because vars make this code easier
+    # pylint: disable=too-many-locals
+    tk_colon = Literal(':')
+    tk_lbrace = Literal('{')
+    tk_semicolon = Literal(';')
+    tk_statement = SkipTo(tk_semicolon)
+    tk_expression = SkipTo(tk_colon)
+
+    tk_case = Keyword('case') + tk_expression + tk_colon
+    tk_default = Keyword('default') + tk_expression + tk_colon
+
+    tk_break = Keyword('break') + tk_statement + tk_semicolon
+    tk_throw = Keyword('throw') + tk_statement + tk_semicolon
+    tk_return = Keyword('return') + tk_statement + tk_semicolon
+
+    tk_finish = tk_break | tk_return | tk_throw
+
     def_stmt = Or([Suppress(tk_case), tk_default]) + \
-        Suppress(Literal(':') + SkipTo(tk_break, include=True))
-    prsr_sw = tk_switch + nestedExpr()
-    switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
-    sw_wout_def = (Suppress(prsr_sw) +
-                   nestedExpr(opener='{', closer='}',
-                              content=def_stmt)).ignore(cppStyleComment)
+        Suppress(SkipTo(tk_finish, include=True))
+
+    switch_decl = Keyword('switch') + nestedExpr()
+    switch_head = switch_decl + Optional(tk_lbrace)
+    switch_without_default = Suppress(switch_decl) + \
+        nestedExpr(opener='{', closer='}', content=def_stmt)
+    switch_without_default = switch_without_default.ignore(cppStyleComment)
 
     result = False
+    msg = 'Code {} "default" case in "switch" statement'
     try:
-        switches = lang.check_grammar(switch_head, csharp_dest,
-                                      LANGUAGE_SPECS, exclude)
-        if not switches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=csharp_dest))
-            return False
+        switches = lang.check_grammar(
+            switch_head, csharp_dest, LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
-        show_unknown('File does not exist',
-                     details=dict(code_dest=csharp_dest))
+        show_unknown('File does not exist', details={'code_dest': csharp_dest})
+        return False
+    if not switches:
+        show_unknown('Not files matched', details={'code_dest': csharp_dest})
         return False
     for code_file, lines in switches.items():
-        vulns = lang.block_contains_empty_grammar(sw_wout_def,
-                                                  code_file, lines,
-                                                  _get_block)
+        vulns = lang.block_contains_empty_grammar(
+            switch_without_default, code_file, lines, _get_block)
         if not vulns:
-            show_close('Code has "switch" with "default" clause',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+            show_close(msg.format('does have'), details={
+                'file': code_file,
+                'fingerprint': lang.file_hash(code_file)
+            })
         else:
-            show_open('Code does not have "switch" with "default" clause',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
-                                   total_vulns=len(vulns)))
+            show_open(msg.format('is missing'), details={
+                'file': code_file,
+                'lines': ", ".join([str(x) for x in vulns]),
+                'total_vulns': len(vulns),
+                'fingerprint': lang.file_hash(code_file),
+            })
             result = True
     return result
 

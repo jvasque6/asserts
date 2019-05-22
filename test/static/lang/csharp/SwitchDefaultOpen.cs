@@ -58,5 +58,13 @@ public class SwitchDefaultOpen{
             //monthString = "Invalid month";
                   //break;
       }
+
+      switch (destinationType)
+      {
+         case NotificationDestinationType.Email:
+            return source.Users.Select(u => u.Email ?? string.Empty);
+         /*default:
+            throw new NotSupportedException(string.Format("'{0}' destination type.", destinationType.ToString()));*/
+      }
    }
 }
