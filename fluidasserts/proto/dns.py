@@ -254,7 +254,7 @@ def can_amplify(nameserver: str) -> bool:
                                dns.rdatatype.OPT, create=True,
                                force_unique=True)
             response = dns.query.udp(request, nameserver, timeout=5)
-            resp_len = sum([len(x.to_text()) for x in response.answer])
+            resp_len = sum(len(x.to_text()) for x in response.answer)
             req_len = len(request.to_text())
             if req_len < resp_len:
                 show_open('Amplification attack is possible on server',

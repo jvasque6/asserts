@@ -208,10 +208,10 @@ def _check_grammar_in_dir(grammar: ParserElement, code_dest: str,
     vulns = {}
 
     for full_path in _scantree(code_dest):
-        if sum(x in full_path.path for x in exclude):
-            continue
-        __vulns = _check_grammar_in_file(grammar, full_path.path, lang_spec)
-        vulns.update(__vulns)
+        if not any(x in full_path.path for x in exclude):
+            __vulns = \
+                _check_grammar_in_file(grammar, full_path.path, lang_spec)
+            vulns.update(__vulns)
     return vulns
 
 

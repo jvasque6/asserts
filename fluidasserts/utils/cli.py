@@ -226,20 +226,20 @@ def get_total_checks(output_list):
 
 def get_total_open_checks(output_list):
     """Get total open checks."""
-    return sum(output['status'] == 'OPEN' for output in output_list
-               if 'status' in output)
+    return sum(1 for output in output_list
+               if 'status' in output and output['status'] == 'OPEN')
 
 
 def get_total_closed_checks(output_list):
     """Get total closed checks."""
-    return sum(output['status'] == 'CLOSED' for output in output_list
-               if 'status' in output)
+    return sum(1 for output in output_list
+               if 'status' in output and output['status'] == 'CLOSED')
 
 
 def get_total_unknown_checks(output_list):
     """Get total unknown checks."""
-    return sum(output['status'] == 'UNKNOWN' for output in output_list
-               if 'status' in output)
+    return sum(1 for output in output_list
+               if 'status' in output and output['status'] == 'UNKNOWN')
 
 
 def filter_content(parsed_content, args):
@@ -261,15 +261,13 @@ def filter_content(parsed_content, args):
 def get_risk_levels(parsed_content):
     """Get risk levels of opened checks."""
     try:
-        high_risk = sum(x['status'] == 'OPEN' and
-                        x['risk-level'] == 'high' for x in parsed_content
-                        if 'status' and 'risk-level' in x)
-        medium_risk = sum(x['status'] == 'OPEN' and
-                          x['risk-level'] == 'medium' for x in parsed_content
-                          if 'status' and 'risk-level' in x)
-        low_risk = sum(x['status'] == 'OPEN' and
-                       x['risk-level'] == 'low' for x in parsed_content
-                       if 'status' and 'risk-level' in x)
+        filtered = (
+            x for x in parsed_content
+            if 'status' in x and 'risk-level' in x and x['status'] == 'OPEN')
+
+        high_risk = sum(1 for x in filtered if x['risk-level'] == 'high')
+        medium_risk = sum(1 for x in filtered if x['risk-level'] == 'medium')
+        low_risk = sum(1 for x in filtered if x['risk-level'] == 'low')
 
         opened = get_total_open_checks(parsed_content)
 
