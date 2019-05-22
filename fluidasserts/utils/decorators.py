@@ -2,11 +2,17 @@
 
 """This module enables decorators for registry and usage tracking purposes."""
 
+# standard imports
+import sys
 import functools
 from typing import Callable, Any
+from .tracking import mp_track
+
+# 3rd party imports
 import yaml
 
-from .tracking import mp_track
+# local imports
+from fluidasserts.utils.cli import colorize_text
 
 
 def track(func: Callable) -> Callable:
@@ -26,6 +32,8 @@ def level(risk_level: str) -> Callable:
         @functools.wraps(func)
         def decorated(*args, **kwargs) -> Any:  # noqa
             """Give a risk level to each check."""
+            msg = '- Running: ' + func.__module__ + ' -> ' + func.__name__
+            colorize_text(msg, outfile=sys.stderr)
             ret_val = func(*args, **kwargs)
             risk = {'risk-level': risk_level}
             message = yaml.safe_dump(risk, default_flow_style=False,

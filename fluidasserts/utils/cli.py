@@ -153,7 +153,10 @@ def enable_win_colors():
     """Enable windows colors."""
     global OUTFILE
     if sys.platform in ('win32', 'cygwin'):  # pragma: no cover
-        OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+        try:
+            OUTFILE = UnclosingTextIOWrapper(sys.stdout.buffer)
+        except AttributeError:
+            pass
         try:
             import colorama.initialise
         except ImportError:
@@ -165,15 +168,14 @@ def enable_win_colors():
                                                       wrap=True)
 
 
-def colorize_text(message, without_color=False):
-    """Colorize text content."""
+def colorize_text(message, without_color=False, outfile=OUTFILE):
+    """Print colorized text content."""
     if without_color:
         print(message, end='')
     else:
         enable_win_colors()
-        highlight(message, PropertiesLexer(),
-                  TerminalFormatter(colorscheme=SUMMARY_COLORS),
-                  OUTFILE)
+        formatter = TerminalFormatter(colorscheme=SUMMARY_COLORS)
+        highlight(message, PropertiesLexer(), formatter, outfile)
 
 
 def colorize(parsed_content):
@@ -310,6 +312,7 @@ def show_banner(args):
 # |___|  attacks, we hack your software
 #
 # Loading attack modules ...
+#
 """.format(fluidasserts.__version__)
 
     colorize_text(header, args.no_color)

@@ -29,7 +29,7 @@ def test_check_function_open():
 
 def test_add_info():
     """Test add_info."""
-    assert generic.add_finding('FIN.0001: test finding')
+    assert generic.add_finding('FIN.S.0001: test finding')
 
 
 #

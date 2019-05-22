@@ -5,7 +5,7 @@
 """Asserts generic meta-method."""
 
 # standard imports
-# None
+import sys
 
 # 3rd party imports
 from typing import Callable
@@ -15,6 +15,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts import show_metadata
+from fluidasserts.utils.cli import colorize_text
 from fluidasserts.utils.decorators import track, level
 
 
@@ -70,4 +71,7 @@ def add_finding(finding: str):
 
     :param finding: Current project context.
     """
-    return add_info({'finding': finding})
+    colorize_text('---', outfile=sys.stderr)
+    colorize_text('finding: ' + finding, outfile=sys.stderr)
+    show_metadata({'finding': finding})
+    return True
