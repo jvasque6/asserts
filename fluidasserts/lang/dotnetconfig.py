@@ -74,7 +74,7 @@ def is_header_x_powered_by_present(webconf_dest: str,
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns])))
+                                   lines=str(vulns)[1:-1]))
             result = True
         else:
             show_close('Header "X-Powered-By" is not present',
@@ -128,7 +128,7 @@ def has_ssl_disabled(apphostconf_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in lines])))
+                                   lines=str(lines)[1:-1]))
             result = True
         else:
             show_close('SSL is enabled',
@@ -177,7 +177,7 @@ def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in lines])))
+                                   lines=str(lines)[1:-1]))
             result = True
         else:
             show_close('Debug is disabled',
@@ -225,7 +225,7 @@ def not_custom_errors(webconf_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in lines])))
+                                   lines=str(lines)[1:-1]))
             result = True
         else:
             show_close('Custom errors are enabled',

@@ -65,7 +65,7 @@ def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -111,7 +111,7 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)),
                       refs=None)
             result = True
@@ -155,7 +155,7 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -202,7 +202,7 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:

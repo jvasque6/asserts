@@ -62,7 +62,7 @@ def uses_console_log(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -100,7 +100,7 @@ def uses_eval(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -140,7 +140,7 @@ def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -183,7 +183,7 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -233,7 +233,7 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -286,7 +286,7 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -333,7 +333,7 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result

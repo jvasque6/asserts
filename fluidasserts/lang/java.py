@@ -70,7 +70,7 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -110,7 +110,7 @@ def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -164,7 +164,7 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -217,7 +217,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -265,7 +265,7 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -318,7 +318,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -364,7 +364,7 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -411,7 +411,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -502,7 +502,7 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:

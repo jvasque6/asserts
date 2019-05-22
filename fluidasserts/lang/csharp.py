@@ -72,7 +72,7 @@ def has_generic_exceptions(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -127,7 +127,7 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -193,7 +193,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
         else:
             show_open(msg.format('is missing'), details={
                 'file': code_file,
-                'lines': ", ".join([str(x) for x in vulns]),
+                'lines': str(vulns)[1:-1],
                 'total_vulns': len(vulns),
                 'fingerprint': lang.file_hash(code_file),
             })
@@ -239,7 +239,7 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -294,7 +294,7 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result
@@ -341,7 +341,7 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -387,7 +387,7 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -431,7 +431,7 @@ def uses_ecb_encryption_mode(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -473,7 +473,7 @@ def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -515,7 +515,7 @@ def uses_console_writeline(csharp_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:

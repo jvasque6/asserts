@@ -76,7 +76,7 @@ def has_generic_exceptions(py_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -132,7 +132,7 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
     return result

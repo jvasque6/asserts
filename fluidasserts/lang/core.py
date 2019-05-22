@@ -50,7 +50,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
                                    bad_text=expected_text,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -91,7 +91,7 @@ def has_not_text(code_dest: str, expected_text: str,
                                    expected_text=expected_text,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -138,7 +138,7 @@ def has_multiple_text(code_dest: str, expected_list: list,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    text_list=expected_list,
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
@@ -199,7 +199,7 @@ def has_weak_cipher(code_dest: str, expected_text: str,
                                    file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
-                                   lines=", ".join([str(x) for x in vulns]),
+                                   lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
             result = True
         else:
