@@ -180,11 +180,13 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     vulns = {}
     if lang_spec.get('extensions'):
         if code_dest.split('.')[-1].lower() in lang_spec.get('extensions'):
-            vulns[code_dest] = _get_match_lines(grammar, code_dest,
-                                                lang_spec)
+            lines = _get_match_lines(grammar, code_dest, lang_spec)
+            if lines:
+                vulns[code_dest] = lines
     else:
-        vulns[code_dest] = _get_match_lines(grammar, code_dest,
-                                            lang_spec)
+        lines = _get_match_lines(grammar, code_dest, lang_spec)
+        if lines:
+            vulns[code_dest] = lines
     return vulns
 
 

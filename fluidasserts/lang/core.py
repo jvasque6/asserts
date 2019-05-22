@@ -39,12 +39,18 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
                                      lang_specs, exclude)
+        if not matches:
+            show_close('Bad text not present in code',
+                       details=dict(location=code_dest,
+                                    expected_text=expected_text))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Bad text present in code',
                       details=dict(file=code_file,
                                    bad_text=expected_text,
@@ -52,12 +58,6 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Bad text not present in code',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -76,25 +76,22 @@ def has_not_text(code_dest: str, expected_text: str,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     exected_regex = Regex(expected_text)
-    result = False
+    result = True
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
                                      lang_specs, exclude)
+        if not matches:
+            show_open('Expected text not present in code',
+                      details=dict(location=code_dest,
+                                   expected_text=expected_text))
+            return True
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    for code_file, vulns in matches.items():
-        if not vulns:
-            show_open('Expected text not present in code',
-                      details=dict(file=code_file,
-                                   expected_text=expected_text,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
+    else:
+        result = False
+        for code_file, vulns in matches.items():
             show_close('Expected text present in code',
                        details=dict(file=code_file,
                                     fingerprint=lang.
@@ -131,21 +128,19 @@ def has_multiple_text(code_dest: str, expected_list: list,
             show_unknown('File does not exist',
                          details=dict(code_dest=code_dest))
             return False
+    if not matches:
+        show_close('All bad text in list was not found in code',
+                   details=dict(file=code_dest))
+        return False
+    result = True
     for code_file, vulns in matches.items():
-        if vulns:
-            show_open('A bad text from list was found in code',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   text_list=expected_list,
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('All bad text in list was not found in code',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+        show_open('A bad text from list was found in code',
+                  details=dict(file=code_file,
+                               fingerprint=lang.
+                               file_hash(code_file),
+                               text_list=expected_list,
+                               lines=str(vulns)[1:-1],
+                               total_vulns=len(vulns)))
     return result
 
 
@@ -189,25 +184,25 @@ def has_weak_cipher(code_dest: str, expected_text: str,
     try:
         b64_matches = lang.check_grammar(prs_base64, code_dest,
                                          lang_specs, exclude)
+        if not b64_matches:
+            show_close('Code does not have confidential data encoded in \
+base64',
+                       details=dict(location=code_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
-    for code_file, vulns in b64_matches.items():
-        if vulns:
-            show_open('Code has confidential data encoded in base64',
-                      details=dict(expected=expected_text,
-                                   file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not have confidential data encoded in \
-base64',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    else:
+        result = True
+        for code_file, vulns in b64_matches.items():
+            if vulns:
+                show_open('Code has confidential data encoded in base64',
+                          details=dict(expected=expected_text,
+                                       file=code_file,
+                                       fingerprint=lang.
+                                       file_hash(code_file),
+                                       lines=str(vulns)[1:-1],
+                                       total_vulns=len(vulns)))
     return result
 
 
@@ -231,19 +226,18 @@ def has_secret(code_dest: str, secret: str, exclude: list = None,
     try:
         matches = lang.check_grammar(secret_regex, code_dest,
                                      lang_specs, exclude)
+        if not matches:
+            show_close('Secret not found in code',
+                       details=dict(location=code_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(location=code_dest))
         return False
 
     result = [{'file': f, 'lines': v, 'fingerprint': lang.file_hash(f)}
               for f, v in matches.items() if v]
-    if result:
-        show_open('Secret found in code',
-                  details=dict(location=result,
-                               secret=secret,
-                               total_vulns=len(result)))
-    else:
-        show_close('Secret not found in code', details=dict(location=code_dest,
-                   secret=secret,
-                   fingerprint=lang.file_hash(code_dest)))
+    show_open('Secret found in code',
+              details=dict(location=result,
+                           secret=secret,
+                           total_vulns=len(result)))
     return bool(result)

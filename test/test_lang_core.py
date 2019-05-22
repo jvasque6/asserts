@@ -40,11 +40,12 @@ def test_has_text_open_in_dir():
 def test_has_not_text_open():
     """Test code does not have text."""
     assert core.has_not_text(INSECURE_CODE, 'strncpy')
+    assert core.has_not_text(CODE_DIR, 'strcpy', exclude=['test'])
 
 
 def test_has_not_text_open_in_dir():
     """Test code does not have text."""
-    assert core.has_not_text(CODE_DIR, 'strncpy')
+    assert core.has_not_text(CODE_DIR, 'strncpyasda')
 
 
 def test_file_exists_open():
@@ -87,7 +88,6 @@ def test_has_text_close():
 def test_has_not_text_close():
     """Test code does not have text."""
     assert not core.has_not_text(SECURE_CODE, 'strncpy')
-    assert not core.has_not_text(CODE_DIR, 'strcpy', exclude=['test'])
     assert not core.has_not_text(NON_EXISTANT_CODE, 'strncpy')
 
 
