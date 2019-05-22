@@ -42,7 +42,7 @@ def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
         affected_lines = []
         counter = 0
         in_block_comment = False
-        for line in file_fd.readlines():
+        for line in file_fd:
             counter += 1
             try:
                 if lang_spec.get('line_comment'):
@@ -76,7 +76,7 @@ def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
                     affected_lines.append(counter)
             except ParseException:
                 pass
-    return affected_lines
+        return affected_lines
 
 
 def lists_as_string(lists: List[List], result: ParseResults,
