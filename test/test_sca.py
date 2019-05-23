@@ -15,7 +15,6 @@ from fluidasserts.sca import maven
 from fluidasserts.sca import npm
 from fluidasserts.sca import nuget
 from fluidasserts.sca import pypi
-from fluidasserts.sca import generic
 
 
 # Constants
@@ -97,6 +96,5 @@ def test_package_has_vulnerabilities_close():
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_CLOSE)
     assert not pypi.package_has_vulnerabilities('pip')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
-    assert not generic.package_has_vulnerabilities('nginx')
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)

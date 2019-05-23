@@ -44,43 +44,6 @@ def _parse_snyk_vulns(html):
     return {x: y for x in fields[0::2] for y in fields[1::2]}
 
 
-def get_vulns_vulners(package: str, version: str) -> bool:
-    """
-    Search vulnerabilities on given package_manager/package/version.
-
-    :param package_manager: Package manager.
-    :param package: Package name.
-    :param version: Package version.
-    """
-    base_url = 'https://vulners.com/api/v3/search/lucene/?query='
-    if version:
-        query = \
-            'affectedSoftware.name%3A{}%20AND%20affectedSoftware.\
-version%3A%22{}%22'.format(package, version)
-    else:
-        query = 'affectedSoftware.name%3A{}'.format(package)
-    url = base_url + query
-
-    try:
-        sess = http.HTTPSession(url)
-        resp = json.loads(sess.response.text)
-        if resp['data']['total'] == 0:
-            return []
-        vulns = resp['data']['search']
-        if version:
-            vuln_titles = \
-                [[x['flatDescription'], x['_id'],
-                  ", ".join(x['highlight']['affectedSoftware.version'])]
-                 for x in vulns]
-        else:
-            vuln_titles = [[x['flatDescription'], x['_id']] for x in vulns]
-        vuln_titles = reduce(lambda l, x: l.append(x) or
-                             l if x not in l else l, vuln_titles, [])
-        return vuln_titles
-    except http.ConnError:
-        raise ConnError
-
-
 def get_vulns_ossindex(package_manager: str, package: str,
                        version: str) -> bool:
     """
