@@ -17,10 +17,10 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
 
 LANGUAGE_SPECS = {
-    'extensions': ['rpg', 'rpgle'],
+    'extensions': ('rpg', 'rpgle',),
     'block_comment_start': None,
     'block_comment_end': None,
-    'line_comment': ['//', '*'],
+    'line_comment': ('//', '*',),
 }  # type: dict
 
 

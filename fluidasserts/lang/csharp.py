@@ -19,10 +19,10 @@ from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
-    'extensions': ['cs'],
+    'extensions': ('cs',),
     'block_comment_start': '/*',
     'block_comment_end': '*/',
-    'line_comment': ['//']
+    'line_comment': ('//',)
 }  # type: dict
 
 

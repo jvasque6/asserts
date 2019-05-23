@@ -28,8 +28,67 @@ def _is_empty_result(parse_result: ParseResults) -> bool:
     return not bool(parse_result)
 
 
-def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
-                     lang_spec: dict) -> List:  # noqa
+@lru_cache(maxsize=None, typed=True)  # noqa
+def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
+    """
+    Walk through the file and discard comments.
+
+    :param code_file: Source code file to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :return: Tuple of non-commented (line number, line content) file contents.
+    """
+    lang_spec = dict(lang_spec)
+    line_comment = lang_spec.get('line_comment')
+    block_comment_end = lang_spec.get('block_comment_end')
+    block_comment_start = lang_spec.get('block_comment_start')
+
+    with open(code_file, encoding='latin-1') as file_fd:
+        counter = 0
+        in_block_comment = False
+        non_commented_lines = []
+        for line in file_fd:
+            counter += 1
+            try:
+                if line_comment:
+                    parser = ~Or(line_comment)
+                    parser.parseString(line)
+            except ParseException:
+                # Line is a comment
+                continue
+
+            if block_comment_start:
+                try:
+                    block_start = Literal(block_comment_start)
+                    parser = SkipTo(block_start) + block_start
+                    parser.parseString(line)
+                except ParseException:
+                    # Line is not the beggining of a block comment
+                    pass
+                else:
+                    in_block_comment = True
+
+                if in_block_comment and block_comment_end:
+                    try:
+                        block_end = Literal(block_comment_end)
+                        parser = SkipTo(block_end) + block_end
+                        parser.parseString(line)
+                    except ParseException:
+                        # The block comment is not ending in this line
+                        continue
+                    else:
+                        # The block comment ended in this line
+                        in_block_comment = False
+                        continue
+
+            non_commented_lines.append((counter, line))
+        return tuple(non_commented_lines)
+
+
+def _get_match_lines(
+        grammar: ParserElement,
+        code_file: str,
+        lang_spec: dict) -> List[int]:  # noqa
     """
     Check grammar in file.
 
@@ -39,45 +98,18 @@ def _get_match_lines(grammar: ParserElement, code_file: str,  # noqa
                        acceptable file extensions and comment delimiters.
     :return: List of lines that contain grammar matches.
     """
-    with open(code_file, encoding='latin-1') as file_fd:
-        affected_lines = []
-        counter = 0
-        in_block_comment = False
-        for line in file_fd:
-            counter += 1
-            try:
-                if lang_spec.get('line_comment'):
-                    parser = ~Or(lang_spec.get('line_comment'))
-                    parser.parseString(line)
-            except ParseException:
-                continue
-            if lang_spec.get('block_comment_start'):
-                try:
-                    block_start = Literal(lang_spec.get('block_comment_start'))
-                    parser = SkipTo(block_start) + block_start
-                    parser.parseString(line)
-                    in_block_comment = True
-                except (ParseException, IndexError):
-                    pass
-
-                if in_block_comment and lang_spec.get('block_comment_end'):
-                    try:
-                        block_end = Literal(lang_spec.get('block_comment_end'))
-                        parser = SkipTo(block_end) + block_end
-                        parser.parseString(line)
-                        in_block_comment = False
-                        continue
-                    except ParseException:
-                        continue
-                    except IndexError:
-                        pass
-            try:
-                results = grammar.searchString(line, maxMatches=1)
-                if not _is_empty_result(results):
-                    affected_lines.append(counter)
-            except ParseException:
-                pass
-        return affected_lines
+    affected_lines = []
+    # We need hashable arguments
+    lang_spec_hashable = tuple(lang_spec.items())
+    for line_number, line_content in _non_commented_code(
+            code_file, lang_spec_hashable):
+        try:
+            results = grammar.searchString(line_content, maxMatches=1)
+            if not _is_empty_result(results):
+                affected_lines.append(line_number)
+        except ParseException:
+            pass
+    return affected_lines
 
 
 def lists_as_string(lists: List[List], result: ParseResults,

@@ -19,7 +19,7 @@ LANGUAGE_SPECS = {
     'extensions': None,
     'block_comment_start': None,
     'block_comment_end': None,
-    'line_comment': ['#'],
+    'line_comment': ('#',),
 }  # type: dict
 
 

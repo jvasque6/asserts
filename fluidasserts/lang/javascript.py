@@ -17,10 +17,10 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level
 
 LANGUAGE_SPECS = {
-    'extensions': ['js', 'ts'],
+    'extensions': ('js', 'ts',),
     'block_comment_start': '/*',
     'block_comment_end': '*/',
-    'line_comment': ['//']
+    'line_comment': ('//',)
 }  # type: dict
 
 

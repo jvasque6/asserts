@@ -18,7 +18,7 @@ from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
-    'extensions': ['config'],
+    'extensions': ('config',),
     'block_comment_start': '<!--',
     'block_comment_end': '-->',
 }  # type: dict

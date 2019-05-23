@@ -16,10 +16,10 @@ from fluidasserts.utils.decorators import track, level
 
 
 LANGUAGE_SPECS = {
-    'extensions': ['php', 'php4', 'php5', 'php6', 'php7'],
+    'extensions': ('php', 'php4', 'php5', 'php6', 'php7',),
     'block_comment_start': '/*',
     'block_comment_end': '*/',
-    'line_comment': ['#', '//']
+    'line_comment': ('#', '//',)
 }  # type: dict
 
 
