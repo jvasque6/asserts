@@ -7,8 +7,7 @@ import os
 import base64
 
 # 3rd party imports
-from pyparsing import Literal, Regex
-
+from pyparsing import Literal, Regex, Optional  # noqa
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
@@ -101,8 +100,8 @@ def has_not_text(code_dest: str, expected_text: str,
 
 @level('low')
 @track
-def has_multiple_text(code_dest: str, expected_list: list,
-                      exclude: list = None, lang_specs: dict = None) -> bool:
+def has_all_text(code_dest: str, expected_list: list,
+                 exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a list of bad text is present in given source file.
 
@@ -141,6 +140,46 @@ def has_multiple_text(code_dest: str, expected_list: list,
                                text_list=expected_list,
                                lines=str(vulns)[1:-1],
                                total_vulns=len(vulns)))
+    return result
+
+
+@level('low')
+@track
+def has_any_text(code_dest: str, expected_list: list,
+                 exclude: list = None, lang_specs: dict = None) -> bool:
+    """
+    Check if any on a list of bad text is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param expected_text: Bad text to look for in the file.
+    """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
+    matches = {}
+    any_list = [f'Optional(Regex("{x}"))' for x in expected_list]
+    any_query = eval(" & ".join(any_list))
+    try:
+        matches = lang.check_grammar(any_query, code_dest,
+                                     lang_specs, exclude)
+        if not matches:
+            show_close('None of the expected strings were found in code',
+                       details=dict(location=code_dest,
+                                    expected_text=expected_list))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=code_dest))
+        return False
+    else:
+        result = True
+        for code_file, vulns in matches.items():
+            show_open('Any of the expected bad text is present in code',
+                      details=dict(file=code_file,
+                                   expected_list=expected_list,
+                                   fingerprint=lang.
+                                   file_hash(code_file)))
     return result
 
 
