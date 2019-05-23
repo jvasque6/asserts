@@ -13,6 +13,9 @@ import yaml
 
 # local imports
 from fluidasserts.utils.cli import colorize_text
+from fluidasserts.utils.cli import enable_win_colors
+
+OUTFILE = sys.stderr
 
 
 def track(func: Callable) -> Callable:
@@ -32,8 +35,9 @@ def level(risk_level: str) -> Callable:
         @functools.wraps(func)
         def decorated(*args, **kwargs) -> Any:  # noqa
             """Give a risk level to each check."""
+            enable_win_colors()
             msg = '- Running: ' + func.__module__ + ' -> ' + func.__name__
-            colorize_text(msg, outfile=sys.stderr)
+            colorize_text(msg)
             ret_val = func(*args, **kwargs)
             risk = {'risk-level': risk_level}
             message = yaml.safe_dump(risk, default_flow_style=False,

@@ -16,8 +16,10 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts import show_metadata
 from fluidasserts.utils.cli import colorize_text
+from fluidasserts.utils.cli import enable_win_colors
 from fluidasserts.utils.decorators import track, level
 
+OUTFILE = sys.stderr
 
 # pylint: disable=broad-except
 
@@ -71,6 +73,7 @@ def add_finding(finding: str):
 
     :param finding: Current project context.
     """
-    colorize_text('---', outfile=sys.stderr)
-    colorize_text('finding: ' + finding, outfile=sys.stderr)
+    enable_win_colors()
+    colorize_text('---')
+    colorize_text('finding: ' + finding)
     return True

@@ -168,14 +168,14 @@ def enable_win_colors():
                                                       wrap=True)
 
 
-def colorize_text(message, without_color=False, outfile=OUTFILE):
+def colorize_text(message, without_color=False):
     """Print colorized text content."""
     if without_color:
         print(message, end='')
     else:
         enable_win_colors()
         formatter = TerminalFormatter(colorscheme=SUMMARY_COLORS)
-        highlight(message, PropertiesLexer(), formatter, outfile)
+        highlight(message, PropertiesLexer(), formatter, OUTFILE)
 
 
 def colorize(parsed_content):
