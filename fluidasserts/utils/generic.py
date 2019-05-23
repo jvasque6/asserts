@@ -73,5 +73,4 @@ def add_finding(finding: str):
     """
     colorize_text('---', outfile=sys.stderr)
     colorize_text('finding: ' + finding, outfile=sys.stderr)
-    show_metadata({'finding': finding})
     return True

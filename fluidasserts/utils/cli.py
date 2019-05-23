@@ -244,26 +244,24 @@ def get_total_unknown_checks(output_list):
 
 def filter_content(parsed_content, args):
     """Show filtered content according to args."""
-    only_checks = [x for x in parsed_content if 'status' in x]
-
     opened_nodes = filter(lambda x: x['status'] == 'OPEN' and
                           args.show_open,
-                          only_checks)
+                          parsed_content)
     closed_nodes = filter(lambda x: x['status'] == 'CLOSED' and
                           args.show_closed,
-                          only_checks)
+                          parsed_content)
     unknown_nodes = filter(lambda x: x['status'] == 'UNKNOWN' and
                            args.show_unknown,
-                           only_checks)
+                           parsed_content)
     return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
 
 
 def get_risk_levels(parsed_content):
     """Get risk levels of opened checks."""
     try:
-        filtered = (
+        filtered = [
             x for x in parsed_content
-            if 'status' in x and 'risk-level' in x and x['status'] == 'OPEN')
+            if 'status' in x and 'risk-level' in x and x['status'] == 'OPEN']
 
         high_risk = sum(1 for x in filtered if x['risk-level'] == 'high')
         medium_risk = sum(1 for x in filtered if x['risk-level'] == 'medium')

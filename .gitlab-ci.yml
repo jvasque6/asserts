@@ -155,7 +155,7 @@ deploy:
   except:
     - schedules
 
-create_installer:
+.create_installer:
   stage: deploy
   script:
     - scons dist
