@@ -613,6 +613,7 @@ given files or directories')
     open_checks = get_total_open_checks(parsed)
     closed_checks = get_total_closed_checks(parsed)
     unknown_checks = get_total_unknown_checks(parsed)
+    div_checks = total_checks if total_checks else 1
 
     final_message = {
         'summary': {
@@ -621,13 +622,13 @@ given files or directories')
                 'total': '{} ({}%)'.format(total_checks, '100'),
                 'unknown':
                     '{} ({:.2f}%)'.format(unknown_checks,
-                                          unknown_checks / total_checks * 100),
+                                          unknown_checks / div_checks * 100.0),
                 'closed':
                     '{} ({:.2f}%)'.format(closed_checks,
-                                          closed_checks / total_checks * 100),
+                                          closed_checks / div_checks * 100.0),
                 'opened':
                     '{} ({:.2f}%)'.format(open_checks,
-                                          open_checks / total_checks * 100),
+                                          open_checks / div_checks * 100.0),
             },
             'risk': get_risk_levels(parsed),
         }
