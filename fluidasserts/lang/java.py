@@ -58,26 +58,21 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
         matches = lang.check_grammar(generic_exception, java_dest,
                                      LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not use generic exceptions',
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses generic exceptions',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use generic exceptions',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -98,26 +93,21 @@ def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
     try:
         matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -144,8 +134,8 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
         catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS,
                                      exclude)
         if not catches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not have catches',
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
@@ -197,8 +187,8 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
         switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS,
                                       exclude)
         if not switches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not have switches',
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
@@ -253,26 +243,22 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
     try:
         matches = lang.check_grammar(
             MatchFirst(insecure_randoms), java_dest, LANGUAGE_SPECS, exclude)
+        if not matches:
+            show_close('Code does not use {} method'.format(insecure_methods),
+                       details=dict(location=java_dest))
+            return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    if not matches:
-        show_unknown('Not files matched', details=dict(code_dest=java_dest))
-        return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(insecure_methods),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(insecure_methods),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -298,8 +284,8 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     try:
         conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS, exclude)
         if not conds:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not have conditionals',
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
@@ -352,26 +338,21 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
         matches = lang.check_grammar(instance, java_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -399,26 +380,21 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
         matches = lang.check_grammar(instance, java_dest, LANGUAGE_SPECS,
                                      exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code uses {} method'.format(method),
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
 
 
@@ -490,24 +466,19 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
     try:
         matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS, exclude)
         if not matches:
-            show_unknown('Not files matched',
-                         details=dict(code_dest=java_dest))
+            show_close('Code does not allow logs injection',
+                       details=dict(code_dest=java_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, vulns in matches.items():
-        if vulns:
+    else:
+        result = True
+        for code_file, vulns in matches.items():
             show_open('Code allows logs injection',
                       details=dict(file=code_file,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not allow logs injection',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
     return result
