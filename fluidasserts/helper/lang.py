@@ -12,6 +12,7 @@ from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults,
                        ParserElement)
 
 # local imports
+from functools import lru_cache
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -140,6 +141,7 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     return vulns
 
 
+@lru_cache(maxsize=None, typed=True)
 def file_hash(filename: str) -> dict:
     """
     Get SHA256 hash from file as a dict.
@@ -156,7 +158,7 @@ def file_hash(filename: str) -> dict:
     return dict(sha256=sha256.hexdigest())
 
 
-def _scantree(path):
+def _scantree(path: str):
     """Recursively yield DirEntry objects for given directory."""
     for entry in os.scandir(path):
         if entry.is_dir(follow_symlinks=False):
