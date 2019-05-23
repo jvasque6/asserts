@@ -244,7 +244,7 @@ def get_total_unknown_checks(output_list):
 
 def filter_content(parsed_content, args):
     """Show filtered content according to args."""
-    only_checks = filter(lambda x: 'status' in x, parsed_content)
+    only_checks = [x for x in parsed_content if 'status' in x]
 
     opened_nodes = filter(lambda x: x['status'] == 'OPEN' and
                           args.show_open,
