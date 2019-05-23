@@ -6,13 +6,13 @@
 import hashlib
 import os
 from typing import Callable, Dict, List
+from functools import lru_cache
 
 # 3rd party imports
 from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults,
                        ParserElement)
 
 # local imports
-from functools import lru_cache
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -159,12 +159,19 @@ def file_hash(filename: str) -> dict:
 
 
 def _scantree(path: str):
-    """Recursively yield DirEntry objects for given directory."""
+    """Recursively yield full paths to files for a given directory."""
     for entry in os.scandir(path):
+        full_path = entry.path
         if entry.is_dir(follow_symlinks=False):
-            yield from _scantree(entry.path)
+            yield from _scantree(full_path)
         else:
-            yield entry
+            yield full_path
+
+
+@lru_cache(maxsize=None, typed=True)
+def _full_paths_in_dir(path: str):
+    """Return a cacheable tuple of full_paths to files in a dir."""
+    return tuple(full_path for full_path in _scantree(path))
 
 
 def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
@@ -180,8 +187,10 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     :return: Maps files to their found vulnerabilites.
     """
     vulns = {}
-    if lang_spec.get('extensions'):
-        if code_dest.split('.')[-1].lower() in lang_spec.get('extensions'):
+    file_extension = code_dest.rsplit('.', 1)[-1].lower()
+    lang_extensions = lang_spec.get('extensions')
+    if lang_extensions:
+        if file_extension in lang_extensions:
             lines = _get_match_lines(grammar, code_dest, lang_spec)
             if lines:
                 vulns[code_dest] = lines
@@ -208,12 +217,9 @@ def _check_grammar_in_dir(grammar: ParserElement, code_dest: str,
     if not exclude:
         exclude = []
     vulns = {}
-
-    for full_path in _scantree(code_dest):
-        if not any(x in full_path.path for x in exclude):
-            __vulns = \
-                _check_grammar_in_file(grammar, full_path.path, lang_spec)
-            vulns.update(__vulns)
+    for full_path in _full_paths_in_dir(code_dest):
+        if not any(x in full_path for x in exclude):
+            vulns.update(_check_grammar_in_file(grammar, full_path, lang_spec))
     return vulns
 
 
