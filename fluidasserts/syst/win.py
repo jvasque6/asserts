@@ -13,9 +13,10 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper.winrm import winrm_exec_command, ConnError
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
+@notify
 @level('medium')
 @track
 def are_compilers_installed(server: str, username: str,
@@ -57,6 +58,7 @@ def are_compilers_installed(server: str, username: str,
     return result
 
 
+@notify
 @level('high')
 @track
 def is_antimalware_not_installed(server: str, username: str,
@@ -100,6 +102,7 @@ def is_antimalware_not_installed(server: str, username: str,
     return result
 
 
+@notify
 @level('low')
 @track
 def are_syncookies_disabled(server: str) -> bool:
@@ -116,6 +119,7 @@ def are_syncookies_disabled(server: str) -> bool:
     return False
 
 
+@notify
 @level('high')
 @track
 def are_protected_users_disabled(server: str, username: str,

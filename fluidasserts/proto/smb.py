@@ -14,13 +14,14 @@ from smb import smb_structs
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 Typconn = SMBConnection.SMBConnection
 CLIENT_MACHINE_NAME = 'assertspc'
 
 
+@notify
 @level('medium')
 @track
 def has_dirlisting(server: str, share: str,
@@ -69,6 +70,7 @@ def has_dirlisting(server: str, share: str,
         conn.close()
 
 
+@notify
 @level('high')
 @track
 def is_anonymous_enabled(server: str,
@@ -104,6 +106,7 @@ def is_anonymous_enabled(server: str,
         return True
 
 
+@notify
 @level('low')
 @track
 def is_signing_disabled(server, user, password, domain='WORKGROUP'):

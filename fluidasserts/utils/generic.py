@@ -17,13 +17,14 @@ from fluidasserts import show_unknown
 from fluidasserts import show_metadata
 from fluidasserts.utils.cli import colorize_text
 from fluidasserts.utils.cli import enable_win_colors
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 OUTFILE = sys.stderr
 
 # pylint: disable=broad-except
 
 
+@notify
 @level('low')
 @track
 def check_function(func: Callable, *args, **kwargs):

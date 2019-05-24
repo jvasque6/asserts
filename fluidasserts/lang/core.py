@@ -14,12 +14,13 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import lang
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 LANGUAGE_SPECS = {}  # type: dict
 
 
+@notify
 @level('low')
 @track
 def has_text(code_dest: str, expected_text: str, exclude: list = None,
@@ -61,6 +62,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
     return result
 
 
+@notify
 @level('low')
 @track
 def has_not_text(code_dest: str, expected_text: str,
@@ -99,6 +101,7 @@ def has_not_text(code_dest: str, expected_text: str,
     return result
 
 
+@notify
 @level('low')
 @track
 def has_all_text(code_dest: str, expected_list: list,
@@ -144,6 +147,7 @@ def has_all_text(code_dest: str, expected_list: list,
     return result
 
 
+@notify
 @level('low')
 @track
 def has_any_text(code_dest: str, expected_list: list,
@@ -184,6 +188,7 @@ def has_any_text(code_dest: str, expected_list: list,
     return result
 
 
+@notify
 @level('low')
 @track
 def file_exists(code_file: str) -> bool:
@@ -203,6 +208,7 @@ def file_exists(code_file: str) -> bool:
     return False
 
 
+@notify
 @level('medium')
 @track
 def has_weak_cipher(code_dest: str, expected_text: str,
@@ -246,6 +252,7 @@ base64',
     return result
 
 
+@notify
 @level('high')
 @track
 def has_secret(code_dest: str, secret: str, exclude: list = None,

@@ -14,7 +14,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import banner
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 PORT = 21
 NULL_PASSWORD = ''
@@ -23,6 +23,7 @@ ANONYMOUS_USERNAME = 'anonymous'
 ANONYMOUS_PASS = 'anonymous'
 
 
+@notify
 @level('medium')
 @track
 def is_a_valid_user(ip_address: str, username: str,
@@ -63,6 +64,7 @@ def is_a_valid_user(ip_address: str, username: str,
     return result
 
 
+@notify
 @level('high')
 @track
 def user_without_password(ip_address: str, username: str) -> bool:
@@ -75,6 +77,7 @@ def user_without_password(ip_address: str, username: str) -> bool:
     return is_a_valid_user(ip_address, username, password=NULL_PASSWORD)
 
 
+@notify
 @level('high')
 @track
 def is_anonymous_enabled(ip_address: str) -> bool:
@@ -86,6 +89,7 @@ def is_anonymous_enabled(ip_address: str) -> bool:
     return is_a_valid_user(ip_address, ANONYMOUS_USERNAME, ANONYMOUS_PASS)
 
 
+@notify
 @level('high')
 @track
 def is_admin_enabled(ip_address: str, password: str,
@@ -100,6 +104,7 @@ def is_admin_enabled(ip_address: str, password: str,
     return is_a_valid_user(ip_address, username, password)
 
 
+@notify
 @level('low')
 @track
 def is_version_visible(ip_address: str, port: int = PORT) -> bool:

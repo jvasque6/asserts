@@ -13,7 +13,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.proto.http import _has_insecure_header
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import http
 
 HDR_RGX = {
@@ -24,6 +24,7 @@ HDR_RGX = {
 }  # type: dict
 
 
+@notify
 @level('low')
 @track
 def has_access(url: str, *args, **kwargs) -> bool:
@@ -43,6 +44,7 @@ def has_access(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@notify
 @level('low')
 @track
 def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
@@ -73,6 +75,7 @@ def accepts_empty_content_type(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@notify
 @level('low')
 @track
 def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
@@ -104,6 +107,7 @@ def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     return False
 
 
+@notify
 @level('medium')
 @track
 def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
@@ -117,6 +121,7 @@ def is_header_x_frame_options_missing(url: str, *args, **kwargs) -> bool:
     return _has_insecure_header(url, 'X-Frame-Options', *args, **kwargs)
 
 
+@notify
 @level('low')
 @track
 def is_header_x_content_type_options_missing(url: str, *args,
@@ -132,6 +137,7 @@ def is_header_x_content_type_options_missing(url: str, *args,
                                 *args, **kwargs)
 
 
+@notify
 @level('medium')
 @track
 def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
@@ -191,6 +197,7 @@ def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def is_header_content_type_missing(url: str, *args, **kwargs) -> bool:

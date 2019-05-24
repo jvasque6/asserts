@@ -17,7 +17,7 @@ from dateutil import parser
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import aws
 
 
@@ -30,6 +30,7 @@ def _any_to_list(input):
     return res
 
 
+@notify
 @level('high')
 @track
 def has_mfa_disabled(key_id: str, secret: str) -> bool:
@@ -68,6 +69,7 @@ def has_mfa_disabled(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def have_old_creds_enabled(key_id: str, secret: str) -> bool:
@@ -110,6 +112,7 @@ def have_old_creds_enabled(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def have_old_access_keys(key_id: str, secret: str) -> bool:
@@ -154,6 +157,7 @@ the last 90 days',
     return result
 
 
+@notify
 @level('high')
 @track
 def root_has_access_keys(key_id: str, secret: str) -> bool:
@@ -187,6 +191,7 @@ def root_has_access_keys(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def not_requires_uppercase(key_id: str, secret: str) -> bool:
@@ -221,6 +226,7 @@ def not_requires_uppercase(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def not_requires_lowercase(key_id: str, secret: str) -> bool:
@@ -255,6 +261,7 @@ def not_requires_lowercase(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def not_requires_symbols(key_id: str, secret: str) -> bool:
@@ -288,6 +295,7 @@ def not_requires_symbols(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def not_requires_numbers(key_id: str, secret: str) -> bool:
@@ -321,6 +329,7 @@ def not_requires_numbers(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
@@ -356,6 +365,7 @@ def min_password_len_unsafe(key_id: str, secret: str, min_len=14) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
@@ -396,6 +406,7 @@ def password_reuse_unsafe(key_id: str, secret: str, min_reuse=24) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def password_expiration_unsafe(key_id: str, secret: str, max_days=90) -> bool:
@@ -436,6 +447,7 @@ def password_expiration_unsafe(key_id: str, secret: str, max_days=90) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def root_without_mfa(key_id: str, secret: str) -> bool:
@@ -469,6 +481,7 @@ def root_without_mfa(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def policies_attached_to_users(key_id: str, secret: str) -> bool:
@@ -506,6 +519,7 @@ def policies_attached_to_users(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def have_full_access_policies(key_id: str, secret: str) -> bool:
@@ -549,6 +563,7 @@ def have_full_access_policies(key_id: str, secret: str) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_not_support_role(key_id: str, secret: str) -> bool:

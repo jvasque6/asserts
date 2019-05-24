@@ -15,7 +15,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 LANGUAGE_SPECS = {
@@ -36,6 +36,7 @@ def _get_block(file_lines, line) -> str:
     return "".join(file_lines[line - 1:])
 
 
+@notify
 @level('low')
 @track
 def has_generic_exceptions(csharp_dest: str, exclude: list = None) -> bool:
@@ -78,6 +79,7 @@ def has_generic_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
@@ -128,6 +130,7 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
@@ -197,6 +200,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
@@ -241,6 +245,7 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
@@ -291,6 +296,7 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
@@ -338,6 +344,7 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
@@ -379,6 +386,7 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def uses_ecb_encryption_mode(csharp_dest: str, exclude: list = None) -> bool:
@@ -418,6 +426,7 @@ def uses_ecb_encryption_mode(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
@@ -455,6 +464,7 @@ def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def uses_console_writeline(csharp_dest: str, exclude: list = None) -> bool:

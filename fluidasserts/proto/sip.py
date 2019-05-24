@@ -17,7 +17,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import http
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 def _make_udp_request(server: str, port: int, data: str):
@@ -42,6 +42,7 @@ def _make_tcp_request(server: str, port: int, data: str):
     return buff.decode()
 
 
+@notify
 @level('low')
 @track
 def is_version_visible(server: str, port: int = 5060,
@@ -105,6 +106,7 @@ Max-Forwards: 70
     return result
 
 
+@notify
 @level('high')
 @track
 def unify_phone_has_default_credentials(hostname: str,
@@ -157,6 +159,7 @@ def unify_phone_has_default_credentials(hostname: str,
     return result
 
 
+@notify
 @level('high')
 @track
 def polycom_phone_has_default_credentials(hostname: str,

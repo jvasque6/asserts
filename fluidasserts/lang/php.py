@@ -12,7 +12,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 LANGUAGE_SPECS = {
@@ -23,6 +23,7 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
+@notify
 @level('low')
 @track
 def has_preg_ce(php_dest: str, exclude: list = None) -> bool:

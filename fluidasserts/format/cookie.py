@@ -14,7 +14,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import http
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 def _has_not_http_only(cookie_name: str, url: Optional[str],
@@ -119,6 +119,7 @@ def _has_not_secure(cookie_name: str, url: Optional[str],
     return False
 
 
+@notify
 @level('medium')
 @track
 def has_not_httponly_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
@@ -135,6 +136,7 @@ def has_not_httponly_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     return _has_not_http_only(cookie_name, url, None, *args, **kwargs)
 
 
+@notify
 @level('medium')
 @track
 def has_not_httponly_in_cookiejar(cookie_name: str, cookie_jar: dict,
@@ -154,6 +156,7 @@ def has_not_httponly_in_cookiejar(cookie_name: str, cookie_jar: dict,
                               *args, **kwargs)
 
 
+@notify
 @level('medium')
 @track
 def has_not_secure_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
@@ -170,6 +173,7 @@ def has_not_secure_set(cookie_name: str, url: str, *args, **kwargs) -> bool:
     return _has_not_secure(cookie_name, url, None, *args, **kwargs)
 
 
+@notify
 @level('medium')
 @track
 def has_not_secure_in_cookiejar(cookie_name: str, cookie_jar: dict,

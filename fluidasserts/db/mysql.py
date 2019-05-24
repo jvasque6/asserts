@@ -12,7 +12,7 @@ import mysql.connector
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 class ConnError(Exception):
@@ -42,6 +42,7 @@ def _get_mysql_cursor(server: str,
         return mydb
 
 
+@notify
 @level('low')
 @track
 def have_access(server: str, username: str, password: str,
@@ -61,6 +62,7 @@ def have_access(server: str, username: str, password: str,
     return result
 
 
+@notify
 @level('low')
 @track
 def test_db_exists(server: str, username: str, password: str,
@@ -95,6 +97,7 @@ def test_db_exists(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('medium')
 @track
 def local_infile_enabled(server: str, username: str, password: str,
@@ -129,6 +132,7 @@ def local_infile_enabled(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('low')
 @track
 def symlinks_enabled(server: str, username: str, password: str,
@@ -164,6 +168,7 @@ def symlinks_enabled(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('low')
 @track
 def memcached_enabled(server: str, username: str, password: str,
@@ -200,6 +205,7 @@ PLUGIN_NAME='daemon_memcached'"
         return result
 
 
+@notify
 @level('medium')
 @track
 def secure_file_priv_disabled(server: str, username: str,
@@ -236,6 +242,7 @@ Variable_name = 'secure_file_priv' AND Value<>''"
         return result
 
 
+@notify
 @level('medium')
 @track
 def strict_all_tables_disabled(server: str, username: str,
@@ -271,6 +278,7 @@ def strict_all_tables_disabled(server: str, username: str,
         return result
 
 
+@notify
 @level('medium')
 @track
 def log_error_disabled(server: str, username: str, password: str,
@@ -306,6 +314,7 @@ def log_error_disabled(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('medium')
 @track
 def logs_on_system_fs(server: str, username: str, password: str,
@@ -342,6 +351,7 @@ def logs_on_system_fs(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('low')
 @track
 def logs_verbosity_low(server: str, username: str, password: str,
@@ -384,6 +394,7 @@ def logs_verbosity_low(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def auto_creates_users(server: str, username: str, password: str,
@@ -424,6 +435,7 @@ def auto_creates_users(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def has_users_without_password(server: str, username: str,
@@ -462,6 +474,7 @@ def has_users_without_password(server: str, username: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def password_expiration_unsafe(server: str, username: str,
@@ -504,6 +517,7 @@ def password_expiration_unsafe(server: str, username: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def password_equals_to_user(server: str, username: str,
@@ -543,6 +557,7 @@ WHERE BINARY password=CONCAT("*", UPPER(SHA1(UNHEX(SHA1(user)))))'
         return result
 
 
+@notify
 @level('high')
 @track
 def users_have_wildcard_host(server: str, username: str,
@@ -581,6 +596,7 @@ def users_have_wildcard_host(server: str, username: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def not_use_ssl(server: str, username: str, password: str,
@@ -617,6 +633,7 @@ def not_use_ssl(server: str, username: str, password: str,
         return result
 
 
+@notify
 @level('high')
 @track
 def ssl_unforced(server: str, username: str, password: str,

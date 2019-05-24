@@ -16,10 +16,11 @@ The checks are based on CIS AWS Foundations Benchmark.
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import aws
 
 
+@notify
 @level('high')
 @track
 def has_public_instances(key_id: str, secret: str) -> bool:

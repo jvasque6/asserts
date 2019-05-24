@@ -14,7 +14,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 LANGUAGE_SPECS = {
     'extensions': ('js', 'ts',),
@@ -34,6 +34,7 @@ def _get_block(file_lines, line) -> str:
     return "".join(file_lines[line - 1:])
 
 
+@notify
 @level('low')
 @track
 def uses_console_log(js_dest: str, exclude: list = None) -> bool:
@@ -69,6 +70,7 @@ def uses_console_log(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def uses_eval(js_dest: str, exclude: list = None) -> bool:
@@ -103,6 +105,7 @@ def uses_eval(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
@@ -139,6 +142,7 @@ def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
@@ -178,6 +182,7 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
@@ -224,6 +229,7 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
@@ -278,6 +284,7 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def has_if_without_else(js_dest: str, exclude: list = None) -> bool:

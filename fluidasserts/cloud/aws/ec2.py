@@ -16,10 +16,11 @@ The checks are based on CIS AWS Foundations Benchmark.
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import aws
 
 
+@notify
 @level('medium')
 @track
 def seggroup_allows_anyone_to_ssh(key_id: str, secret: str) -> bool:
@@ -65,6 +66,7 @@ from anyone to port 22',
     return result
 
 
+@notify
 @level('medium')
 @track
 def seggroup_allows_anyone_to_rdp(key_id: str, secret: str) -> bool:
@@ -110,6 +112,7 @@ from anyone to port 3389',
     return result
 
 
+@notify
 @level('medium')
 @track
 def default_seggroup_allows_all_traffic(key_id: str, secret: str) -> bool:
@@ -155,6 +158,7 @@ to or from anyone',
     return result
 
 
+@notify
 @level('medium')
 @track
 def has_unencrypted_volumes(key_id: str, secret: str) -> bool:

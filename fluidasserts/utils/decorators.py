@@ -18,12 +18,17 @@ from fluidasserts.utils.cli import enable_win_colors
 OUTFILE = sys.stderr
 
 
+def _get_func_id(func: Callable) -> str:
+    """Return a function identifier."""
+    return f"{func.__module__} -> {func.__name__}"
+
+
 def track(func: Callable) -> Callable:
-    """Log and registers function usage."""
+    """Log and register function usage."""
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:  # noqa
         """Log and registers function usage."""
-        mp_track(func.__module__ + ' -> ' + func.__name__)
+        mp_track(_get_func_id(func))
         return func(*args, **kwargs)
     return decorated
 
@@ -35,9 +40,6 @@ def level(risk_level: str) -> Callable:
         @functools.wraps(func)
         def decorated(*args, **kwargs) -> Any:  # noqa
             """Give a risk level to each check."""
-            enable_win_colors()
-            msg = '- Running: ' + func.__module__ + ' -> ' + func.__name__
-            colorize_text(msg)
             ret_val = func(*args, **kwargs)
             risk = {'risk-level': risk_level}
             message = yaml.safe_dump(risk, default_flow_style=False,
@@ -46,3 +48,16 @@ def level(risk_level: str) -> Callable:
             return ret_val
         return decorated
     return wrapper
+
+
+def notify(func: Callable) -> Callable:
+    """Notify the user that the function is running."""
+    @functools.wraps(func)
+    def decorated(*args, **kwargs) -> Any:  # noqa
+        """Notify the user that the function is running."""
+        enable_win_colors()
+        msg = f'- Running: {_get_func_id(func)}'
+        colorize_text(msg)
+        ret_val = func(*args, **kwargs)
+        return ret_val
+    return decorated

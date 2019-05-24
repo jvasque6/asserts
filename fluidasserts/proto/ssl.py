@@ -23,7 +23,7 @@ import tlslite
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import http
 from fluidasserts.helper.ssl import connect
 from fluidasserts.helper.ssl import connect_legacy
@@ -183,6 +183,7 @@ def _build_heartbeat(tls_ver: str) -> List:
     return heartbeat
 
 
+@notify
 @level('medium')
 @track
 def is_pfs_disabled(site: str, port: int = PORT) -> bool:
@@ -235,6 +236,7 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
@@ -269,6 +271,7 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('medium')
 @track
 def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
@@ -303,6 +306,7 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def is_tlsv11_enabled(site: str, port: int = PORT) -> bool:
@@ -337,6 +341,7 @@ def is_tlsv11_enabled(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def has_poodle_tls(site: str, port: int = PORT) -> bool:
@@ -377,6 +382,7 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
@@ -420,6 +426,7 @@ be vulnerable to POODLE SSLv3 attack',
     return result
 
 
+@notify
 @level('low')
 @track
 def has_breach(site: str, port: int = PORT) -> bool:
@@ -455,6 +462,7 @@ def has_breach(site: str, port: int = PORT) -> bool:
     return False
 
 
+@notify
 @level('high')
 @track
 def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
@@ -489,6 +497,7 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def allows_weak_ciphers(site: str, port: int = PORT) -> bool:
@@ -524,6 +533,7 @@ suites', details=dict(site=site, port=port))
     return result
 
 
+@notify
 @level('low')
 @track
 def has_beast(site: str, port: int = PORT) -> bool:
@@ -563,6 +573,7 @@ to be not an enabler to BEAST attack', details=dict(site=site, port=port))
     return result
 
 
+@notify
 @level('high')
 @track
 def has_heartbleed(site: str, port: int = PORT) -> bool:
@@ -615,6 +626,7 @@ but it\'s not vulnerable to Heartbleed.',
     return result
 
 
+@notify
 @level('high')
 @track
 def allows_modified_mac(site: str, port: int = PORT) -> bool:

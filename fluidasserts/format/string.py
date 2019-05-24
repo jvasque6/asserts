@@ -10,7 +10,7 @@ import pkg_resources
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 
 
 def _check_password_strength(password: str, length: int) -> bool:
@@ -63,6 +63,7 @@ def _check_password_strength(password: str, length: int) -> bool:
     return result
 
 
+@notify
 @level('high')
 @track
 def is_user_password_insecure(password: str) -> bool:
@@ -80,6 +81,7 @@ def is_user_password_insecure(password: str) -> bool:
     return _check_password_strength(password, min_password_len)
 
 
+@notify
 @level('high')
 @track
 def is_system_password_insecure(password: str) -> bool:
@@ -97,6 +99,7 @@ def is_system_password_insecure(password: str) -> bool:
     return _check_password_strength(password, min_password_len)
 
 
+@notify
 @level('medium')
 @track
 def is_otp_token_insecure(password: str) -> bool:
@@ -124,6 +127,7 @@ def is_otp_token_insecure(password: str) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def is_ssid_insecure(ssid: str) -> bool:

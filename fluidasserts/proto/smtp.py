@@ -11,12 +11,13 @@ import smtplib
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
-from fluidasserts.utils.decorators import track, level
+from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import banner
 
 PORT = 25
 
 
+@notify
 @level('medium')
 @track
 def has_vrfy(ip_address: str, port: int = PORT) -> bool:
@@ -47,6 +48,7 @@ def has_vrfy(ip_address: str, port: int = PORT) -> bool:
     return result
 
 
+@notify
 @level('low')
 @track
 def is_version_visible(ip_address: str, port: int = PORT,
