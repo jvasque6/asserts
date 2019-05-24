@@ -7,7 +7,8 @@ import os
 import base64
 
 # 3rd party imports
-from pyparsing import Literal, Regex, Optional  # noqa
+from pyparsing import Literal, Regex, Optional, Or  # noqa
+
 # local imports
 from fluidasserts import show_close
 from fluidasserts import show_open
@@ -158,8 +159,8 @@ def has_any_text(code_dest: str, expected_list: list,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [f'Optional(Regex("{x}"))' for x in expected_list]
-    any_query = eval(" & ".join(any_list))
+    any_list = [Regex(expected) for expected in expected_list]
+    any_query = Or(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
                                      lang_specs, exclude)
