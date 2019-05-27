@@ -4,6 +4,7 @@
 
 # standard imports
 import os
+import re
 import base64
 
 # 3rd party imports
@@ -35,7 +36,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    exected_regex = Regex(expected_text)
+    exected_regex = Regex(re.escape(expected_text))
     result = False
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
@@ -77,7 +78,7 @@ def has_not_text(code_dest: str, expected_text: str,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    exected_regex = Regex(expected_text)
+    exected_regex = Regex(re.escape(expected_text))
     result = True
     try:
         matches = lang.check_grammar(exected_regex, code_dest,
@@ -118,7 +119,7 @@ def has_all_text(code_dest: str, expected_list: list,
         lang_specs = LANGUAGE_SPECS
     matches = {}
     for expected in expected_list:
-        exected_regex = Regex(expected)
+        exected_regex = Regex(re.escape(expected))
         result = False
         try:
             __matches = lang.check_grammar(exected_regex, code_dest,
@@ -163,7 +164,7 @@ def has_any_text(code_dest: str, expected_list: list,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [Regex(expected) for expected in expected_list]
+    any_list = [Regex(re.escape(expected)) for expected in expected_list]
     any_query = Or(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
@@ -269,7 +270,7 @@ def has_secret(code_dest: str, secret: str, exclude: list = None,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     result = False
-    secret_regex = Regex(secret)
+    secret_regex = Regex(re.escape(secret))
     try:
         matches = lang.check_grammar(secret_regex, code_dest,
                                      lang_specs, exclude)
