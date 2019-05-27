@@ -346,6 +346,12 @@ def lint_exploit(exploit):
             'Avoid printing aditional info in Asserts using print().',
             'regexes':
                 [r'print[\s]*\(']
+        },
+        '004': {
+            'description':
+            'Avoid using exit().',
+            'regexes':
+                [r'exit[\s]*\(']
         }
     }
     warnings = []
