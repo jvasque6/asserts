@@ -7,7 +7,7 @@ import os
 import base64
 
 # 3rd party imports
-from pyparsing import Literal, Regex, Optional, Or  # noqa
+from pyparsing import Literal, Regex, Or
 
 # local imports
 from fluidasserts import show_close
