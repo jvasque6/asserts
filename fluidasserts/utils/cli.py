@@ -573,6 +573,9 @@ def main():
     argparser.add_argument('-u', '--show-unknown',
                            help='show only unknown (error) checks',
                            action='store_true')
+    argparser.add_argument('-ms', '--show-method-stats',
+                           help='show method-level stats at the end',
+                           action='store_true')
     argparser.add_argument('-O', '--output', nargs=1, metavar='FILE',
                            help='save output in FILE')
     argparser.add_argument('-H', '--http', nargs='+', metavar='URL',
@@ -636,6 +639,14 @@ given files or directories')
 
     message = yaml.safe_dump(final_message, default_flow_style=False,
                              explicit_start=True)
+
+    if args.show_method_stats:
+        show_method_stats = {
+            'method level stats': fluidasserts.method_stats_parse_stats()
+        }
+        show_method_stats_yaml = yaml.safe_dump(
+            show_method_stats, default_flow_style=False, explicit_start=True)
+        colorize_text(show_method_stats_yaml, args.no_color)
 
     colorize_text(message, args.no_color)
 

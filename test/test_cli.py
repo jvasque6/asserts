@@ -38,7 +38,7 @@ def test_cli_strict():
     testargs = ["asserts", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
         with pytest.raises(SystemExit):
-                assert cli.main()
+            assert cli.main()
 
 
 def test_cli_strict_bad():
@@ -47,7 +47,7 @@ def test_cli_strict_bad():
     testargs = ["asserts", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
         with pytest.raises(SystemExit):
-                assert cli.main()
+            assert cli.main()
 
 
 def test_cli_noargs():
@@ -56,7 +56,7 @@ def test_cli_noargs():
     testargs = ["asserts"]
     with patch.object(sys, 'argv', testargs):
         with pytest.raises(SystemExit):
-                assert cli.main()
+            assert cli.main()
 
 
 def test_cli_quiet():
@@ -129,6 +129,14 @@ def test_cli_filtered():
     """Run CLI with filtered results."""
     os.environ['FA_STRICT'] = 'false'
     testargs = ["asserts", "-cou", ASSERTS_EXPLOIT]
+    with patch.object(sys, 'argv', testargs):
+        with pytest.raises(SystemExit):
+            assert not cli.main()
+
+def test_cli_method_stats():
+    """Run CLI with method stats flag."""
+    os.environ['FA_STRICT'] = 'false'
+    testargs = ["asserts", "-ms", ASSERTS_EXPLOIT]
     with patch.object(sys, 'argv', testargs):
         with pytest.raises(SystemExit):
             assert not cli.main()

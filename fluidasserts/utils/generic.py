@@ -15,6 +15,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts import show_metadata
+from fluidasserts import method_stats_set_owner
 from fluidasserts.utils.cli import colorize_text
 from fluidasserts.utils.cli import enable_win_colors
 from fluidasserts.utils.decorators import track, level, notify
@@ -60,7 +61,7 @@ def check_function(func: Callable, *args, **kwargs):
         return bool(ret)
 
 
-def add_info(metadata: dict):
+def add_info(metadata: dict) -> bool:
     """Print arbitrary info in the Asserts output.
 
     :param metadata: Dict with data to be printed.
@@ -69,12 +70,13 @@ def add_info(metadata: dict):
     return True
 
 
-def add_finding(finding: str):
+def add_finding(finding: str) -> bool:
     """Print finding as part of the Asserts output.
 
     :param finding: Current project context.
     """
     enable_win_colors()
+    method_stats_set_owner(finding)
     colorize_text('---')
     colorize_text('finding: ' + finding)
     return True
