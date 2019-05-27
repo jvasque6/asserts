@@ -113,7 +113,7 @@ def has_all_text(code_dest: str, expected_list: list,
     Search is (case-insensitively) performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
-    :param expected_text: Bad text to look for in the file.
+    :param expected_list: List of bad text to look for in the file.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -159,7 +159,7 @@ def has_any_text(code_dest: str, expected_list: list,
     Search is (case-insensitively) performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
-    :param expected_text: Bad text to look for in the file.
+    :param expected_list: List of bad text to look for in the file.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -289,3 +289,44 @@ def has_secret(code_dest: str, secret: str, exclude: list = None,
                            secret=secret,
                            total_vulns=len(result)))
     return bool(result)
+
+
+@notify
+@level('high')
+@track
+def has_any_secret(code_dest: str, expected_list: list,
+                   exclude: list = None, lang_specs: dict = None) -> bool:
+    """
+    Check if any on a list of secrets is present in given source file.
+
+    Search is (case-insensitively) performed by :py:func:`re.search`.
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param expected_list: List of secrets to look for in the file.
+    """
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
+    matches = {}
+    any_list = [Regex(re.escape(expected)) for expected in expected_list]
+    any_query = Or(any_list)
+    try:
+        matches = lang.check_grammar(any_query, code_dest,
+                                     lang_specs, exclude)
+        if not matches:
+            show_close('None of the expected secrets were found in code',
+                       details=dict(location=code_dest,
+                                    expected_text=expected_list))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=code_dest))
+        return False
+    else:
+        result = True
+        for code_file, vulns in matches.items():
+            show_open('Some of the expected secrets are present in code',
+                      details=dict(file=code_file,
+                                   expected_list=expected_list,
+                                   fingerprint=lang.
+                                   file_hash(code_file)))
+    return result

@@ -77,6 +77,10 @@ def test_has_any_text_open():
     """Check if code has some of the text in list given."""
     assert core.has_any_text(INSECURE_CODE, ['char user', 'char pass'])
 
+def test_has_any_secret_open():
+    """Check if code has some of the secret in the given list."""
+    assert core.has_any_secret(INSECURE_CODE, ['root', 'password123'])
+
 #
 # Closing tests
 #
@@ -128,3 +132,8 @@ def test_has_any_text_close():
                                  ['char user', 'char pass'])
     assert not core.has_any_text(INSECURE_CODE,
                                  ['char notu', 'char notp'])
+
+def test_has_any_secret_close():
+    """Check if code has some of the text in list given."""
+    assert not core.has_any_secret(NON_EXISTANT_CODE, ['root', 'password123'])
+    assert not core.has_any_secret(SECURE_CODE, ['root', 'password123'])
