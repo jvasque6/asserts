@@ -186,7 +186,8 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                     self.cookies = ret.cookies
             except (requests.ConnectionError,
                     requests.exceptions.TooManyRedirects,
-                    requests.exceptions.ReadTimeout) as exc:
+                    requests.exceptions.ReadTimeout,
+                    requests.exceptions.ChunkedEncodingError) as exc:
                 raise ConnError(exc)
             except requests.exceptions.MissingSchema as exc:
                 raise ParameterError(exc)
