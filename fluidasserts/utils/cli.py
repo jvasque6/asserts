@@ -654,7 +654,10 @@ given files or directories')
             'method level stats': fluidasserts.method_stats_parse_stats()
         }
         show_method_stats_yaml = yaml.safe_dump(
-            show_method_stats, default_flow_style=False, explicit_start=True)
+            show_method_stats,
+            default_flow_style=False,
+            explicit_start=True,
+            allow_unicode=True)
         colorize_text(show_method_stats_yaml, args.no_color)
 
     colorize_text(message, args.no_color)
