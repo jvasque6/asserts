@@ -125,7 +125,7 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     Search for on-error empty.
 
     See `REQ. 161
-    <https://fluidattacks.com/web/en/rules/161/>`_.
+    <https://fluidattacks.com/web/rules/161/>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
     """
@@ -164,7 +164,7 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     Search for on-error without code.
 
     See `REQ.075
-    <https://fluidattacks.com/web/en/rules/075>`_.
+    <https://fluidattacks.com/web/rules/075>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
     """

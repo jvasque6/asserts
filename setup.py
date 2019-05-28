@@ -30,7 +30,7 @@ setup(
     description='Assertion Library for Security Assumptions',
     long_description=_get_readme(),
     version=_get_version(),
-    url='https://fluidattacks.com/web/en/products/asserts',
+    url='https://fluidattacks.com/web/products/asserts',
     project_urls={'Documentation': 'https://fluidattacks.gitlab.io/asserts/'},
     package_data={'': ['conf/conf.cfg', 'conf/conf.spec']},
     author='Fluid Attacks Engineering Team',

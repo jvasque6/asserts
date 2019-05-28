@@ -120,7 +120,7 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
     """
     Search for ``catch`` blocks that are empty or only have comments.
 
-    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -170,7 +170,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``switch``\ es have a ``default`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -227,7 +227,7 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
     - ``java.util.Random()``.
     - ``java.lang.Math.random()``.
 
-    See `REQ.224 <https://fluidattacks.com/web/en/rules/224/>`_.
+    See `REQ.224 <https://fluidattacks.com/web/rules/224/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -274,7 +274,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     r"""
     Check if all ``if``\ s have an ``else`` clause.
 
-    See `REQ.161 <https://fluidattacks.com/web/en/rules/161/>`_.
+    See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -324,8 +324,8 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
     """
     Check if code uses an insecure cipher algorithm.
 
-    See `REQ.148 <https://fluidattacks.com/web/en/rules/148/>`_.
-    See `REQ.149 <https://fluidattacks.com/web/en/rules/149/>`_.
+    See `REQ.148 <https://fluidattacks.com/web/rules/148/>`_.
+    See `REQ.149 <https://fluidattacks.com/web/rules/149/>`_.
 
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
@@ -371,7 +371,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
     """
     Check if code uses an insecure hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
+    See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
@@ -413,7 +413,7 @@ def uses_md5_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
+    See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -428,7 +428,7 @@ def uses_sha1_hash(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses MD5 as hashing algorithm.
 
-    See `REQ.150 <https://fluidattacks.com/web/en/rules/150/>`_.
+    See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
@@ -443,7 +443,7 @@ def uses_des_algorithm(java_dest: str, exclude: list = None) -> bool:
     """
     Check if code uses DES as encryption algorithm.
 
-    See `REQ.149 <https://fluidattacks.com/web/en/rules/149/>`_.
+    See `REQ.149 <https://fluidattacks.com/web/rules/149/>`_.
 
     :param java_dest: Path to a Java source file or package.
     """

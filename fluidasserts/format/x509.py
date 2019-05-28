@@ -80,7 +80,7 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     Check if certificate Common Name (CN) is different from given sitename.
 
     Name in certificate should be coherent with organization name, see
-    `REQ. 093 <https://fluidattacks.com/web/en/rules/093/>`_
+    `REQ. 093 <https://fluidattacks.com/web/rules/093/>`_
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -296,7 +296,7 @@ def is_sha1_used(site: str, port: int = PORT) -> bool:
     Use of this algorithm is not recommended.
     See `Storing passwords safely`__.
 
-    __ https://fluidattacks.com/web/en/blog/storing-password-safely/
+    __ https://fluidattacks.com/web/blog/storing-password-safely/
 
     :param site: Site address.
     :param port: Port to connect to.
@@ -314,7 +314,7 @@ def is_md5_used(site: str, port: int = PORT) -> bool:
     Use of this algorithm is not recommended.
     See `Storing passwords safely`__.
 
-    __ https://fluidattacks.com/web/en/blog/storing-password-safely/
+    __ https://fluidattacks.com/web/blog/storing-password-safely/
 
     :param site: Site address.
     :param port: Port to connect to.

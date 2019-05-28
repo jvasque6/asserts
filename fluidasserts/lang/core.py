@@ -234,7 +234,7 @@ def has_weak_cipher(code_dest: str, expected_text: str,
     """
     Check if code uses base 64 to cipher confidential data.
 
-    See `REQ.185 <https://fluidattacks.com/web/en/rules/185/>`_.
+    See `REQ.185 <https://fluidattacks.com/web/rules/185/>`_.
 
     :param code_dest: Path to a code source file or package.
     :param expected_text: Text that might be in source file or package
