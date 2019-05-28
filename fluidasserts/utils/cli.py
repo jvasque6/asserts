@@ -352,6 +352,12 @@ def lint_exploit(exploit):
             'Avoid using exit().',
             'regexes':
                 [r'exit[\s]*\(']
+        },
+        '005': {
+            'description':
+            'Exploit does not use fluidasserts.util.generic.add_finding()',
+            'regexes':
+                [r'^((?!generic\.add_finding\().)*$']
         }
     }
     warnings = []
