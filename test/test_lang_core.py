@@ -66,20 +66,29 @@ def test_has_weak_cipher_open_in_dir():
 def test_has_secret_open():
     """Code has secret."""
     assert core.has_secret(INSECURE_CODE, 'user: root; pass: password123')
+    assert core.has_secret(
+        INSECURE_CODE, r'user: ro{2}t; pass: password\d{3}', use_regex=True)
 
 
 def test_has_all_text_open():
     """Check if code has all of the text in list given."""
     assert core.has_all_text(INSECURE_CODE, ['char user', 'char pass'])
+    assert core.has_all_text(
+        INSECURE_CODE, [r'char use[r]', r'char pas{2}'], use_regex=True)
 
 
 def test_has_any_text_open():
     """Check if code has some of the text in list given."""
     assert core.has_any_text(INSECURE_CODE, ['char user', 'char pass'])
+    assert core.has_any_text(
+        INSECURE_CODE, [r'char use[r]', r'char pas{2}'], use_regex=True)
+
 
 def test_has_any_secret_open():
     """Check if code has some of the secret in the given list."""
     assert core.has_any_secret(INSECURE_CODE, ['root', 'password123'])
+    assert core.has_any_secret(
+        INSECURE_CODE, [r'ro{2}t', r'password\d{3}'], use_regex=True)
 
 #
 # Closing tests
@@ -92,12 +101,16 @@ def test_has_text_close():
     assert not core.has_text(CODE_DIR, 'strcpy', exclude=['test'])
     assert not core.has_text(NON_EXISTANT_CODE, 'strcpy')
     assert not core.has_text(SECURE_CODE, 'user: root; pass: password123')
+    assert not core.has_text(
+        SECURE_CODE, r'user: ro{2}t; pass: password\d{3}', use_regex=True)
 
 
 def test_has_not_text_close():
     """Test code does not have text."""
     assert not core.has_not_text(SECURE_CODE, 'strncpy')
     assert not core.has_not_text(NON_EXISTANT_CODE, 'strncpy')
+    assert not core.has_not_text(
+        NON_EXISTANT_CODE, r'strn+cpy', use_regex=True)
 
 
 def test_file_exists_close():
@@ -116,6 +129,8 @@ def test_has_secret_close():
     """Code has secret."""
     assert not core.has_secret(NON_EXISTANT_CODE, 'password123')
     assert not core.has_secret(SECURE_CODE, 'user: root; pass: password123')
+    assert not core.has_secret(
+        SECURE_CODE, r'user: ro{2}t; pass: password\d{3}', use_regex=True)
 
 
 def test_has_all_text_close():
@@ -124,6 +139,9 @@ def test_has_all_text_close():
                                  ['char user', 'char pass'])
     assert not core.has_all_text(INSECURE_CODE,
                                  ['char notu', 'char notp'])
+    assert not core.has_all_text(INSECURE_CODE,
+                                 [r'char notu', r'char notp'],
+                                 use_regex=True)
 
 
 def test_has_any_text_close():
@@ -132,8 +150,17 @@ def test_has_any_text_close():
                                  ['char user', 'char pass'])
     assert not core.has_any_text(INSECURE_CODE,
                                  ['char notu', 'char notp'])
+    assert not core.has_any_text(INSECURE_CODE,
+                                 [r'char not[u]', r'char not[p]'],
+                                 use_regex=True)
+
 
 def test_has_any_secret_close():
     """Check if code has some of the text in list given."""
-    assert not core.has_any_secret(NON_EXISTANT_CODE, ['root', 'password123'])
-    assert not core.has_any_secret(SECURE_CODE, ['root', 'password123'])
+    assert not core.has_any_secret(NON_EXISTANT_CODE,
+                                   ['root', 'password123'])
+    assert not core.has_any_secret(SECURE_CODE,
+                                   ['root', 'password123'])
+    assert not core.has_any_secret(SECURE_CODE,
+                                   [r'ro{2}t', r'password\d{3}'],
+                                   use_regex=True)

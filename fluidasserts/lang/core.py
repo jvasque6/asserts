@@ -4,7 +4,6 @@
 
 # standard imports
 import os
-import re
 import base64
 
 # 3rd party imports
@@ -24,27 +23,29 @@ LANGUAGE_SPECS = {}  # type: dict
 @notify
 @level('low')
 @track
-def has_text(code_dest: str, expected_text: str, exclude: list = None,
-             lang_specs: dict = None) -> bool:
+def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
+             exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a bad text is present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    exected_regex = Regex(re.escape(expected_text))
+    grammar = Regex(expected_text) if use_regex else Literal(expected_text)
     result = False
     try:
-        matches = lang.check_grammar(exected_regex, code_dest,
-                                     lang_specs, exclude)
+        matches = lang.check_grammar(grammar, code_dest, lang_specs, exclude)
         if not matches:
             show_close('Bad text not present in code',
                        details=dict(location=code_dest,
-                                    expected_text=expected_text))
+                                    expected_text=expected_text,
+                                    used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist',
@@ -56,6 +57,7 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
             show_open('Bad text present in code',
                       details=dict(file=code_file,
                                    bad_text=expected_text,
+                                   used_regular_expressions=use_regex,
                                    fingerprint=lang.
                                    file_hash(code_file),
                                    lines=str(vulns)[1:-1],
@@ -66,27 +68,30 @@ def has_text(code_dest: str, expected_text: str, exclude: list = None,
 @notify
 @level('low')
 @track
-def has_not_text(code_dest: str, expected_text: str,
+def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
                  exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a required text is not present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    exected_regex = Regex(re.escape(expected_text))
+    grammar = Regex(expected_text) if use_regex else Literal(expected_text)
     result = True
     try:
-        matches = lang.check_grammar(exected_regex, code_dest,
+        matches = lang.check_grammar(grammar, code_dest,
                                      lang_specs, exclude)
         if not matches:
             show_open('Expected text not present in code',
                       details=dict(location=code_dest,
-                                   expected_text=expected_text))
+                                   expected_text=expected_text,
+                                   used_regular_expressions=use_regex))
             return True
     except FileNotFoundError:
         show_unknown('File does not exist',
@@ -97,6 +102,7 @@ def has_not_text(code_dest: str, expected_text: str,
         for code_file, vulns in matches.items():
             show_close('Expected text present in code',
                        details=dict(file=code_file,
+                                    used_regular_expressions=use_regex,
                                     fingerprint=lang.
                                     file_hash(code_file)))
     return result
@@ -105,24 +111,26 @@ def has_not_text(code_dest: str, expected_text: str,
 @notify
 @level('low')
 @track
-def has_all_text(code_dest: str, expected_list: list,
+def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
                  exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a list of bad text is present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_list: List of bad text to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
     for expected in expected_list:
-        exected_regex = Regex(re.escape(expected))
+        grammar = Regex(expected) if use_regex else Literal(expected)
         result = False
         try:
-            __matches = lang.check_grammar(exected_regex, code_dest,
+            __matches = lang.check_grammar(grammar, code_dest,
                                            lang_specs, exclude)
             try:
                 matches = {x: matches[x] + y for x, y in __matches.items()}
@@ -130,7 +138,8 @@ def has_all_text(code_dest: str, expected_list: list,
                 matches.update(__matches)
         except FileNotFoundError:
             show_unknown('File does not exist',
-                         details=dict(code_dest=code_dest))
+                         details=dict(code_dest=code_dest,
+                                      used_regular_expressions=use_regex))
             return False
     if not matches:
         show_close('All bad text in list was not found in code',
@@ -143,6 +152,7 @@ def has_all_text(code_dest: str, expected_list: list,
                                fingerprint=lang.
                                file_hash(code_file),
                                text_list=expected_list,
+                               used_regular_expressions=use_regex,
                                lines=str(vulns)[1:-1],
                                total_vulns=len(vulns)))
     return result
@@ -151,20 +161,25 @@ def has_all_text(code_dest: str, expected_list: list,
 @notify
 @level('low')
 @track
-def has_any_text(code_dest: str, expected_list: list,
+def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
                  exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if any on a list of bad text is present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
     :param expected_list: List of bad text to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [Regex(re.escape(expected)) for expected in expected_list]
+    any_list = [
+        Regex(expected) if use_regex else Literal(expected)
+        for expected in expected_list
+    ]
     any_query = Or(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
@@ -172,7 +187,8 @@ def has_any_text(code_dest: str, expected_list: list,
         if not matches:
             show_close('None of the expected strings were found in code',
                        details=dict(location=code_dest,
-                                    expected_text=expected_list))
+                                    expected_text=expected_list,
+                                    used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist',
@@ -184,6 +200,7 @@ def has_any_text(code_dest: str, expected_list: list,
             show_open('Any of the expected bad text is present in code',
                       details=dict(file=code_file,
                                    expected_list=expected_list,
+                                   used_regular_expressions=use_regex,
                                    fingerprint=lang.
                                    file_hash(code_file)))
     return result
@@ -256,27 +273,30 @@ base64',
 @notify
 @level('high')
 @track
-def has_secret(code_dest: str, secret: str, exclude: list = None,
-               lang_specs: dict = None) -> bool:
+def has_secret(code_dest: str, secret: str, use_regex: bool = False,
+               exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if a secret is present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
     :param secret: Secret to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     :param exclude: Files to exclude.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     result = False
-    secret_regex = Regex(re.escape(secret))
+    grammar = Regex(secret) if use_regex else Literal(secret)
     try:
-        matches = lang.check_grammar(secret_regex, code_dest,
+        matches = lang.check_grammar(grammar, code_dest,
                                      lang_specs, exclude)
         if not matches:
             show_close('Secret not found in code',
-                       details=dict(location=code_dest))
+                       details=dict(location=code_dest,
+                                    used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(location=code_dest))
@@ -287,6 +307,7 @@ def has_secret(code_dest: str, secret: str, exclude: list = None,
     show_open('Secret found in code',
               details=dict(location=result,
                            secret=secret,
+                           used_regular_expressions=use_regex,
                            total_vulns=len(result)))
     return bool(result)
 
@@ -294,20 +315,25 @@ def has_secret(code_dest: str, secret: str, exclude: list = None,
 @notify
 @level('high')
 @track
-def has_any_secret(code_dest: str, expected_list: list,
+def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
                    exclude: list = None, lang_specs: dict = None) -> bool:
     """
     Check if any on a list of secrets is present in given source file.
 
-    Search is (case-insensitively) performed by :py:func:`re.search`.
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
 
     :param code_dest: Path to the file or directory to be tested.
-    :param expected_list: List of secrets to look for in the file.
+    :param secrets_list: List of secrets to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [Regex(re.escape(expected)) for expected in expected_list]
+    any_list = [
+        Regex(secret) if use_regex else Literal(secret)
+        for secret in secrets_list
+    ]
     any_query = Or(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
@@ -315,7 +341,8 @@ def has_any_secret(code_dest: str, expected_list: list,
         if not matches:
             show_close('None of the expected secrets were found in code',
                        details=dict(location=code_dest,
-                                    expected_text=expected_list))
+                                    secrets_list=secrets_list,
+                                    used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist',
@@ -326,7 +353,8 @@ def has_any_secret(code_dest: str, expected_list: list,
         for code_file, vulns in matches.items():
             show_open('Some of the expected secrets are present in code',
                       details=dict(file=code_file,
-                                   expected_list=expected_list,
+                                   secrets_list=secrets_list,
+                                   used_regular_expressions=use_regex,
                                    fingerprint=lang.
                                    file_hash(code_file)))
     return result
