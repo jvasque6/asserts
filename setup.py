@@ -101,6 +101,7 @@ setup(
         'python-dateutil==2.8.0',    # fluidasserts.cloud.aws
         'mysql-connector==2.2.9',    # fluidasserts.db.mysql_db
         'pycrypto==2.6.1; platform_system == "Linux"',
+        'pyjwt==1.7.1',              # fluidasserts.format.jwt
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points={
