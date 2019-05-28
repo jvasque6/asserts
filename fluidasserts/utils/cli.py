@@ -361,12 +361,9 @@ def lint_exploit(exploit):
         }
     }
     warnings = []
-    for rule in rules:
-        for regex in rules[rule]['regexes']:
-            match = re.search(regex, exploit)
-            if match:
-                warnings.append('{}: {}'.format(rule,
-                                                rules[rule]['description']))
+    warnings += ['{}: {}'.format(rule, rules[rule]['description'])
+                 for rule in rules
+                 for x in rules[rule]['regexes'] if re.search(x, exploit)]
 
     if warnings:
         enable_win_colors()
