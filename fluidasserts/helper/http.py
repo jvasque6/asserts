@@ -125,7 +125,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                                           allow_redirects=self.redirect,
                                           timeout=self.timeout)
                 self.response = ret
-            except (requests.ConnectionError,
+            except (requests.exceptions.ConnectionError,
                     requests.exceptions.TooManyRedirects) as exc:
                 raise ConnError(exc)
             except requests.exceptions.MissingSchema as exc:
@@ -184,7 +184,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
                         self.cookies = ret.request._cookies
                 else:
                     self.cookies = ret.cookies
-            except (requests.ConnectionError,
+            except (requests.exceptions.ConnectionError,
                     requests.exceptions.TooManyRedirects,
                     requests.exceptions.ReadTimeout,
                     requests.exceptions.ChunkedEncodingError) as exc:
