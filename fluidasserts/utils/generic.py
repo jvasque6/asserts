@@ -6,6 +6,7 @@
 
 # standard imports
 import sys
+import asyncio
 
 # 3rd party imports
 from typing import Callable
@@ -40,7 +41,13 @@ def check_function(func: Callable, *args, **kwargs):
     :param *kwargs: Keyword parameters that will be passed to func.
     """
     try:
-        ret = func(*args, **kwargs)
+        if asyncio.iscoroutinefunction(func):
+            loop = asyncio.new_event_loop()
+            futr = asyncio.gather(func(*args, **kwargs), loop=loop)
+            ret, = loop.run_until_complete(futr)
+            loop.close()
+        else:
+            ret = func(*args, **kwargs)
     except Exception as exc:
         show_unknown('Function returned an error',
                      details=dict(function=func.__name__,
