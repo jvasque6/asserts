@@ -227,6 +227,26 @@ def file_exists(code_file: str) -> bool:
 
 
 @notify
+@level('low')
+@track
+def file_does_not_exist(code_file: str) -> bool:
+    """
+    Check if the given file does'nt exist.
+
+    :param code_file: Path to the file to be tested.
+    """
+    if os.path.exists(code_file):
+        show_close('File exists',
+                   details=dict(path=code_file,
+                                fingerprint=lang.file_hash(code_file)))
+        return False
+    show_open('File does not exist',
+              details=dict(path=code_file,
+                           fingerprint=lang.file_hash(code_file)))
+    return True
+
+
+@notify
 @level('medium')
 @track
 def has_weak_cipher(code_dest: str, expected_text: str,

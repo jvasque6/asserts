@@ -53,6 +53,11 @@ def test_file_exists_open():
     assert core.file_exists(INSECURE_CODE)
 
 
+def test_file_does_not_exist_open():
+    """Check if a given file exists."""
+    assert core.file_does_not_exist('notexistingfile.code')
+
+
 def test_has_weak_cipher_open():
     """Check if base64 is used to cipher confidential data."""
     assert core.has_weak_cipher(INSECURE_CODE, 'password123')
@@ -116,6 +121,11 @@ def test_has_not_text_close():
 def test_file_exists_close():
     """Check if a given file exists."""
     assert not core.file_exists('notexistingfile.code')
+
+
+def test_file_does_not_exist_close():
+    """Check if a given file exists."""
+    assert not core.file_does_not_exist(INSECURE_CODE)
 
 
 def test_has_weak_cipher_close():
