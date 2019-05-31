@@ -110,9 +110,17 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     if key_exchange_names:
         settings.keyExchangeNames = key_exchange_names
 
-    if anon:
-        connection.handshakeClientAnonymous(settings=settings)
+    if tlslite.utils.dns_utils.is_valid_hostname(hostname):
+        if anon:
+            connection.handshakeClientAnonymous(settings=settings,
+                                                serverName=hostname)
+        else:
+            connection.handshakeClientCert(settings=settings,
+                                           serverName=hostname)
     else:
-        connection.handshakeClientCert(settings=settings)
+        if anon:
+            connection.handshakeClientAnonymous(settings=settings)
+        else:
+            connection.handshakeClientCert(settings=settings)
     yield connection
     connection.close()

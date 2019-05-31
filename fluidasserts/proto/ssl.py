@@ -12,7 +12,6 @@ from __future__ import absolute_import
 import copy
 import errno
 import socket
-import ssl
 import struct
 from typing import Tuple, Optional, List
 
@@ -26,7 +25,6 @@ from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level, notify
 from fluidasserts.helper import http
 from fluidasserts.helper.ssl import connect
-from fluidasserts.helper.ssl import connect_legacy
 
 PORT = 443
 TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
@@ -193,24 +191,6 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
     :param site: Address to connect to.
     :param port: If necessary, specify port to connect to.
     """
-    ciphers = 'ECDHE-RSA-AES256-GCM-SHA384:\
-               ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:\
-               ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:\
-               ECDHE-ECDSA-AES256-SHA:DHE-DSS-AES256-GCM-SHA384:\
-               DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES256-SHA256:\
-               DHE-DSS-AES256-SHA256:DHE-RSA-AES256-SHA:\
-               DHE-DSS-AES256-SHA:DHE-RSA-CAMELLIA256-SHA:\
-               DHE-DSS-CAMELLIA256-SHA:ECDHE-RSA-AES128-GCM-SHA256:\
-               ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-SHA256:\
-               ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:\
-               ECDHE-ECDSA-AES128-SHA:DHE-DSS-AES128-GCM-SHA256:\
-               DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES128-SHA256:\
-               DHE-DSS-AES128-SHA256:DHE-RSA-AES128-SHA:\
-               DHE-DSS-AES128-SHA:DHE-RSA-SEED-SHA:DHE-DSS-SEED-SHA:\
-               DHE-RSA-CAMELLIA128-SHA:DHE-DSS-CAMELLIA128-SHA:\
-               ECDHE-RSA-RC4-SHA:ECDHE-ECDSA-RC4-SHA:\
-               ECDHE-RSA-DES-CBC3-SHA:ECDHE-ECDSA-DES-CBC3-SHA'
-
     try:
         with connect(site, port=port,
                      key_exchange_names=['dhe_rsa', 'ecdhe_rsa',
@@ -220,15 +200,9 @@ def is_pfs_disabled(site: str, port: int = PORT) -> bool:
             result = False
     except (tlslite.errors.TLSRemoteAlert,
             tlslite.errors.TLSAbruptCloseError):
-        try:
-            with connect_legacy(site, port, ciphers):
-                show_close('Forward Secrecy enabled on site',
-                           details=dict(site=site, port=port))
-                result = False
-        except ssl.SSLError:
-            show_open('Forward Secrecy not enabled on site',
-                      details=dict(site=site, port=port))
-            return True
+        show_open('Forward Secrecy not enabled on site',
+                  details=dict(site=site, port=port))
+        return True
     except (tlslite.errors.TLSLocalAlert, socket.error) as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port, error=str(exc)))
