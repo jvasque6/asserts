@@ -44,7 +44,7 @@ def _uses_sign_alg(site: str, alg: str, port: int) -> bool:
     except tlslite.errors.TLSRemoteAlert as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port,
-                                  error=str(exc.replace(':', ','))))
+                                  error=str(exc).replace(':', ',')))
         return False
     except (tlslite.errors.TLSLocalAlert):
         show_unknown('Port doesn\'t support SSL',
@@ -94,7 +94,7 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     except tlslite.errors.TLSRemoteAlert as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port,
-                                  error=str(exc.replace(':', ','))))
+                                  error=str(exc).replace(':', ',')))
         return False
     except (tlslite.errors.TLSLocalAlert):
         show_unknown('Port doesn\'t support SSL',
@@ -154,7 +154,7 @@ def is_cert_inactive(site: str, port: int = PORT) -> bool:
     except tlslite.errors.TLSRemoteAlert as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port,
-                                  error=str(exc.replace(':', ','))))
+                                  error=str(exc).replace(':', ',')))
         return False
     except (tlslite.errors.TLSLocalAlert):
         show_unknown('Port doesn\'t support SSL',
@@ -238,7 +238,7 @@ def is_cert_validity_lifespan_unsafe(site: str, port: int = PORT) -> bool:
     except tlslite.errors.TLSRemoteAlert as exc:
         show_unknown('Could not connect',
                      details=dict(site=site, port=port,
-                                  error=str(exc.replace(':', ','))))
+                                  error=str(exc).replace(':', ',')))
         return False
     except (tlslite.errors.TLSLocalAlert):
         show_unknown('Port doesn\'t support SSL',
