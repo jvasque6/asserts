@@ -19,8 +19,7 @@ RUN git clone --depth 1 \
     && cd /home/asserts \
     && scons dist
 
-
-FROM alpine:3.9
+FROM python:3.7-alpine3.9
 
 WORKDIR /home
 COPY --from=deps /home/asserts/build/dist/* /home/
@@ -35,10 +34,7 @@ RUN apk update \
         libffi-dev \
         make \
         openssl-dev \
-        py3-pip \
-        python3-dev \
         zlib-dev \
-    && pip3 install -U pip==18.1 \
     && pip3 install --no-cache-dir -U ./*.zip \
     && apk del -r --purge \
         gcc \
@@ -59,3 +55,4 @@ RUN apk update \
     && rm -rf \
         /var/cache/apk/* \
         /home/*
+
