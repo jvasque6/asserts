@@ -1283,7 +1283,7 @@ def has_user_enumeration(url: str, user_field: str,
     else:
         num_comp = len(fake_res) * len(user_res)
 
-        merged = [(x, y) for x in fake_res for y in user_res]
+        merged = ((x, y) for x in fake_res for y in user_res)
 
         from difflib import SequenceMatcher
         res = 0.0

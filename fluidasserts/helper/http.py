@@ -251,7 +251,7 @@ rv:45.0) Gecko/20100101 Firefox/45.0'
         fp_headers.pop('x-amz-id-2', None)
         fp_headers.pop('x-amz-request-id', None)
 
-        banner = '\r\n'.join(['{key}: {key}'.format(key=x)
-                              for x in fp_headers])
+        banner = '\r\n'.join(('{key}: {key}'.format(key=x)
+                              for x in fp_headers))
         sha256.update(banner.encode('utf-8'))
         return dict(sha256=sha256.hexdigest(), banner=fp_headers)

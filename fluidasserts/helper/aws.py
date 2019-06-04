@@ -75,7 +75,7 @@ def get_credentials_report(key_id: str, secret: str) -> dict:
         client.generate_credential_report()
         response = client.get_credential_report()
         users = response['Content'].decode().split('\n')[1:]
-        return [x.split(',') for x in users]
+        return (x.split(',') for x in users)
     except botocore.vendored.requests.exceptions.ConnectionError:
         raise ConnError
     except botocore.exceptions.ClientError:

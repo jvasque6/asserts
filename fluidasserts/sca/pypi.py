@@ -27,7 +27,7 @@ def _get_requirements(path: str) -> list:
 
     :param path: Project path
     """
-    _reqs = [(x.name, x.version_specs) for x in find_requirements(path)]
+    _reqs = ((x.name, x.version_specs) for x in find_requirements(path))
     reqs = []
     for req in _reqs:
         if req[1]:

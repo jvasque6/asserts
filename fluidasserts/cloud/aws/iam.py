@@ -180,7 +180,7 @@ def root_has_access_keys(key_id: str, secret: str) -> bool:
         show_unknown('Error retrieving info. Check credentials.',
                      details=dict(error=str(exc).replace(':', '')))
         return False
-    root_user = users[0]
+    root_user = next(users)
     if root_user[8] == 'true' or root_user[13] == 'true':
         show_open('Root user has access keys', details=dict(user=root_user))
         result = True

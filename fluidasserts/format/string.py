@@ -38,7 +38,7 @@ def _check_password_strength(password: str, length: int) -> bool:
     special = sum(1 for c in password if not c.isalnum())
 
     with open(dictionary) as dict_fd:
-        words = [x.rstrip() for x in dict_fd.readlines()]
+        words = (x.rstrip() for x in dict_fd.readlines())
 
     result = True
 
@@ -144,7 +144,7 @@ def is_ssid_insecure(ssid: str) -> bool:
     dictionary = static_path + 'wordlists/password.lst'
 
     with open(dictionary) as dict_fd:
-        words = [x.rstrip() for x in dict_fd.readlines()]
+        words = (x.rstrip() for x in dict_fd.readlines())
 
     result = True
     if ssid in words:
