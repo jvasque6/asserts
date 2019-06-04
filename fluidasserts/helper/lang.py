@@ -44,11 +44,9 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
     block_comment_start = lang_spec.get('block_comment_start')
 
     with open(code_file, encoding='latin-1') as file_fd:
-        counter = 0
         in_block_comment = False
         non_commented_lines = []
-        for line in file_fd:
-            counter += 1
+        for (counter, line) in enumerate(file_fd, start=1):
             try:
                 if line_comment:
                     parser = ~Or(line_comment)
