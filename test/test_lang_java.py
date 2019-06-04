@@ -146,6 +146,15 @@ def test_uses_insecure_cipher_open():
     assert java.uses_insecure_cipher(INSECURE_CIPHER, 'DES')
 
 
+def test_uses_system_exit_open_in_dir():
+    """Search System.exit() calls."""
+    assert java.uses_system_exit(CODE_DIR)
+
+
+def test_uses_system_exit_open():
+    """Search System.exit() calls."""
+    assert java.uses_system_exit(INSECURE_CODE)
+
 #
 # Closing tests
 #
@@ -226,3 +235,10 @@ def test_uses_insecure_cipher_close():
     assert not java.uses_insecure_cipher(SECURE_CIPHER, 'DES')
     assert not java.uses_insecure_cipher(CODE_DIR, 'DES', exclude=['test'])
     assert not java.uses_insecure_cipher(NON_EXISTANT_CODE, 'DES')
+
+
+def test_uses_system_exit_close():
+    """Search System.exit calls."""
+    assert not java.uses_system_exit(SECURE_CODE)
+    assert not java.uses_system_exit(CODE_DIR, exclude=['test'])
+    assert not java.uses_system_exit(NON_EXISTANT_CODE)

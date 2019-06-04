@@ -494,3 +494,38 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
     return result
+
+
+@notify
+@level('low')
+@track
+def uses_system_exit(java_dest: str, exclude: list = None) -> bool:
+    """
+    Search for ``System.exit`` calls in a  or package.
+
+    :param java_dest: Path to a Java source file or package.
+    """
+    method = 'System.exit'
+    sys_exit = Literal(method)
+
+    result = False
+    try:
+        matches = lang.check_grammar(sys_exit, java_dest, LANGUAGE_SPECS,
+                                     exclude)
+        if not matches:
+            show_close('Code does not use {} method'.format(method),
+                       details=dict(code_dest=java_dest))
+            return False
+    except FileNotFoundError:
+        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        return False
+    else:
+        result = True
+        for code_file, vulns in matches.items():
+            show_open('Code uses {} method'.format(method),
+                      details=dict(file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   lines=str(vulns)[1:-1],
+                                   total_vulns=len(vulns)))
+    return result

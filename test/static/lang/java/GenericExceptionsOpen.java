@@ -26,6 +26,9 @@ class GenericExceptionsOpen{
       des.init(Cipher.ENCRYPT_MODE, secretKeySpec);
       byte[] encrypted = des.doFinal(input.getBytes("UTF-8"));
 
+      catch(NullException e){
+         System.exit(1);
+      }
       catch(ArithmeticException e){
          System.out.println("Warning: ArithmeticException");
       }
