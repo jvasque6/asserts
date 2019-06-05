@@ -52,7 +52,7 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param version: Package version.
     """
     try:
-        vulns = sca.get_vulns_ossindex(PACKAGE_MANAGER, package, version)
+        vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, package, version)
         if vulns:
             show_open('Software has vulnerabilities',
                       details=dict(package=package, version=version,
@@ -64,10 +64,6 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
-        return False
-    except sca.PackageNotFoundException:
-        show_unknown('Sofware couldn\'t be found in package manager',
-                     details=dict(package=package, version=version))
         return False
 
 

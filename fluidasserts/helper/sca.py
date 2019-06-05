@@ -112,7 +112,7 @@ def scan_requirements(requirements: list, package_manager: str) -> list:
     result = []
     for req in requirements:
         try:
-            vulns = get_vulns_ossindex(package_manager, req[0], req[1])
+            vulns = get_vulns_snyk(package_manager, req[0], req[1])
             result.append(dict(package=req[0], version=req[1], vulns=vulns))
         except PackageNotFoundException:
             result.append(dict(package=req[0], version=-1, vulns=[]))

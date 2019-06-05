@@ -15,6 +15,8 @@ from fluidasserts.sca import maven
 from fluidasserts.sca import npm
 from fluidasserts.sca import nuget
 from fluidasserts.sca import pypi
+from fluidasserts.sca import linux
+from fluidasserts.sca import rubygems
 
 
 # Constants
@@ -51,6 +53,8 @@ def test_package_has_vulnerabilities_open():
     assert nuget.project_has_vulnerabilities(NUGET_PROJECT_OPEN)
     assert pypi.package_has_vulnerabilities('pip')
     assert pypi.project_has_vulnerabilities(PYPI_PROJECT_OPEN)
+    assert linux.package_has_vulnerabilities('jquery')
+    assert rubygems.package_has_vulnerabilities('jquery-rails')
 
 #
 # Closing tests
@@ -82,6 +86,8 @@ def test_package_has_vulnerabilities_close():
     assert not pypi.package_has_vulnerabilities('pipasdiahsds')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_NOT_FOUND)
+    assert not linux.package_has_vulnerabilities('jquery', '3.0.0')
+    assert not rubygems.package_has_vulnerabilities('jquery-rails', '5.0.0')
 
     os.environ['http_proxy'] = 'https://0.0.0.0:8080'
     os.environ['https_proxy'] = 'https://0.0.0.0:8080'
@@ -96,5 +102,7 @@ def test_package_has_vulnerabilities_close():
     assert not nuget.project_has_vulnerabilities(NUGET_PROJECT_CLOSE)
     assert not pypi.package_has_vulnerabilities('pip')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
+    assert not linux.package_has_vulnerabilities('jquery')
+    assert not rubygems.package_has_vulnerabilities('jquery-rails')
     os.environ.pop('http_proxy', None)
     os.environ.pop('https_proxy', None)
