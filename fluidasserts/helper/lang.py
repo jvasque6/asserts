@@ -9,10 +9,13 @@ from typing import Callable, Dict, List
 from functools import lru_cache
 
 # 3rd party imports
+import pyparsing
 from pyparsing import (ParserElement, ParseException, ParseResults, Literal,
                        SkipTo, MatchFirst)
 
 # local imports
+
+pyparsing.ParserElement.enablePackrat(cache_size_limit=512)
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -266,6 +269,7 @@ def check_grammar(grammar: ParserElement, code_dest: str,
     :param exclude: Exclude files or directories with given strings
     :return: Maps files to their found vulnerabilites.
     """
+    grammar.enablePackrat(cache_size_limit=512)
     if not exclude:
         exclude = []
     vulns = {}
