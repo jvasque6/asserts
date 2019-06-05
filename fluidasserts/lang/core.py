@@ -7,7 +7,7 @@ import os
 import base64
 
 # 3rd party imports
-from pyparsing import Literal, Regex, Or
+from pyparsing import Literal, Regex, MatchFirst
 
 # local imports
 from fluidasserts import show_close
@@ -180,7 +180,7 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
         Regex(expected) if use_regex else Literal(expected)
         for expected in expected_list
     ]
-    any_query = Or(any_list)
+    any_query = MatchFirst(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
                                      lang_specs, exclude)
@@ -354,7 +354,7 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
         Regex(secret) if use_regex else Literal(secret)
         for secret in secrets_list
     ]
-    any_query = Or(any_list)
+    any_query = MatchFirst(any_list)
     try:
         matches = lang.check_grammar(any_query, code_dest,
                                      lang_specs, exclude)

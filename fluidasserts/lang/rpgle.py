@@ -7,7 +7,8 @@
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Keyword, Literal, Word, Optional,
-                       NotAny, alphas, alphanums, nums, cppStyleComment, Or)
+                       NotAny, alphas, alphanums, nums, cppStyleComment,
+                       MatchFirst)
 
 # local imports
 from fluidasserts.helper import lang
@@ -46,7 +47,7 @@ def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
     tk_dow = CaselessKeyword('dow')
     tk_sqlcod = CaselessKeyword('sqlcod')
     tk_literal_zero = CaselessKeyword('*zeros')
-    tk_zeros = Or([Literal('0'), tk_literal_zero])
+    tk_zeros = MatchFirst([Literal('0'), tk_literal_zero])
 
     dos_dow_sqlcod = tk_dow + tk_sqlcod + Literal('=') + tk_zeros
 

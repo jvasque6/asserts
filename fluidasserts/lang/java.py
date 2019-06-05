@@ -6,7 +6,7 @@
 # None
 
 # 3rd party imports
-from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
                        SkipTo, QuotedString, oneOf, Keyword, MatchFirst)
 
@@ -178,7 +178,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     tk_case = CaselessKeyword('case') + (Word(alphanums))
     tk_default = CaselessKeyword('default')
     tk_break = CaselessKeyword('break') + Literal(';')
-    def_stmt = Or([Suppress(tk_case), tk_default]) + \
+    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
         Suppress(Literal(':') + SkipTo(tk_break, include=True))
     prsr_sw = tk_switch + nestedExpr()
     switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))

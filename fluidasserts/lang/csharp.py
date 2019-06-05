@@ -6,9 +6,9 @@
 # None
 
 # 3rd party imports
-from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas, Or,
+from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, cppStyleComment,
-                       SkipTo, Keyword)
+                       SkipTo, Keyword, MatchFirst)
 
 # local imports
 from fluidasserts.helper import lang
@@ -160,7 +160,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
 
     tk_finish = tk_break | tk_return | tk_throw
 
-    def_stmt = Or([Suppress(tk_case), tk_default]) + \
+    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
         Suppress(SkipTo(tk_finish, include=True))
 
     switch_decl = Keyword('switch') + nestedExpr()
@@ -318,7 +318,7 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
     tk_params = nestedExpr()
     fn_2 = tk_new + tk_md5cry + tk_params
 
-    call_function = Or([fn_1, fn_2])
+    call_function = MatchFirst([fn_1, fn_2])
 
     result = False
     try:
@@ -360,7 +360,7 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
     tk_sha1cry = CaselessKeyword('SHA1CryptoServiceProvider')
     tk_sha1man = CaselessKeyword('SHA1Managed')
     tk_params = nestedExpr()
-    call_function = tk_new + Or([tk_sha1cry, tk_sha1man]) + tk_params
+    call_function = tk_new + MatchFirst([tk_sha1cry, tk_sha1man]) + tk_params
 
     result = False
     try:

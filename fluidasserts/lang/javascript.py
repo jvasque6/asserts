@@ -7,7 +7,8 @@
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Literal, Suppress, Word, alphanums,
-                       nestedExpr, cppStyleComment, Optional, Or, SkipTo)
+                       nestedExpr, cppStyleComment, Optional, SkipTo,
+                       MatchFirst)
 
 # local imports
 from fluidasserts.helper import lang
@@ -245,7 +246,7 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     tk_default = CaselessKeyword('default') + Literal(':')
     tk_break = (CaselessKeyword('break') + Optional(Literal(';'))) | \
         Literal('}')
-    def_stmt = Or([Suppress(tk_case), tk_default]) + \
+    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
         Suppress(SkipTo(tk_break, include=True))
     prsr_sw = tk_switch + nestedExpr()
     switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))

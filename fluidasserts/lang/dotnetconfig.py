@@ -6,8 +6,8 @@
 from copy import copy
 
 # 3rd party imports
-from pyparsing import (makeXMLTags, Suppress, Or, OneOrMore, withAttribute,
-                       htmlComment)
+from pyparsing import (makeXMLTags, Suppress, MatchFirst, withAttribute,
+                       htmlComment, OneOrMore)
 
 # local imports
 from fluidasserts.helper import lang
@@ -49,8 +49,8 @@ def is_header_x_powered_by_present(webconf_dest: str,
     tk_clear_tag, _ = makeXMLTags('clear')
     tk_remove_tag, _ = makeXMLTags('remove')
     tk_remove_tag.setParseAction(withAttribute(name='X-Powered-By'))
-    tk_child_tag = Or([Suppress(tk_add_tag), Suppress(tk_clear_tag),
-                       tk_remove_tag])
+    tk_child_tag = MatchFirst(
+        [Suppress(tk_add_tag), Suppress(tk_clear_tag), tk_remove_tag])
     result = False
     try:
         custom_headers = lang.check_grammar(tk_tag_s, webconf_dest,

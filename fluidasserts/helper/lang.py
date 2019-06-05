@@ -9,8 +9,8 @@ from typing import Callable, Dict, List
 from functools import lru_cache
 
 # 3rd party imports
-from pyparsing import (Or, ParseException, Literal, SkipTo, ParseResults,
-                       ParserElement)
+from pyparsing import (ParserElement, ParseException, ParseResults, Literal,
+                       SkipTo, MatchFirst)
 
 # local imports
 
@@ -49,7 +49,7 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
         for (counter, line) in enumerate(file_fd, start=1):
             try:
                 if line_comment:
-                    parser = ~Or(line_comment)
+                    parser = ~MatchFirst(line_comment)
                     parser.parseString(line)
             except ParseException:
                 # Line is a comment
