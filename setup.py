@@ -78,7 +78,7 @@ setup(
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
         'beautifulsoup4==4.7.1',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.proto.dns
-        'tlslite-ng==0.7.5',         # fluidasserts.proto.ssl
+        'tlslite-ng==0.8.0-alpha26',         # fluidasserts.proto.ssl
         'pyOpenSSL==19.0.0',         # fluidasserts.proto.ssl
         'cffi==1.12.3',              # fluidasserts.proto.ssl
         'cryptography==2.7',       # fluidasserts.proto.ssl

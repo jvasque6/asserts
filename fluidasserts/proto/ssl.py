@@ -32,22 +32,29 @@ TYPRECEIVE = Tuple[Optional[str], Optional[int], Optional[int]]
 # pylint: disable=protected-access
 
 
-def _my_send_finished(self, master_secret,
-                      cipher_suite=None,
-                      next_p=None):  # pragma: no cover
+def _my_send_finished(self, master_secret, cipher_suite=None, next_proto=None,
+                      settings=None):  # pragma: no cover
     """Duck-tapped TLSConnection._sendFinished function."""
     self.sock.buffer_writes = True
-
+    # Send ChangeCipherSpec
     for result in self._sendMsg(tlslite.messages.ChangeCipherSpec()):
         yield result
 
+    # Switch to pending write state
     self._changeWriteState()
 
-    if next_p is not None:
-        next_proto_msg = tlslite.messages.NextProtocol().create(next_p)
+    if self._peer_record_size_limit:
+        self._send_record_limit = self._peer_record_size_limit
+        # this is TLS 1.2 and earlier method, so the real limit may be
+        # lower that what's in the settings
+        self._recv_record_limit = min(2**14, settings.record_size_limit)
+
+    if next_proto is not None:
+        next_proto_msg = tlslite.messages.NextProtocol().create(next_proto)
         for result in self._sendMsg(next_proto_msg):
             yield result
 
+    # Calculate verification data
     verify_data = tlslite.mathtls.calcFinished(self.version,
                                                master_secret,
                                                cipher_suite,
@@ -61,6 +68,7 @@ def _my_send_finished(self, master_secret,
         for i in range(0, tweak_len):
             verify_data[i] ^= self.macTweak[i]
 
+    # Send Finished message under new state
     finished = tlslite.messages.Finished(self.version).create(verify_data)
     for result in self._sendMsg(finished):
         yield result
@@ -639,8 +647,39 @@ def allows_modified_mac(site: str, port: int = PORT) -> bool:
     if result:
         show_open('Server allowed messages with modified MAC',
                   details=dict(server=site, port=port,
-                               failed_bits=",".join(failed_bits)))
+                               failed_bits=",".join(str(failed_bits))))
     else:
         show_close('Server rejected messages with modified MAC',
                    details=dict(server=site, port=port))
+    return result
+
+
+@notify
+@level('medium')
+@track
+def not_tls13_enabled(site: str, port: int = PORT) -> bool:
+    """
+    Check if site has TLSv1.3 enabled.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    result = True
+    try:
+        with connect(site, port=port, min_version=(3, 4), max_version=(3, 4)):
+            show_close('Site supports TLSv1.3',
+                       details=dict(site=site, port=port))
+            result = False
+    except (tlslite.errors.TLSLocalAlert) as exc:
+        if exc.message and 'Too old version' in exc.message:
+            show_open('Site does not support TLSv1.3',
+                      details=dict(site=site, port=port))
+            return True
+        show_unknown('Port doesn\'t support SSL',
+                     details=dict(site=site, port=port))
+        return False
+    except socket.error as exc:
+        result = False
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result

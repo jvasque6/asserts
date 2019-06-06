@@ -77,3 +77,15 @@ def test_allows_anon_alg_open(get_mock_ip):
 def test_has_heartbleed_open(get_mock_ip):
     """Heartbleed enabled?."""
     assert ssl.has_heartbleed(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_allows_modified_mac_open(get_mock_ip):
+    """Host allows messages with modified MAC?."""
+    assert not ssl.allows_modified_mac(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_not_tls13_enabled_open(get_mock_ip):
+    """TLSv1.3 enabled?."""
+    assert ssl.not_tls13_enabled(get_mock_ip)

@@ -74,7 +74,7 @@ def connect_legacy(hostname: str, port: int = PORT,
 @contextmanager
 def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
             min_version: Tuple[int, int] = (3, 0),
-            max_version: Tuple[int, int] = (3, 3),
+            max_version: Tuple[int, int] = (3, 4),
             cipher_names: List[str] = None,
             key_exchange_names: List[str] = None,
             anon: bool = False)\
