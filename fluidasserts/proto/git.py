@@ -3,7 +3,7 @@
 """This module allows to check GIT vulnerabilities."""
 
 # standard imports
-# None
+import os
 
 # third party imports
 import git
@@ -46,3 +46,37 @@ def commit_has_secret(repo: str, commit_id: str, secret: str) -> bool:
                                 secret=secret))
         result = False
     return result
+
+
+@notify
+@level('low')
+@track
+def has_insecure_gitignore(repo: str) -> bool:
+    r"""
+    Check if .gitignore file has secure exceptions.
+
+    :param repo: Repository path.
+    """
+    secure_entries = (
+        '*.pem',
+        '*.key',
+        '*.p12',
+    )
+    result = True
+    try:
+        with open(os.path.join(repo, '.gitignore')) as git_fd:
+            content = git_fd.read()
+            result = not all(x in content for x in secure_entries)
+    except FileNotFoundError as exc:
+        show_unknown('There was an error',
+                     details=dict(repo=repo,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    else:
+        if result:
+            show_open('Security entries not found in .gitignore',
+                      details=dict(repo=repo, secure_entries=secure_entries))
+        else:
+            show_close('Security entries found in .gitignore',
+                       details=dict(repo=repo, secure_entries=secure_entries))
+        return result
