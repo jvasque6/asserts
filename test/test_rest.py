@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Test methods of fluidasserts.code.docker."""
+"""Test methods of fluidasserts.proto.rest."""
 
 # standard imports
 # None
