@@ -10,7 +10,6 @@ Jared Stafford (jspenguin@jspenguin.org)
 # standard imports
 from __future__ import absolute_import
 import copy
-import errno
 import socket
 import struct
 from typing import Tuple, Optional, List
@@ -91,6 +90,8 @@ def _rcv_tls_record(sock: socket.socket) -> TYPRECEIVE:
         if len(tls_header) < 5:
             return None, None, None
         typ, ver, length = struct.unpack('>BHH', tls_header)
+        if typ > 24:
+            return None, None, None
         message = ''
         while len(message) != length:
             message += sock.recv(length - len(message)).decode('ISO-8859-1')
@@ -244,12 +245,8 @@ def is_sslv3_enabled(site: str, port: int = PORT) -> bool:
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('SSLv3 not enabled on site',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -279,12 +276,8 @@ def is_tlsv1_enabled(site: str, port: int = PORT) -> bool:
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('TLSv1 not enabled on site',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -314,12 +307,8 @@ def is_tlsv11_enabled(site: str, port: int = PORT) -> bool:
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('TLSv1.1 not enabled on site',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -355,12 +344,8 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('Site not vulnerable to POODLE TLS attack',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -399,12 +384,8 @@ be vulnerable to POODLE SSLv3 attack',
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('Site not vulnerable to POODLE SSLv3 attack',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -470,12 +451,8 @@ def allows_anon_ciphers(site: str, port: int = PORT) -> bool:
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('Site not allows anonymous cipher suites',
-                       details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 
@@ -506,12 +483,8 @@ suites', details=dict(site=site, port=port))
         result = False
     except socket.error as exc:
         result = False
-        if exc.errno == errno.ECONNRESET:
-            show_close('Site not allows weak (RC4, 3DES and NULL) cipher \
-suites', details=dict(site=site, port=port))
-        else:
-            show_unknown('Could not connect',
-                         details=dict(site=site, port=port, error=str(exc)))
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
     return result
 
 

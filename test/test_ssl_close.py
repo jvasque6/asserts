@@ -110,6 +110,7 @@ def test_has_breach_close(get_mock_ip):
 def test_has_heartbleed_close(get_mock_ip):
     """Presencia de la vulnerabilidad Heartbleed?."""
     assert not ssl.has_heartbleed(get_mock_ip, SSL_PORT)
+    assert not ssl.has_heartbleed(get_mock_ip, 80)
     assert not ssl.has_heartbleed(NON_EXISTANT, SSL_PORT)
 
 
