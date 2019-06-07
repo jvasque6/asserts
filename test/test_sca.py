@@ -95,7 +95,6 @@ def test_package_has_vulnerabilities_close():
     assert not chocolatey.package_has_vulnerabilities('python')
     assert not maven.package_has_vulnerabilities('maven')
     assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
-    assert not maven.project_has_vulnerabilities(MAVEN_PROJECT_CLOSE)
     assert not npm.package_has_vulnerabilities('extend')
     assert not npm.project_has_vulnerabilities(NPM_PROJECT_CLOSE)
     assert not nuget.package_has_vulnerabilities('jquery')

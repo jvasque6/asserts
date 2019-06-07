@@ -3,7 +3,7 @@
 """Software Composition Analysis for Maven packages."""
 
 # standard imports
-import os
+# None
 
 # 3rd party imports
 from defusedxml.ElementTree import parse
@@ -28,26 +28,24 @@ def _get_requirements(path: str) -> list:
     """
     reqs = []
     namespaces = {'xmlns': 'http://maven.apache.org/POM/4.0.0'}
-    for root, _, files in os.walk(path):
-        for pom_file in files:
-            if pom_file != 'pom.xml':
-                continue
-            full_path = os.path.join(root, pom_file)
-            tree = parse(full_path)
-            root = tree.getroot()
-            deps = root.findall(".//xmlns:dependency",
-                                namespaces=namespaces)
-            for dep in deps:
-                artifact_id = dep.find("xmlns:artifactId",
-                                       namespaces=namespaces)
-                version = dep.find("xmlns:version", namespaces=namespaces)
-                if version is not None:
-                    if version.text.startswith('$'):
-                        reqs.append((artifact_id.text, None))
-                    else:
-                        reqs.append((artifact_id.text, version.text))
-                else:
+    for full_path in sca.full_paths_in_dir(path):
+        if not full_path.endswith('pom.xml'):
+            continue
+        tree = parse(full_path)
+        root = tree.getroot()
+        deps = root.findall(".//xmlns:dependency",
+                            namespaces=namespaces)
+        for dep in deps:
+            artifact_id = dep.find("xmlns:artifactId",
+                                   namespaces=namespaces)
+            version = dep.find("xmlns:version", namespaces=namespaces)
+            if version is not None:
+                if version.text.startswith('$'):
                     reqs.append((artifact_id.text, None))
+                else:
+                    reqs.append((artifact_id.text, version.text))
+            else:
+                reqs.append((artifact_id.text, None))
     return reqs
 
 
@@ -90,6 +88,11 @@ def project_has_vulnerabilities(path: str) -> bool:
     """
     try:
         reqs = _get_requirements(path)
+    except FileNotFoundError:
+        show_unknown('Project dir not found',
+                     details=dict(path=path))
+        return False
+    try:
         response = sca.scan_requirements(reqs, PACKAGE_MANAGER)
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
@@ -103,8 +106,6 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     result = False
     for package in response:
-        if package['version'] == -1:
-            continue
         ret = package_has_vulnerabilities(package['package'],
                                           package['version'])
         if ret:

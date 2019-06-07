@@ -84,8 +84,6 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     result = False
     for package in response:
-        if package['version'] == -1:
-            continue
         ret = package_has_vulnerabilities(package['package'],
                                           package['version'])
         if ret:

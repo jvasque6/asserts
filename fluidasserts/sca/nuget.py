@@ -3,7 +3,7 @@
 """Software Composition Analysis for NuGet (C#) packages."""
 
 # standard imports
-import os
+# None
 
 # 3rd party imports
 from defusedxml.ElementTree import parse
@@ -27,17 +27,12 @@ def _get_requirements(path: str) -> list:
     :param path: Project path
     """
     reqs = []
-    for root, _, files in os.walk(path):
-        for pom_file in files:
-            if pom_file != 'packages.config':
-                continue
-            full_path = os.path.join(root, pom_file)
-            tree = parse(full_path)
-            deps = tree.findall(".//package")
-            for dep in deps:
-                artifact_id = dep.attrib['id']
-                version = dep.attrib['version']
-                reqs.append((artifact_id, version))
+    for full_path in sca.full_paths_in_dir(path):
+        if not full_path.endswith('packages.config'):
+            continue
+        tree = parse(full_path)
+        deps = tree.findall(".//package")
+        reqs += [(dep.attrib['id'], dep.attrib['version']) for dep in deps]
     return reqs
 
 
@@ -76,6 +71,11 @@ def project_has_vulnerabilities(path: str) -> bool:
     """
     try:
         reqs = _get_requirements(path)
+    except FileNotFoundError:
+        show_unknown('Project dir not found',
+                     details=dict(path=path))
+        return False
+    try:
         response = sca.scan_requirements(reqs, PACKAGE_MANAGER)
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
@@ -89,8 +89,6 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     result = False
     for package in response:
-        if package['version'] == -1:
-            continue
         ret = package_has_vulnerabilities(package['package'],
                                           package['version'])
         if ret:

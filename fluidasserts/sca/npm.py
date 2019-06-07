@@ -4,7 +4,6 @@
 
 # standard imports
 import json
-import os
 
 # 3rd party imports
 # None
@@ -28,24 +27,20 @@ def _get_requirements(path: str) -> list:
     :param path: Project path
     """
     reqs = []
-    for root, _, files in os.walk(path):
-        for json_file in files:
-            if json_file != 'package.json':
-                continue
-            full_path = os.path.join(root, json_file)
-            with open(full_path) as json_file:
-                json_data = json_file.read()
-            data = json.loads(json_data)
-            try:
-                deps = data['dependencies']
-            except KeyError:
-                continue
-            else:
-                for dep, ver in deps.items():
-                    dep = dep.replace('@types/', '')
-                    ver = ver.translate({ord(c): None for c in '^~<=>'})
-                    reqs.append((dep, ver))
-
+    for full_path in sca.full_paths_in_dir(path):
+        if not full_path.endswith('package.json'):
+            continue
+        with open(full_path) as json_file:
+            json_data = json_file.read()
+        data = json.loads(json_data)
+        try:
+            deps = data['dependencies']
+        except KeyError:
+            continue
+        else:
+            reqs += [(dep.replace('@types/', ''),
+                      ver.translate({ord(c): None for c in '^~<=>'}))
+                     for dep, ver in deps.items()]
     return reqs
 
 
@@ -85,6 +80,11 @@ def project_has_vulnerabilities(path: str) -> bool:
     """
     try:
         reqs = _get_requirements(path)
+    except FileNotFoundError:
+        show_unknown('Project dir not found',
+                     details=dict(path=path))
+        return False
+    try:
         response = sca.scan_requirements(reqs, PACKAGE_MANAGER)
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
@@ -98,8 +98,6 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     result = False
     for package in response:
-        if package['version'] == -1:
-            continue
         ret = package_has_vulnerabilities(package['package'],
                                           package['version'])
         if ret:
