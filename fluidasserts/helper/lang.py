@@ -129,7 +129,9 @@ def lists_as_string(lists: List[List], result: ParseResults,
 
 def block_contains_grammar(grammar: ParserElement, code_dest: str,
                            lines: List[str],
-                           get_block_fn: Callable) -> List[str]:
+                           get_block_fn: Callable,
+                           should_have: str = '',
+                           should_not_have: str = '',) -> List[str]:
     """
     Check block grammar.
 
@@ -144,8 +146,19 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
         for line in lines:
             txt = get_block_fn(file_lines, line)
             results = grammar.searchString(txt, maxMatches=1)
-            if not _is_empty_result(results):
+            results_str = str(results)
+
+            is_vulnerable = True
+            if _is_empty_result(results):
+                is_vulnerable = False
+            elif should_have and should_have not in results_str:
+                is_vulnerable = False
+            elif should_not_have and should_not_have in results_str:
+                is_vulnerable = False
+
+            if is_vulnerable:
                 vulns.append(line)
+
     return vulns
 
 

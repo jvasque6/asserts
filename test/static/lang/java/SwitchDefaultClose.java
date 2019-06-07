@@ -25,6 +25,9 @@ class SwitchDefaultClose{
          case 11: monthString = "November";
                   break;
          case 12: monthString = "December";
+                  dummyString = "default";
+                  // default
+                  /* default */
                   break;
          default: monthString = "Invalid month";
                   break;

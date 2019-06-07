@@ -8,7 +8,7 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
-                       SkipTo, QuotedString, oneOf, Keyword, MatchFirst)
+                       QuotedString, oneOf, Keyword, MatchFirst, delimitedList)
 
 # local imports
 from fluidasserts.helper import lang
@@ -26,14 +26,30 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
-def _get_block(file_lines, line) -> str:
+L_CHAR = QuotedString("'")
+L_STRING = QuotedString('"')
+L_VAR_NAME = Literal(alphas + '$_') + Literal(alphanums + '_')
+L_VAR_CHAIN_NAME = delimitedList(L_VAR_NAME, delim='.', combine=True)
+
+
+def _get_block(file_lines: list, line: int) -> str:
     """
     Return a Java block of code beginning in line.
 
     :param file_lines: Lines of code
     :param line: First line of block
     """
-    return "".join(file_lines[line - 1:])
+    return '\n'.join(file_lines[line - 1:])
+
+
+def _get_block_as_one_liner(file_lines: list, line: int) -> str:
+    """
+    Return a Java block of code beginning in line as a one-liner str.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    return ''.join(file_lines[line - 1:])
 
 
 @notify
@@ -146,7 +162,7 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
     for code_file, lines in catches.items():
         vulns = lang.block_contains_empty_grammar(empty_catch,
                                                   code_file, lines,
-                                                  _get_block)
+                                                  _get_block_as_one_liner)
         if not vulns:
             show_close('Code does not have empty catches',
                        details=dict(file=code_file,
@@ -174,33 +190,33 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    tk_switch = CaselessKeyword('switch')
-    tk_case = CaselessKeyword('case') + (Word(alphanums))
-    tk_default = CaselessKeyword('default')
-    tk_break = CaselessKeyword('break') + Literal(';')
-    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
-        Suppress(Literal(':') + SkipTo(tk_break, include=True))
-    prsr_sw = tk_switch + nestedExpr()
-    switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
-    sw_wout_def = (Suppress(prsr_sw) +
-                   nestedExpr(opener='{', closer='}',
-                              content=def_stmt)).ignore(javaStyleComment)
+    switch = CaselessKeyword('switch') + nestedExpr(opener='(', closer=')')
+    switch_line = Optional(Literal('}')) + switch + Optional(Literal('{'))
 
     result = False
     try:
-        switches = lang.check_grammar(switch_head, java_dest, LANGUAGE_SPECS,
+        switches = lang.check_grammar(switch_line, java_dest, LANGUAGE_SPECS,
                                       exclude)
+    except FileNotFoundError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=java_dest))
+        return False
+    else:
         if not switches:
             show_close('Code does not have switches',
                        details=dict(code_dest=java_dest))
             return False
-    except FileNotFoundError:
-        show_unknown('File does not exist', details=dict(code_dest=java_dest))
-        return False
+
+    switch_block = Suppress(switch) + nestedExpr(opener='{', closer='}')
+    switch_block.ignore(javaStyleComment)
+    switch_block.ignore(L_CHAR)
+    switch_block.ignore(L_STRING)
+
     for code_file, lines in switches.items():
-        vulns = lang.block_contains_empty_grammar(sw_wout_def,
-                                                  code_file, lines,
-                                                  _get_block)
+        vulns = lang.block_contains_grammar(switch_block,
+                                            code_file, lines,
+                                            _get_block,
+                                            should_not_have='default')
         if not vulns:
             show_close('Code has "switch" with "default" clause',
                        details=dict(file=code_file,
@@ -299,7 +315,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     for code_file, lines in conds.items():
         vulns = lang.block_contains_empty_grammar(if_wout_else,
                                                   code_file, lines,
-                                                  _get_block)
+                                                  _get_block_as_one_liner)
         if not vulns:
             show_close('Code has "if" with "else" clauses',
                        details=dict(file=code_file,

@@ -6,9 +6,7 @@ class SwitchDefaultOpen{
                   break;
          case 12: monthString = "December";
                   break;
-      }
-
-      switch (month) {
+      }                        switch (month) {
          case 1:  monthString = "January";
                   break;
          case 12: monthString = "December";
