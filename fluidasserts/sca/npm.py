@@ -36,11 +36,16 @@ def _get_requirements(path: str) -> list:
             with open(full_path) as json_file:
                 json_data = json_file.read()
             data = json.loads(json_data)
-            deps = data['dependencies']
-            for dep, version in deps.items():
-                dep = dep.replace('@types/', '')
-                version = version.translate({ord(c): None for c in '^~<=>'})
-                reqs.append((dep, version))
+            try:
+                deps = data['dependencies']
+            except KeyError:
+                continue
+            else:
+                for dep, ver in deps.items():
+                    dep = dep.replace('@types/', '')
+                    ver = ver.translate({ord(c): None for c in '^~<=>'})
+                    reqs.append((dep, ver))
+
     return reqs
 
 
