@@ -39,6 +39,7 @@ def _get_requirements(path: str) -> list:
             deps = data['dependencies']
             for dep, version in deps.items():
                 dep = dep.replace('@types/', '')
+                version = version.translate({ord(c): None for c in '^~<=>'})
                 reqs.append((dep, version))
     return reqs
 
