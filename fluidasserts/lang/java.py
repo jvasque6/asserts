@@ -8,7 +8,8 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
-                       QuotedString, oneOf, Keyword, MatchFirst, delimitedList)
+                       QuotedString, oneOf, Keyword, MatchFirst, delimitedList,
+                       ZeroOrMore)
 
 # local imports
 from fluidasserts.helper import lang
@@ -28,7 +29,7 @@ LANGUAGE_SPECS = {
 
 L_CHAR = QuotedString("'")
 L_STRING = QuotedString('"')
-L_VAR_NAME = Literal(alphas + '$_') + Literal(alphanums + '_')
+L_VAR_NAME = Literal(alphas + '$_') + ZeroOrMore(Literal(alphanums + '$_'))
 L_VAR_CHAIN_NAME = delimitedList(L_VAR_NAME, delim='.', combine=True)
 
 

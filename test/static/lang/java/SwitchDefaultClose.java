@@ -26,11 +26,17 @@ class SwitchDefaultClose{
                   break;
          case 12: monthString = "December";
                   dummyString = "default";
+                  dummyString = "block should not end here }";
                   // default
                   /* default */
+                  // block should not end here }
+                  /* block should not end here } */
                   break;
          default: monthString = "Invalid month";
                   break;
      }
+
+     switch (month + somethingWithParens("default")) { /* default } */ case 1: monthString = "January"; break; default: monthString = "default"; dummyString = "block should not end here }"; throw } //default
+
    }
 }
