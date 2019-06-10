@@ -535,10 +535,11 @@ npm.project_has_vulnerabilities('__code__')
     return exec_wrapper(template)
 
 
-def exec_exploit(exploit):
+def exec_exploit(exploits):
     """Execute exploit file."""
     try:
-        return exec_wrapper(open(exploit).read())
+        res = map(lambda expl: exec_wrapper(open(expl).read()), exploits)
+        return "".join(list(res))
     except FileNotFoundError:
         print('Exploit not found')
         sys.exit(return_strict(True))
@@ -555,8 +556,8 @@ def get_content(args):
         content += exec_dns_package(args.dns)
     if args.lang:
         content += exec_lang_package(args.lang)
-    elif args.exploit:
-        content += exec_exploit(args.exploit)
+    elif args.exploits:
+        content += exec_exploit(args.exploits)
     return get_parsed_output(content)
 
 
@@ -601,12 +602,12 @@ over given nameserver')
     argparser.add_argument('-L', '--lang', nargs='+', metavar='FILE/DIR',
                            help='perform static security checks over \
 given files or directories')
-    argparser.add_argument('exploit', nargs='?', help='exploit to execute')
+    argparser.add_argument('exploits', nargs='+', help='exploits to execute')
 
     args = argparser.parse_args()
     show_banner(args)
 
-    if not args.exploit and not args.http \
+    if not args.exploits and not args.http \
        and not args.ssl and not args.dns and not args.lang:
         argparser.print_help()
         sys.exit(-1)
