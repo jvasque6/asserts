@@ -199,7 +199,7 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
         for code_file, vulns in matches.items():
             show_open('Any of the expected bad text is present in code',
                       details=dict(file=code_file,
-                                   expected_list=expected_list,
+                                   found_text=matches,
                                    used_regular_expressions=use_regex,
                                    fingerprint=lang.
                                    file_hash(code_file)))
@@ -373,7 +373,7 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
         for code_file, vulns in matches.items():
             show_open('Some of the expected secrets are present in code',
                       details=dict(file=code_file,
-                                   secrets_list=secrets_list,
+                                   found_secrets=matches,
                                    used_regular_expressions=use_regex,
                                    fingerprint=lang.
                                    file_hash(code_file)))
