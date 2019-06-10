@@ -24,14 +24,6 @@ class ConnError(http.ConnError):
     """
 
 
-class PackageNotFoundException(Exception):
-    """
-    A connection error occurred.
-
-    :py:exc:`Exception` wrapper exception.
-    """
-
-
 def _parse_snyk_vulns(html):
     """Parse Snyk HTML content for retrieve vulnerabilities."""
     soup = BeautifulSoup(html, 'html.parser')
@@ -82,7 +74,7 @@ def get_vulns_ossindex(package_manager: str, package: str,
         sess = http.HTTPSession(url)
         resp = json.loads(sess.response.text)[0]
         if resp['id'] == 0:
-            raise PackageNotFoundException
+            return []
         if int(resp['vulnerability-matches']) > 0:
             vulns = resp['vulnerabilities']
             vuln_titles = [[x['title'], ", ".join(x['versions'])]
@@ -105,6 +97,7 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
     :param version: Package version.
     """
     base_url = 'https://snyk.io'
+
     if version:
         url = base_url + '/vuln/{}:{}@{}'.format(package_manager,
                                                  package, version)
@@ -119,22 +112,3 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
         return vuln_names
     except http.ConnError:
         raise ConnError
-
-
-def scan_requirements(requirements: list, package_manager: str) -> list:
-    """
-    Search vulnerabilities on given project directory.
-
-    :param package_manager: Package manager.
-    :param requirements: Requirement list.
-    """
-    result = []
-    for req in requirements:
-        try:
-            vulns = get_vulns_snyk(package_manager, req[0], req[1])
-            result.append(dict(package=req[0], version=req[1], vulns=vulns))
-        except PackageNotFoundException:
-            result.append(dict(package=req[0], version=-1, vulns=[]))
-        except http.ConnError:
-            raise ConnError
-    return result

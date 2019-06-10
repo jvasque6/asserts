@@ -73,10 +73,6 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
         return False
-    except sca.PackageNotFoundException:
-        show_unknown('Sofware couldn\'t be found in package manager',
-                     details=dict(package=package, version=version))
-        return False
 
 
 @notify
@@ -94,30 +90,20 @@ def project_has_vulnerabilities(path: str) -> bool:
         show_unknown('Project dir not found',
                      details=dict(path=path))
         return False
-    try:
-        packages = sca.scan_requirements(reqs, PACKAGE_MANAGER)
-    except sca.ConnError as exc:
-        show_unknown('Could not connect to SCA provider',
-                     details=dict(error=str(exc).replace(':', ',')))
-        return False
 
-    if not packages:
+    if not reqs:
         show_unknown('Not packages found in project',
                      details=dict(path=path))
         return False
 
     result = True
     try:
-        proj_vulns = \
-            list(filter(lambda x:
-                        sca.get_vulns_ossindex(PACKAGE_MANAGER,
-                                               x['package'],
-                                               x['version']), packages))
+        unfiltered = {x[0]: sca.get_vulns_ossindex(PACKAGE_MANAGER, x[0], x[1])
+                      for x in reqs}
+        proj_vulns = {k: v for k, v in unfiltered.items() if v}
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
-        result = False
-    except sca.PackageNotFoundException:
         result = False
     else:
         if proj_vulns:

@@ -42,7 +42,3 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
         return False
-    except sca.PackageNotFoundException:
-        show_unknown('Sofware couldn\'t be found in package manager',
-                     details=dict(package=package, version=version))
-        return False
