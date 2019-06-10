@@ -31,6 +31,7 @@ NUGET_PROJECT_EMPTY = 'test/static/sca/nuget/empty'
 PYPI_PROJECT_OPEN = 'test/static/sca/pypi/open'
 PYPI_PROJECT_CLOSE = 'test/static/sca/pypi/close'
 PYPI_PROJECT_NOT_FOUND = 'test/static/sca/pypi/not_found'
+PYPI_PROJECT_EMPTY = 'test/static/sca/pypi/empty'
 NPM_PROJECT_OPEN = 'test/static/sca/npm/open'
 NPM_PROJECT_CLOSE = 'test/static/sca/npm/close'
 NPM_PROJECT_NOT_FOUND = 'test/static/sca/npm/not_found'
@@ -86,6 +87,7 @@ def test_package_has_vulnerabilities_close():
     assert not pypi.package_has_vulnerabilities('pipasdiahsds')
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_CLOSE)
     assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_NOT_FOUND)
+    assert not pypi.project_has_vulnerabilities(PYPI_PROJECT_EMPTY)
     assert not linux.package_has_vulnerabilities('jquery', '3.0.0')
     assert not rubygems.package_has_vulnerabilities('jquery-rails', '5.0.0')
 

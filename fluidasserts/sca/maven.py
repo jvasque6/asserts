@@ -79,6 +79,8 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
         return False
 
 
+@notify
+@level('high')
 @track
 def project_has_vulnerabilities(path: str) -> bool:
     """
@@ -93,21 +95,38 @@ def project_has_vulnerabilities(path: str) -> bool:
                      details=dict(path=path))
         return False
     try:
-        response = sca.scan_requirements(reqs, PACKAGE_MANAGER)
+        packages = sca.scan_requirements(reqs, PACKAGE_MANAGER)
     except sca.ConnError as exc:
         show_unknown('Could not connect to SCA provider',
                      details=dict(error=str(exc).replace(':', ',')))
         return False
 
-    if not response:
+    if not packages:
         show_unknown('Not packages found in project',
                      details=dict(path=path))
         return False
 
-    result = False
-    for package in response:
-        ret = package_has_vulnerabilities(package['package'],
-                                          package['version'])
-        if ret:
+    result = True
+    try:
+        proj_vulns = \
+            list(filter(lambda x:
+                        sca.get_vulns_ossindex(PACKAGE_MANAGER,
+                                               x['package'],
+                                               x['version']), packages))
+    except sca.ConnError as exc:
+        show_unknown('Could not connect to SCA provider',
+                     details=dict(error=str(exc).replace(':', ',')))
+        result = False
+    except sca.PackageNotFoundException:
+        result = False
+    else:
+        if proj_vulns:
+            show_open('Project has dependencies with vulnerabilities',
+                      details=dict(project_path=path,
+                                   vulnerabilities=proj_vulns))
             result = True
+        else:
+            show_close('Project has not dependencies with vulnerabilities',
+                       details=dict(project_path=path))
+            result = False
     return result

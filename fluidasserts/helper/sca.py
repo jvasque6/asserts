@@ -115,7 +115,7 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
         vuln_names = _parse_snyk_vulns(sess.response.text)
 
         if not vuln_names:
-            return []
+            return {}
         return vuln_names
     except http.ConnError:
         raise ConnError
