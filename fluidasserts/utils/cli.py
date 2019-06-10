@@ -602,7 +602,7 @@ over given nameserver')
     argparser.add_argument('-L', '--lang', nargs='+', metavar='FILE/DIR',
                            help='perform static security checks over \
 given files or directories')
-    argparser.add_argument('exploits', nargs='+', help='exploits to execute')
+    argparser.add_argument('exploits', nargs='*', help='exploits to execute')
 
     args = argparser.parse_args()
     show_banner(args)

@@ -140,7 +140,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     :param lines: List of starting lines.
     :param get_block_fn: Function that gives block code starting at line.
     """
-    vulns = []
+    vulns = {}
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
@@ -157,7 +157,10 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
                 is_vulnerable = False
 
             if is_vulnerable:
-                vulns.append(line)
+                vulns[code_dest] = {
+                    'lines': lines,
+                    'file_hash': file_hash(code_dest),
+                }
 
     return vulns
 
@@ -173,14 +176,17 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     :param lines: List of starting lines.
     :param get_block_fn: Function that gives block code starting at line.
     """
-    vulns = []
+    vulns = {}
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = code_f.readlines()
         for line in lines:
             txt = get_block_fn(file_lines, line)
             results = grammar.searchString(txt, maxMatches=1)
             if _is_empty_result(results):
-                vulns.append(line)
+                vulns[code_dest] = {
+                    'lines': lines,
+                    'file_hash': file_hash(code_dest),
+                }
     return vulns
 
 
@@ -230,17 +236,20 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     :return: Maps files to their found vulnerabilites.
     """
     vulns = {}
+    lines = []
     file_extension = code_dest.rsplit('.', 1)[-1].lower()
     lang_extensions = lang_spec.get('extensions')
+
     if lang_extensions:
         if file_extension in lang_extensions:
             lines = _get_match_lines(grammar, code_dest, lang_spec)
-            if lines:
-                vulns[code_dest] = lines
     else:
         lines = _get_match_lines(grammar, code_dest, lang_spec)
-        if lines:
-            vulns[code_dest] = lines
+    if lines:
+        vulns[code_dest] = {
+            'lines': lines,
+            'file_hash': file_hash(code_dest),
+        }
     return vulns
 
 

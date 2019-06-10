@@ -52,11 +52,7 @@ def not_pinned(file_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Dockerfile uses unpinned base image(s)',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Dockerfile uses unpinned base image(s)',
+                  details=dict(file=matches,
+                               total_vulns=len(matches)))
     return result

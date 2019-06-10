@@ -66,22 +66,21 @@ def is_header_x_powered_by_present(webconf_dest: str,
 
     tk_rem = Suppress(tk_tag_s) + OneOrMore(tk_child_tag)
 
-    for code_file, lines in custom_headers.items():
-        vulns = lang.block_contains_empty_grammar(tk_rem,
-                                                  code_file, lines,
-                                                  _get_block)
-        if vulns:
-            show_open('Header "X-Powered-By" is present',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1]))
-            result = True
-        else:
-            show_close('Header "X-Powered-By" is not present',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    vulns = {}
+    for code_file, val in custom_headers.items():
+        vulns.update(lang.block_contains_empty_grammar(tk_rem,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if vulns:
+        show_open('Header "X-Powered-By" is present',
+                  details=dict(matched=vulns,
+                               total_lines=len(custom_headers)))
+        result = True
+    else:
+        show_close('Header "X-Powered-By" is not present',
+                   details=dict(file=webconf_dest,
+                                fingerprint=lang.
+                                file_hash(webconf_dest)))
     return result
 
 
@@ -115,28 +114,28 @@ def has_ssl_disabled(apphostconf_dest: str, exclude: list = None) -> bool:
         show_unknown('File does not exist',
                      details=dict(code_dest=apphostconf_dest))
         return False
-    for code_file, lines in sec_tag.items():
-        access_tags = lang.block_contains_grammar(tk_access,
-                                                  code_file,
-                                                  lines,
-                                                  _get_block)
+    access_tags = {}
+    none_sslflags = {}
+    for code_file, val in sec_tag.items():
+        access_tags.update(lang.block_contains_grammar(tk_access,
+                                                       code_file,
+                                                       val['lines'],
+                                                       _get_block))
 
-        none_sslflags = lang.block_contains_grammar(tk_access_none,
-                                                    code_file,
-                                                    lines,
-                                                    _get_block)
-        if not access_tags or none_sslflags:
-            show_open('SSL is disabled',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(lines)[1:-1]))
-            result = True
-        else:
-            show_close('SSL is enabled',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+        none_sslflags.update(lang.block_contains_grammar(tk_access_none,
+                                                         code_file,
+                                                         val['lines'],
+                                                         _get_block))
+    if not access_tags or none_sslflags:
+        show_open('SSL is disabled',
+                  details=dict(matched=access_tags if
+                               access_tags else none_sslflags))
+        result = True
+    else:
+        show_close('SSL is enabled',
+                   details=dict(file=apphostconf_dest,
+                                fingerprint=lang.
+                                file_hash(apphostconf_dest)))
     return result
 
 
@@ -170,23 +169,22 @@ def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
                      details=dict(code_dest=webconf_dest))
         return False
 
-    for code_file, lines in sysweb_tag.items():
-        debug_tags = lang.block_contains_grammar(tk_comp_debug,
-                                                 code_file,
-                                                 lines,
-                                                 _get_block)
-        if debug_tags:
-            show_open('Debug is enabled',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(lines)[1:-1]))
-            result = True
-        else:
-            show_close('Debug is disabled',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    debug_tags = {}
+    for code_file, val in sysweb_tag.items():
+        debug_tags.update(lang.block_contains_grammar(tk_comp_debug,
+                                                      code_file,
+                                                      val['lines'],
+                                                      _get_block))
+    if debug_tags:
+        show_open('Debug is enabled',
+                  details=dict(matched=debug_tags,
+                               total_lines=len(sysweb_tag)))
+        result = True
+    else:
+        show_close('Debug is disabled',
+                   details=dict(file=webconf_dest,
+                                fingerprint=lang.
+                                file_hash(webconf_dest)))
     return result
 
 
@@ -219,21 +217,20 @@ def not_custom_errors(webconf_dest: str, exclude: list = None) -> bool:
                      details=dict(code_dest=webconf_dest))
         return False
 
-    for code_file, lines in sysweb_tag.items():
-        custom_error_tags = lang.block_contains_grammar(tk_comp_custom_errors,
-                                                        code_file,
-                                                        lines,
-                                                        _get_block)
-        if custom_error_tags:
-            show_open('Custom errors are not enabled',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(lines)[1:-1]))
-            result = True
-        else:
-            show_close('Custom errors are enabled',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    vulns = {}
+    for code_file, val in sysweb_tag.items():
+        vulns.update(lang.block_contains_grammar(tk_comp_custom_errors,
+                                                 code_file,
+                                                 val['lines'],
+                                                 _get_block))
+    if vulns:
+        show_open('Custom errors are not enabled',
+                  details=dict(matches=vulns,
+                               total_lines=len(sysweb_tag)))
+        result = True
+    else:
+        show_close('Custom errors are enabled',
+                   details=dict(file=webconf_dest,
+                                fingerprint=lang.
+                                file_hash(webconf_dest)))
     return result

@@ -64,13 +64,9 @@ def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code has DoS for using "DoW SQLCOD = 0"',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code has DoS for using "DoW SQLCOD = 0"',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -107,14 +103,9 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code has unitialized variables',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)),
-                      refs=None)
+        show_open('Code has unitialized variables',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -147,13 +138,9 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code has empty monitors',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code has empty monitors',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -187,20 +174,19 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=rpg_dest))
         return False
-    for code_file, lines in matches.items():
-        vulns = lang.block_contains_grammar(prs_sw, code_file, lines,
-                                            _get_block)
-        if vulns:
-            show_open('Code swallows exceptions',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
-        else:
-            show_close('Code does not swallow exceptions',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+    vulns = {}
+    for code_file, val in matches.items():
+        vulns.update(lang.block_contains_grammar(prs_sw, code_file,
+                                                 val['lines'],
+                                                 _get_block))
+    if vulns:
+        show_open('Code swallows exceptions',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
+    else:
+        show_close('Code does not swallow exceptions',
+                   details=dict(file=rpg_dest,
+                                fingerprint=lang.
+                                file_hash(rpg_dest)))
     return result

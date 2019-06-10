@@ -43,7 +43,7 @@ def _get_block(file_lines: list, line: int) -> str:
     return '\n'.join(file_lines[line - 1:])
 
 
-def _get_block_as_one_liner(file_lines: list, line: int) -> str:
+def _get_block_one_liner(file_lines: list, line: int) -> str:
     """
     Return a Java block of code beginning in line as a one-liner str.
 
@@ -84,13 +84,9 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses generic exceptions',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses generic exceptions',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -120,13 +116,9 @@ def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -160,23 +152,21 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, lines in catches.items():
-        vulns = lang.block_contains_empty_grammar(empty_catch,
-                                                  code_file, lines,
-                                                  _get_block_as_one_liner)
-        if not vulns:
-            show_close('Code does not have empty catches',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code has empty catches',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in catches.items():
+        vulns.update(lang.block_contains_empty_grammar(empty_catch,
+                                                       code_file, val['lines'],
+                                                       _get_block_one_liner))
+    if not vulns:
+        show_close('Code does not have empty catches',
+                   details=dict(file=java_dest,
+                                fingerprint=lang.
+                                file_hash(java_dest)))
+    else:
+        show_open('Code has empty catches',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -213,24 +203,22 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     switch_block.ignore(L_CHAR)
     switch_block.ignore(L_STRING)
 
-    for code_file, lines in switches.items():
-        vulns = lang.block_contains_grammar(switch_block,
-                                            code_file, lines,
-                                            _get_block,
-                                            should_not_have='default')
-        if not vulns:
-            show_close('Code has "switch" with "default" clause',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code does not have "switch" with "default" clause',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in switches.items():
+        vulns.update(lang.block_contains_grammar(switch_block,
+                                                 code_file, val['lines'],
+                                                 _get_block,
+                                                 should_not_have='default'))
+    if not vulns:
+        show_close('Code has "switch" with "default" clause',
+                   details=dict(file=java_dest,
+                                fingerprint=lang.
+                                file_hash(java_dest)))
+    else:
+        show_open('Code does not have "switch" with "default" clause',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -274,13 +262,9 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(insecure_methods),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(insecure_methods),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -313,23 +297,21 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
-    for code_file, lines in conds.items():
-        vulns = lang.block_contains_empty_grammar(if_wout_else,
-                                                  code_file, lines,
-                                                  _get_block_as_one_liner)
-        if not vulns:
-            show_close('Code has "if" with "else" clauses',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code does not have "if" with "else" clauses',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in conds.items():
+        vulns.update(lang.block_contains_empty_grammar(if_wout_else,
+                                                       code_file, val['lines'],
+                                                       _get_block_one_liner))
+    if not vulns:
+        show_close('Code has "if" with "else" clauses',
+                   details=dict(file=java_dest,
+                                fingerprint=lang.
+                                file_hash(java_dest)))
+    else:
+        show_open('Code does not have "if" with "else" clauses',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -370,13 +352,9 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -413,13 +391,9 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -503,13 +477,9 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code allows logs injection',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code allows logs injection',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -538,11 +508,7 @@ def uses_system_exit(java_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result

@@ -3,8 +3,7 @@
 """Test methods of fluidasserts.code.java."""
 
 # standard imports
-import io
-import sys
+# None
 
 # 3rd party imports
 # None
@@ -36,13 +35,7 @@ LINES_FORMAT = 'lines: '
 
 def test_has_generic_exceptions_open():
     """Code uses generic exceptions."""
-    capt_out = io.StringIO()
-    temp_stdout = sys.stdout
-    sys.stdout = capt_out
-    expected = LINES_FORMAT + '44, 54'
     assert csharp.has_generic_exceptions(INSECURE_CODE)
-    sys.stdout = temp_stdout
-    assert expected in capt_out.getvalue()
 
 
 def test_has_generic_exceptions_in_dir_open():
@@ -52,13 +45,7 @@ def test_has_generic_exceptions_in_dir_open():
 
 def test_swallows_exceptions_open():
     """Search empty catches."""
-    capt_out = io.StringIO()
-    temp_stdout = sys.stdout
-    sys.stdout = capt_out
-    expected = LINES_FORMAT + '14, 19, 24, 32'
     assert csharp.swallows_exceptions(INSECURE_EMPTY_CATCH)
-    sys.stdout = temp_stdout
-    assert expected in capt_out.getvalue()
 
 
 def test_swallows_exceptions_in_dir_open():

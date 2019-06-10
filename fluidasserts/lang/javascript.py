@@ -61,13 +61,9 @@ def uses_console_log(js_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -96,13 +92,9 @@ def uses_eval(js_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -133,13 +125,9 @@ def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -173,13 +161,9 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -210,23 +194,21 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, lines in catches.items():
-        vulns = lang.block_contains_empty_grammar(empty_catch,
-                                                  code_file, lines,
-                                                  _get_block)
-        if not vulns:
-            show_close('Code does not have empty "catches"',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code has empty "catches"',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in catches.items():
+        vulns.update(lang.block_contains_empty_grammar(empty_catch,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if not vulns:
+        show_close('Code does not have empty "catches"',
+                   details=dict(file=js_dest,
+                                fingerprint=lang.
+                                file_hash(js_dest)))
+    else:
+        show_open('Code has empty "catches"',
+                  details=dict(file=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -265,23 +247,21 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, lines in switches.items():
-        vulns = lang.block_contains_empty_grammar(sw_wout_def,
-                                                  code_file, lines,
-                                                  _get_block)
-        if not vulns:
-            show_close('Code has "switch" with "default" clause',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code does not have "switch" with "default" clause',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in switches.items():
+        vulns.update(lang.block_contains_empty_grammar(sw_wout_def,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if not vulns:
+        show_close('Code has "switch" with "default" clause',
+                   details=dict(file=js_dest,
+                                fingerprint=lang.
+                                file_hash(js_dest)))
+    else:
+        show_open('Code does not have "switch" with "default" clause',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -314,21 +294,19 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    for code_file, lines in conds.items():
-        vulns = lang.block_contains_empty_grammar(if_wout_else,
-                                                  code_file, lines,
-                                                  _get_block)
-        if not vulns:
-            show_close('Code has "if" with "else" clauses',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code does not have "if" with "else" clause',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in conds.items():
+        vulns.update(lang.block_contains_empty_grammar(if_wout_else,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if not vulns:
+        show_close('Code has "if" with "else" clauses',
+                   details=dict(file=js_dest,
+                                fingerprint=lang.
+                                file_hash(js_dest)))
+    else:
+        show_open('Code does not have "if" with "else" clause',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result

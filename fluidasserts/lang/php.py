@@ -45,18 +45,15 @@ def has_preg_ce(php_dest: str, exclude: list = None) -> bool:
                                      LANGUAGE_SPECS, exclude)
         if not matches:
             show_close('Code does not allow RCE using preg_replace()',
-                       details=dict(code_dest=php_dest))
+                       details=dict(code_dest=php_dest,
+                                    fingerprint=lang.file_hash(php_dest)))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=php_dest))
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code may allow RCE using preg_replace()',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code may allow RCE using preg_replace()',
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result

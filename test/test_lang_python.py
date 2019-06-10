@@ -3,8 +3,7 @@
 """Test methods of fluidasserts.code.python."""
 
 # standard imports
-import io
-import sys
+# None
 
 # 3rd party imports
 # None
@@ -37,13 +36,7 @@ def test_has_generic_exceptions_in_dir_open():
 
 def test_swallows_exceptions_open():
     """Code swallows exceptions."""
-    capt_out = io.StringIO()
-    temp_stdout = sys.stdout
-    sys.stdout = capt_out
-    expected = LINES_FORMAT + '13, 17, 21'
     assert python.swallows_exceptions(INSECURE_CODE)
-    sys.stdout = temp_stdout
-    assert expected in capt_out.getvalue()
 
 
 def test_swallows_exceptions_in_dir_open():

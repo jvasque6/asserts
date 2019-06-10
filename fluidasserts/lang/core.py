@@ -53,15 +53,11 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Bad text present in code',
-                      details=dict(file=code_file,
-                                   bad_text=expected_text,
-                                   used_regular_expressions=use_regex,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Bad text present in code',
+                  details=dict(matched=matches,
+                               bad_text=expected_text,
+                               used_regular_expressions=use_regex,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -99,12 +95,9 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
         return False
     else:
         result = False
-        for code_file, vulns in matches.items():
-            show_close('Expected text present in code',
-                       details=dict(file=code_file,
-                                    used_regular_expressions=use_regex,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
+        show_close('Expected text present in code',
+                   details=dict(matched=matches,
+                                used_regular_expressions=use_regex))
     return result
 
 
@@ -128,34 +121,25 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
     matches = {}
     for expected in expected_list:
         grammar = Regex(expected) if use_regex else Literal(expected)
-        result = False
         try:
             __matches = lang.check_grammar(grammar, code_dest,
                                            lang_specs, exclude)
-            try:
-                matches = {x: matches[x] + y for x, y in __matches.items()}
-            except KeyError:
-                matches.update(__matches)
+            if not __matches:
+                show_close('Not all expected text was found in code',
+                           details=dict(file=code_dest))
+                return False
+            matches.update(__matches)
         except FileNotFoundError:
             show_unknown('File does not exist',
                          details=dict(code_dest=code_dest,
                                       used_regular_expressions=use_regex))
             return False
-    if not matches:
-        show_close('All bad text in list was not found in code',
-                   details=dict(file=code_dest))
-        return False
-    result = True
-    for code_file, vulns in matches.items():
-        show_open('A bad text from list was found in code',
-                  details=dict(file=code_file,
-                               fingerprint=lang.
-                               file_hash(code_file),
-                               text_list=expected_list,
-                               used_regular_expressions=use_regex,
-                               lines=str(vulns)[1:-1],
-                               total_vulns=len(vulns)))
-    return result
+    show_open('A bad text from list was found in code',
+              details=dict(matched=matches,
+                           text_list=expected_list,
+                           used_regular_expressions=use_regex,
+                           total_vulns=len(matches)))
+    return True
 
 
 @notify
@@ -196,13 +180,9 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Any of the expected bad text is present in code',
-                      details=dict(file=code_file,
-                                   found_text=matches,
-                                   used_regular_expressions=use_regex,
-                                   fingerprint=lang.
-                                   file_hash(code_file)))
+        show_open('Any of the expected bad text is present in code',
+                  details=dict(matched=matches,
+                               used_regular_expressions=use_regex))
     return result
 
 
@@ -370,11 +350,9 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Some of the expected secrets are present in code',
-                      details=dict(file=code_file,
-                                   found_secrets=matches,
-                                   used_regular_expressions=use_regex,
-                                   fingerprint=lang.
-                                   file_hash(code_file)))
+
+        show_open('Some of the expected secrets are present in code',
+                  details=dict(matched=matches,
+                               found_secrets=matches,
+                               used_regular_expressions=use_regex))
     return result

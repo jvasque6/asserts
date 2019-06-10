@@ -69,13 +69,8 @@ def has_generic_exceptions(csharp_dest: str, exclude: list = None) -> bool:
         result = False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses generic exceptions',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses generic exceptions',
+                  details=dict(matched=matches, total_vulns=len(matches)))
     return result
 
 
@@ -110,23 +105,20 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
-    for code_file, lines in catches.items():
-        vulns = lang.block_contains_empty_grammar(empty_catch,
-                                                  code_file, lines,
-                                                  _get_block)
-        if not vulns:
-            show_close('Code does not have empty catches',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code has empty catches',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in catches.items():
+        vulns.update(lang.block_contains_empty_grammar(empty_catch,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if not vulns:
+        show_close('Code does not have empty catches',
+                   details=dict(file=csharp_dest,
+                                fingerprint=lang.
+                                file_hash(csharp_dest)))
+    else:
+        show_open('Code has empty catches',
+                  details=dict(matches=vulns, total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -181,22 +173,21 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
         show_close('Code does not have switches',
                    details={'code_dest': csharp_dest})
         return False
-    for code_file, lines in switches.items():
-        vulns = lang.block_contains_empty_grammar(
-            switch_without_default, code_file, lines, _get_block)
-        if not vulns:
-            show_close(msg.format('does have'), details={
-                'file': code_file,
-                'fingerprint': lang.file_hash(code_file)
-            })
-        else:
-            show_open(msg.format('is missing'), details={
-                'file': code_file,
-                'lines': str(vulns)[1:-1],
-                'total_vulns': len(vulns),
-                'fingerprint': lang.file_hash(code_file),
-            })
-            result = True
+    vulns = {}
+    for code_file, val in switches.items():
+        vulns.update(lang.block_contains_empty_grammar(
+            switch_without_default, code_file, val['lines'], _get_block))
+    if not vulns:
+        show_close(msg.format('does have'), details={
+            'file': csharp_dest,
+            'fingerprint': lang.file_hash(csharp_dest)
+        })
+    else:
+        show_open(msg.format('is missing'), details={
+            'matched': switches,
+            'total_vulns': len(switches),
+        })
+        result = True
     return result
 
 
@@ -235,13 +226,9 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
         result = False
     else:
         result = True
-        for code_file, vulns in random_new.items():
-            show_open('Code generates insecure random numbers',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code generates insecure random numbers',
+                  details=dict(matched=random_new,
+                               total_vulns=len(random_new)))
     return result
 
 
@@ -276,23 +263,21 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
         show_unknown('File does not exist',
                      details=dict(code_dest=csharp_dest))
         return False
-    for code_file, lines in conds.items():
-        vulns = lang.block_contains_empty_grammar(if_wout_else,
-                                                  code_file, lines,
-                                                  _get_block)
-        if not vulns:
-            show_close('Code has "if" with "else" clauses',
-                       details=dict(file=code_file,
-                                    fingerprint=lang.
-                                    file_hash(code_file)))
-        else:
-            show_open('Code does not have "if" with "else" clauses',
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
-            result = True
+    vulns = {}
+    for code_file, val in conds.items():
+        vulns.update(lang.block_contains_empty_grammar(if_wout_else,
+                                                       code_file, val['lines'],
+                                                       _get_block))
+    if not vulns:
+        show_close('Code has "if" with "else" clauses',
+                   details=dict(file=csharp_dest,
+                                fingerprint=lang.
+                                file_hash(csharp_dest)))
+    else:
+        show_open('Code does not have "if" with "else" clauses',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
+        result = True
     return result
 
 
@@ -334,13 +319,9 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
         result = False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -376,13 +357,9 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -416,13 +393,9 @@ def uses_ecb_encryption_mode(csharp_dest: str, exclude: list = None) -> bool:
         result = False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -454,13 +427,9 @@ def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
         result = False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result
 
 
@@ -492,11 +461,7 @@ def uses_console_writeline(csharp_dest: str, exclude: list = None) -> bool:
         return False
     else:
         result = True
-        for code_file, vulns in matches.items():
-            show_open('Code uses {} method'.format(method),
-                      details=dict(file=code_file,
-                                   fingerprint=lang.
-                                   file_hash(code_file),
-                                   lines=str(vulns)[1:-1],
-                                   total_vulns=len(vulns)))
+        show_open('Code uses {} method'.format(method),
+                  details=dict(matched=matches,
+                               total_vulns=len(matches)))
     return result

@@ -3,8 +3,7 @@
 """Test methods of fluidasserts.code.java."""
 
 # standard imports
-import io
-import sys
+# None
 
 # 3rd party imports
 # None
@@ -58,17 +57,7 @@ def test_uses_print_stack_trace_in_dir_open():
 
 def test_swallows_exceptions_open():
     """Search empty catches."""
-    capt_out = io.StringIO()
-    temp_stdout = sys.stdout
-    sys.stdout = capt_out
-    # Given this test fails
-    # And you didn't modified this method
-    # But you touched test/static/lang/java/EmptyCatchOpen.java
-    # Then update the line below accordingly
-    expected = LINES_FORMAT + '18, 21'
     assert java.swallows_exceptions(INSECURE_EMPTY_CATCH)
-    sys.stdout = temp_stdout
-    assert expected in capt_out.getvalue()
 
 
 def test_has_empty_catches_in_dir_open():
