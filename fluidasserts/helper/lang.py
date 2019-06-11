@@ -5,14 +5,24 @@
 # standard imports
 import hashlib
 import os
+import re
 from typing import Callable, Dict, List
 from functools import lru_cache
 
 # 3rd party imports
-from pyparsing import (ParserElement, ParseException, ParseResults, Literal,
-                       SkipTo, MatchFirst)
+from pyparsing import ParserElement, ParseException, ParseResults
 
 # local imports
+# none
+
+
+def _re_compile(
+        literals: tuple,
+        pre: str = r'',
+        suf: str = r'',
+        sep: str = r''):
+    """Return a compiled regular expression from a tuple of literals."""
+    return re.compile(f'{pre}(?:{sep.join(map(re.escape, literals))}){suf}')
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -40,46 +50,65 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
     """
     lang_spec = dict(lang_spec)
     line_comment = lang_spec.get('line_comment')
-    block_comment_end = lang_spec.get('block_comment_end')
     block_comment_start = lang_spec.get('block_comment_start')
+    block_comment_end = lang_spec.get('block_comment_end')
+
+    if line_comment:
+        re_line_comment = _re_compile(line_comment)
+        re_line_comment_ignore = _re_compile(
+            line_comment, suf=r'.*$')
+    if block_comment_start:
+        re_block_comment_start = _re_compile(block_comment_start)
+        re_block_comment_start_ignore = _re_compile(
+            (block_comment_start,), suf=r'.*$')
+    if block_comment_end:
+        re_block_comment_end = _re_compile(block_comment_end)
+        re_block_comment_end_ignore = _re_compile(
+            (block_comment_end,), pre=r'^.*')
+    if block_comment_start and block_comment_end:
+        re_block_comment_dual = _re_compile(block_comment_end)
+        re_block_comment_dual_ignore = _re_compile(
+            (block_comment_start, block_comment_end,), sep=r'.*?')
 
     with open(code_file, encoding='latin-1') as file_fd:
         in_block_comment = False
         non_commented_lines = []
-        for (counter, line) in enumerate(file_fd, start=1):
-            try:
-                if line_comment:
-                    parser = ~MatchFirst(line_comment)
-                    parser.parseString(line)
-            except ParseException:
-                # Line is a comment
-                continue
+        for (counter, line) in enumerate(file_fd.read().splitlines(), start=1):
+            if not in_block_comment:
+                if block_comment_start and block_comment_end:
+                    while re_block_comment_dual.search(line):
+                        # Line has a multi line comment that starts and end
+                        #   on the same line
+                        # Ignore what is in between
+                        line = re_block_comment_dual_ignore.sub('', line)
 
-            if block_comment_start:
-                try:
-                    block_start = Literal(block_comment_start)
-                    parser = SkipTo(block_start) + block_start
-                    parser.parseString(line)
-                except ParseException:
-                    # Line is not the beggining of a block comment
-                    pass
+                if line_comment and re_line_comment.search(line):
+                    # Line has a single line comment
+                    # Ignore the rest of the line
+                    line = re_line_comment_ignore.sub('', line)
+
+            if block_comment_start and re_block_comment_start.search(line):
+                # A block comment starts in this line
+                in_block_comment = True
+                # Ignore the rest of the line
+                line = re_block_comment_start_ignore.sub('', line)
+
+            if in_block_comment:
+                if block_comment_end and re_block_comment_end.search(line):
+                    # A block comment ends in this line
+                    # Ignore what is before
+                    line = re_block_comment_end_ignore.sub('', line)
+                    in_block_comment = False
+
+                    if line_comment and re_line_comment.search(line):
+                        # Line has a single line comment
+                        # Ignore the rest of the line
+                        line = re_line_comment_ignore.sub('', line)
                 else:
-                    in_block_comment = True
+                    continue
+            if line:
+                non_commented_lines.append((counter, line))
 
-                if in_block_comment and block_comment_end:
-                    try:
-                        block_end = Literal(block_comment_end)
-                        parser = SkipTo(block_end) + block_end
-                        parser.parseString(line)
-                    except ParseException:
-                        # The block comment is not ending in this line
-                        continue
-                    else:
-                        # The block comment ended in this line
-                        in_block_comment = False
-                        continue
-
-            non_commented_lines.append((counter, line))
         return tuple(non_commented_lines)
 
 
