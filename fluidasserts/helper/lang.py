@@ -70,9 +70,9 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
         re_block_comment_dual_ignore = _re_compile(
             (block_comment_start, block_comment_end,), sep=r'.*?')
 
+    non_commented_lines = []
     with open(code_file, encoding='latin-1') as file_fd:
         in_block_comment = False
-        non_commented_lines = []
         for (counter, line) in enumerate(file_fd.read().splitlines(), start=1):
             if not in_block_comment:
                 if block_comment_start and block_comment_end:
@@ -109,7 +109,7 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
             if line:
                 non_commented_lines.append((counter, line))
 
-        return tuple(non_commented_lines)
+    return tuple(non_commented_lines)
 
 
 def _get_match_lines(
