@@ -142,6 +142,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     """
     vulns = {}
     lines = [int(x) for x in lines.split(',')]
+    vuln_lines = []
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
@@ -158,11 +159,15 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
                 is_vulnerable = False
 
             if is_vulnerable:
-                vulns[code_dest] = {
-                    'lines': str(lines)[1:-1],
-                    'file_hash': file_hash(code_dest),
-                }
+                vuln_lines.append(line)
 
+    if vuln_lines:
+        vulns = {
+            code_dest: {
+                'lines': str(vuln_lines)[1:-1],
+                'file_hash': file_hash(code_dest),
+            }
+        }
     return vulns
 
 
@@ -179,16 +184,22 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     """
     vulns = {}
     lines = lines = [int(x) for x in lines.split(',')]
+    vuln_lines = []
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = code_f.readlines()
         for line in lines:
             txt = get_block_fn(file_lines, line)
             results = grammar.searchString(txt, maxMatches=1)
             if _is_empty_result(results):
-                vulns[code_dest] = {
-                    'lines': str(lines)[1:-1],
-                    'file_hash': file_hash(code_dest),
-                }
+                vuln_lines.append(line)
+
+    if vuln_lines:
+        vulns = {
+            code_dest: {
+                'lines': str(vuln_lines)[1:-1],
+                'file_hash': file_hash(code_dest),
+            }
+        }
     return vulns
 
 
