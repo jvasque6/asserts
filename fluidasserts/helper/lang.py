@@ -174,21 +174,21 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     vuln_lines = []
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
-        for line in lines:
-            txt = get_block_fn(file_lines, line)
-            results = grammar.searchString(txt, maxMatches=1)
-            results_str = str(results)
+    for line in lines:
+        txt = get_block_fn(file_lines, line)
+        results = grammar.searchString(txt, maxMatches=1)
+        results_str = str(results)
 
-            is_vulnerable = True
-            if _is_empty_result(results):
-                is_vulnerable = False
-            elif should_have and should_have not in results_str:
-                is_vulnerable = False
-            elif should_not_have and should_not_have in results_str:
-                is_vulnerable = False
+        is_vulnerable = True
+        if _is_empty_result(results):
+            is_vulnerable = False
+        elif should_have and should_have not in results_str:
+            is_vulnerable = False
+        elif should_not_have and should_not_have in results_str:
+            is_vulnerable = False
 
-            if is_vulnerable:
-                vuln_lines.append(line)
+        if is_vulnerable:
+            vuln_lines.append(line)
 
     if vuln_lines:
         vulns = {
@@ -216,11 +216,11 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     vuln_lines = []
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = code_f.readlines()
-        for line in lines:
-            txt = get_block_fn(file_lines, line)
-            results = grammar.searchString(txt, maxMatches=1)
-            if _is_empty_result(results):
-                vuln_lines.append(line)
+    for line in lines:
+        txt = get_block_fn(file_lines, line)
+        results = grammar.searchString(txt, maxMatches=1)
+        if _is_empty_result(results):
+            vuln_lines.append(line)
 
     if vuln_lines:
         vulns = {
