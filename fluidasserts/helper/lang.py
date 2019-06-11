@@ -160,7 +160,8 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
                            lines: List[str],
                            get_block_fn: Callable,
                            should_have: str = '',
-                           should_not_have: str = '',) -> List[str]:
+                           should_not_have: str = '',
+                           search_for_empty: bool = False) -> List[str]:
     """
     Check block grammar.
 
@@ -168,6 +169,8 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     :param code_dest: Source code file to check.
     :param lines: List of starting lines.
     :param get_block_fn: Function that gives block code starting at line.
+    :param should_have: A string to search for in the match results.
+    :param should_not_have: A string to search for in the match results.
     """
     vulns = {}
     lines = [int(x) for x in lines.split(',')]
@@ -179,13 +182,13 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
         results = grammar.searchString(txt, maxMatches=1)
         results_str = str(results)
 
-        is_vulnerable = True
+        is_vulnerable = not search_for_empty
         if _is_empty_result(results):
-            is_vulnerable = False
+            is_vulnerable = search_for_empty
         elif should_have and should_have not in results_str:
-            is_vulnerable = False
+            is_vulnerable = search_for_empty
         elif should_not_have and should_not_have in results_str:
-            is_vulnerable = False
+            is_vulnerable = search_for_empty
 
         if is_vulnerable:
             vuln_lines.append(line)
@@ -201,8 +204,10 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
 
 
 def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
-                                 lines: str,
-                                 get_block_fn: Callable) -> List[str]:
+                                 lines: List[str],
+                                 get_block_fn: Callable,
+                                 should_have: str = '',
+                                 should_not_have: str = '') -> List[str]:
     """
     Check empty block grammar.
 
@@ -210,26 +215,16 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     :param code_dest: Source code file to check.
     :param lines: List of starting lines.
     :param get_block_fn: Function that gives block code starting at line.
+    :param should_have: A string to search for in the match results.
+    :param should_not_have: A string to search for in the match results.
     """
-    vulns = {}
-    lines = lines = [int(x) for x in lines.split(',')]
-    vuln_lines = []
-    with open(code_dest, encoding='latin-1') as code_f:
-        file_lines = code_f.readlines()
-    for line in lines:
-        txt = get_block_fn(file_lines, line)
-        results = grammar.searchString(txt, maxMatches=1)
-        if _is_empty_result(results):
-            vuln_lines.append(line)
-
-    if vuln_lines:
-        vulns = {
-            code_dest: {
-                'lines': str(vuln_lines)[1:-1],
-                'file_hash': file_hash(code_dest),
-            }
-        }
-    return vulns
+    return block_contains_grammar(grammar,
+                                  code_dest,
+                                  lines,
+                                  get_block_fn,
+                                  should_have=should_have,
+                                  should_not_have=should_not_have,
+                                  search_for_empty=True)
 
 
 @lru_cache(maxsize=None, typed=True)
