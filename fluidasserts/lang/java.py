@@ -181,7 +181,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    switch = CaselessKeyword('switch') + nestedExpr(opener='(', closer=')')
+    switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
     switch_line = Optional(Literal('}')) + switch + Optional(Literal('{'))
 
     result = False
@@ -279,40 +279,50 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    tk_if = CaselessKeyword('if')
-    tk_else = CaselessKeyword('else')
-    block = nestedExpr(opener='{', closer='}')
-    prsr_if = tk_if + nestedExpr() + block
-    prsr_else = Suppress(tk_else) + (prsr_if | block)
-    if_head = tk_if + nestedExpr() + Optional(Literal('{'))
-    if_wout_else = (Suppress(prsr_if) + prsr_else).ignore(javaStyleComment)
+    args = nestedExpr(opener='(', closer=')')
 
-    result = False
+    if_ = Keyword('if') + args
+    if_line = Optional('}') + if_ + Optional('{')
+
     try:
-        conds = lang.check_grammar(if_head, java_dest, LANGUAGE_SPECS, exclude)
-        if not conds:
-            show_close('Code does not have conditionals',
-                       details=dict(code_dest=java_dest))
-            return False
+        conds = lang.check_grammar(if_line, java_dest, LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
         return False
+    else:
+        if not conds:
+            show_close('Code does not use "if" statements',
+                       details=dict(code_dest=java_dest))
+            return False
+
+    block = nestedExpr(opener='{', closer='}')
+
+    if_block = if_ + block
+    else_if_block = Keyword('else') + Keyword('if') + args + block
+    else_block = Keyword('else') + block
+
+    cond_block = \
+        Suppress(if_block + ZeroOrMore(else_if_block)) + Optional(else_block)
+    cond_block.ignore(javaStyleComment)
+    cond_block.ignore(L_CHAR)
+    cond_block.ignore(L_STRING)
+
     vulns = {}
     for code_file, val in conds.items():
-        vulns.update(lang.block_contains_empty_grammar(if_wout_else,
+        vulns.update(lang.block_contains_empty_grammar(cond_block,
                                                        code_file, val['lines'],
-                                                       _get_block_one_liner))
+                                                       _get_block))
     if not vulns:
-        show_close('Code has "if" with "else" clauses',
+        show_close('Code has "if" with "else" clause',
                    details=dict(file=java_dest,
                                 fingerprint=lang.
                                 file_hash(java_dest)))
     else:
-        show_open('Code does not have "if" with "else" clauses',
+        show_open('Code has "if" without "else" clause',
                   details=dict(matched=vulns,
                                total_vulns=len(vulns)))
-        result = True
-    return result
+        return True
+    return False
 
 
 @notify

@@ -7,11 +7,21 @@ class GenericExceptionsOpen{
           int a[]=new int[7];
           a[4]=30/0;
           System.out.println("First print statement in try block");
-          if (a[0] > 200) {
+
+          if (a[0] > (200)) {
+              // this comment should not comment the else if clause
               System.out.println("Big num");
-          } else  if (a[0] < 100){
-              System.out.println("Small num");
+          } else if (a[0] < (100)){
+              System.out.println("Small num}");
           }
+
+          if (a[0] > (200)) {System.out.println("Big num{");} else  if (a[0] < (100)){System.out.println("Small num");}
+
+          if (a[0] > (200)) {System.out.println("Big num}");}
+          else   if (a[0] < (100)){System.out.println("Small num}");}
+
+          // this comment should not comment the entire file
+          else {System.out.println("Not big not small num");}
       }
 
       MessageDigest messageDigest, messageDigest2;

@@ -25,6 +25,7 @@ class GenericExceptionsClose{
             System.out.println("Big num");
          } else  if (a[0] < 100){
             System.out.println("Small num");
+            // This comment should not comment the else clause
          } else {
             System.out.println("Average num");
          }
