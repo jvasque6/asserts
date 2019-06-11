@@ -141,6 +141,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     :param get_block_fn: Function that gives block code starting at line.
     """
     vulns = {}
+    lines = [int(x) for x in lines.split(',')]
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = [x.rstrip() for x in code_f.readlines()]
         for line in lines:
@@ -158,7 +159,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
 
             if is_vulnerable:
                 vulns[code_dest] = {
-                    'lines': lines,
+                    'lines': str(lines)[1:-1],
                     'file_hash': file_hash(code_dest),
                 }
 
@@ -166,7 +167,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
 
 
 def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
-                                 lines: List[str],
+                                 lines: str,
                                  get_block_fn: Callable) -> List[str]:
     """
     Check empty block grammar.
@@ -177,6 +178,7 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
     :param get_block_fn: Function that gives block code starting at line.
     """
     vulns = {}
+    lines = lines = [int(x) for x in lines.split(',')]
     with open(code_dest, encoding='latin-1') as code_f:
         file_lines = code_f.readlines()
         for line in lines:
@@ -184,7 +186,7 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
             results = grammar.searchString(txt, maxMatches=1)
             if _is_empty_result(results):
                 vulns[code_dest] = {
-                    'lines': lines,
+                    'lines': str(lines)[1:-1],
                     'file_hash': file_hash(code_dest),
                 }
     return vulns
@@ -247,7 +249,7 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
         lines = _get_match_lines(grammar, code_dest, lang_spec)
     if lines:
         vulns[code_dest] = {
-            'lines': lines,
+            'lines': str(lines)[1:-1],
             'file_hash': file_hash(code_dest),
         }
     return vulns
