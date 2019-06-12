@@ -61,6 +61,8 @@ def has_insecure_gitignore(repo: str) -> bool:
         '*.pem',
         '*.key',
         '*.p12',
+        'Thumbs.db',
+        '.DS_Store',
     )
     result = True
     try:
