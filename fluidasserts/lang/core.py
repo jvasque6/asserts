@@ -116,6 +116,8 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
     """
+    # Remove duplicates
+    expected_list = set(expected_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
@@ -157,6 +159,8 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
     """
+    # Remove duplicates
+    expected_list = set(expected_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
@@ -327,6 +331,8 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
     :param secrets_list: List of secrets to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
     """
+    # Remove duplicates
+    secrets_list = set(secrets_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
