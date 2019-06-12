@@ -66,8 +66,7 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
         re_block_comment_end_ignore = _re_compile(
             (block_comment_end,), pre=r'^.*')
     if block_comment_start and block_comment_end:
-        re_block_comment_dual = _re_compile(block_comment_end)
-        re_block_comment_dual_ignore = _re_compile(
+        re_block_comment_dual = _re_compile(
             (block_comment_start, block_comment_end,), sep=r'.*?')
 
     non_commented_lines = []
@@ -80,7 +79,7 @@ def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
                         # Line has a multi line comment that starts and end
                         #   on the same line
                         # Ignore what is in between
-                        line = re_block_comment_dual_ignore.sub('', line)
+                        line = re_block_comment_dual.sub('', line)
 
                 if line_comment and re_line_comment.search(line):
                     # Line has a single line comment
