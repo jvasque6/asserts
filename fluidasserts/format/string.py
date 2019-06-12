@@ -36,6 +36,7 @@ def _check_password_strength(password: str, length: int) -> bool:
     lower = sum(1 for c in password if c.islower())
     nums = sum(1 for c in password if c.isdigit())
     special = sum(1 for c in password if not c.isalnum())
+    spaces = sum(1 for c in password if c.isspace())
 
     with open(dictionary) as dict_fd:
         words = (x.rstrip() for x in dict_fd.readlines())
@@ -49,15 +50,17 @@ def _check_password_strength(password: str, length: int) -> bool:
     elif password in words:
         show_open('{} is a dictionary password'.format(password))
         result = True
-    elif caps < 1 or lower < 1 or nums < 1 or special < 1:
+    elif caps < 1 or lower < 1 or nums < 1 or special < 1 or spaces < 1:
         show_open('{} is too weak'.format(password),
                   details=dict(caps=str(caps), lower=str(lower),
-                               numbers=str(nums), special=str(special)))
+                               numbers=str(nums), special=str(special),
+                               spaces=str(spaces)))
         result = True
     else:
         show_close('{} password is secure'.format(password),
                    details=dict(caps=str(caps), lower=str(lower),
-                                numbers=str(nums), special=str(special)))
+                                numbers=str(nums), special=str(special),
+                                spaces=str(spaces)))
         result = False
 
     return result
@@ -76,7 +79,7 @@ def is_user_password_insecure(password: str) -> bool:
     :param password: Password to be tested.
     :returns: True if password insecure, False if secure.
     """
-    min_password_len = 8
+    min_password_len = 12
 
     return _check_password_strength(password, min_password_len)
 
@@ -94,7 +97,7 @@ def is_system_password_insecure(password: str) -> bool:
     :param password: Password to be tested.
     :returns: True if password insecure, False if secure.
     """
-    min_password_len = 20
+    min_password_len = 24
 
     return _check_password_strength(password, min_password_len)
 

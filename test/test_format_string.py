@@ -18,11 +18,10 @@ from fluidasserts.format import string
 
 # Constants
 
-WEAK_USER_PASS = 'password'
-WEAK_USER_PASS = 'password2'
-STRONG_USER_PASS = 'P@ssw0rd1.'
+WEAK_USER_PASS = 'P@ssw0rd1.'
+STRONG_USER_PASS = 'P@ssw0rd1. P@ssw0rd1.'
 WEAK_SYSTEM_PASS = 'system_password'
-STRONG_SYSTEM_PASS = 'P@ssw0rd1.P@ssw0rd1.P@ssw0rd1.'
+STRONG_SYSTEM_PASS = 'P@ssw0rd1. P@ssw0rd1. P@ssw0rd1. P@ssw0rd1.'
 WEAK_OTP = '123a'
 STRONG_OTP = '123abc'
 WEAK_SSID = 'network'
