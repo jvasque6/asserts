@@ -138,6 +138,30 @@ def _get_match_lines(
     return affected_lines
 
 
+def _get_match_lines_re(
+        grammar: str,
+        code_file: str,
+        lang_spec: dict) -> List[int]:  # noqa
+    """
+    Check grammar in file using basic regex.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_file: Source code file to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :return: List of lines that contain grammar matches.
+    """
+    affected_lines = []
+    # We need hashable arguments
+    lang_spec_hashable = tuple(lang_spec.items())
+    grammar_re = re.compile(grammar)
+    for line_number, line_content in _non_commented_code(
+            code_file, lang_spec_hashable):
+        if grammar_re.search(line_content):
+            affected_lines.append(line_number)
+    return affected_lines
+
+
 def lists_as_string(lists: List[List], result: ParseResults,
                     level: int) -> str:
     """
@@ -289,6 +313,36 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     return vulns
 
 
+def _check_grammar_in_file_re(grammar: str, code_dest: str,
+                              lang_spec: dict) -> Dict[str, List[str]]:
+    """
+    Check grammar in file.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: File or directory to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :param exclude: Exclude files or directories with given strings
+    :return: Maps files to their found vulnerabilites.
+    """
+    vulns = {}
+    lines = []
+    file_extension = code_dest.rsplit('.', 1)[-1].lower()
+    lang_extensions = lang_spec.get('extensions')
+
+    if lang_extensions:
+        if file_extension in lang_extensions:
+            lines = _get_match_lines_re(grammar, code_dest, lang_spec)
+    else:
+        lines = _get_match_lines_re(grammar, code_dest, lang_spec)
+    if lines:
+        vulns[code_dest] = {
+            'lines': str(lines)[1:-1],
+            'file_hash': file_hash(code_dest),
+        }
+    return vulns
+
+
 def _check_grammar_in_dir(grammar: ParserElement, code_dest: str,
                           lang_spec: dict,
                           exclude: list = None) -> Dict[str, List[str]]:
@@ -308,6 +362,29 @@ def _check_grammar_in_dir(grammar: ParserElement, code_dest: str,
     for full_path in _full_paths_in_dir(code_dest):
         if not any(x in full_path for x in exclude):
             vulns.update(_check_grammar_in_file(grammar, full_path, lang_spec))
+    return vulns
+
+
+def _check_grammar_in_dir_re(grammar: ParserElement, code_dest: str,
+                             lang_spec: dict,
+                             exclude: list = None) -> Dict[str, List[str]]:
+    """
+    Check grammar in directory.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: File or directory to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :param exclude: Exclude files or directories with given strings
+    :return: Maps files to their found vulnerabilites.
+    """
+    if not exclude:
+        exclude = []
+    vulns = {}
+    for full_path in _full_paths_in_dir(code_dest):
+        if not any(x in full_path for x in exclude):
+            vulns.update(_check_grammar_in_file_re(grammar, full_path,
+                                                   lang_spec))
     return vulns
 
 
@@ -334,4 +411,30 @@ def check_grammar(grammar: ParserElement, code_dest: str,
                                       exclude)
     else:
         vulns = _check_grammar_in_file(grammar, code_dest, lang_spec)
+    return vulns
+
+
+def check_grammar_re(grammar: ParserElement, code_dest: str,
+                     lang_spec: dict,
+                     exclude: list = None) -> Dict[str, List[str]]:
+    """
+    Check grammar in location.
+
+    :param grammar: Pyparsing grammar against which file will be checked.
+    :param code_dest: File or directory to check.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                       acceptable file extensions and comment delimiters.
+    :param exclude: Exclude files or directories with given strings
+    :return: Maps files to their found vulnerabilites.
+    """
+    if not exclude:
+        exclude = []
+    vulns = {}
+    try:
+        open(code_dest)
+    except IsADirectoryError:
+        vulns = _check_grammar_in_dir_re(grammar, code_dest, lang_spec,
+                                         exclude)
+    else:
+        vulns = _check_grammar_in_file_re(grammar, code_dest, lang_spec)
     return vulns

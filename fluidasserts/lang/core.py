@@ -3,6 +3,7 @@
 """This module allows to check generic Code vulnerabilities."""
 
 # standard imports
+import re
 import os
 import base64
 
@@ -37,10 +38,11 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    grammar = Regex(expected_text) if use_regex else Literal(expected_text)
+    grammar = rf'{expected_text}' if use_regex else re.escape(expected_text)
     result = False
     try:
-        matches = lang.check_grammar(grammar, code_dest, lang_specs, exclude)
+        matches = lang.check_grammar_re(grammar, code_dest, lang_specs,
+                                        exclude)
         if not matches:
             show_close('Bad text not present in code',
                        details=dict(location=code_dest,
@@ -78,11 +80,11 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    grammar = Regex(expected_text) if use_regex else Literal(expected_text)
+    grammar = rf'{expected_text}' if use_regex else re.escape(expected_text)
     result = True
     try:
-        matches = lang.check_grammar(grammar, code_dest,
-                                     lang_specs, exclude)
+        matches = lang.check_grammar_re(grammar, code_dest,
+                                        lang_specs, exclude)
         if not matches:
             show_open('Expected text not present in code',
                       details=dict(location=code_dest,
@@ -122,10 +124,10 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
         lang_specs = LANGUAGE_SPECS
     matches = {}
     for expected in expected_list:
-        grammar = Regex(expected) if use_regex else Literal(expected)
+        grammar = rf'{expected}' if use_regex else re.escape(expected)
         try:
-            __matches = lang.check_grammar(grammar, code_dest,
-                                           lang_specs, exclude)
+            __matches = lang.check_grammar_re(grammar, code_dest,
+                                              lang_specs, exclude)
             if not __matches:
                 show_close('Not all expected text was found in code',
                            details=dict(file=code_dest))
@@ -293,10 +295,10 @@ def has_secret(code_dest: str, secret: str, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     result = False
-    grammar = Regex(secret) if use_regex else Literal(secret)
+    grammar = rf'{secret}' if use_regex else re.escape(secret)
     try:
-        matches = lang.check_grammar(grammar, code_dest,
-                                     lang_specs, exclude)
+        matches = lang.check_grammar_re(grammar, code_dest,
+                                        lang_specs, exclude)
         if not matches:
             show_close('Secret not found in code',
                        details=dict(location=code_dest,
