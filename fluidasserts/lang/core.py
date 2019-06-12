@@ -5,10 +5,10 @@
 # standard imports
 import re
 import os
-import base64
+from base64 import b64encode
 
 # 3rd party imports
-from pyparsing import Literal
+# none
 
 # local imports
 from fluidasserts import show_close
@@ -246,23 +246,19 @@ def has_weak_cipher(code_dest: str, expected_text: str,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    enc_text = base64.b64encode(expected_text.encode('utf-8'))
-    prs_base64 = Literal(enc_text.decode('utf-8'))
-
-    result = False
+    grammar = re.escape(b64encode(expected_text.encode()).decode())
     try:
-        b64_matches = lang.check_grammar(prs_base64, code_dest,
-                                         lang_specs, exclude)
+        b64_matches = lang.check_grammar_re(grammar, code_dest,
+                                            lang_specs, exclude)
         if not b64_matches:
-            show_close('Code does not have confidential data encoded in \
-base64',
-                       details=dict(location=code_dest))
+            show_close(
+                'Code does not have confidential data encoded in base64',
+                details=dict(location=code_dest))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=code_dest))
         return False
     else:
-        result = True
         for code_file, vulns in b64_matches.items():
             if vulns:
                 show_open('Code has confidential data encoded in base64',
@@ -272,7 +268,8 @@ base64',
                                        file_hash(code_file),
                                        lines=str(vulns)[1:-1],
                                        total_vulns=len(vulns)))
-    return result
+        return True
+    return False
 
 
 @notify
