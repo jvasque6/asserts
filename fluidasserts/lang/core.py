@@ -8,7 +8,7 @@ import os
 import base64
 
 # 3rd party imports
-from pyparsing import Literal, Regex, MatchFirst
+from pyparsing import Literal
 
 # local imports
 from fluidasserts import show_close
@@ -38,7 +38,7 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    grammar = rf'{expected_text}' if use_regex else re.escape(expected_text)
+    grammar = expected_text if use_regex else re.escape(expected_text)
     result = False
     try:
         matches = lang.check_grammar_re(grammar, code_dest, lang_specs,
@@ -80,7 +80,7 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    grammar = rf'{expected_text}' if use_regex else re.escape(expected_text)
+    grammar = expected_text if use_regex else re.escape(expected_text)
     result = True
     try:
         matches = lang.check_grammar_re(grammar, code_dest,
@@ -124,7 +124,7 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
         lang_specs = LANGUAGE_SPECS
     matches = {}
     for expected in expected_list:
-        grammar = rf'{expected}' if use_regex else re.escape(expected)
+        grammar = expected if use_regex else re.escape(expected)
         try:
             __matches = lang.check_grammar_re(grammar, code_dest,
                                               lang_specs, exclude)
@@ -166,14 +166,13 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [
-        Regex(expected) if use_regex else Literal(expected)
-        for expected in expected_list
-    ]
-    any_query = MatchFirst(any_list)
+    if use_regex:
+        any_list = '|'.join(f'(?:{exp})' for exp in expected_list)
+    else:
+        any_list = '|'.join(f'(?:{re.escape(exp)})' for exp in expected_list)
     try:
-        matches = lang.check_grammar(any_query, code_dest,
-                                     lang_specs, exclude)
+        matches = lang.check_grammar_re(any_list, code_dest,
+                                        lang_specs, exclude)
         if not matches:
             show_close('None of the expected strings were found in code',
                        details=dict(location=code_dest,
@@ -295,7 +294,7 @@ def has_secret(code_dest: str, secret: str, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     result = False
-    grammar = rf'{secret}' if use_regex else re.escape(secret)
+    grammar = secret if use_regex else re.escape(secret)
     try:
         matches = lang.check_grammar_re(grammar, code_dest,
                                         lang_specs, exclude)
@@ -338,14 +337,13 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    any_list = [
-        Regex(secret) if use_regex else Literal(secret)
-        for secret in secrets_list
-    ]
-    any_query = MatchFirst(any_list)
+    if use_regex:
+        any_list = '|'.join(f'(?:{exp})' for exp in secrets_list)
+    else:
+        any_list = '|'.join(f'(?:{re.escape(exp)})' for exp in secrets_list)
     try:
-        matches = lang.check_grammar(any_query, code_dest,
-                                     lang_specs, exclude)
+        matches = lang.check_grammar_re(any_list, code_dest,
+                                        lang_specs, exclude)
         if not matches:
             show_close('None of the expected secrets were found in code',
                        details=dict(location=code_dest,
