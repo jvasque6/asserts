@@ -434,7 +434,8 @@ def secure_ok():
 def http_only_fail():
     """Cookie sin atributo de seguridad http-only."""
     resp = Response('Login successful')
-    resp.set_cookie('JSESSID', 'World', secure=True, httponly=False)
+    resp.set_cookie('JSESSID', 'World', secure=True, httponly=False,
+                    samesite='lax')
     return resp
 
 
@@ -442,7 +443,8 @@ def http_only_fail():
 def http_only_ok():
     """Cookie con atributo de seguridad http-only."""
     resp = Response('Login successful')
-    resp.set_cookie('JSESSID', 'World', secure=True, httponly=True)
+    resp.set_cookie('JSESSID', 'World', secure=True, httponly=True,
+                    samesite='strict')
     return resp
 
 

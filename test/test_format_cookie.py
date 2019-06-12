@@ -87,3 +87,36 @@ def test_has_not_secure_in_cookiejar_close():
     assert not cookie.has_not_secure_in_cookiejar(cookie_name, sess.cookies)
     assert not cookie.has_not_secure_in_cookiejar(cookie_name, None)
     assert not cookie.has_not_secure_in_cookiejar(None, sess.cookies)
+
+
+def test_has_not_samesite_set_open():
+    """Cookie has samesite attribute?."""
+    url = '%s/http/cookies/http_only/fail' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    assert cookie.has_not_samesite_set(cookie_name, url)
+
+
+def test_has_not_samesite_set_close():
+    """Cookie has samesite attribute?."""
+    url = '%s/http/cookies/http_only/ok' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    assert not cookie.has_not_samesite_set(cookie_name, url)
+    assert not cookie.has_not_samesite_set(cookie_name, NON_EXISTANT)
+
+
+def test_has_not_samesite_in_cookiejar_open():
+    """Cookiejar has samesite attribute?."""
+    url = '%s/http/cookies/http_only/fail' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http.HTTPSession(url)
+    assert cookie.has_not_samesite_in_cookiejar(cookie_name, sess.cookies)
+
+
+def test_has_not_samesite_in_cookiejar_close():
+    """Cookiejar has samesite attribute?."""
+    url = '%s/http/cookies/http_only/ok' % (MOCK_SERVICE)
+    cookie_name = 'JSESSID'
+    sess = http.HTTPSession(url)
+    assert not cookie.has_not_samesite_in_cookiejar(cookie_name, sess.cookies)
+    assert not cookie.has_not_samesite_in_cookiejar(cookie_name, None)
+    assert not cookie.has_not_samesite_in_cookiejar(None, sess.cookies)
