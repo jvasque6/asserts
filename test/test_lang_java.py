@@ -25,6 +25,8 @@ SECURE_RANDOM = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_RANDOM = CODE_DIR + 'EmptyCatchOpen.java'
 SECURE_HASH = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_HASH = CODE_DIR + 'GenericExceptionsOpen.java'
+SECURE_NULL_POINTER_EXCEPTION = CODE_DIR + 'GenericExceptionsClose.java'
+INSECURE_NULL_POINTER_EXCEPTION = CODE_DIR + 'GenericExceptionsOpen.java'
 SECURE_CIPHER = CODE_DIR + 'GenericExceptionsClose.java'
 INSECURE_CIPHER = CODE_DIR + 'GenericExceptionsOpen.java'
 NON_EXISTANT_CODE = CODE_DIR + 'NotExists.java'
@@ -93,6 +95,12 @@ def test_has_if_without_else_open():
 def test_has_if_without_else_in_dir_open():
     """Search conditionals without an else option."""
     assert java.has_if_without_else(CODE_DIR)
+
+
+def test_uses_catch_for_null_pointer_exception_open():
+    """Search for the use of NullPointerException "catch" in a path."""
+    assert java.uses_catch_for_null_pointer_exception(
+        INSECURE_NULL_POINTER_EXCEPTION)
 
 
 def test_uses_md5_hash_open():
@@ -190,6 +198,18 @@ def test_has_if_without_else_close():
     assert not java.has_if_without_else(CODE_DIR, exclude=['test'])
     assert not java.has_if_without_else(NON_EXISTANT_CODE)
 
+
+def test_uses_catch_for_null_pointer_exception_close():
+    """Search for the use of NullPointerException "catch" in a path."""
+    assert not java.uses_catch_for_null_pointer_exception(
+        SECURE_NULL_POINTER_EXCEPTION)
+    assert not java.uses_catch_for_null_pointer_exception(
+        CODE_DIR, exclude=['test'])
+    assert not java.uses_catch_for_null_pointer_exception(
+        NON_EXISTANT_CODE)
+
+test_uses_catch_for_null_pointer_exception_open()
+test_uses_catch_for_null_pointer_exception_close()
 
 def test_uses_md5_hash_close():
     """Search MD5 hash algorithm."""

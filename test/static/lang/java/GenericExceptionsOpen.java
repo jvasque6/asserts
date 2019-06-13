@@ -55,7 +55,7 @@ class GenericExceptionsOpen{
       catch(Exception e      ){
          log.info("The error was" + e);
       }
-      catch   (IOException|Exception e)   {
+      catch   (NullPointerException|Exception e)   {
          log.info("The error was" + e);
       }
       catch   (java.io.IOException|Exception|ArithmeticException e)   {

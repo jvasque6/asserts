@@ -47,27 +47,21 @@ def _get_block(file_lines: list, line: int) -> str:
     return '\n'.join(file_lines[line - 1:])
 
 
-@notify
-@level('low')
-@track
-def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
-    """
-    Search for generic exceptions in a Java source file or package.
-
-    See `CWE-396 <https://cwe.mitre.org/data/definitions/396.html>`_.
-
-    :param java_dest: Path to a Java source file or package.
-    """
+def _declares_catch_for_exceptions(
+        java_dest: str,
+        exceptions_list: list,
+        open_msg: str,
+        closed_msg: str,
+        exclude: list = None) -> bool:
+    """Search for the declaration of catch for the given exceptions."""
     any_exception = L_VAR_CHAIN_NAME
-    generic_exception = MatchFirst([
-        Keyword('Exception'),
-        Keyword('lang.Exception'),
-        Keyword('java.lang.Exception')])
+    provided_exception = MatchFirst(
+        [Keyword(exception) for exception in exceptions_list])
 
     exception_group = delimitedList(expr=any_exception, delim='|')
     exception_group.addCondition(
-        # Ensure that at least one exception in the group is generic
-        lambda tokens: any(generic_exception.matches(tok) for tok in tokens))
+        # Ensure that at least one exception in the group is the provided one
+        lambda tokens: any(provided_exception.matches(tok) for tok in tokens))
 
     grammar = Suppress(Keyword('catch')) + nestedExpr(
         opener='(', closer=')', content=(
@@ -83,12 +77,57 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
     else:
         if matches:
-            show_open('Code declares a "catch" for a generic exception',
-                      details=dict(matched=matches))
+            show_open(open_msg, details=dict(matched=matches))
             return True
-        show_close('Code does not declare "catch" for a generic exception',
-                   details=dict(code_dest=java_dest))
+        show_close(closed_msg, details=dict(code_dest=java_dest))
     return False
+
+
+@notify
+@level('low')
+@track
+def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
+    """
+    Search for generic exceptions in a Java source file or package.
+
+    See `CWE-396 <https://cwe.mitre.org/data/definitions/396.html>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    """
+    return _declares_catch_for_exceptions(
+        java_dest=java_dest,
+        exceptions_list=[
+            'Exception',
+            'lang.Exception',
+            'java.lang.Exception'],
+        open_msg='Code declares a "catch" for generic exceptions',
+        closed_msg='Code does not declare "catch" for generic exceptions',
+        exclude=exclude)
+
+
+@notify
+@level('low')
+@track
+def uses_catch_for_null_pointer_exception(
+        java_dest: str, exclude: list = None) -> bool:
+    """
+    Search for the use of NullPointerException "catch" in a path.
+
+    See `CWE-395 <https://cwe.mitre.org/data/definitions/395.html>`_.
+
+    :param java_dest: Path to a Java source file or package.
+    """
+    return _declares_catch_for_exceptions(
+        java_dest=java_dest,
+        exceptions_list=[
+            'NullPointerException',
+            'lang.NullPointerException',
+            'java.lang.NullPointerException'],
+        open_msg=('Code uses NullPointerException '
+                  'Catch to Detect NULL Pointer Dereference'),
+        closed_msg=('Code does not use NullPointerException '
+                    'Catch to Detect NULL Pointer Dereference'),
+        exclude=exclude)
 
 
 @notify
