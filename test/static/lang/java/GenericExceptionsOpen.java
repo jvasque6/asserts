@@ -83,4 +83,12 @@ class GenericExceptionsOpen{
          e.printStackTrace();
       }
     }
+
+   anException/* a comment */.printStackTrace(); // another comment
+
+   anException /* a comment */
+   // another comment
+
+   .printStackTrace();
+
    }

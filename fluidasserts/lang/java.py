@@ -106,31 +106,31 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
 @track
 def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
     """
-    Search for ``printStackTrace`` calls in a  or package.
+    Search for ``printStackTrace`` calls in a path.
+
+    See `CWE-209 <https://cwe.mitre.org/data/definitions/209.html>`_.
 
     :param java_dest: Path to a Java source file or package.
     """
-    method = 'exc.printStackTrace()'
-    tk_object = Word(alphanums)
-    tk_pst = CaselessKeyword('printstacktrace')
-    pst = tk_object + Literal('.') + tk_pst + Literal('(') + Literal(')')
+    grammar = L_VAR_NAME + '.' + Keyword('printStackTrace')
+    grammar.ignore(javaStyleComment)
+    grammar.ignore(L_STRING)
+    grammar.ignore(L_CHAR)
 
-    result = False
     try:
-        matches = lang.check_grammar(pst, java_dest, LANGUAGE_SPECS, exclude)
-        if not matches:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(code_dest=java_dest))
-            return False
+        matches = lang.path_contains_grammar(grammar, java_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
-        return False
     else:
-        result = True
-        show_open('Code uses {} method'.format(method),
-                  details=dict(matched=matches,
-                               total_vulns=len(matches)))
-    return result
+        if matches:
+            show_open('Code uses Throwable.printStackTrace() method',
+                      details=dict(matched=matches,
+                                   total_vulns=len(matches)))
+            return True
+        show_close('Code does not use Throwable.printStackTrace() method',
+                   details=dict(code_dest=java_dest))
+    return False
 
 
 @notify
