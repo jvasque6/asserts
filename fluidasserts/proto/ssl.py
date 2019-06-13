@@ -370,10 +370,6 @@ def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
                 show_open('Site vulnerable to POODLE SSLv3 attack',
                           details=dict(site=site, port=port))
                 return True
-            show_close('Site allows SSLv3. However, it doesn\'t seem to \
-be vulnerable to POODLE SSLv3 attack',
-                       details=dict(site=site, port=port))
-            return False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE SSLv3 attack',
                    details=dict(site=site, port=port))
@@ -509,10 +505,6 @@ def has_beast(site: str, port: int = PORT) -> bool:
                 show_open('Site enables BEAST attack to clients',
                           details=dict(site=site, port=port))
                 result = True
-            else:
-                show_close('Site allows TLSv1.0. However, it seems \
-to be not an enabler to BEAST attack', details=dict(site=site, port=port))
-                result = False
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not enables BEAST attack to clients',
                    details=dict(site=site, port=port))
@@ -566,10 +558,6 @@ def has_heartbleed(site: str, port: int = PORT) -> bool:
                             show_open('Site vulnerable to Heartbleed \
 attack ({})'.format(vers), details=dict(site=site, port=port))
                             return True
-                        show_close('Site supports SSL/TLS heartbeats, \
-but it\'s not vulnerable to Heartbleed.',
-                                   details=dict(site=site, port=port))
-                        return False
             sock.close()
         show_close("Site doesn't support SSL/TLS heartbeats",
                    details=dict(site=site, port=port))
@@ -656,4 +644,55 @@ def not_tls13_enabled(site: str, port: int = PORT) -> bool:
         result = False
         show_unknown('Could not connect',
                      details=dict(site=site, port=port, error=str(exc)))
+    return result
+
+
+@notify
+@level('medium')
+@track
+def has_insecure_renegotiation(site: str, port: int = PORT) -> bool:
+    """
+    Check if site has support for TLS_FALLBACK_SCSV extension.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    supported = []
+    for version in reversed(range(0, 5)):
+        try:
+            with connect(site, port=port, max_version=(3, version)):
+                supported.append(version)
+        except (tlslite.errors.TLSRemoteAlert, OSError):
+            continue
+        except tlslite.errors.TLSLocalAlert:
+            show_unknown('Port does not support SSL/TLS',
+                         details=dict(site=site, port=port))
+            return False
+    if not supported:
+        show_unknown('Could not connect to server',
+                     details=dict(site=site, port=port))
+        return False
+
+    result = True
+
+    if len(supported) > 1 and any(x in (0, 1, 2) for x in supported):
+        try:
+            with connect(site, port=port, max_version=(3, min(supported)),
+                         scsv=True):
+                show_open('Site does not support TLS_FALLBACK_SCSV',
+                          details=dict(site=site, port=port))
+                result = True
+        except tlslite.errors.TLSRemoteAlert as exc:
+            if str(exc) in ('inappropriate_fallback', 'close_notify'):
+                show_close('Site supports TLS_FALLBACK_SCSV',
+                           details=dict(site=site, port=port))
+            else:
+                show_unknown('Could not connect to server',
+                             details=dict(site=site, port=port,
+                                          error=str(exc).replace(':', ',')))
+            result = False
+    else:
+        show_close('Host does not support multiple TLS versions',
+                   details=dict(site=site, port=port))
+        result = False
     return result

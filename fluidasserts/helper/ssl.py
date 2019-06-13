@@ -77,7 +77,8 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
             max_version: Tuple[int, int] = (3, 4),
             cipher_names: List[str] = None,
             key_exchange_names: List[str] = None,
-            anon: bool = False)\
+            anon: bool = False,
+            scsv: bool = False)\
         -> Generator[tlslite.TLSConnection, None, None]:
     """
     Establish a SSL/TLS connection.
@@ -105,6 +106,7 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     settings = tlslite.HandshakeSettings()
     settings.minVersion = min_version
     settings.maxVersion = max_version
+    settings.sendFallbackSCSV = scsv
     if cipher_names:
         settings.cipherNames = cipher_names
     if key_exchange_names:

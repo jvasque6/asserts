@@ -61,6 +61,12 @@ def test_has_beast_open(get_mock_ip):
     assert ssl.has_beast(get_mock_ip)
 
 
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_has_breach_open(get_mock_ip):
+    """Presencia de la vulnerabilidad Breach?."""
+    assert ssl.has_breach('fluidattacks.com', SSL_PORT)
+
+
 @pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
 def test_allows_weak_alg_open(get_mock_ip):
     """Sitio permite algoritmos debiles?."""
@@ -89,3 +95,9 @@ def test_allows_modified_mac_open(get_mock_ip):
 def test_not_tls13_enabled_open(get_mock_ip):
     """TLSv1.3 enabled?."""
     assert ssl.not_tls13_enabled(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_scsv_open(get_mock_ip):
+    """TLS_FALLBACK_SCSV enabled?."""
+    assert ssl.has_insecure_renegotiation(get_mock_ip)

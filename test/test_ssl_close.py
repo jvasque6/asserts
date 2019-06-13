@@ -128,3 +128,11 @@ def test_not_tls13_enabled_close(get_mock_ip):
     assert not ssl.not_tls13_enabled(get_mock_ip, SSL_PORT)
     assert not ssl.not_tls13_enabled(get_mock_ip, 80)
     assert not ssl.not_tls13_enabled(NON_EXISTANT, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_not_scsv_close(get_mock_ip):
+    """TLS_FALLBACK_SCSV enabled?."""
+    assert not ssl.has_insecure_renegotiation(get_mock_ip, SSL_PORT)
+    assert not ssl.has_insecure_renegotiation(get_mock_ip, 80)
+    assert not ssl.has_insecure_renegotiation(NON_EXISTANT, SSL_PORT)
