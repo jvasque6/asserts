@@ -8,6 +8,7 @@ import os
 import re
 from typing import Callable, Dict, List
 from functools import lru_cache
+from itertools import accumulate
 
 # 3rd party imports
 from pyparsing import ParserElement, ParseException, ParseResults
@@ -23,6 +24,11 @@ def _re_compile(
         sep: str = r''):
     """Return a compiled regular expression from a tuple of literals."""
     return re.compile(f'{pre}(?:{sep.join(map(re.escape, literals))}){suf}')
+
+
+@lru_cache(maxsize=None, typed=True)
+def _enum_and_accum(_iterable):
+    return tuple(enumerate(accumulate(_iterable), start=1))
 
 
 def _is_empty_result(parse_result: ParseResults) -> bool:
@@ -162,6 +168,33 @@ def _get_match_lines_re(
     return affected_lines
 
 
+def _get_line_number(column: int, columns_per_line: List[int]) -> int:
+    """
+    Return the line number given you know the columns per line, and the column.
+
+    :param column: Column number to be searched.
+    :param cols_per_line: List of columns per line.
+    """
+    for line_no, cols_up_to_this_line in _enum_and_accum(columns_per_line):
+        if cols_up_to_this_line > column:
+            return line_no
+    # This return is not going to happen, but if it happens, then be prepared
+    return 0
+
+
+@lru_cache(maxsize=None, typed=True)
+def _path_match_extension(path: str, extensions: tuple) -> bool:
+    """
+    Return True if the provided path ends with any of the provided extensions.
+
+    :param path: Path which extension is to be matched with extensions.
+    :param extensions: Tuple of extensions, or None.
+    """
+    if not extensions:
+        return True
+    return path.endswith(extensions)
+
+
 def lists_as_string(lists: List[List], result: ParseResults,
                     level: int) -> str:
     """
@@ -177,6 +210,54 @@ def lists_as_string(lists: List[List], result: ParseResults,
         else:
             result += "\t" * int(level / 2) + lst + "\n"
     return result
+
+
+def _path_contains_grammar(grammar: ParserElement, path: str) -> dict:
+    """
+    Return a dict mapping the path to the lines where the grammar matched.
+
+    :param grammar: Grammar to be searched for in path.
+    :param path: Path to the destination file.
+    """
+    with open(path) as file_d:
+        lines = file_d.read().splitlines()
+
+    lines_length = tuple(map(lambda x: len(x) + 1, lines))
+    file_as_string = '\n'.join(lines)
+
+    matched_lines = [
+        _get_line_number(start, lines_length)
+        for _, start, _ in grammar.scanString(file_as_string)]
+
+    if matched_lines:
+        return {
+            path: {
+                'lines': str(matched_lines)[1:-1],
+                'file_hash': file_hash(path),
+            }
+        }
+    return {}
+
+
+def path_contains_grammar(
+        grammar: ParserElement, path: str,
+        lang_spec: dict, exclude: list = None) -> List[str]:
+    """
+    Return a dict mapping all files in path to the line with grammar matches.
+
+    :param grammar: Grammar to be searched for in path.
+    :param path: Path to the destination file.
+    :param lang_spec: Contains language-specific syntax elements, such as
+                      acceptable file extensions and comment delimiters.
+    """
+    vulns = {}
+    exclude = exclude if exclude else tuple()
+    extensions = lang_spec.get('extensions')
+    for full_path in _full_paths_in_dir(path):
+        if _path_match_extension(full_path, extensions) and \
+                not any(x in full_path for x in exclude):
+            vulns.update(_path_contains_grammar(grammar, full_path))
+    return vulns
 
 
 def block_contains_grammar(grammar: ParserElement, code_dest: str,
@@ -269,18 +350,21 @@ def file_hash(filename: str) -> dict:
 
 def _scantree(path: str):
     """Recursively yield full paths to files for a given directory."""
-    for entry in os.scandir(path):
-        full_path = entry.path
-        if entry.is_dir(follow_symlinks=False):
-            yield from _scantree(full_path)
-        else:
-            yield full_path
+    if os.path.isfile(path):
+        yield path
+    else:
+        for entry in os.scandir(path):
+            full_path = entry.path
+            if entry.is_dir(follow_symlinks=False):
+                yield from _scantree(full_path)
+            else:
+                yield full_path
 
 
 @lru_cache(maxsize=None, typed=True)
 def _full_paths_in_dir(path: str):
     """Return a cacheable tuple of full_paths to files in a dir."""
-    return tuple(full_path for full_path in _scantree(path))
+    return tuple(_scantree(path))
 
 
 def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
@@ -297,11 +381,10 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     """
     vulns = {}
     lines = []
-    file_extension = code_dest.rsplit('.', 1)[-1].lower()
     lang_extensions = lang_spec.get('extensions')
 
     if lang_extensions:
-        if file_extension in lang_extensions:
+        if _path_match_extension(code_dest, lang_extensions):
             lines = _get_match_lines(grammar, code_dest, lang_spec)
     else:
         lines = _get_match_lines(grammar, code_dest, lang_spec)
@@ -327,11 +410,10 @@ def _check_grammar_in_file_re(grammar: str, code_dest: str,
     """
     vulns = {}
     lines = []
-    file_extension = code_dest.rsplit('.', 1)[-1].lower()
     lang_extensions = lang_spec.get('extensions')
 
     if lang_extensions:
-        if file_extension in lang_extensions:
+        if _path_match_extension(code_dest, lang_extensions):
             lines = _get_match_lines_re(grammar, code_dest, lang_spec)
     else:
         lines = _get_match_lines_re(grammar, code_dest, lang_spec)

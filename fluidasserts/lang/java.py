@@ -3,7 +3,7 @@
 """This module allows to check Java code vulnerabilities."""
 
 # standard imports
-# None
+# none
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
@@ -29,7 +29,7 @@ LANGUAGE_SPECS = {
 
 L_CHAR = QuotedString("'")
 L_STRING = QuotedString('"')
-L_VAR_NAME = Literal(alphas + '$_') + ZeroOrMore(Literal(alphanums + '$_'))
+L_VAR_NAME = Word(alphas + '$_', alphanums + '$_')
 L_VAR_CHAIN_NAME = delimitedList(L_VAR_NAME, delim='.', combine=True)
 
 
@@ -60,34 +60,35 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
     """
     Search for generic exceptions in a Java source file or package.
 
+    See `CWE-396 <https://cwe.mitre.org/data/definitions/396.html>`_.
+
     :param java_dest: Path to a Java source file or package.
     """
-    tk_catch = CaselessKeyword('catch')
-    tk_generic_exc = CaselessKeyword('exception')
-    tk_type = Word(alphas)
-    tk_object_name = Word(alphas)
-    tk_object = Word(alphas)
-    generic_exception = Optional(Literal('}')) + tk_catch + Literal('(') + \
-        tk_generic_exc + Optional(Literal('(') + tk_type + Literal(')')) + \
-        tk_object_name + Optional(Literal('(') + tk_object + Literal(')'))
+    generic_exception = MatchFirst([
+        Keyword('Exception'),
+        Keyword('lang.Exception'),
+        Keyword('java.lang.Exception')])
 
-    result = False
+    generic_exception = Suppress(Keyword('catch')) + nestedExpr(
+        opener='(', closer=')', content=(
+            generic_exception + Suppress(Optional(L_VAR_NAME))))
+    generic_exception.ignore(javaStyleComment)
+    generic_exception.ignore(L_CHAR)
+    generic_exception.ignore(L_STRING)
+
     try:
-        matches = lang.check_grammar(generic_exception, java_dest,
-                                     LANGUAGE_SPECS, exclude)
-        if not matches:
-            show_close('Code does not use generic exceptions',
-                       details=dict(code_dest=java_dest))
-            return False
+        matches = lang.path_contains_grammar(generic_exception, java_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
-        return False
     else:
-        result = True
-        show_open('Code uses generic exceptions',
-                  details=dict(matched=matches,
-                               total_vulns=len(matches)))
-    return result
+        if matches:
+            show_open('Code declares a "catch" for a generic exception',
+                      details=dict(matched=matches))
+            return True
+        show_close('Code does not declare "catch" for a generic exception',
+                   details=dict(code_dest=java_dest))
+    return False
 
 
 @notify
