@@ -58,13 +58,27 @@ class GenericExceptionsOpen{
       catch   (IOException|Exception e)   {
          log.info("The error was" + e);
       }
+      catch   (java.io.IOException|Exception|ArithmeticException e)   {
+         log.info("The error was" + e);
+      }
+      catch   (Exception|java.lang.ArithmeticException)   {
+         log.info("There was an error");
+      }
+      catch   (
+            java.lang.ArithmeticException|java.io.IOException)   {
+         log.info("There was an error");
+      }
+      catch   (java.lang.ArithmeticException|
+            java.io.IOException e)   {
+         log.info("There was an error");
+      }
       catch(Exception e){
          System.out.println("Warning: Some Other exception");
       }
     try {
         System.out.println("Out of try-catch block...");
     }
-   catch(      Exception e
+   catch(      java.lang.Exception e
                            ){
          e.printStackTrace();
       }

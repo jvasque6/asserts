@@ -27,9 +27,13 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
+# 'anything'
 L_CHAR = QuotedString("'")
+# "anything"
 L_STRING = QuotedString('"')
+# Var$_123
 L_VAR_NAME = Word(alphas + '$_', alphanums + '$_')
+# Class$_123.property1.property1.value
 L_VAR_CHAIN_NAME = delimitedList(L_VAR_NAME, delim='.', combine=True)
 
 
@@ -64,20 +68,26 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
+    any_exception = L_VAR_CHAIN_NAME
     generic_exception = MatchFirst([
         Keyword('Exception'),
         Keyword('lang.Exception'),
         Keyword('java.lang.Exception')])
 
-    generic_exception = Suppress(Keyword('catch')) + nestedExpr(
+    exception_group = delimitedList(expr=any_exception, delim='|')
+    exception_group.addCondition(
+        # Ensure that at least one exception in the group is generic
+        lambda tokens: any(generic_exception.matches(tok) for tok in tokens))
+
+    grammar = Suppress(Keyword('catch')) + nestedExpr(
         opener='(', closer=')', content=(
-            generic_exception + Suppress(Optional(L_VAR_NAME))))
-    generic_exception.ignore(javaStyleComment)
-    generic_exception.ignore(L_CHAR)
-    generic_exception.ignore(L_STRING)
+            exception_group + Suppress(Optional(L_VAR_NAME))))
+    grammar.ignore(javaStyleComment)
+    grammar.ignore(L_STRING)
+    grammar.ignore(L_CHAR)
 
     try:
-        matches = lang.path_contains_grammar(generic_exception, java_dest,
+        matches = lang.path_contains_grammar(grammar, java_dest,
                                              LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
