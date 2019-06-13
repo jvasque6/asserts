@@ -9,7 +9,7 @@
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, javaStyleComment,
                        QuotedString, oneOf, Keyword, MatchFirst, delimitedList,
-                       ZeroOrMore)
+                       ZeroOrMore, Empty)
 
 # local imports
 from fluidasserts.helper import lang
@@ -45,16 +45,6 @@ def _get_block(file_lines: list, line: int) -> str:
     :param line: First line of block
     """
     return '\n'.join(file_lines[line - 1:])
-
-
-def _get_block_one_liner(file_lines: list, line: int) -> str:
-    """
-    Return a Java block of code beginning in line as a one-liner str.
-
-    :param file_lines: Lines of code
-    :param line: First line of block
-    """
-    return ''.join(file_lines[line - 1:])
 
 
 @notify
@@ -142,43 +132,29 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
 
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
+    See `CWE-391 <https://cwe.mitre.org/data/definitions/391.html>`_.
+
     :param java_dest: Path to a Java source file or package.
     """
-    tk_catch = CaselessKeyword('catch')
-    tk_word = Word(alphas)
-    parser_catch = (Optional(Literal('}')) + tk_catch + Literal('(') +
-                    tk_word + Optional(Literal('(') + tk_word + Literal(')')) +
-                    tk_word + Literal(')'))
-    empty_catch = (Suppress(parser_catch) +
-                   nestedExpr(opener='{', closer='}')).ignore(javaStyleComment)
+    # content=~Empty() is a syntax suggar for matching an empty nestedExpr
+    # Do not try to understand it as 'not empty'
+    grammar = Suppress(Keyword('catch')) + nestedExpr(opener='(', closer=')') \
+        + nestedExpr(opener='{', closer='}', content=~Empty())
+    grammar.ignore(javaStyleComment)
 
-    result = False
     try:
-        catches = lang.check_grammar(parser_catch, java_dest, LANGUAGE_SPECS,
-                                     exclude)
-        if not catches:
-            show_close('Code does not have catches',
-                       details=dict(code_dest=java_dest))
-            return False
+        matches = lang.path_contains_grammar(grammar, java_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=java_dest))
-        return False
-    vulns = {}
-    for code_file, val in catches.items():
-        vulns.update(lang.block_contains_empty_grammar(empty_catch,
-                                                       code_file, val['lines'],
-                                                       _get_block_one_liner))
-    if not vulns:
-        show_close('Code does not have empty catches',
-                   details=dict(file=java_dest,
-                                fingerprint=lang.
-                                file_hash(java_dest)))
     else:
-        show_open('Code has empty catches',
-                  details=dict(matched=vulns,
-                               total_vulns=len(vulns)))
-        result = True
-    return result
+        if matches:
+            show_open('Code has empty "catch" blocks',
+                      details=dict(matched=matches))
+            return True
+        show_close('Code does not have empty "catch" blocks',
+                   details=dict(code_dest=java_dest))
+    return False
 
 
 @notify

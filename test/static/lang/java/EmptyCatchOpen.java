@@ -23,6 +23,15 @@ class GenericExceptionsClose{
         Multiline comment
         Test
         */
+
+        // more comments and an empty line
+
+     } catch          (
+        Exception
+        e
+        )
+        {
+         // a really weird empty catch
      }
      catch(ArithmeticException e){
         System.out.println("Warning: ArithmeticException");
