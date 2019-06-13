@@ -78,7 +78,7 @@ def _insecure_functions_in_file(py_dest: str) -> bool:
     insecure.update({y for x in import_from for y in x['qualnames']})
     insecure.update({y for x in import_calls for y in x['qualnames']})
 
-    with open(py_dest) as code_handle:
+    with open(py_dest, encoding='latin-1') as code_handle:
         content = code_handle.read()
     calls = [call for call in insecure
              if _call_in_code(call, content)]
@@ -100,7 +100,8 @@ def _insecure_functions_in_dir(py_dest: str, exclude: list = None) -> bool:
 
     res = [_insecure_functions_in_file(full_path)
            for full_path in lang.full_paths_in_dir(py_dest)
-           if not any(x in full_path for x in exclude)]
+           if full_path.endswith(LANGUAGE_SPECS['extensions']) and
+           not any(x in full_path for x in exclude)]
     return list(filter(None, res))
 
 
