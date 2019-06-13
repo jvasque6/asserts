@@ -253,7 +253,7 @@ def path_contains_grammar(
     vulns = {}
     exclude = exclude if exclude else tuple()
     extensions = lang_spec.get('extensions')
-    for full_path in _full_paths_in_dir(path):
+    for full_path in full_paths_in_dir(path):
         if _path_match_extension(full_path, extensions) and \
                 not any(x in full_path for x in exclude):
             vulns.update(_path_contains_grammar(grammar, full_path))
@@ -362,7 +362,7 @@ def _scantree(path: str):
 
 
 @lru_cache(maxsize=None, typed=True)
-def _full_paths_in_dir(path: str):
+def full_paths_in_dir(path: str):
     """Return a cacheable tuple of full_paths to files in a dir."""
     return tuple(_scantree(path))
 
@@ -441,7 +441,7 @@ def _check_grammar_in_dir(grammar: ParserElement, code_dest: str,
     if not exclude:
         exclude = []
     vulns = {}
-    for full_path in _full_paths_in_dir(code_dest):
+    for full_path in full_paths_in_dir(code_dest):
         if not any(x in full_path for x in exclude):
             vulns.update(_check_grammar_in_file(grammar, full_path, lang_spec))
     return vulns
@@ -463,7 +463,7 @@ def _check_grammar_in_dir_re(grammar: ParserElement, code_dest: str,
     if not exclude:
         exclude = []
     vulns = {}
-    for full_path in _full_paths_in_dir(code_dest):
+    for full_path in full_paths_in_dir(code_dest):
         if not any(x in full_path for x in exclude):
             vulns.update(_check_grammar_in_file_re(grammar, full_path,
                                                    lang_spec))

@@ -6,6 +6,7 @@
 # None
 
 # 3rd party imports
+from bandit import blacklists
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        pythonStyleComment, Suppress, delimitedList, Forward,
                        SkipTo, LineEnd, indentedBlock, Group)
@@ -24,6 +25,83 @@ LANGUAGE_SPECS = {
     'block_comment_end': None,
     'line_comment': ('#',)
 }  # type: dict
+
+
+def _call_in_code(call, code_content):
+    """Check if call is present in code_file."""
+    import ast
+
+    code_tree = ast.parse(code_content)
+    for node in code_tree.body:
+        if isinstance(node, ast.Expr):
+            if isinstance(node.value, ast.Call):
+                if isinstance(node.value.func, ast.Attribute):
+                    func_name = \
+                        f'{node.value.func.value.id}.{node.value.func.attr}'
+                else:
+                    func_name = f'{node.value.func.id}'
+                if call == func_name:
+                    return True
+    return False
+
+
+def _import_in_code(import_name, code_content):
+    """Check if call is present in code_file."""
+    import ast
+
+    code_tree = ast.parse(code_content)
+    for node in code_tree.body:
+        if isinstance(node, ast.Import):
+            for name in node.names:
+                if import_name == name.name:
+                    return True
+    return False
+
+
+def _insecure_functions_in_file(py_dest: str) -> bool:
+    """
+    Search for insecure functions in code.
+
+    Powered by Bandit.
+
+    :param py_dest: Path to a Python script or package.
+    """
+    calls = blacklists.calls.gen_blacklist()['Call']
+    imports = blacklists.imports.gen_blacklist()['Import']
+    import_from = blacklists.imports.gen_blacklist()['ImportFrom']
+    import_calls = blacklists.imports.gen_blacklist()['Call']
+
+    insecure = set()
+
+    insecure.update({y for x in calls for y in x['qualnames']})
+    insecure.update({y for x in imports for y in x['qualnames']})
+    insecure.update({y for x in import_from for y in x['qualnames']})
+    insecure.update({y for x in import_calls for y in x['qualnames']})
+
+    with open(py_dest) as code_handle:
+        content = code_handle.read()
+    calls = [call for call in insecure
+             if _call_in_code(call, content)]
+    imports = [imp for imp in insecure
+               if _import_in_code(imp, content)]
+    results = calls + imports
+
+    return {py_dest: results} if results else None
+
+
+def _insecure_functions_in_dir(py_dest: str, exclude: list = None) -> bool:
+    """
+    Search for insecure functions in dir.
+
+    :param py_dest: Path to a Python script or package.
+    """
+    if not exclude:
+        exclude = []
+
+    res = [_insecure_functions_in_file(full_path)
+           for full_path in lang.full_paths_in_dir(py_dest)
+           if not any(x in full_path for x in exclude)]
+    return list(filter(None, res))
 
 
 def _get_block(file_lines, line) -> str:
@@ -129,3 +207,33 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
                                total_vulns=len(vulns)))
         result = True
     return result
+
+
+@notify
+@level('high')
+@track
+def uses_insecure_functions(py_dest: str, exclude: list = None) -> bool:
+    """
+    Search for insecure functions in code.
+
+    Powered by Bandit.
+
+    :param py_dest: Path to a Python script or package.
+    """
+    try:
+        open(py_dest)
+    except IsADirectoryError:
+        results = _insecure_functions_in_dir(py_dest, exclude)
+    except FileNotFoundError:
+        show_unknown('Code not found', details=dict(location=py_dest))
+        return False
+    else:
+        results = _insecure_functions_in_file(py_dest)
+
+    if results:
+        show_open('Insecure functions were found in code',
+                  details=dict(matched=results))
+        return True
+    show_close('No insecure functions were found in code',
+               details=dict(location=py_dest))
+    return False

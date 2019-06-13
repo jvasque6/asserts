@@ -44,6 +44,15 @@ def test_swallows_exceptions_in_dir_open():
     assert python.swallows_exceptions(CODE_DIR)
 
 
+def test_insecure_functions_open():
+    """Search for insecure functions."""
+    assert python.uses_insecure_functions(INSECURE_CODE)
+
+
+def test_insecure_functions_in_dir_open():
+    """Search for insecure functions."""
+    assert python.uses_insecure_functions(CODE_DIR)
+
 #
 # Closing tests
 #
@@ -61,3 +70,11 @@ def test_swallows_exceptions_close():
     assert not python.swallows_exceptions(SECURE_CODE)
     assert not python.swallows_exceptions(NON_EXISTANT_CODE)
     assert not python.swallows_exceptions(CODE_DIR, exclude=['test'])
+
+
+def test_insecure_functions_close():
+    """Search for insecure functions."""
+    assert not python.uses_insecure_functions(SECURE_CODE)
+    assert not python.uses_insecure_functions(NON_EXISTANT_CODE)
+    assert not python.uses_insecure_functions(CODE_DIR,
+                                              exclude=['exceptions_open'])
