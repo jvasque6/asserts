@@ -44,77 +44,50 @@ def _is_empty_result(parse_result: ParseResults) -> bool:
     return not bool(parse_result)
 
 
-@lru_cache(maxsize=None, typed=True)  # noqa
-def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:  # noqa
+@lru_cache(maxsize=None, typed=True)
+def _non_commented_code(code_file: str, lang_spec: tuple) -> tuple:
     """
     Walk through the file and discard comments.
 
     :param code_file: Source code file to check.
     :param lang_spec: Contains language-specific syntax elements, such as
-                       acceptable file extensions and comment delimiters.
+                      acceptable file extensions and comment delimiters.
     :return: Tuple of non-commented (line number, line content) file contents.
     """
     lang_spec = dict(lang_spec)
-    line_comment = lang_spec.get('line_comment')
-    block_comment_start = lang_spec.get('block_comment_start')
-    block_comment_end = lang_spec.get('block_comment_end')
+    # As much tokens as needed like in PHP ('#', '//')
+    line_start = lang_spec.get('line_comment')
+    # Just one token like in C '/*' or in HTML '<!--'
+    block_beg = lang_spec.get('block_comment_start')
+    # Just one token like in C '*/' or in HTML '-->'
+    block_end = lang_spec.get('block_comment_end')
 
-    if line_comment:
-        re_line_comment = _re_compile(line_comment)
-        re_line_comment_ignore = _re_compile(
-            line_comment, suf=r'.*$')
-    if block_comment_start:
-        re_block_comment_start = _re_compile(block_comment_start)
-        re_block_comment_start_ignore = _re_compile(
-            (block_comment_start,), suf=r'.*$')
-    if block_comment_end:
-        re_block_comment_end = _re_compile(block_comment_end)
-        re_block_comment_end_ignore = _re_compile(
-            (block_comment_end,), pre=r'^.*')
-    if block_comment_start and block_comment_end:
-        re_block_comment_dual = _re_compile(
-            (block_comment_start, block_comment_end,), sep=r'.*?')
+    with open(code_file, encoding='latin-1') as file_descriptor:
+        file_as_str = '\n'.join(file_descriptor.read().splitlines())
 
-    non_commented_lines = []
-    with open(code_file, encoding='latin-1') as file_fd:
-        in_block_comment = False
-        for (counter, line) in enumerate(file_fd.read().splitlines(), start=1):
-            if not in_block_comment:
-                if block_comment_start and block_comment_end:
-                    while re_block_comment_dual.search(line):
-                        # Line has a multi line comment that starts and end
-                        #   on the same line
-                        # Ignore what is in between
-                        line = re_block_comment_dual.sub('', line)
+    replacements = []
+    if block_beg and block_end:
+        if len(block_end) == 2:
+            beg = re.escape(block_beg)
+            end1, end2 = map(re.escape, block_end)
+            replacements.append((
+                f'({beg}(?:[^{block_end[0]}]|{end1}(?!{end2}))*{end1}{end2})'))
+        else:
+            replacements.append(f'((?={block_beg})(?:[\\s\\S]*?){block_end})')
+    if line_start:
+        tokens = (f'(?:{x})' for x in map(re.escape, line_start))
+        replacements.append(f'((?:{"|".join(tokens)})(?:\\\\\\n|[^\\n])*)')
 
-                if line_comment and re_line_comment.search(line):
-                    # Line has a single line comment
-                    # Ignore the rest of the line
-                    line = re_line_comment_ignore.sub('', line)
+    for regex in replacements:
+        file_as_str = re.sub(
+            regex,
+            lambda x: '\n' * x[0].count('\n'),
+            file_as_str)
 
-            if block_comment_start and re_block_comment_start.search(line):
-                # A block comment starts in this line
-                in_block_comment = True
-                # Ignore the rest of the line
-                line = re_block_comment_start_ignore.sub('', line)
-
-            if in_block_comment:
-                if block_comment_end and re_block_comment_end.search(line):
-                    # A block comment ends in this line
-                    # Ignore what is before
-                    line = re_block_comment_end_ignore.sub('', line)
-                    in_block_comment = False
-
-                    if line_comment and re_line_comment.search(line):
-                        # Line has a single line comment
-                        # Ignore the rest of the line
-                        line = re_line_comment_ignore.sub('', line)
-                else:
-                    continue
-            if line:
-                non_commented_lines.append((counter, line))
-
-    return tuple(non_commented_lines)
+    return tuple(
+        (num, line)
+        for num, line in enumerate(file_as_str.splitlines(), start=1)
+        if line.strip())
 
 
 def _get_match_lines(

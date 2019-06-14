@@ -27,7 +27,6 @@ def test_non_commented_code():
         (1, '#include <stdio.h>'),
         (3, 'int main()'),
         (4, '{'),
-        (5, '    '),
         (6, '    char a[] = "something" ; strncpy(buf, "but not this", 4);'),
         (12, ' printf(buf); '),
         (20, '    return 0;'),
