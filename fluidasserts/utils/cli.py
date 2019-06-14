@@ -544,7 +544,7 @@ def exec_exploit(exploits):
         return "".join(list(res))
     except FileNotFoundError:
         print('Exploit not found')
-        sys.exit(return_strict(True))
+        sys.exit(return_strict(False))
 
 
 def get_content(args):

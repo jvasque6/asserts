@@ -192,7 +192,7 @@ def _path_contains_grammar(grammar: ParserElement, path: str) -> dict:
     :param grammar: Grammar to be searched for in path.
     :param path: Path to the destination file.
     """
-    with open(path) as file_d:
+    with open(path, encoding='latin-1') as file_d:
         lines = file_d.read().splitlines()
 
     lines_length = tuple(map(lambda x: len(x) + 1, lines))
@@ -459,11 +459,8 @@ def check_grammar(grammar: ParserElement, code_dest: str,
     if not exclude:
         exclude = []
     vulns = {}
-    try:
-        open(code_dest)
-    except IsADirectoryError:
-        vulns = _check_grammar_in_dir(grammar, code_dest, lang_spec,
-                                      exclude)
+    if os.path.isdir(code_dest):
+        vulns = _check_grammar_in_dir(grammar, code_dest, lang_spec, exclude)
     else:
         vulns = _check_grammar_in_file(grammar, code_dest, lang_spec)
     return vulns
@@ -485,9 +482,7 @@ def check_grammar_re(grammar: ParserElement, code_dest: str,
     if not exclude:
         exclude = []
     vulns = {}
-    try:
-        open(code_dest)
-    except IsADirectoryError:
+    if os.path.isdir(code_dest):
         vulns = _check_grammar_in_dir_re(grammar, code_dest, lang_spec,
                                          exclude)
     else:
