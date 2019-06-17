@@ -16,7 +16,6 @@ import inspect
 import os
 import re
 import sys
-from collections import OrderedDict
 
 # 3rd party imports
 from pkg_resources import get_distribution, DistributionNotFound
@@ -209,42 +208,35 @@ def method_stats_parse_stats() -> dict:
 class Message():
     """Output message class."""
 
-    def __init__(self, status, message, details, references):
+    def __init__(
+            self,
+            status: str,
+            message: str,
+            details: dict) -> None:
         """Create constructor method."""
-        self.__ref_base = 'https://fluidattacks.com/web/es/defends/'
         self.__status_codes = ['OPEN', 'CLOSED', 'UNKNOWN', 'ERROR']
         self.date = datetime.datetime.now()
-        self.status = status
-        self.message = message
-        self.details = details
-        if references:
-            self.references = self.__ref_base + references
-        else:
-            self.references = None
-        self.caller_module = get_caller_module()
-        self.caller_function = get_caller_function()
-        self.check = '{}.{}'.format(self.caller_module, self.caller_function)
+        self.status: str = status
+        self.message: str = message
+        self.details: dict = details if isinstance(details, dict) else {}
+        self.caller_module: str = get_caller_module()
+        self.caller_function: str = get_caller_function()
+        self.check: str = f'{self.caller_module}.{self.caller_function}'
         self.module_description = get_module_description(self.caller_module,
                                                          self.caller_function)
 
     def __build_message(self):
         """Build message dict."""
-        if self.details is None:
-            details = 'None'
-        else:
-            import operator
-            details = OrderedDict(sorted(self.details.items(),
-                                         key=operator.itemgetter(0)))
-
-        data = [('check', self.check),
-                ('description', self.module_description),
-                ('status', self.status),
-                ('message', self.message),
-                ('details', details),
-                ('when', self.date)]
-        if self.references:
-            data.append(('references', self.references))
-        return OrderedDict(data)
+        data = {}
+        data['check'] = self.check
+        if 'metadata' not in self.details:
+            data['description'] = self.module_description
+        data['status'] = self.status
+        data['message'] = self.message
+        if self.details:
+            data['details'] = self.details
+        data['when'] = self.date
+        return data
 
     def as_yaml(self):
         """Get YAML representation of message."""
@@ -252,27 +244,27 @@ class Message():
                               explicit_start=True)
 
 
-def show_close(message, details=None, refs=None):
+def show_close(message, details=None):
     """Show close message."""
     check_cli()
     method_stats_register_caller('closed')
-    message = Message('CLOSED', message, details, refs)
+    message = Message('CLOSED', message, details)
     print(message.as_yaml(), end='', flush=True)
 
 
-def show_open(message, details=None, refs=None):
+def show_open(message, details=None):
     """Show open message."""
     check_cli()
     method_stats_register_caller('open')
-    message = Message('OPEN', message, details, refs)
+    message = Message('OPEN', message, details)
     print(message.as_yaml(), end='', flush=True)
 
 
-def show_unknown(message, details=None, refs=None):
+def show_unknown(message, details=None):
     """Show unknown message."""
     check_cli()
     method_stats_register_caller('unknown')
-    message = Message('UNKNOWN', message, details, refs)
+    message = Message('UNKNOWN', message, details)
     print(message.as_yaml(), end='', flush=True)
 
 

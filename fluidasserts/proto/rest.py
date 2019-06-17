@@ -177,22 +177,19 @@ def is_header_hsts_missing(url: str, *args, **kwargs) -> bool:
                            details=dict(url=url,
                                         header=header,
                                         value=value,
-                                        fingerprint=fingerprint),
-                           refs=None)
+                                        fingerprint=fingerprint))
                 result = False
             else:
                 show_open('{} HTTP header is insecure'.
                           format(header),
                           details=dict(url=url, header=header, value=value,
-                                       fingerprint=fingerprint),
-                          refs=None)
+                                       fingerprint=fingerprint))
                 result = True
         else:
             show_open('{} HTTP header is insecure'.
                       format(header),
                       details=dict(url=url, header=header, value=value,
-                                   fingerprint=fingerprint),
-                      refs=None)
+                                   fingerprint=fingerprint))
             result = True
     return result
 

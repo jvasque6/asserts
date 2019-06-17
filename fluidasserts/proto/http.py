@@ -221,17 +221,14 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
             show_open('HTTP Method {} enabled'.format(method),
-                      details=dict(url=url),
-                      refs=None)
+                      details=dict(url=url))
         else:
             show_close('HTTP Method {} disabled'.format(method),
-                       details=dict(url=url),
-                       refs=None)
+                       details=dict(url=url))
             result = False
     else:
         show_close('HTTP Method {} disabled'.format(method),
-                   details=dict(url=url),
-                   refs=None)
+                   details=dict(url=url))
         result = False
     return result
 
@@ -275,20 +272,17 @@ def _has_insecure_header(url: str, header: str,     # noqa
                 show_open('{} HTTP header is insecure'.
                           format(header),
                           details=dict(url=url, header=header, value=value,
-                                       fingerprint=fingerprint),
-                          refs=None)
+                                       fingerprint=fingerprint))
                 return True
             show_close('HTTP header {} value is secure'.
                        format(header),
                        details=dict(url=url, header=header, value=value,
-                                    fingerprint=fingerprint),
-                       refs=None)
+                                    fingerprint=fingerprint))
             return False
         show_close('HTTP header {} not present which is secure \
 by default'.format(header),
                    details=dict(url=url, header=header,
-                                fingerprint=fingerprint),
-                   refs=None)
+                                fingerprint=fingerprint))
         return False
 
     result = True
@@ -299,15 +293,13 @@ by default'.format(header),
             show_open('{} HTTP insecure header present'.
                       format(header),
                       details=dict(url=url, header=header, value=value,
-                                   fingerprint=fingerprint),
-                      refs=None)
+                                   fingerprint=fingerprint))
             result = True
         else:
             show_close('{} HTTP insecure header not present'.
                        format(header),
                        details=dict(url=url, header=header,
-                                    fingerprint=fingerprint),
-                       refs=None)
+                                    fingerprint=fingerprint))
             result = False
         return result
 
@@ -324,29 +316,25 @@ by default'.format(header),
                                details=dict(url=url,
                                             header=header,
                                             value=value,
-                                            fingerprint=fingerprint),
-                               refs=None)
+                                            fingerprint=fingerprint))
                     result = False
                 else:
                     show_open('{} HTTP header is insecure'.
                               format(header),
                               details=dict(url=url, header=header, value=value,
-                                           fingerprint=fingerprint),
-                              refs=None)
+                                           fingerprint=fingerprint))
                     result = True
             else:
                 show_open('{} HTTP header is insecure'.
                           format(header),
                           details=dict(url=url, header=header, value=value,
-                                       fingerprint=fingerprint),
-                          refs=None)
+                                       fingerprint=fingerprint))
                 result = True
         else:
             show_open('{} HTTP header not present'.
                       format(header),
                       details=dict(url=url, header=header,
-                                   fingerprint=fingerprint),
-                      refs=None)
+                                   fingerprint=fingerprint))
             result = True
         return result
 
@@ -355,22 +343,19 @@ by default'.format(header),
         if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
             show_close('HTTP header {} is secure'.format(header),
                        details=dict(url=url, header=header, value=value,
-                                    fingerprint=fingerprint),
-                       refs=None)
+                                    fingerprint=fingerprint))
             result = False
         else:
             show_open('{} HTTP header is insecure'.
                       format(header),
                       details=dict(url=url, header=header, value=value,
-                                   fingerprint=fingerprint),
-                      refs=None)
+                                   fingerprint=fingerprint))
             result = True
     else:
         show_open('{} HTTP header not present'.
                   format(header),
                   details=dict(url=url, header=header,
-                               fingerprint=fingerprint),
-                  refs=None)
+                               fingerprint=fingerprint))
         result = True
 
     return result
@@ -1040,14 +1025,12 @@ def is_version_visible(url) -> bool:
         result = True
         show_open('HTTP version visible',
                   details=dict(url=url,
-                               version=version, fingerprint=fingerprint),
-                  refs=None)
+                               version=version, fingerprint=fingerprint))
     else:
         result = False
         show_close('HTTP version not visible',
                    details=dict(url=url,
-                                fingerprint=fingerprint),
-                   refs=None)
+                                fingerprint=fingerprint))
     return result
 
 
@@ -1070,12 +1053,10 @@ def is_not_https_required(url: str) -> bool:
         if http_session.url.startswith('https'):
             show_close('HTTPS is forced on URL',
                        details=dict(url=http_session.url,
-                                    fingerprint=fingerprint),
-                       refs=None)
+                                    fingerprint=fingerprint))
             return False
         show_open('HTTPS is not forced on URL',
-                  details=dict(url=http_session.url, fingerprint=fingerprint),
-                  refs=None)
+                  details=dict(url=http_session.url, fingerprint=fingerprint))
         return True
     except http.ConnError as exc:
         show_unknown('Could not connnect',

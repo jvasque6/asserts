@@ -29,7 +29,7 @@ OUTFILE = sys.stderr
 @notify
 @level('low')
 @track
-def check_function(func: Callable, *args, **kwargs):
+def check_function(func: Callable, *args, **kwargs) -> bool:
     """Run arbitrary code and return results in Asserts format.
 
     This is useful for verifying very specific scenarios.
@@ -40,6 +40,7 @@ def check_function(func: Callable, *args, **kwargs):
     :param *args: Positional parameters that will be passed to func.
     :param *kwargs: Keyword parameters that will be passed to func.
     """
+    metadata = kwargs.pop('metadata', None)
     try:
         if asyncio.iscoroutinefunction(func):
             loop = asyncio.new_event_loop()
@@ -50,22 +51,25 @@ def check_function(func: Callable, *args, **kwargs):
             ret = func(*args, **kwargs)
     except Exception as exc:
         show_unknown('Function returned an error',
-                     details=dict(function=func.__name__,
-                                  args=args, kwargs=kwargs,
-                                  error=str(exc).replace(':', ',')))
-        return False
+                     details=dict(metadata=metadata,
+                                  function_call=dict(args=args,
+                                                     kwargs=kwargs),
+                                  error=repr(exc).replace(':', ',')))
     else:
         if ret:
             show_open('Function check was found open',
-                      details=dict(function=func.__name__,
-                                   args=args, kwargs=kwargs,
-                                   ret=ret))
+                      details=dict(metadata=metadata,
+                                   function_call=dict(args=args,
+                                                      kwargs=kwargs,
+                                                      return_value=ret)))
+            return True
         else:
             show_close('Function check was found closed',
-                       details=dict(function=func.__name__,
-                                    args=args, kwargs=kwargs,
-                                    ret=ret))
-        return bool(ret)
+                       details=dict(metadata=metadata,
+                                    function_call=dict(args=args,
+                                                       kwargs=kwargs,
+                                                       return_value=ret)))
+    return False
 
 
 def add_info(metadata: dict) -> bool:
