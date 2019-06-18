@@ -205,6 +205,8 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
 
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
+    See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
+
     :param java_dest: Path to a Java source file or package.
     """
     switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
@@ -231,15 +233,15 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
 
     vulns = {}
     for code_file, val in switches.items():
-        vulns.update(lang.block_contains_grammar(switch_block,
-                                                 code_file, val['lines'],
-                                                 _get_block,
-                                                 should_not_have='default'))
+        vulns.update(lang.block_contains_grammar(
+            switch_block,
+            code_file, val['lines'],
+            _get_block,
+            should_not_have=r'(?:default\s*:)'))
     if not vulns:
         show_close('Code has "switch" with "default" clause',
                    details=dict(file=java_dest,
-                                fingerprint=lang.
-                                file_hash(java_dest)))
+                                fingerprint=lang.file_hash(java_dest)))
     else:
         show_open('Code does not have "switch" with "default" clause',
                   details=dict(matched=vulns,

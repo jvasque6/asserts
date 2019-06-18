@@ -8,7 +8,8 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Word, Literal, Optional, alphas,
                        alphanums, Suppress, nestedExpr, cppStyleComment,
-                       SkipTo, Keyword, MatchFirst)
+                       SkipTo, Keyword, MatchFirst, QuotedString,
+                       delimitedList, javaStyleComment)
 
 # local imports
 from fluidasserts.helper import lang
@@ -26,7 +27,27 @@ LANGUAGE_SPECS = {
 }  # type: dict
 
 
-def _get_block(file_lines, line) -> str:
+# 'anything'
+L_CHAR = QuotedString("'")
+# "anything"
+L_STRING = QuotedString('"')
+# _Var_123
+L_VAR_NAME = Word(alphas + '_', alphanums + '_')
+# Class_123.property1.property1.value
+L_VAR_CHAIN_NAME = delimitedList(L_VAR_NAME, delim='.', combine=True)
+
+
+def _get_block(file_lines: list, line: int) -> str:
+    """
+    Return a C# block of code beginning in line.
+
+    :param file_lines: Lines of code
+    :param line: First line of block
+    """
+    return '\n'.join(file_lines[line - 1:])
+
+
+def _get_block_as_one_liner(file_lines, line) -> str:
     """
     Return a C# block of code beginning in line.
 
@@ -107,9 +128,9 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
         return False
     vulns = {}
     for code_file, val in catches.items():
-        vulns.update(lang.block_contains_empty_grammar(empty_catch,
-                                                       code_file, val['lines'],
-                                                       _get_block))
+        vulns.update(lang.block_contains_empty_grammar(
+            empty_catch,
+            code_file, val['lines'], _get_block_as_one_liner))
     if not vulns:
         show_close('Code does not have empty catches',
                    details=dict(file=csharp_dest,
@@ -135,58 +156,43 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
 
     :param csharp_dest: Path to a C# source file or package.
     """
-    # I'm disabling this in the local scope because vars make this code easier
-    # pylint: disable=too-many-locals
-    tk_colon = Literal(':')
-    tk_lbrace = Literal('{')
-    tk_semicolon = Literal(';')
-    tk_statement = SkipTo(tk_semicolon)
-    tk_expression = SkipTo(tk_colon)
-
-    tk_case = Keyword('case') + tk_expression + tk_colon
-    tk_default = Keyword('default') + tk_expression + tk_colon
-
-    tk_break = Keyword('break') + tk_statement + tk_semicolon
-    tk_throw = Keyword('throw') + tk_statement + tk_semicolon
-    tk_return = Keyword('return') + tk_statement + tk_semicolon
-
-    tk_finish = tk_break | tk_return | tk_throw
-
-    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
-        Suppress(SkipTo(tk_finish, include=True))
-
-    switch_decl = Keyword('switch') + nestedExpr()
-    switch_head = switch_decl + Optional(tk_lbrace)
-    switch_without_default = Suppress(switch_decl) + \
-        nestedExpr(opener='{', closer='}', content=def_stmt)
-    switch_without_default = switch_without_default.ignore(cppStyleComment)
+    switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
+    switch_line = Optional('}') + switch + Optional('{')
 
     result = False
-    msg = 'Code {} "default" case in "switch" statement'
     try:
-        switches = lang.check_grammar(
-            switch_head, csharp_dest, LANGUAGE_SPECS, exclude)
+        switches = lang.check_grammar(switch_line, csharp_dest, LANGUAGE_SPECS,
+                                      exclude)
     except FileNotFoundError:
-        show_unknown('File does not exist', details={'code_dest': csharp_dest})
+        show_unknown('File does not exist',
+                     details=dict(code_dest=csharp_dest))
         return False
-    if not switches:
-        show_close('Code does not have switches',
-                   details={'code_dest': csharp_dest})
-        return False
+    else:
+        if not switches:
+            show_close('Code does not have switches',
+                       details=dict(code_dest=csharp_dest))
+            return False
+
+    switch_block = Suppress(switch) + nestedExpr(opener='{', closer='}')
+    switch_block.ignore(javaStyleComment)
+    switch_block.ignore(L_CHAR)
+    switch_block.ignore(L_STRING)
+
     vulns = {}
     for code_file, val in switches.items():
-        vulns.update(lang.block_contains_empty_grammar(
-            switch_without_default, code_file, val['lines'], _get_block))
+        vulns.update(lang.block_contains_grammar(
+            switch_block,
+            code_file, val['lines'],
+            _get_block,
+            should_not_have=r'(?:default\s*:)'))
     if not vulns:
-        show_close(msg.format('does have'), details={
-            'file': csharp_dest,
-            'fingerprint': lang.file_hash(csharp_dest)
-        })
+        show_close('Code has "switch" with "default" clause',
+                   details=dict(file=csharp_dest,
+                                fingerprint=lang.file_hash(csharp_dest)))
     else:
-        show_open(msg.format('is missing'), details={
-            'matched': switches,
-            'total_vulns': len(switches),
-        })
+        show_open('Code does not have "switch" with "default" clause',
+                  details=dict(matched=vulns,
+                               total_vulns=len(vulns)))
         result = True
     return result
 
@@ -265,9 +271,9 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
         return False
     vulns = {}
     for code_file, val in conds.items():
-        vulns.update(lang.block_contains_empty_grammar(if_wout_else,
-                                                       code_file, val['lines'],
-                                                       _get_block))
+        vulns.update(lang.block_contains_empty_grammar(
+            if_wout_else,
+            code_file, val['lines'], _get_block_as_one_liner))
     if not vulns:
         show_close('Code has "if" with "else" clauses',
                    details=dict(file=csharp_dest,

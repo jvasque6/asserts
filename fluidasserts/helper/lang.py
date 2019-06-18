@@ -250,11 +250,14 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
     :param should_not_have: A string to search for in the match results.
     """
     vulns = {}
-    lines = [int(x) for x in lines.split(',')]
     vuln_lines = []
+    if should_have:
+        should_have_re = re.compile(should_have, flags=re.M)
+    if should_not_have:
+        should_not_have_re = re.compile(should_not_have, flags=re.M)
     with open(code_dest, encoding='latin-1') as code_f:
-        file_lines = [x.rstrip() for x in code_f.readlines()]
-    for line in lines:
+        file_lines = code_f.read().splitlines()
+    for line in map(int, lines.split(',')):
         txt = get_block_fn(file_lines, line)
         results = grammar.searchString(txt, maxMatches=1)
         results_str = str(results)
@@ -262,9 +265,9 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
         is_vulnerable = not search_for_empty
         if _is_empty_result(results):
             is_vulnerable = search_for_empty
-        elif should_have and should_have not in results_str:
+        elif should_have and should_have_re.search(results_str):
             is_vulnerable = search_for_empty
-        elif should_not_have and should_not_have in results_str:
+        elif should_not_have and should_not_have_re.search(results_str):
             is_vulnerable = search_for_empty
 
         if is_vulnerable:
