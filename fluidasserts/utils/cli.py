@@ -192,8 +192,10 @@ def colorize(parsed_content):
         except KeyError:
             style = SUMMARY_COLORS
 
-        message = yaml.safe_dump(node, default_flow_style=False,
-                                 explicit_start=True)
+        message = yaml.safe_dump(node,
+                                 default_flow_style=False,
+                                 explicit_start=True,
+                                 allow_unicode=True)
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=style),
                   OUTFILE)
@@ -293,8 +295,12 @@ def print_message(message, args):
     """Print message according to args."""
     if args.no_color:
         for node in message:
-            print(yaml.safe_dump(node, default_flow_style=False,
-                                 explicit_start=True), flush=True, end='')
+            print(yaml.safe_dump(node,
+                                 default_flow_style=False,
+                                 explicit_start=True,
+                                 allow_unicode=True),
+                  flush=True,
+                  end='')
     else:
         colorize(message)
 
@@ -653,26 +659,29 @@ given files or directories')
         }
     }
 
-    message = yaml.safe_dump(final_message, default_flow_style=False,
-                             explicit_start=True)
+    message = yaml.safe_dump(final_message,
+                             default_flow_style=False,
+                             explicit_start=True,
+                             allow_unicode=True)
 
     if args.show_method_stats:
         show_method_stats = {
             'method level stats': fluidasserts.method_stats_parse_stats()
         }
-        show_method_stats_yaml = yaml.safe_dump(
-            show_method_stats,
-            default_flow_style=False,
-            explicit_start=True,
-            allow_unicode=True)
+        show_method_stats_yaml = yaml.safe_dump(show_method_stats,
+                                                default_flow_style=False,
+                                                explicit_start=True,
+                                                allow_unicode=True)
         colorize_text(show_method_stats_yaml, args.no_color)
 
     colorize_text(message, args.no_color)
 
     if args.output:
         with open(args.output[0], 'a+') as fd_out:
-            result = yaml.safe_dump(parsed, default_flow_style=False,
-                                    explicit_start=True)
+            result = yaml.safe_dump(parsed,
+                                    default_flow_style=False,
+                                    explicit_start=True,
+                                    allow_unicode=True)
             fd_out.write(result)
             fd_out.write(message)
 

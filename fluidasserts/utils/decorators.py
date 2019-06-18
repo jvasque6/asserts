@@ -42,8 +42,10 @@ def level(risk_level: str) -> Callable:
             """Give a risk level to each check."""
             ret_val = func(*args, **kwargs)
             risk = {'risk-level': risk_level}
-            message = yaml.safe_dump(risk, default_flow_style=False,
-                                     explicit_start=False)
+            message = yaml.safe_dump(risk,
+                                     default_flow_style=False,
+                                     explicit_start=False,
+                                     allow_unicode=True)
             print(message, flush=True)
             return ret_val
         return decorated

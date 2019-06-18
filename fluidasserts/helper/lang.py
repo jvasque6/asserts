@@ -198,6 +198,15 @@ def _path_contains_grammar(grammar: ParserElement, path: str) -> dict:
     lines_length = tuple(map(lambda x: len(x) + 1, lines))
     file_as_string = '\n'.join(lines)
 
+    # Given scanString expands tabs to 'n' number of spaces
+    # And we count tabs as '1' char width
+    # And scanString reports the match column relative to the expanded version
+    # When a file contains tabs
+    # Then the line numbers will get an offset
+    # Given we force to parse without expanding tabs
+    grammar.parseWithTabs()
+    # Then the line numbers are reported correctly
+
     matched_lines = [
         _get_line_number(start, lines_length)
         for _, start, _ in grammar.scanString(file_as_string)]

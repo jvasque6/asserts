@@ -240,8 +240,10 @@ class Message():
 
     def as_yaml(self):
         """Get YAML representation of message."""
-        return yaml.safe_dump(self.__build_message(), default_flow_style=False,
-                              explicit_start=True)
+        return yaml.safe_dump(self.__build_message(),
+                              default_flow_style=False,
+                              explicit_start=True,
+                              allow_unicode=True)
 
 
 def show_close(message, details=None):
@@ -271,8 +273,10 @@ def show_unknown(message, details=None):
 def show_metadata(message):
     """Show unknown message."""
     check_cli()
-    yaml_msg = yaml.safe_dump(message, default_flow_style=False,
-                              explicit_start=True)
+    yaml_msg = yaml.safe_dump(message,
+                              default_flow_style=False,
+                              explicit_start=True,
+                              allow_unicode=True)
     print(yaml_msg, end='', flush=True)
 
 
