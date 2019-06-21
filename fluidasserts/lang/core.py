@@ -39,7 +39,6 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     grammar = expected_text if use_regex else re.escape(expected_text)
-    result = False
     try:
         matches = lang.check_grammar_re(grammar, code_dest, lang_specs,
                                         exclude)
@@ -53,14 +52,11 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    else:
-        result = True
-        show_open('Bad text present in code',
-                  details=dict(matched=matches,
-                               bad_text=expected_text,
-                               used_regular_expressions=use_regex,
-                               total_vulns=len(matches)))
-    return result
+    show_open('Bad text present in code',
+              details=dict(matches=matches,
+                           expected_text=expected_text,
+                           used_regular_expressions=use_regex))
+    return True
 
 
 @notify
@@ -81,7 +77,6 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     grammar = expected_text if use_regex else re.escape(expected_text)
-    result = True
     try:
         matches = lang.check_grammar_re(grammar, code_dest,
                                         lang_specs, exclude)
@@ -95,12 +90,11 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    else:
-        result = False
-        show_close('Expected text present in code',
-                   details=dict(matched=matches,
-                                used_regular_expressions=use_regex))
-    return result
+    show_close('Expected text present in code',
+               details=dict(matches=matches,
+                            expected_text=expected_text,
+                            used_regular_expressions=use_regex))
+    return False
 
 
 @notify
@@ -118,19 +112,19 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
     """
-    # Remove duplicates
-    expected_list = set(expected_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
     matches = {}
-    for expected in expected_list:
+    for expected in set(expected_list):
         grammar = expected if use_regex else re.escape(expected)
         try:
             __matches = lang.check_grammar_re(grammar, code_dest,
                                               lang_specs, exclude)
             if not __matches:
                 show_close('Not all expected text was found in code',
-                           details=dict(file=code_dest))
+                           details=dict(location=code_dest,
+                                        expected_list=expected_list,
+                                        used_regular_expressions=use_regex))
                 return False
             matches.update(__matches)
         except FileNotFoundError:
@@ -139,10 +133,9 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
                                       used_regular_expressions=use_regex))
             return False
     show_open('A bad text from list was found in code',
-              details=dict(matched=matches,
-                           text_list=expected_list,
-                           used_regular_expressions=use_regex,
-                           total_vulns=len(matches)))
+              details=dict(matches=matches,
+                           expected_list=expected_list,
+                           used_regular_expressions=use_regex))
     return True
 
 
@@ -162,33 +155,30 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param use_regex: Use regular expressions instead of literals to search.
     """
     # Remove duplicates
-    expected_list = set(expected_list)
+    expected_set = set(expected_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    matches = {}
-    if use_regex:
-        any_list = '|'.join(f'(?:{exp})' for exp in expected_list)
-    else:
-        any_list = '|'.join(f'(?:{re.escape(exp)})' for exp in expected_list)
+    if not use_regex:
+        expected_set = map(re.escape, expected_set)
+    any_list = '|'.join(f'(?:{exp})' for exp in expected_set)
     try:
         matches = lang.check_grammar_re(any_list, code_dest,
                                         lang_specs, exclude)
         if not matches:
             show_close('None of the expected strings were found in code',
                        details=dict(location=code_dest,
-                                    expected_text=expected_list,
+                                    expected_list=expected_list,
                                     used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    else:
-        result = True
-        show_open('Any of the expected bad text is present in code',
-                  details=dict(matched=matches,
-                               used_regular_expressions=use_regex))
-    return result
+    show_open('Any of the expected bad text is present in code',
+              details=dict(matches=matches,
+                           expected_list=expected_list,
+                           used_regular_expressions=use_regex))
+    return True
 
 
 @notify
@@ -290,7 +280,6 @@ def has_secret(code_dest: str, secret: str, use_regex: bool = False,
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    result = False
     grammar = secret if use_regex else re.escape(secret)
     try:
         matches = lang.check_grammar_re(grammar, code_dest,
@@ -298,20 +287,17 @@ def has_secret(code_dest: str, secret: str, use_regex: bool = False,
         if not matches:
             show_close('Secret not found in code',
                        details=dict(location=code_dest,
+                                    secret=secret,
                                     used_regular_expressions=use_regex))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(location=code_dest))
         return False
-
-    result = [{'file': f, 'lines': v, 'fingerprint': lang.file_hash(f)}
-              for f, v in matches.items() if v]
     show_open('Secret found in code',
-              details=dict(location=result,
+              details=dict(matches=matches,
                            secret=secret,
-                           used_regular_expressions=use_regex,
-                           total_vulns=len(result)))
-    return bool(result)
+                           used_regular_expressions=use_regex))
+    return True
 
 
 @notify
@@ -330,14 +316,12 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
     :param use_regex: Use regular expressions instead of literals to search.
     """
     # Remove duplicates
-    secrets_list = set(secrets_list)
+    secrets_set = set(secrets_list)
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
-    matches = {}
-    if use_regex:
-        any_list = '|'.join(f'(?:{exp})' for exp in secrets_list)
-    else:
-        any_list = '|'.join(f'(?:{re.escape(exp)})' for exp in secrets_list)
+    if not use_regex:
+        secrets_set = map(re.escape, secrets_set)
+    any_list = '|'.join(f'(?:{exp})' for exp in secrets_set)
     try:
         matches = lang.check_grammar_re(any_list, code_dest,
                                         lang_specs, exclude)
@@ -351,11 +335,8 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
         show_unknown('File does not exist',
                      details=dict(code_dest=code_dest))
         return False
-    else:
-        result = True
-
-        show_open('Some of the expected secrets are present in code',
-                  details=dict(matched=matches,
-                               found_secrets=matches,
-                               used_regular_expressions=use_regex))
-    return result
+    show_open('Some of the expected secrets are present in code',
+              details=dict(matches=matches,
+                           secrets_list=secrets_list,
+                           used_regular_expressions=use_regex))
+    return True
