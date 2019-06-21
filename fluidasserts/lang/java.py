@@ -175,8 +175,8 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    # content=~Empty() is a syntax suggar for matching an empty nestedExpr
-    # Do not try to understand it as 'not empty'
+    # Empty() grammar matches 'anything'
+    # ~Empty() grammar matches 'not anything' or 'nothing'
     grammar = Suppress(Keyword('catch')) + nestedExpr(opener='(', closer=')') \
         + nestedExpr(opener='{', closer='}', content=~Empty())
     grammar.ignore(javaStyleComment)
@@ -212,7 +212,6 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
     switch_line = Optional(Literal('}')) + switch + Optional(Literal('{'))
 
-    result = False
     try:
         switches = lang.check_grammar(switch_line, java_dest, LANGUAGE_SPECS,
                                       exclude)
@@ -220,11 +219,10 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
         show_unknown('File does not exist',
                      details=dict(code_dest=java_dest))
         return False
-    else:
-        if not switches:
-            show_close('Code does not have switches',
-                       details=dict(code_dest=java_dest))
-            return False
+    if not switches:
+        show_close('Code does not have switches',
+                   details=dict(code_dest=java_dest))
+        return False
 
     switch_block = Suppress(switch) + nestedExpr(opener='{', closer='}')
     switch_block.ignore(javaStyleComment)
@@ -242,12 +240,12 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
         show_close('Code has "switch" with "default" clause',
                    details=dict(file=java_dest,
                                 fingerprint=lang.file_hash(java_dest)))
-    else:
-        show_open('Code does not have "switch" with "default" clause',
-                  details=dict(matched=vulns,
-                               total_vulns=len(vulns)))
-        result = True
-    return result
+        return False
+
+    show_open('Code does not have "switch" with "default" clause',
+              details=dict(matched=vulns,
+                           total_vulns=len(vulns)))
+    return True
 
 
 @notify
@@ -264,36 +262,42 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
 
     :param java_dest: Path to a Java source file or package.
     """
-    tk_dot = Literal('.')
-    tk_new = Keyword('new')
-    tk_math = Keyword('Math')
-    tk_equal = Literal('=')
-    tk_params = Suppress(nestedExpr())
-    tk_random = CaselessKeyword('random')
-    tk_javavar = Word(alphas + '$_', alphanums + '_')
-    insecure_methods = 'java.util.Random() or java.lang.Math.random()'
-    insecure_randoms = [
-        tk_random + tk_javavar + tk_equal + tk_new + tk_random + tk_params,
-        tk_math + tk_dot + tk_random + tk_params,
-    ]
+    _java = Keyword('java')
+    _util = Keyword('util')
+    _lang = Keyword('lang')
+    _math = Keyword('Math')
+    _import = Keyword('import')
+    _random_minus = Keyword('random')
+    _random_mayus = Keyword('Random')
+    _args = nestedExpr()
 
-    result = False
+    insecure_randoms = MatchFirst([
+        # util.Random()
+        _util + '.' + _random_mayus + _args,
+        # Math.random()
+        _math + '.' + _random_minus + _args,
+        # import java.util.Random
+        _import + _java + '.' + _util + '.' + _random_mayus,
+        # import java.lang.Math.random
+        _import + _java + '.' + _lang + '.' + _math + '.' + _random_minus,
+    ])
+    insecure_randoms.ignore(javaStyleComment)
+    insecure_randoms.ignore(L_CHAR)
+    insecure_randoms.ignore(L_STRING)
+
     try:
-        matches = lang.check_grammar(
-            MatchFirst(insecure_randoms), java_dest, LANGUAGE_SPECS, exclude)
-        if not matches:
-            show_close('Code does not use {} method'.format(insecure_methods),
-                       details=dict(location=java_dest))
-            return False
+        matches = lang.path_contains_grammar(insecure_randoms, java_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
-        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        show_unknown('File does not exist', details=dict(location=java_dest))
         return False
-    else:
-        result = True
-        show_open('Code uses {} method'.format(insecure_methods),
-                  details=dict(matched=matches,
-                               total_vulns=len(matches)))
-    return result
+    if not matches:
+        show_close('Code does not use insecure random generators',
+                   details=dict(location=java_dest))
+        return False
+    show_open('Code uses insecure random generators',
+              details=dict(matches=matches))
+    return True
 
 
 @notify
@@ -368,32 +372,31 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
     :param algorithm: Insecure algorithm.
     """
     method = 'Cipher.getInstance("{}")'.format(algorithm.upper())
-    tk_algo = CaselessKeyword(algorithm)
-    tk_mode = Literal('/') + oneOf('CBC ECB', caseless=True)
-    tk_padd = Literal('/') + oneOf('NoPadding PKCS5Padding', caseless=True)
-    tk_method = CaselessKeyword('cipher') + \
-        Literal('.') + CaselessKeyword('getinstance')
-    tk_arguments = Literal('"') + tk_algo + \
-        Optional(tk_mode + Optional(tk_padd)) + Literal('"')
-    instance = tk_method + Literal('(') + tk_arguments + Literal(')')
+    op_mode = '/' + oneOf('CBC ECB', caseless=True)
+    padding = '/' + oneOf('NoPadding PKCS5Padding', caseless=True)
+    algorithm = '"' + CaselessKeyword(algorithm) + Optional(
+        op_mode + Optional(padding)) + '"'
 
-    result = False
+    grammar = Suppress(Keyword('Cipher') + '.' + Keyword('getInstance')) + \
+        nestedExpr()
+    grammar.ignore(javaStyleComment)
+    grammar.addCondition(
+        # Ensure that at least one token is the provided algorithm
+        lambda tokens: tokens.asList() and any(
+            algorithm.matches(tok) for tok in tokens[0]))
     try:
-        matches = lang.check_grammar(instance, java_dest, LANGUAGE_SPECS,
-                                     exclude)
-        if not matches:
-            show_close('Code does not use {} method'.format(method),
-                       details=dict(code_dest=java_dest))
-            return False
+        matches = lang.path_contains_grammar(grammar, java_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
-        show_unknown('File does not exist', details=dict(code_dest=java_dest))
+        show_unknown('File does not exist', details=dict(location=java_dest))
         return False
-    else:
-        result = True
-        show_open('Code uses {} method'.format(method),
-                  details=dict(matched=matches,
-                               total_vulns=len(matches)))
-    return result
+    if not matches:
+        show_close('Code does not use {} method'.format(method),
+                   details=dict(location=java_dest))
+        return False
+    show_open('Code uses {} method'.format(method),
+              details=dict(matches=matches))
+    return True
 
 
 @notify

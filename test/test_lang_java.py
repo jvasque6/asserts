@@ -208,8 +208,6 @@ def test_uses_catch_for_null_pointer_exception_close():
     assert not java.uses_catch_for_null_pointer_exception(
         NON_EXISTANT_CODE)
 
-test_uses_catch_for_null_pointer_exception_open()
-test_uses_catch_for_null_pointer_exception_close()
 
 def test_uses_md5_hash_close():
     """Search MD5 hash algorithm."""

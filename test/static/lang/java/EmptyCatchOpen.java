@@ -1,4 +1,8 @@
-import java.util.Random;
+import java.util;
+// This should not be detected
+// import java.util.Random;
+// import java.lang.Math;
+import java.lang.Math.random;
 
 class GenericExceptionsClose{
    public static void main(String args[]){
@@ -6,8 +10,15 @@ class GenericExceptionsClose{
          int a[]=new int[7];
          Random $random_gen = new Random();
 
-         a[0] = Math.random();
-         a[1] = $random_gen.nextInt(10);
+         a[0] = /* a comment*/
+                  // more comments
+                  random();
+         a[1] = $random_gen /*comment*/
+                        .
+                        // other comment
+                     nextInt(10);
+         a[2] = util // comment
+                     .Random(); /* util.Random() */
          a[4]=30/0;
 
          System.out.println("First print statement in try block");

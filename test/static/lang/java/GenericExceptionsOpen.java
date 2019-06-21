@@ -32,7 +32,17 @@ class GenericExceptionsOpen{
       messageDigest2.update(data.getBytes());
       byte[] messageDigestSHA1 = messageDigest2.digest();
 
-      Cipher des = Cipher.getInstance("DES/ECB/PKCS5Padding");
+      Cipher des = Cipher // a comment
+                  /*another comment*/          .getInstance(
+               "DES/ECB/PKCS5Padding" // a comment
+               /* A comment */
+               "The provider as string");
+      Cipher des = Cipher // a comment
+                  /*another comment*/          .getInstance(
+               "DES/ECB/PKCS5Padding" // a comment
+               /* A comment */
+               TheProviderAsAVar /* A comment */
+               );
       des.init(Cipher.ENCRYPT_MODE, secretKeySpec);
       byte[] encrypted = des.doFinal(input.getBytes("UTF-8"));
 
