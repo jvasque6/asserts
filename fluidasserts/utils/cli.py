@@ -5,12 +5,13 @@
 """Asserts CLI."""
 
 # standard imports
-from io import StringIO
-from timeit import default_timer as timer
-import contextlib
-import argparse
 import os
 import sys
+import argparse
+import itertools
+import contextlib
+from io import StringIO
+from timeit import default_timer as timer
 
 # pylint: disable=no-name-in-module
 # pylint: disable=global-statement
@@ -246,16 +247,18 @@ def get_total_unknown_checks(output_list):
 
 def filter_content(parsed_content, args):
     """Show filtered content according to args."""
-    opened_nodes = filter(lambda x: x['status'] == 'OPEN' and
-                          args.show_open,
-                          parsed_content)
-    closed_nodes = filter(lambda x: x['status'] == 'CLOSED' and
-                          args.show_closed,
-                          parsed_content)
-    unknown_nodes = filter(lambda x: x['status'] == 'UNKNOWN' and
-                           args.show_unknown,
-                           parsed_content)
-    return list(opened_nodes) + list(closed_nodes) + list(unknown_nodes)
+    headers = filter(lambda x: 'status' not in x,
+                     parsed_content)
+    opened = filter(lambda x: x.get('status') == 'OPEN' and
+                    args.show_open,
+                    parsed_content)
+    closed = filter(lambda x: x.get('status') == 'CLOSED' and
+                    args.show_closed,
+                    parsed_content)
+    unknown = filter(lambda x: x.get('status') == 'UNKNOWN' and
+                     args.show_unknown,
+                     parsed_content)
+    return list(itertools.chain(headers, opened, closed, unknown))
 
 
 def get_risk_levels(parsed_content):
@@ -509,6 +512,7 @@ dotnetconfig.has_ssl_disabled('__code__')
 dotnetconfig.has_debug_enabled('__code__')
 dotnetconfig.not_custom_errors('__code__')
 java.has_generic_exceptions('__code__')
+java.uses_catch_for_null_pointer_exception('__code__')
 java.uses_print_stack_trace('__code__')
 java.swallows_exceptions('__code__')
 java.has_switch_without_default('__code__')

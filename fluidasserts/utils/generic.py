@@ -9,6 +9,7 @@ import sys
 import asyncio
 
 # 3rd party imports
+import yaml
 from typing import Callable
 
 # local imports
@@ -17,11 +18,7 @@ from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts import show_metadata
 from fluidasserts import method_stats_set_owner
-from fluidasserts.utils.cli import colorize_text
-from fluidasserts.utils.cli import enable_win_colors
 from fluidasserts.utils.decorators import track, level, notify
-
-OUTFILE = sys.stderr
 
 # pylint: disable=broad-except
 
@@ -86,8 +83,11 @@ def add_finding(finding: str) -> bool:
 
     :param finding: Current project context.
     """
-    enable_win_colors()
     method_stats_set_owner(finding)
-    colorize_text('---')
-    colorize_text('finding: ' + finding)
+    message = yaml.safe_dump({'finding': finding},
+                             default_flow_style=False,
+                             explicit_start=True,
+                             allow_unicode=True)
+    print(message, end='', flush=True)
+    print(message, end='', flush=True, file=sys.stderr)
     return True
