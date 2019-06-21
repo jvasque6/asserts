@@ -650,7 +650,7 @@ def not_tls13_enabled(site: str, port: int = PORT) -> bool:
 @notify
 @level('medium')
 @track
-def has_insecure_renegotiation(site: str, port: int = PORT) -> bool:
+def allows_insecure_downgrade(site: str, port: int = PORT) -> bool:
     """
     Check if site has support for TLS_FALLBACK_SCSV extension.
 
