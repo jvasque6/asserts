@@ -1,21 +1,6 @@
 # -*- coding: utf-8 -*-
 
-r"""
-This module enables banner and fingerprint grabbing for other modules.
-
-Usage examples: ::
-
-   ftp_service = FTPService()
-   ssh_service = SSHService()
-   telnet_service = TELNETService()
-   smtp_service = SMTPService()
-   http_service = HTTPService(payload='GET / HTTP/1.0\r\n\r\n')
-   https_service = HTTPSService(payload='GET / HTTP/1.0\r\n\r\n')
-
-   banner = get_banner(https_service, 'fluid.la')
-   version = get_version(https_service, banner)
-   print version
-"""
+"""This module enables banner and fingerprint grabbing for other modules."""
 
 
 # standard imports

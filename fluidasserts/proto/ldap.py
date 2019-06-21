@@ -45,8 +45,6 @@ def is_anonymous_bind_allowed(ldap_server: str, port: int = PORT) -> bool:
 
     try:
         if conn.bind() is True:
-            print(server)
-            print(port)
             show_open('LDAP anonymous bind success',
                       details=dict(server=ldap_server, port=port))
             result = True
