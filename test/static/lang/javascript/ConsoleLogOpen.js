@@ -13,7 +13,19 @@ function functionAWithConsoleLog() {
         eval('alert("Your query string was ' + unescape(document.location.search) + '");');
     }
     catch(err) {
+        // a comment
+        /* a comment */
+        /*
+            a comment
+        */
     }
+
+    var promise = request();
+    promise.catch(
+        /*
+            TODO: Pending to add a log
+        */
+    );
 
     switch (new Date().getDay()) {
         case 0:

@@ -8,7 +8,7 @@
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Literal, Suppress, Word, alphanums,
                        nestedExpr, cppStyleComment, Optional, SkipTo,
-                       MatchFirst)
+                       MatchFirst, Keyword, Empty)
 
 # local imports
 from fluidasserts.helper import lang
@@ -176,40 +176,34 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
 
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
+    See `CWE-391 <https://cwe.mitre.org/data/definitions/391.html>`_.
+
     :param js_dest: Path to a JavaScript source file or package.
     """
-    tk_catch = CaselessKeyword('catch')
-    parser_catch = (Optional(Literal('}')) + tk_catch + nestedExpr())
-    empty_catch = (Suppress(parser_catch) +
-                   nestedExpr(opener='{', closer='}')).ignore(cppStyleComment)
+    # Empty() grammar matches 'anything'
+    # ~Empty() grammar matches 'not anything' or 'nothing'
+    classic = Suppress(Keyword('catch')) + nestedExpr(opener='(', closer=')') \
+        + nestedExpr(opener='{', closer='}', content=~Empty())
 
-    result = False
+    modern = Suppress('.' + Keyword('catch')) + nestedExpr(
+        opener='(', closer=')', content=~Empty())
+
+    grammar = MatchFirst([classic, modern])
+    grammar.ignore(cppStyleComment)
+
     try:
-        catches = lang.check_grammar(parser_catch, js_dest, LANGUAGE_SPECS,
-                                     exclude)
-        if not catches:
-            show_close('Code does not have catches',
-                       details=dict(code_dest=js_dest))
-            return False
+        matches = lang.path_contains_grammar(grammar, js_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
-        return False
-    vulns = {}
-    for code_file, val in catches.items():
-        vulns.update(lang.block_contains_empty_grammar(empty_catch,
-                                                       code_file, val['lines'],
-                                                       _get_block))
-    if not vulns:
-        show_close('Code does not have empty "catches"',
-                   details=dict(file=js_dest,
-                                fingerprint=lang.
-                                file_hash(js_dest)))
     else:
-        show_open('Code has empty "catches"',
-                  details=dict(file=vulns,
-                               total_vulns=len(vulns)))
-        result = True
-    return result
+        if matches:
+            show_open('Code has empty "catch" blocks',
+                      details=dict(matched=matches))
+            return True
+        show_close('Code does not have empty "catch" blocks',
+                   details=dict(code_dest=js_dest))
+    return False
 
 
 @notify

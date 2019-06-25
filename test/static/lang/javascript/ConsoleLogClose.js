@@ -46,6 +46,17 @@ function functionBWithoutConsoleLog() {
         message.innerHTML = "Input is " + err;
     }
 
+
+    var promise = request();
+    promise.catch(function(error) {
+        // a comment
+        /* a comment */
+        /*
+            a comment
+        */
+       message.innerHTML = "Input is " + err;
+    });
+
     switch (new Date().getDay()) {
         case 0:
             day = "Sunday";
