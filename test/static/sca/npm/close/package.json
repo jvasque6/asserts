@@ -1,12 +1,13 @@
 {
-  "name": "Test Project",
+  "name": "Test-Project",
   "version": "1.0.0",
   "description": "",
   "repository": "https://gitlab.com/fluidattacks/asserts",
   "author": "Fluid Attacks",
   "dependencies": {
+    "notexists": "8.3.8",
     "react-i18next": "8.3.8",
-    "notexists": "8.3.8"
+    "@babel/code-frame": "7.0.0"
   },
   "resolutions": {
     "graceful-fs": "4.1.13"

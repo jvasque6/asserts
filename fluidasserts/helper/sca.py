@@ -30,13 +30,13 @@ def _parse_snyk_vulns(html):
     vuln_table = soup.find_all('table',
                                attrs={'class': ['table--comfortable']})
     if not vuln_table:
-        return {}
+        return tuple()
     fields = [field.text.strip()
               for field in vuln_table[0].find_all('span',
                                                   attrs={'class':
                                                          ['l-push-left--sm',
                                                           'semver']})]
-    return {x: y for x in fields[0::2] for y in fields[1::2]}
+    return tuple({x: y for x in fields[0::2] for y in fields[1::2]}.items())
 
 
 def _scantree(path: str):
@@ -56,7 +56,7 @@ def full_paths_in_dir(path: str):
 
 
 def get_vulns_ossindex(package_manager: str, package: str,
-                       version: str) -> bool:
+                       version: str) -> tuple:
     """
     Search vulnerabilities on given package_manager/package/version.
 
@@ -73,22 +73,22 @@ def get_vulns_ossindex(package_manager: str, package: str,
     try:
         sess = http.HTTPSession(url)
         resp = json.loads(sess.response.text)[0]
+        vuln_titles = tuple()
         if resp['id'] == 0:
-            return []
+            return vuln_titles
         if int(resp['vulnerability-matches']) > 0:
             vulns = resp['vulnerabilities']
-            vuln_titles = [[x['title'], ", ".join(x['versions'])]
-                           for x in vulns]
-            vuln_titles = reduce(lambda l, x: l.append(x) or
-                                 l if x not in l else l, vuln_titles, [])
-        else:
-            vuln_titles = []
+            vuln_titles = tuple([x['title'], ", ".join(x['versions'])]
+                                for x in vulns)
+            vuln_titles = tuple(reduce(
+                lambda l, x: l.append(x) or l if x not in l else l,
+                vuln_titles, []))
         return vuln_titles
     except http.ConnError:
         raise ConnError
 
 
-def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
+def get_vulns_snyk(package_manager: str, package: str, version: str) -> tuple:
     """
     Search vulnerabilities on given package_manager/package/version.
 
@@ -105,10 +105,6 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> bool:
         url = base_url + '/vuln/{}:{}'.format(package_manager, package)
     try:
         sess = http.HTTPSession(url, timeout=20)
-        vuln_names = _parse_snyk_vulns(sess.response.text)
-
-        if not vuln_names:
-            return {}
-        return vuln_names
+        return _parse_snyk_vulns(sess.response.text)
     except http.ConnError:
         raise ConnError
