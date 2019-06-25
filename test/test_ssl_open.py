@@ -101,3 +101,9 @@ def test_not_tls13_enabled_open(get_mock_ip):
 def test_scsv_open(get_mock_ip):
     """TLS_FALLBACK_SCSV enabled?."""
     assert ssl.allows_insecure_downgrade(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_tls_cbc_open(get_mock_ip):
+    """TLS CBC ciphers enabled?."""
+    assert ssl.tls_uses_cbc(get_mock_ip)

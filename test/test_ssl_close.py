@@ -136,3 +136,11 @@ def test_not_scsv_close(get_mock_ip):
     assert not ssl.allows_insecure_downgrade(get_mock_ip, SSL_PORT)
     assert not ssl.allows_insecure_downgrade(get_mock_ip, 80)
     assert not ssl.allows_insecure_downgrade(NON_EXISTANT, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_tls_cbc_close(get_mock_ip):
+    """TLS CBC ciphers enabled?."""
+    assert not ssl.tls_uses_cbc(get_mock_ip, SSL_PORT)
+    assert not ssl.tls_uses_cbc(get_mock_ip, 80)
+    assert not ssl.tls_uses_cbc(NON_EXISTANT, SSL_PORT)

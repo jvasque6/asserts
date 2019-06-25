@@ -696,3 +696,37 @@ def allows_insecure_downgrade(site: str, port: int = PORT) -> bool:
                    details=dict(site=site, port=port))
         result = False
     return result
+
+
+@notify
+@level('medium')
+@track
+def tls_uses_cbc(site: str, port: int = PORT) -> bool:
+    """
+    Check if TLS connection uses CBC.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    result = False
+    try:
+        with connect(site, port=port, min_version=(3, 1)) as conn:
+            if conn._recordLayer.isCBCMode():  # noqa
+                show_open('Site uses TLS CBC ciphers and may be vulnerable to \
+to GOLDENDOODLE and Zombie POODLE attacks',
+                          details=dict(site=site, port=port))
+                result = True
+            else:
+                show_close('Site does not use TLS CBC ciphers',
+                           details=dict(site=site, port=port))
+                result = False
+    except (tlslite.errors.TLSRemoteAlert,
+            tlslite.errors.TLSAbruptCloseError, socket.error) as exc:
+        result = False
+        show_unknown('Could not connect',
+                     details=dict(site=site, port=port, error=str(exc)))
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port doesn\'t support SSL',
+                     details=dict(site=site, port=port))
+        result = False
+    return result
