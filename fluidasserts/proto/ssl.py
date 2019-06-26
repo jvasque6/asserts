@@ -327,7 +327,7 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
     """
     result = False
     try:
-        with connect(site, port=port, check='POODLE_TLS',
+        with connect(site, port=port, check='POODLE',
                      cipher_names=["aes256", "aes128", "3des"],
                      min_version=(3, 1)):
             show_open('Site vulnerable to POODLE TLS attack',
