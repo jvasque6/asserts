@@ -327,7 +327,7 @@ def has_poodle_tls(site: str, port: int = PORT) -> bool:
     """
     result = False
     try:
-        with connect(site, port=port, check_poodle_tls=True,
+        with connect(site, port=port, check='POODLE_TLS',
                      cipher_names=["aes256", "aes128", "3des"],
                      min_version=(3, 1)):
             show_open('Site vulnerable to POODLE TLS attack',
@@ -365,11 +365,11 @@ def has_poodle_sslv3(site: str, port: int = PORT) -> bool:
     result = False
     try:
         with connect(site, port=port, min_version=(3, 0),
-                     max_version=(3, 0)) as conn:
-            if conn._recordLayer.isCBCMode():  # noqa
-                show_open('Site vulnerable to POODLE SSLv3 attack',
-                          details=dict(site=site, port=port))
-                return True
+                     cipher_names=["aes256", "aes128", "3des"],
+                     max_version=(3, 0), check='POODLE'):
+            show_open('Site vulnerable to POODLE SSLv3 attack',
+                      details=dict(site=site, port=port))
+            return True
     except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSAbruptCloseError):
         show_close('Site not vulnerable to POODLE SSLv3 attack',
                    details=dict(site=site, port=port))
@@ -710,7 +710,9 @@ def tls_uses_cbc(site: str, port: int = PORT) -> bool:
     """
     result = False
     try:
-        with connect(site, port=port, min_version=(3, 1)) as conn:
+        with connect(site, port=port,
+                     min_version=(3, 1),
+                     max_version=(3, 3)) as conn:
             if conn._recordLayer.isCBCMode():  # noqa
                 show_open('Site uses TLS CBC ciphers and may be vulnerable to \
 to GOLDENDOODLE and Zombie POODLE attacks',
@@ -725,6 +727,38 @@ to GOLDENDOODLE and Zombie POODLE attacks',
         result = False
         show_unknown('Could not connect',
                      details=dict(site=site, port=port, error=str(exc)))
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port doesn\'t support SSL',
+                     details=dict(site=site, port=port))
+        result = False
+    return result
+
+
+@notify
+@level('medium')
+@track
+def has_0length_padding_vuln(site: str, port: int = PORT) -> bool:
+    """
+    Check if server is vulnerable to CVE-2019-1559.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    result = False
+    try:
+        with connect(site, port=port, check='0_LENGTH',
+                     cipher_names=["aes256", "aes128", "3des"],
+                     min_version=(3, 1),
+                     max_version=(3, 3)):
+            show_open('Site vulnerable to OpenSSL 0-LENGTH (CVE-2019-1559) \
+padding attack',
+                      details=dict(site=site, port=port))
+            result = True
+    except (tlslite.errors.TLSRemoteAlert,
+            tlslite.errors.TLSAbruptCloseError, socket.error):
+        show_close('Site not vulnerable to OpenSSL 0-LENGTH (CVE-2019-1559)',
+                   details=dict(site=site, port=port))
+        result = False
     except (tlslite.errors.TLSLocalAlert):
         show_unknown('Port doesn\'t support SSL',
                      details=dict(site=site, port=port))

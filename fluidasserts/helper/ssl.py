@@ -20,9 +20,11 @@ PORT = 443
 ORIG_METHOD = copy.deepcopy(tlslite.recordlayer.RecordLayer.addPadding)
 
 
-def _my_add_padding(self, data: bytes) -> bytes:
+def _my_add_padding_poodle(self, data: bytes) -> bytes:
     """
     Add padding to data so that it is multiple of block size.
+
+    POODLE version.
 
     :param data: Original bytestring to pad.
     """
@@ -33,6 +35,23 @@ def _my_add_padding(self, data: bytes) -> bytes:
     padding_bytes = bytearray(x ^ 42 for x in padding_bytes[0:-1])
     padding_bytes.append(padding_length)
     data += padding_bytes
+    return data
+
+
+def _my_add_padding_0length(self, data: bytes) -> bytes:
+    """
+    Add padding to data so that it is multiple of block size.
+
+    0-LENGTH attack (CVE-2019-1559) version.
+
+    :param data: Original bytestring to pad.
+    """
+    current_length = len(data)
+    block_length = self.blockSize
+    padding_length = block_length - 1 - (current_length % block_length)
+    padding_bytes = [padding_length] * (padding_length + 1)
+    padding_bytes[-1] = 0
+    data += bytearray(padding_bytes)
     return data
 
 
@@ -72,7 +91,7 @@ def connect_legacy(hostname: str, port: int = PORT,
 
 # pylint: disable=too-many-arguments
 @contextmanager
-def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
+def connect(hostname, port: int = PORT, check: str = None,
             min_version: Tuple[int, int] = (3, 0),
             max_version: Tuple[int, int] = (3, 4),
             cipher_names: List[str] = None,
@@ -92,8 +111,10 @@ def connect(hostname, port: int = PORT, check_poodle_tls: bool = False,
     :param key_exchange_names: List of exchange names.
     :param anon: Whether to make the handshake anonymously.
     """
-    if check_poodle_tls:
-        tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding
+    if check == 'POODLE':
+        tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding_poodle
+    elif check == '0_LENGTH':
+        tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding_0length
     else:
         tlslite.recordlayer.RecordLayer.addPadding = ORIG_METHOD
 
