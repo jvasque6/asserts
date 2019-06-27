@@ -107,9 +107,3 @@ def test_scsv_open(get_mock_ip):
 def test_tls_cbc_open(get_mock_ip):
     """TLS CBC ciphers enabled?."""
     assert ssl.tls_uses_cbc(get_mock_ip)
-
-
-@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
-def test_0length_open(get_mock_ip):
-    """Site vulnerable to CVE-2019-1559?."""
-    assert not ssl.has_0length_padding_vuln(get_mock_ip)

@@ -38,23 +38,6 @@ def _my_add_padding_poodle(self, data: bytes) -> bytes:
     return data
 
 
-def _my_add_padding_0length(self, data: bytes) -> bytes:
-    """
-    Add padding to data so that it is multiple of block size.
-
-    0-LENGTH attack (CVE-2019-1559) version.
-
-    :param data: Original bytestring to pad.
-    """
-    current_length = len(data)
-    block_length = self.blockSize
-    padding_length = block_length - 1 - (current_length % block_length)
-    padding_bytes = [padding_length] * (padding_length + 1)
-    padding_bytes[-1] = 0
-    data += bytearray(padding_bytes)
-    return data
-
-
 @contextmanager
 def connect_legacy(hostname: str, port: int = PORT,
                    ciphers: str = 'HIGH:!DH:!aNULL',
@@ -113,8 +96,6 @@ def connect(hostname, port: int = PORT, check: str = None,
     """
     if check == 'POODLE':
         tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding_poodle
-    elif check == '0_LENGTH':
-        tlslite.recordlayer.RecordLayer.addPadding = _my_add_padding_0length
     else:
         tlslite.recordlayer.RecordLayer.addPadding = ORIG_METHOD
 

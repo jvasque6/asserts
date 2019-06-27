@@ -732,35 +732,3 @@ to GOLDENDOODLE and Zombie POODLE attacks',
                      details=dict(site=site, port=port))
         result = False
     return result
-
-
-@notify
-@level('medium')
-@track
-def has_0length_padding_vuln(site: str, port: int = PORT) -> bool:
-    """
-    Check if server is vulnerable to CVE-2019-1559.
-
-    :param site: Address to connect to.
-    :param port: If necessary, specify port to connect to.
-    """
-    result = False
-    try:
-        with connect(site, port=port, check='0_LENGTH',
-                     cipher_names=["aes256", "aes128", "3des"],
-                     min_version=(3, 1),
-                     max_version=(3, 3)):
-            show_open('Site vulnerable to OpenSSL 0-LENGTH (CVE-2019-1559) \
-padding attack',
-                      details=dict(site=site, port=port))
-            result = True
-    except (tlslite.errors.TLSRemoteAlert,
-            tlslite.errors.TLSAbruptCloseError, socket.error):
-        show_close('Site not vulnerable to OpenSSL 0-LENGTH (CVE-2019-1559)',
-                   details=dict(site=site, port=port))
-        result = False
-    except (tlslite.errors.TLSLocalAlert):
-        show_unknown('Port doesn\'t support SSL',
-                     details=dict(site=site, port=port))
-        result = False
-    return result
