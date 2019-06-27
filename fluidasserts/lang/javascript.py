@@ -3,12 +3,12 @@
 """This module allows to check JavaScript code vulnerabilities."""
 
 # standard imports
-# None
+import re
 
 # 3rd party imports
 from pyparsing import (CaselessKeyword, Literal, Suppress, Word, alphanums,
-                       nestedExpr, cppStyleComment, Optional, SkipTo,
-                       MatchFirst, Keyword, Empty)
+                       nestedExpr, cppStyleComment, Optional,
+                       MatchFirst, Keyword, Empty, QuotedString)
 
 # local imports
 from fluidasserts.helper import lang
@@ -23,6 +23,15 @@ LANGUAGE_SPECS = {
     'block_comment_end': '*/',
     'line_comment': ('//',)
 }  # type: dict
+
+
+# 'anything'
+L_CHAR = QuotedString("'")
+# "anything"
+L_STRING = QuotedString('"')
+
+# Compiled regular expressions
+RE_HAVES_DEFAULT = re.compile(r'(?:default\s*:)', flags=re.M)
 
 
 def _get_block(file_lines, line) -> str:
@@ -215,48 +224,29 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
 
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
+    See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
+
     :param js_dest: Path to a JavaScript source file or package.
     """
-    tk_switch = CaselessKeyword('switch')
-    tk_case = CaselessKeyword('case') + SkipTo(Literal(':'))
-    tk_default = CaselessKeyword('default') + Literal(':')
-    tk_break = (CaselessKeyword('break') + Optional(Literal(';'))) | \
-        Literal('}')
-    def_stmt = MatchFirst([Suppress(tk_case), tk_default]) + \
-        Suppress(SkipTo(tk_break, include=True))
-    prsr_sw = tk_switch + nestedExpr()
-    switch_head = tk_switch + nestedExpr() + Optional(Literal('{'))
-    sw_wout_def = (Suppress(prsr_sw) +
-                   nestedExpr(opener='{', closer='}',
-                              content=def_stmt)).ignore(cppStyleComment)
-
-    result = False
+    switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
+    switch_block = Suppress(switch) + nestedExpr(opener='{', closer='}')
+    switch_block.ignore(cppStyleComment)
+    switch_block.ignore(L_CHAR)
+    switch_block.ignore(L_STRING)
+    switch_block.addCondition(lambda x: not RE_HAVES_DEFAULT.search(str(x)))
     try:
-        switches = lang.check_grammar(switch_head, js_dest, LANGUAGE_SPECS,
-                                      exclude)
-        if not switches:
-            show_close('Code does not have switches',
-                       details=dict(code_dest=js_dest))
-            return False
+        matches = lang.path_contains_grammar(switch_block, js_dest,
+                                             LANGUAGE_SPECS, exclude)
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=js_dest))
         return False
-    vulns = {}
-    for code_file, val in switches.items():
-        vulns.update(lang.block_contains_empty_grammar(sw_wout_def,
-                                                       code_file, val['lines'],
-                                                       _get_block))
-    if not vulns:
-        show_close('Code has "switch" with "default" clause',
-                   details=dict(file=js_dest,
-                                fingerprint=lang.
-                                file_hash(js_dest)))
-    else:
+    if matches:
         show_open('Code does not have "switch" with "default" clause',
-                  details=dict(matched=vulns,
-                               total_vulns=len(vulns)))
-        result = True
-    return result
+                  details=dict(matched=matches))
+        return True
+    show_close('Code has "switch" with "default" clause',
+               details=dict(code_dest=js_dest))
+    return False
 
 
 @notify

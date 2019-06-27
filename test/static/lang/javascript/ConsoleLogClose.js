@@ -82,6 +82,28 @@ function functionBWithoutConsoleLog() {
         default:
             day = "Error";
     }
+
+    switch (deviceId) {
+        case DEVICE_ID_FBK:
+          response = await saveTermsFBK(uniqueUserId);
+          break;
+        case DEVICE_ID_CPC:
+          response = { status: false };
+          break;
+        default:
+          response = { status: false };
+          break;
+      }
+
+    switch (control) {
+        // } testing the block is not terminated early
+        /* } */
+    case 'postback':
+        content = [{"}": ""}];
+        break;
+    default:
+        break;
+    }
 }
 
 function functionCWithoutConsoleLog() {

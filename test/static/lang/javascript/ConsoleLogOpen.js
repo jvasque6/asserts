@@ -28,15 +28,24 @@ function functionAWithConsoleLog() {
     );
 
     switch (new Date().getDay()) {
+        // default:
+        /* default : */
+        /* default:
+        */
+        /*
+        default:
+            */
+        // } testing the block is not terminated early
+        /* } */
         case 0:
-            day = "Sunday";
+            day = "} Sunday";
             break;
         case 1:
             day = "Monday";
             break;
         case 2:
             day = "Tuesday";
-            break;
+            throw day;
         case 3:
             day = "Wednesday";
             break;
@@ -44,7 +53,7 @@ function functionAWithConsoleLog() {
             day = "Thursday";
             break;
         case 5:
-            day = "Friday";
+            day = "default:";
             break;
         case 6:
             day = "Saturday";
