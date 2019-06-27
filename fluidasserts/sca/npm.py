@@ -72,7 +72,7 @@ def _get_requirements(path: str) -> set:
             with open(path) as file:
                 data = json.load(file)
             reqs.update(
-                (path, dep.replace('@types/', ''), ver.translate(dictionary))
+                (path, dep, ver.translate(dictionary))
                 for dep, ver in _get_all_versions(data))
     return reqs
 

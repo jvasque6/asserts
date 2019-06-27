@@ -5,6 +5,7 @@
 # standard imports
 import json
 import os
+import urllib.parse
 
 # 3rd party imports
 from bs4 import BeautifulSoup
@@ -22,6 +23,11 @@ class ConnError(http.ConnError):
 
     :py:exc:`http.ConnError` wrapper exception.
     """
+
+
+def _url_encode(string: str) -> str:
+    """Return a url encoded string."""
+    return urllib.parse.quote(string, safe='')
 
 
 def _parse_snyk_vulns(html):
@@ -64,12 +70,15 @@ def get_vulns_ossindex(package_manager: str, package: str,
     :param package: Package name.
     :param version: Package version.
     """
-    base_url = 'https://ossindex.net/v2.0/package'
     if version:
-        url = base_url + '/' + package_manager + '/' + package + '/' + version
+        url = 'https://ossindex.net/v2.0/package/{}/{}/{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package),
+            _url_encode(version))
     else:
-        url = base_url + '/' + package_manager + '/' + package
-
+        url = 'https://ossindex.net/v2.0/package/{}/{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package))
     try:
         sess = http.HTTPSession(url)
         resp = json.loads(sess.response.text)[0]
@@ -96,13 +105,15 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> tuple:
     :param package: Package name.
     :param version: Package version.
     """
-    base_url = 'https://snyk.io'
-
     if version:
-        url = base_url + '/vuln/{}:{}@{}'.format(package_manager,
-                                                 package, version)
+        url = 'https://snyk.io/vuln/{}:{}@{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package),
+            _url_encode(version))
     else:
-        url = base_url + '/vuln/{}:{}'.format(package_manager, package)
+        url = 'https://snyk.io/vuln/{}:{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package))
     try:
         sess = http.HTTPSession(url, timeout=20)
         return _parse_snyk_vulns(sess.response.text)
