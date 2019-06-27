@@ -12,8 +12,7 @@ from .tracking import mp_track
 import yaml
 
 # local imports
-from fluidasserts.utils.cli import colorize_text
-from fluidasserts.utils.cli import enable_win_colors
+# none
 
 OUTFILE = sys.stderr
 
@@ -57,9 +56,7 @@ def notify(func: Callable) -> Callable:
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:  # noqa
         """Notify the user that the function is running."""
-        enable_win_colors()
-        msg = f'- Running: {_get_func_id(func)}'
-        colorize_text(msg)
         ret_val = func(*args, **kwargs)
+        print(f'  check: {_get_func_id(func)}', file=sys.stderr)
         return ret_val
     return decorated

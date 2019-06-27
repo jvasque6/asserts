@@ -12,6 +12,7 @@ import itertools
 import contextlib
 from io import StringIO
 from timeit import default_timer as timer
+from multiprocessing import Pool, cpu_count
 
 # pylint: disable=no-name-in-module
 # pylint: disable=global-statement
@@ -324,14 +325,23 @@ def show_banner(args):
 
 
 @contextlib.contextmanager
-def std_redir(stdout=None):
+def stdout_redir():
     """Redirect stdout."""
     old = sys.stdout
-    if stdout is None:
-        stdout = StringIO()
+    stdout = StringIO()
     sys.stdout = stdout
     yield stdout
     sys.stdout = old
+
+
+@contextlib.contextmanager
+def stderr_redir():
+    """Redirect stderr."""
+    old = sys.stderr
+    stderr = StringIO()
+    sys.stderr = stderr
+    yield stderr
+    sys.stderr = old
 
 
 def lint_exploit(exploit):
@@ -390,10 +400,11 @@ linting: warnings
 def exec_wrapper(exploit):
     """Execute exploit wrapper."""
     lint_exploit(exploit)
-    with std_redir() as exploit_result:
+    with stdout_redir() as stdout_result, stderr_redir() as stderr_result:
         code = compile(exploit, 'exploit', 'exec', optimize=0)
         exec(code)
-    return exploit_result.getvalue()
+    print(stderr_result.getvalue(), end='', file=sys.stderr)
+    return stdout_result.getvalue()
 
 
 def exec_http_package(urls):
@@ -548,11 +559,22 @@ npm.project_has_vulnerabilities('__code__')
     return exec_wrapper(template)
 
 
-def exec_exploit(exploits):
-    """Execute exploit file."""
+def get_exploit_content(exploit_path: str) -> str:
+    """Read the exploit as a string."""
+    with open(exploit_path) as exploit:
+        return exploit.read()
+
+
+def exec_exploits(exploit_paths: list, enable_multiprocessing: bool) -> str:
+    """Execute the exploits list."""
     try:
-        res = map(lambda expl: exec_wrapper(open(expl).read()), exploits)
-        return "".join(list(res))
+        exploit_contents = map(get_exploit_content, exploit_paths)
+        if enable_multiprocessing:
+            with Pool(processes=cpu_count()) as agents:
+                results = agents.map(exec_wrapper, exploit_contents, 1)
+        else:
+            results = map(exec_wrapper, exploit_contents)
+        return "".join(results)
     except FileNotFoundError:
         print('Exploit not found')
         sys.exit(return_strict(False))
@@ -570,7 +592,7 @@ def get_content(args):
     if args.lang:
         content += exec_lang_package(args.lang)
     elif args.exploits:
-        content += exec_exploit(args.exploits)
+        content += exec_exploits(args.exploits, args.multiprocessing)
     return get_parsed_output(content)
 
 
@@ -602,6 +624,12 @@ def main():
                            action='store_true')
     argparser.add_argument('-ms', '--show-method-stats',
                            help='show method-level stats at the end',
+                           action='store_true')
+    argparser.add_argument('-mp', '--multiprocessing',
+                           help=('enable multiprocessing over '
+                                 'the provided list of exploits.'
+                                 'The number of used cpu cores defaults to '
+                                 'the local cpu count provided by the OS.'),
                            action='store_true')
     argparser.add_argument('-O', '--output', nargs=1, metavar='FILE',
                            help='save output in FILE')
