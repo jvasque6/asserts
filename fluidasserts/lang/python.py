@@ -16,6 +16,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import full_paths_in_dir
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -99,7 +100,7 @@ def _insecure_functions_in_dir(py_dest: str, exclude: list = None) -> bool:
         exclude = []
 
     res = [_insecure_functions_in_file(full_path)
-           for full_path in lang.full_paths_in_dir(py_dest)
+           for full_path in full_paths_in_dir(py_dest)
            if full_path.endswith(LANGUAGE_SPECS['extensions']) and
            not any(x in full_path for x in exclude)]
     return list(filter(None, res))

@@ -13,6 +13,7 @@ from fluidasserts.helper import sca
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import full_paths_in_dir
 from fluidasserts.utils.decorators import track, level, notify
 
 PACKAGE_MANAGER = 'npm'
@@ -65,7 +66,7 @@ def _get_requirements(path: str) -> set:
     """
     reqs = set()
     dictionary = {c: None for c in '^~<=>'}
-    for path in sca.full_paths_in_dir(path):
+    for path in full_paths_in_dir(path):
         is_package = path.endswith('package.json')
         is_package_lock = path.endswith('package-lock.json')
         if is_package or is_package_lock:

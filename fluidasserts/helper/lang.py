@@ -14,7 +14,7 @@ from itertools import accumulate
 from pyparsing import ParserElement, ParseException, ParseResults
 
 # local imports
-# none
+from fluidasserts.utils.generic import full_paths_in_dir
 
 
 def _re_compile(
@@ -331,25 +331,6 @@ def file_hash(filename: str) -> dict:
     except (FileNotFoundError, IsADirectoryError):
         return None
     return dict(sha256=sha256.hexdigest())
-
-
-def _scantree(path: str):
-    """Recursively yield full paths to files for a given directory."""
-    if os.path.isfile(path):
-        yield path
-    else:
-        for entry in os.scandir(path):
-            full_path = entry.path
-            if entry.is_dir(follow_symlinks=False):
-                yield from _scantree(full_path)
-            else:
-                yield full_path
-
-
-@lru_cache(maxsize=None, typed=True)
-def full_paths_in_dir(path: str):
-    """Return a cacheable tuple of full_paths to files in a dir."""
-    return tuple(_scantree(path))
 
 
 def _check_grammar_in_file(grammar: ParserElement, code_dest: str,

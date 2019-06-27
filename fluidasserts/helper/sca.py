@@ -4,12 +4,10 @@
 
 # standard imports
 import json
-import os
 import urllib.parse
 
 # 3rd party imports
 from bs4 import BeautifulSoup
-from functools import lru_cache
 from functools import reduce
 
 
@@ -43,22 +41,6 @@ def _parse_snyk_vulns(html):
                                                          ['l-push-left--sm',
                                                           'semver']})]
     return tuple({x: y for x in fields[0::2] for y in fields[1::2]}.items())
-
-
-def _scantree(path: str):
-    """Recursively yield full paths to files for a given directory."""
-    for entry in os.scandir(path):
-        full_path = entry.path
-        if entry.is_dir(follow_symlinks=False):
-            yield from _scantree(full_path)
-        else:
-            yield full_path
-
-
-@lru_cache(maxsize=None, typed=True)
-def full_paths_in_dir(path: str):
-    """Return a cacheable tuple of full_paths to files in a dir."""
-    return tuple(full_path for full_path in _scantree(path))
 
 
 def get_vulns_ossindex(package_manager: str, package: str,

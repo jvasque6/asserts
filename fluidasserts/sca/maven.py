@@ -13,6 +13,7 @@ from fluidasserts.helper import sca
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import full_paths_in_dir
 from fluidasserts.utils.decorators import track, level, notify
 
 PACKAGE_MANAGER = 'maven'
@@ -28,7 +29,7 @@ def _get_requirements(path: str) -> list:
     """
     reqs = []
     namespaces = {'xmlns': 'http://maven.apache.org/POM/4.0.0'}
-    for full_path in sca.full_paths_in_dir(path):
+    for full_path in full_paths_in_dir(path):
         if not full_path.endswith('pom.xml'):
             continue
         tree = parse(full_path)

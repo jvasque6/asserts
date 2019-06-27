@@ -5,8 +5,10 @@
 """Asserts generic meta-method."""
 
 # standard imports
+import os
 import sys
 import asyncio
+from functools import lru_cache
 
 # 3rd party imports
 import yaml
@@ -21,6 +23,19 @@ from fluidasserts import method_stats_set_owner
 from fluidasserts.utils.decorators import track, level, notify
 
 # pylint: disable=broad-except
+
+
+def _scantree(path: str):
+    """Recursively yield full paths to files for a given directory."""
+    if os.path.isfile(path):
+        yield path
+    else:
+        for entry in os.scandir(path):
+            full_path = entry.path
+            if entry.is_dir(follow_symlinks=False):
+                yield from _scantree(full_path)
+            else:
+                yield full_path
 
 
 @notify
@@ -67,6 +82,12 @@ def check_function(func: Callable, *args, **kwargs) -> bool:
                                                        kwargs=kwargs,
                                                        return_value=ret)))
     return False
+
+
+@lru_cache(maxsize=None, typed=True)
+def full_paths_in_dir(path: str):
+    """Return a cacheable tuple of full_paths to files in a dir."""
+    return tuple(_scantree(path))
 
 
 def add_info(metadata: dict) -> bool:
