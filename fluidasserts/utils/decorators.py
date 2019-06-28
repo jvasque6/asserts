@@ -56,7 +56,7 @@ def notify(func: Callable) -> Callable:
     @functools.wraps(func)
     def decorated(*args, **kwargs) -> Any:  # noqa
         """Notify the user that the function is running."""
+        print(f'  check: {_get_func_id(func)}', file=sys.stderr, flush=True)
         ret_val = func(*args, **kwargs)
-        print(f'  check: {_get_func_id(func)}', file=sys.stderr)
         return ret_val
     return decorated

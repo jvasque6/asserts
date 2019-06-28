@@ -215,7 +215,7 @@ def return_strict(condition):
 def get_parsed_output(content):
     """Get parsed YAML output."""
     try:
-        ret = [x for x in yaml.safe_load_all(content) if len(x) > 0]
+        ret = [x for x in yaml.safe_load_all(content) if x]
     except yaml.scanner.ScannerError:  # pragma: no cover
         print(content, flush=True)
         sys.exit(return_strict(True))
