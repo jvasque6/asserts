@@ -144,3 +144,11 @@ def test_tls_cbc_close(get_mock_ip):
     assert not ssl.tls_uses_cbc(get_mock_ip, SSL_PORT)
     assert not ssl.tls_uses_cbc(get_mock_ip, 80)
     assert not ssl.tls_uses_cbc(NON_EXISTANT, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_sweet32_close(get_mock_ip):
+    """Check SWEET32."""
+    assert not ssl.has_sweet32(get_mock_ip, SSL_PORT)
+    assert not ssl.has_sweet32(get_mock_ip, 80)
+    assert not ssl.has_sweet32(NON_EXISTANT, SSL_PORT)

@@ -732,3 +732,34 @@ to GOLDENDOODLE and Zombie POODLE attacks',
                      details=dict(site=site, port=port))
         result = False
     return result
+
+
+@notify
+@level('low')
+@track
+def has_sweet32(site: str, port: int = PORT) -> bool:
+    """
+    Check if server is vulnerable to SWEET32.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    result = False
+    try:
+        with connect(site, port=port,
+                     cipher_names=["3des"],
+                     min_version=(3, 1),
+                     max_version=(3, 3)):
+            show_open('Site vulnerable to SWEET32',
+                      details=dict(site=site, port=port))
+            result = True
+    except (tlslite.errors.TLSRemoteAlert,
+            tlslite.errors.TLSAbruptCloseError, socket.error):
+        result = False
+        show_close('Site not vulnerable to SWEET32',
+                   details=dict(site=site, port=port))
+    except (tlslite.errors.TLSLocalAlert):
+        show_unknown('Port doesn\'t support SSL',
+                     details=dict(site=site, port=port))
+        result = False
+    return result
