@@ -763,3 +763,61 @@ def has_sweet32(site: str, port: int = PORT) -> bool:
                      details=dict(site=site, port=port))
         result = False
     return result
+
+
+@notify
+@level('medium')
+@track
+def has_tls13_downgrade_vuln(site: str, port: int = PORT) -> bool:
+    """
+    Check if server is prone to TLSv1.3 downgrade attack.
+
+    :param site: Address to connect to.
+    :param port: If necessary, specify port to connect to.
+    """
+    supported = []
+    for version in reversed(range(0, 5)):
+        try:
+            with connect(site, port=port,
+                         min_version=(3, version),
+                         max_version=(3, version)):
+                supported.append(version)
+        except (tlslite.errors.TLSRemoteAlert, tlslite.errors.TLSLocalAlert,
+                OSError):
+            continue
+    if not supported:
+        show_unknown('Could not connect to server',
+                     details=dict(site=site, port=port))
+        return False
+
+    if 4 not in supported:
+        show_unknown('Site does not support TLSv1.3',
+                     details=dict(site=site, port=port))
+        return False
+    if len(supported) > 1:
+        try:
+            with connect(site, port=port, min_version=(3, min(supported)),
+                         max_version=(3, min(supported)),
+                         key_exchange_names=['rsa']):
+                show_open('Site supports TLSv1.3 and older versions and \
+supports RSA keys without (EC)DH(E) cipher suites',
+                          details=dict(site=site, port=port,
+                                       supported=supported))
+                result = True
+        except (tlslite.errors.TLSRemoteAlert,
+                tlslite.errors.TLSAbruptCloseError):
+            show_close('Site supports TLSv1.3 older versions but \
+RSA keys require (EC)DH(E) cipher suites',
+                       details=dict(site=site, port=port,
+                                    supported=supported))
+            result = False
+        except (tlslite.errors.TLSLocalAlert, socket.error) as exc:
+            show_unknown('Could not connect',
+                         details=dict(site=site, port=port, error=str(exc)))
+            result = False
+    else:
+        show_close('Site not vulnerable to TLSv1.3 downgrade attack',
+                   details=dict(site=site, port=port,
+                                supported=supported))
+        result = False
+    return result

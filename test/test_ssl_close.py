@@ -152,3 +152,17 @@ def test_sweet32_close(get_mock_ip):
     assert not ssl.has_sweet32(get_mock_ip, SSL_PORT)
     assert not ssl.has_sweet32(get_mock_ip, 80)
     assert not ssl.has_sweet32(NON_EXISTANT, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard_tlsv13'], indirect=True)
+def test_tlsv13_downgrade_close(get_mock_ip):
+    """Check TLSv1.3 downgrade attack close."""
+    assert not ssl.has_tls13_downgrade_vuln(get_mock_ip, SSL_PORT)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_weak'], indirect=True)
+def test_tlsv13_downgrade_unknown(get_mock_ip):
+    """Check TLSv1.3 downgrade attack unknown."""
+    assert not ssl.has_tls13_downgrade_vuln(get_mock_ip, SSL_PORT)
+    assert not ssl.has_tls13_downgrade_vuln(get_mock_ip, 80)
+    assert not ssl.has_tls13_downgrade_vuln(NON_EXISTANT, 80)

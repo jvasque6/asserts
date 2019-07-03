@@ -66,6 +66,7 @@ def run_mocks(request):
         'mysql_db:hard': {'3306/tcp': 3306},
         'ssl:weak': {'443/tcp': 443},
         'ssl:hard': {'443/tcp': 443},
+        'ssl:hard_tlsv13': {'443/tcp': 443},
         'tcp:weak': {'21/tcp': 21},
         'tcp:hard': {'443/tcp': 443},
         'dns:weak': {'53/tcp': 53, '53/udp': 53},

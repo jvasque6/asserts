@@ -113,3 +113,9 @@ def test_tls_cbc_open(get_mock_ip):
 def test_sweet32_open(get_mock_ip):
     """Check SWEET32."""
     assert ssl.has_sweet32(get_mock_ip)
+
+
+@pytest.mark.parametrize('get_mock_ip', ['ssl_hard'], indirect=True)
+def test_tlsv13_downgrade_open(get_mock_ip):
+    """Check TLSv1.3 downgrade attack."""
+    assert ssl.has_tls13_downgrade_vuln(get_mock_ip)
