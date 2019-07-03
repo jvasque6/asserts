@@ -38,10 +38,13 @@ def _scantree(path: str):
                 yield full_path
 
 
-def _run_async_func(func: Callable, args) -> list:
+def _run_async_func(
+        func: Callable, args: list, return_exceptions: bool = True) -> list:
     """Run a function asynchronously over the list of arguments."""
     loop = asyncio.new_event_loop()
-    future = asyncio.gather(*(func(*a, **k) for a, k in args), loop=loop)
+    future = asyncio.gather(*(func(*a, **k) for a, k in args),
+                            return_exceptions=return_exceptions,
+                            loop=loop)
     result = loop.run_until_complete(future)
     loop.close()
     return result
@@ -64,7 +67,8 @@ def check_function(func: Callable, *args, **kwargs) -> bool:
     metadata = kwargs.pop('metadata', None)
     try:
         if asyncio.iscoroutinefunction(func):
-            ret = _run_async_func(func, [(args, kwargs)])[0]
+            ret = _run_async_func(
+                func, ((args, kwargs),), return_exceptions=False)[0]
         else:
             ret = func(*args, **kwargs)
     except Exception as exc:

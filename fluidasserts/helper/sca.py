@@ -4,6 +4,7 @@
 
 # standard imports
 import json
+import aiohttp
 import urllib.parse
 
 # 3rd party imports
@@ -101,3 +102,30 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> tuple:
         return _parse_snyk_vulns(sess.response.text)
     except http.ConnError:
         raise ConnError
+
+
+async def get_vulns_snyk_async(
+        package_manager: str, path: str, package: str, version: str) -> tuple:
+    """
+    Search vulnerabilities on given package_manager/package/version.
+
+    :param package_manager: Package manager.
+    :param package: Package name.
+    :param version: Package version.
+    """
+    async def fetch(session, url):
+        async with session.get(url) as response:
+            return await response.text()
+
+    if version:
+        url = 'https://snyk.io/vuln/{}:{}@{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package),
+            _url_encode(version))
+    else:
+        url = 'https://snyk.io/vuln/{}:{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package))
+    async with aiohttp.ClientSession() as session:
+        html = await fetch(session, url)
+    return path, package, version, _parse_snyk_vulns(html) if html else None

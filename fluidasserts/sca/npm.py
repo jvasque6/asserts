@@ -14,10 +14,11 @@ from fluidasserts.helper import sca
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import _run_async_func
 from fluidasserts.utils.generic import full_paths_in_dir
 from fluidasserts.utils.decorators import track, level, notify
 
-PACKAGE_MANAGER = 'npm'
+PKG_MNGR = 'npm'
 
 
 def _get_all_versions(json_obj: dict) -> None:
@@ -66,10 +67,9 @@ def _get_requirements(path: str) -> set:
     :param path: Project path
     """
     reqs = set()
-    dictionary = {c: None for c in '^~<=>'}
-
     if not os.path.exists(path):
-        return None
+        return reqs
+    dictionary = {ord(c): None for c in '^~<=>'}
     for path in full_paths_in_dir(path):
         is_package = path.endswith('package.json')
         is_package_lock = path.endswith('package-lock.json')
@@ -80,6 +80,23 @@ def _get_requirements(path: str) -> set:
                 (path, dep, ver.translate(dictionary))
                 for dep, ver in _get_all_versions(data))
     return reqs
+
+
+def _parse_requirements(reqs: set) -> tuple:
+    """Return a dict mapping path to dependencies, versions and vulns."""
+    has_vulns, proj_vulns = None, {}
+    results = _run_async_func(
+        sca.get_vulns_snyk_async,
+        [((PKG_MNGR, path, dep, ver), {}) for path, dep, ver in reqs])
+    results = filter(lambda x: isinstance(x, tuple), results)
+    for path, dep, ver, vulns in results:
+        if vulns:
+            has_vulns = True
+            try:
+                proj_vulns[path][f'{dep} {ver}'] = vulns
+            except KeyError:
+                proj_vulns[path] = {f'{dep} {ver}': vulns}
+    return has_vulns, proj_vulns
 
 
 @notify
@@ -93,7 +110,7 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param version: Package version.
     """
     try:
-        vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, package, version)
+        vulns = sca.get_vulns_snyk(PKG_MNGR, package, version)
         if vulns:
             show_open('Software has vulnerabilities',
                       details=dict(package=package, version=version,
@@ -118,24 +135,12 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     :param path: Project path.
     """
-    has_vulns = None
-    proj_vulns = {}
     reqs = _get_requirements(path)
     if not reqs:
         show_unknown('Not packages found in project',
                      details=dict(path=path))
         return False
-    for full_path, dep, ver in reqs:
-        try:
-            _vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, dep, ver)
-        except sca.ConnError:
-            continue
-        if _vulns:
-            has_vulns = True
-            try:
-                proj_vulns[full_path][f'{dep} {ver}'] = _vulns
-            except KeyError:
-                proj_vulns[full_path] = {f'{dep} {ver}': _vulns}
+    has_vulns, proj_vulns = _parse_requirements(reqs)
     if has_vulns:
         show_open('Project has dependencies with vulnerabilities',
                   details=dict(project_path=path,
