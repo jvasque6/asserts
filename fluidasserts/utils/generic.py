@@ -38,6 +38,15 @@ def _scantree(path: str):
                 yield full_path
 
 
+def _run_async_func(func: Callable, args) -> list:
+    """Run a function asynchronously over the list of arguments."""
+    loop = asyncio.new_event_loop()
+    future = asyncio.gather(*(func(*a, **k) for a, k in args), loop=loop)
+    result = loop.run_until_complete(future)
+    loop.close()
+    return result
+
+
 @notify
 @level('low')
 @track
@@ -55,10 +64,7 @@ def check_function(func: Callable, *args, **kwargs) -> bool:
     metadata = kwargs.pop('metadata', None)
     try:
         if asyncio.iscoroutinefunction(func):
-            loop = asyncio.new_event_loop()
-            futr = asyncio.gather(func(*args, **kwargs), loop=loop)
-            ret, = loop.run_until_complete(futr)
-            loop.close()
+            ret = _run_async_func(func, [(args, kwargs)])[0]
         else:
             ret = func(*args, **kwargs)
     except Exception as exc:
