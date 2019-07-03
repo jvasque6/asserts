@@ -4,6 +4,7 @@
 
 # standard imports
 import json
+import os
 
 # 3rd party imports
 # None
@@ -66,6 +67,9 @@ def _get_requirements(path: str) -> set:
     """
     reqs = set()
     dictionary = {c: None for c in '^~<=>'}
+
+    if not os.path.exists(path):
+        return None
     for path in full_paths_in_dir(path):
         is_package = path.endswith('package.json')
         is_package_lock = path.endswith('package-lock.json')
@@ -114,30 +118,24 @@ def project_has_vulnerabilities(path: str) -> bool:
 
     :param path: Project path.
     """
-    try:
-        has_vulns = None
-        proj_vulns = {}
-        reqs = _get_requirements(path)
-        if not reqs:
-            show_unknown('Not packages found in project',
-                         details=dict(path=path))
-            return False
-        for full_path, dep, ver in reqs:
-            _vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, dep, ver)
-            if _vulns:
-                has_vulns = True
-                try:
-                    proj_vulns[full_path][f'{dep} {ver}'] = _vulns
-                except KeyError:
-                    proj_vulns[full_path] = {f'{dep} {ver}': _vulns}
-    except sca.ConnError as exc:
-        show_unknown('Could not connect to SCA provider',
-                     details=dict(error=str(exc).replace(':', ',')))
-        return False
-    except FileNotFoundError:
-        show_unknown('Project dir not found',
+    has_vulns = None
+    proj_vulns = {}
+    reqs = _get_requirements(path)
+    if not reqs:
+        show_unknown('Not packages found in project',
                      details=dict(path=path))
         return False
+    for full_path, dep, ver in reqs:
+        try:
+            _vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, dep, ver)
+        except sca.ConnError:
+            continue
+        if _vulns:
+            has_vulns = True
+            try:
+                proj_vulns[full_path][f'{dep} {ver}'] = _vulns
+            except KeyError:
+                proj_vulns[full_path] = {f'{dep} {ver}': _vulns}
     if has_vulns:
         show_open('Project has dependencies with vulnerabilities',
                   details=dict(project_path=path,
