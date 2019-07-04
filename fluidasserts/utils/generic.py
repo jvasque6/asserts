@@ -119,6 +119,6 @@ def add_finding(finding: str) -> bool:
                              default_flow_style=False,
                              explicit_start=True,
                              allow_unicode=True)
-    print(message, end='', flush=True)
+    print(message, end='', flush=True, file=sys.stdout)
     print(message, end='', flush=True, file=sys.stderr)
     return True

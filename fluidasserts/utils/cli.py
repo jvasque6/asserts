@@ -8,7 +8,6 @@
 import os
 import sys
 import argparse
-import itertools
 import contextlib
 from io import StringIO
 from timeit import default_timer as timer
@@ -246,20 +245,16 @@ def get_total_unknown_checks(output_list):
                if 'status' in output and output['status'] == 'UNKNOWN')
 
 
-def filter_content(parsed_content, args):
+def filter_content(parsed: list, args) -> list:
     """Show filtered content according to args."""
-    headers = filter(lambda x: 'status' not in x,
-                     parsed_content)
-    opened = filter(lambda x: x.get('status') == 'OPEN' and
-                    args.show_open,
-                    parsed_content)
-    closed = filter(lambda x: x.get('status') == 'CLOSED' and
-                    args.show_closed,
-                    parsed_content)
-    unknown = filter(lambda x: x.get('status') == 'UNKNOWN' and
-                     args.show_unknown,
-                     parsed_content)
-    return list(itertools.chain(headers, opened, closed, unknown))
+    result: list = [
+        node
+        for node in parsed
+        if 'status' not in node
+        or (args.show_open and node.get('status') == 'OPEN')
+        or (args.show_closed and node.get('status') == 'CLOSED')
+        or (args.show_unknown and node.get('status') == 'UNKNOWN')]
+    return result
 
 
 def get_risk_levels(parsed_content):
