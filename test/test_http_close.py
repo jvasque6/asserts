@@ -592,3 +592,10 @@ def test_host_injection_close():
         '%s/host_injection_ok' % (NONEXISTANT_SERVICE))
     assert not http.has_host_header_injection(
         '%s/host_injection_ok' % (BAD_FORMAT_SERVICE))
+
+
+def test_mixed_content_close():
+    """Resource has mixed content?."""
+    assert not http.has_mixed_content(NONEXISTANT_SERVICE)
+    assert not http.has_mixed_content(BAD_FORMAT_SERVICE)
+    assert not http.has_mixed_content('https://google.com')

@@ -437,3 +437,8 @@ def test_host_injection_open():
     """Server vulnerable to Host header injection?."""
     assert http.has_host_header_injection(
         '%s/host_injection_fail' % (BASE_URL))
+
+
+def test_mixed_content_open():
+    """Resource has mixed content?."""
+    assert http.has_mixed_content('https://fluidattacks.com')

@@ -117,6 +117,17 @@ SQLI_ERROR_MSG = {
 }
 
 
+def _get_links(html_page: str) -> List:
+    """Extract links from page."""
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html_page)
+    links = [x.get('href')
+             for x in soup.findAll('a',
+                                   attrs={'href':
+                                          re.compile("^http(s)?://")})]
+    return links
+
+
 def _replace_dict_value(adict: dict, key: str, value: str) -> None:
     """
     Replace a `value` given a `key` in a complex dict.
@@ -1486,5 +1497,48 @@ def has_host_header_injection(url: str, *args, **kwargs) -> bool:
                       details=dict(url=url, fingerprint=fingerprint))
             return True
     show_close('Server not vulnerable to Host header injection',
+               details=dict(url=url, fingerprint=fingerprint))
+    return False
+
+
+@notify
+@level('low')
+@track
+def has_mixed_content(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if resource has mixed (HTTP and HTTPS) links.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    try:
+        sess = http.HTTPSession(url, *args, **kwargs)
+        fingerprint = sess.get_fingerprint()
+    except (KeyError, http.ConnError) as exc:
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+
+    links = _get_links(sess.response.text)
+    if not links:
+        show_close('No links found in site',
+                   details=dict(url=url, fingerprint=fingerprint))
+        return False
+    if any(x.startswith('http://') for x in links) and \
+            any(x.startswith('https://') for x in links):
+
+        insecure = list(filter(lambda x: x.startswith('http://'), links))
+        show_open('There is mixed content in resource',
+                  details=dict(url=url, fingerprint=fingerprint,
+                               http_links=insecure))
+        return True
+    show_close('There is not mixed content in resource',
                details=dict(url=url, fingerprint=fingerprint))
     return False
