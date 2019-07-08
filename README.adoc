@@ -8,6 +8,7 @@
 :source-highlighter:     pygments
 :keywords:               fluidasserts, fluidsignal, fsg, unit testing
 
+image:https://img.shields.io/lgtm/grade/python/g/fluidattacks/asserts.svg?logo=lgtm&logoWidth=18[link="https://lgtm.com/projects/g/fluidattacks/asserts/context:python", title="Language grade: Python"]
 image:https://img.shields.io/docker/pulls/fluidattacks/asserts.svg[link="https://hub.docker.com/r/fluidattacks/asserts"]
 image:https://ci.appveyor.com/api/projects/status/jpa4vqob49wqedig?svg=true[link="https://ci.appveyor.com/project/technologyatfluid87536/asserts", title="appveyor"]
 image:https://gitlab.com/fluidattacks/asserts/badges/master/pipeline.svg[link="https://gitlab.com/fluidattacks/asserts/commits/master",title="pipeline status"]
