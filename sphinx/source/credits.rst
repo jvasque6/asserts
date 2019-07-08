@@ -26,7 +26,7 @@ but retain moral rights.
 Copyright
 ---------
 
-© 2001-2018 Fluidsignal Group
+© 2001-2019 FluidAttacks by Fluidsignal Group
 
 -------
 License
