@@ -89,6 +89,13 @@ def test_has_any_text_open():
         INSECURE_CODE, [r'char use[r]', r'char pas{2}'], use_regex=True)
 
 
+def test_has_not_any_text_open():
+    """Check if code has some of the text in list given."""
+    assert core.has_not_any_text(INSECURE_CODE, ['char-user', 'char-pass'])
+    assert core.has_not_any_text(
+        INSECURE_CODE, [r'char-use[r]', r'char-pas{2}'], use_regex=True)
+
+
 def test_has_any_secret_open():
     """Check if code has some of the secret in the given list."""
     assert core.has_any_secret(INSECURE_CODE, ['root', 'password123'])
@@ -163,6 +170,17 @@ def test_has_any_text_close():
     assert not core.has_any_text(INSECURE_CODE,
                                  [r'char not[u]', r'char not[p]'],
                                  use_regex=True)
+
+
+def test_has_not_any_text_close():
+    """Check if code has some of the text in list given."""
+    assert not core.has_not_any_text(NON_EXISTANT_CODE,
+                                     ['char-user', 'char-pass'])
+    assert not core.has_not_any_text(INSECURE_CODE,
+                                     ['char user', 'char pass'])
+    assert not core.has_not_any_text(INSECURE_CODE,
+                                     [r'char use[r]', r'char pas{2}'],
+                                     use_regex=True)
 
 
 def test_has_any_secret_close():

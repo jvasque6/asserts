@@ -185,6 +185,49 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
 @notify
 @level('low')
 @track
+def has_not_any_text(code_dest: str,
+                     expected_list: list, use_regex: bool = False,
+                     exclude: list = None, lang_specs: dict = None) -> bool:
+    """
+    Check if not any on a list of bad text is present in given source file.
+
+    if `use_regex` equals True, Search is (case-insensitively)
+    performed by :py:func:`re.search`.
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param expected_list: List of bad text to look for in the file.
+    :param use_regex: Use regular expressions instead of literals to search.
+    """
+    # Remove duplicates
+    expected_set = set(expected_list)
+    if not lang_specs:
+        lang_specs = LANGUAGE_SPECS
+    if not use_regex:
+        expected_set = map(re.escape, expected_set)
+    any_list = '|'.join(f'(?:{exp})' for exp in expected_set)
+    try:
+        matches = lang.check_grammar_re(any_list, code_dest,
+                                        lang_specs, exclude)
+        if not matches:
+            show_open('None of the expected texts were found in code',
+                      details=dict(location=code_dest,
+                                   expected_list=expected_list,
+                                   used_regular_expressions=use_regex))
+            return True
+    except FileNotFoundError:
+        show_unknown('File does not exist',
+                     details=dict(code_dest=code_dest))
+        return False
+    show_close('Any of the expected texts are present in code',
+               details=dict(matches=matches,
+                            expected_list=expected_list,
+                            used_regular_expressions=use_regex))
+    return False
+
+
+@notify
+@level('low')
+@track
 def file_exists(code_file: str) -> bool:
     """
     Check if the given file exists.
