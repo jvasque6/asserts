@@ -1,1 +1,0 @@
-for i in code format service system; do egrep -r "^def [^__]+" $i | sed -e "s|$i/|from fluidasserts.$i import |g" | sed -e "s/.py:def / /g" | sed -e "s/from fluidasserts.\([a-zA-Z0-9_]*\) import \([a-zA-Z0-9_]*\) /\2./g" | sed -e 's/:$//g'; done
