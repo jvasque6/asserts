@@ -100,16 +100,16 @@ def is_cacheable(filename: str) -> bool:
     tag = 'meta'
     tk_pragma = CaselessKeyword('pragma')
     tk_nocache = CaselessKeyword('no-cache')
-    attrs = {'http-equiv': tk_pragma,
-             'content': tk_nocache}
+    pragma_attrs = {'http-equiv': tk_pragma,
+                    'content': tk_nocache}
 
     tk_expires = CaselessKeyword('expires')
     tk_minusone = CaselessKeyword('-1')
-    attrs = {'http-equiv': tk_expires,
-             'content': tk_minusone}
+    expires_attrs = {'http-equiv': tk_expires,
+                     'content': tk_minusone}
     try:
-        has_pragma = _has_attributes(filename, tag, attrs)
-        has_expires = _has_attributes(filename, tag, attrs)
+        has_pragma = _has_attributes(filename, tag, pragma_attrs)
+        has_expires = _has_attributes(filename, tag, expires_attrs)
     except FileNotFoundError as exc:
         show_unknown('There was an error',
                      details=dict(error=str(exc)))
@@ -118,11 +118,13 @@ def is_cacheable(filename: str) -> bool:
     if not has_pragma or not has_expires:
         result = True
         show_open('Attributes in {}'.format(filename),
-                  details=dict(attributes=str(attrs)))
+                  details=dict(pragma_attrs=str(pragma_attrs),
+                               expires_attrs=str(expires_attrs)))
     else:
         result = False
         show_close('Attributes in {}'.format(filename),
-                   details=dict(attributes=str(attrs)))
+                   details=dict(pragma_attrs=str(pragma_attrs),
+                                expires_attrs=str(expires_attrs)))
     return result
 
 

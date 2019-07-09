@@ -167,7 +167,7 @@ def has_cache_snooping(nameserver: str) -> bool:
         request = dns.message.make_query(name, dns.rdatatype.A,
                                          dns.rdataclass.IN)
 
-        response = dns.query.udp(request, nameserver, timeout=5)
+        dns.query.udp(request, nameserver, timeout=5)
 
         # Make a non-recursive request
         request = dns.message.make_query(name, dns.rdatatype.A,
