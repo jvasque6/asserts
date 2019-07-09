@@ -3,7 +3,6 @@
 """This module has helper functions for code analysis modules."""
 
 # standard imports
-import hashlib
 import os
 import re
 from typing import Callable, Dict, List
@@ -14,6 +13,7 @@ from itertools import accumulate
 from pyparsing import ParserElement, ParseException, ParseResults
 
 # local imports
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.generic import full_paths_in_dir
 
 
@@ -215,7 +215,7 @@ def _path_contains_grammar(grammar: ParserElement, path: str) -> dict:
         return {
             path: {
                 'lines': str(matched_lines)[1:-1],
-                'file_hash': file_hash(path),
+                'sha256': get_sha256(path),
             }
         }
     return {}
@@ -286,7 +286,7 @@ def block_contains_grammar(grammar: ParserElement, code_dest: str,
         vulns = {
             code_dest: {
                 'lines': str(vuln_lines)[1:-1],
-                'file_hash': file_hash(code_dest),
+                'sha256': get_sha256(code_dest),
             }
         }
     return vulns
@@ -316,23 +316,6 @@ def block_contains_empty_grammar(grammar: ParserElement, code_dest: str,
                                   search_for_empty=True)
 
 
-@lru_cache(maxsize=None, typed=True)
-def file_hash(filename: str) -> dict:
-    """
-    Get SHA256 hash from file as a dict.
-
-    :param filename: Path to the file to digest.
-    """
-    sha256 = hashlib.sha256()
-    try:
-        with open(filename, 'rb', buffering=0) as code_fd:
-            for code_byte in iter(lambda: code_fd.read(128 * 1024), b''):
-                sha256.update(code_byte)
-    except (FileNotFoundError, IsADirectoryError):
-        return None
-    return dict(sha256=sha256.hexdigest())
-
-
 def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
                            lang_spec: dict) -> Dict[str, List[str]]:
     """
@@ -357,7 +340,7 @@ def _check_grammar_in_file(grammar: ParserElement, code_dest: str,
     if lines:
         vulns[code_dest] = {
             'lines': str(lines)[1:-1],
-            'file_hash': file_hash(code_dest),
+            'sha256': get_sha256(code_dest),
         }
     return vulns
 
@@ -386,7 +369,7 @@ def _check_grammar_in_file_re(grammar: str, code_dest: str,
     if lines:
         vulns[code_dest] = {
             'lines': str(lines)[1:-1],
-            'file_hash': file_hash(code_dest),
+            'sha256': get_sha256(code_dest),
         }
     return vulns
 

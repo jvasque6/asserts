@@ -16,6 +16,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -239,7 +240,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code has "switch" with "default" clause',
                    details=dict(file=java_dest,
-                                fingerprint=lang.file_hash(java_dest)))
+                                fingerprint=get_sha256(java_dest)))
         return False
 
     show_open('Code does not have "switch" with "default" clause',
@@ -347,8 +348,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code has "if" with "else" clause',
                    details=dict(file=java_dest,
-                                fingerprint=lang.
-                                file_hash(java_dest)))
+                                fingerprint=get_sha256(java_dest)))
     else:
         show_open('Code has "if" without "else" clause',
                   details=dict(matched=vulns,

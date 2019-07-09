@@ -44,6 +44,13 @@ def test_add_info():
     assert generic.add_finding('FIN.S.0001: test finding')
 
 
+def test_get_sha256():
+    """Test add_info."""
+    expected_sha256: str = \
+        'e988f5d769a5fc3b32031fa46c75256f5c60647c0d958e1ca59816ba58643ecb'
+    assert expected_sha256 == generic.get_sha256(
+        'test/static/format/jks/open/1.jks')
+
 #
 # Closing tests
 #
@@ -55,6 +62,3 @@ def test_check_function_close():
     assert not generic.check_function(is_greater, 'a', 2)
     assert not generic.check_function(is_greater_async, 1, 2)
     assert not generic.check_function(is_greater_async, 'a', 2)
-
-test_check_function_open()
-test_check_function_close()

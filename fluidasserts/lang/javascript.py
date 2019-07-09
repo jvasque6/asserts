@@ -15,6 +15,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 LANGUAGE_SPECS = {
@@ -286,8 +287,7 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code has "if" with "else" clauses',
                    details=dict(file=js_dest,
-                                fingerprint=lang.
-                                file_hash(js_dest)))
+                                fingerprint=get_sha256(js_dest)))
     else:
         show_open('Code does not have "if" with "else" clause',
                   details=dict(matched=vulns,

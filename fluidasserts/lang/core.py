@@ -15,6 +15,7 @@ from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
 from fluidasserts.helper import lang
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -193,11 +194,11 @@ def file_exists(code_file: str) -> bool:
     if os.path.exists(code_file):
         show_open('File exists',
                   details=dict(path=code_file,
-                               fingerprint=lang.file_hash(code_file)))
+                               fingerprint=get_sha256(code_file)))
         return True
     show_close('File does not exist',
                details=dict(path=code_file,
-                            fingerprint=lang.file_hash(code_file)))
+                            fingerprint=get_sha256(code_file)))
     return False
 
 
@@ -213,11 +214,11 @@ def file_does_not_exist(code_file: str) -> bool:
     if os.path.exists(code_file):
         show_close('File exists',
                    details=dict(path=code_file,
-                                fingerprint=lang.file_hash(code_file)))
+                                fingerprint=get_sha256(code_file)))
         return False
     show_open('File does not exist',
               details=dict(path=code_file,
-                           fingerprint=lang.file_hash(code_file)))
+                           fingerprint=get_sha256(code_file)))
     return True
 
 
@@ -254,7 +255,7 @@ def has_weak_cipher(code_dest: str, expected_text: str,
                       details=dict(expected=expected_text,
                                    file=code_file,
                                    fingerprint=lang.
-                                   file_hash(code_file),
+                                   get_sha256(code_file),
                                    lines=str(vulns)[1:-1],
                                    total_vulns=len(vulns)))
     return True

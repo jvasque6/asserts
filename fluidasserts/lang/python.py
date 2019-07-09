@@ -16,6 +16,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.generic import full_paths_in_dir
 from fluidasserts.utils.decorators import track, level, notify
 
@@ -201,8 +202,7 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code does not have empty "catches"',
                    details=dict(file=py_dest,
-                                fingerprint=lang.
-                                file_hash(py_dest)))
+                                fingerprint=get_sha256(py_dest)))
     else:
         show_open('Code has empty "catches"',
                   details=dict(matched=vulns,

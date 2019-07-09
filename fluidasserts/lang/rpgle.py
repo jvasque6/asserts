@@ -15,6 +15,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 LANGUAGE_SPECS = {
@@ -187,6 +188,5 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     else:
         show_close('Code does not swallow exceptions',
                    details=dict(file=rpg_dest,
-                                fingerprint=lang.
-                                file_hash(rpg_dest)))
+                                fingerprint=get_sha256(rpg_dest)))
     return result

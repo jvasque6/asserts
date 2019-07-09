@@ -12,6 +12,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -46,7 +47,7 @@ def has_preg_ce(php_dest: str, exclude: list = None) -> bool:
         if not matches:
             show_close('Code does not allow RCE using preg_replace()',
                        details=dict(code_dest=php_dest,
-                                    fingerprint=lang.file_hash(php_dest)))
+                                    fingerprint=get_sha256(php_dest)))
             return False
     except FileNotFoundError:
         show_unknown('File does not exist', details=dict(code_dest=php_dest))

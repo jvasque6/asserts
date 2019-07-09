@@ -8,6 +8,7 @@
 import os
 import sys
 import asyncio
+import hashlib
 from functools import lru_cache
 
 # 3rd party imports
@@ -98,6 +99,23 @@ def check_function(func: Callable, *args, **kwargs) -> bool:
 def full_paths_in_dir(path: str):
     """Return a cacheable tuple of full_paths to files in a dir."""
     return tuple(_scantree(path))
+
+
+@lru_cache(maxsize=None, typed=True)
+def get_sha256(filename: str) -> dict:
+    """
+    Get SHA256 hash from file as a dict.
+
+    :param filename: Path to the file to digest.
+    """
+    sha256 = hashlib.sha256()
+    try:
+        with open(filename, 'rb', buffering=0) as code_fd:
+            for code_byte in iter(lambda: code_fd.read(128 * 1024), b''):
+                sha256.update(code_byte)
+    except (FileNotFoundError, IsADirectoryError):
+        return None
+    return sha256.hexdigest()
 
 
 def add_info(metadata: dict) -> bool:

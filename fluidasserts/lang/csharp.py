@@ -16,6 +16,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -134,8 +135,7 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code does not have empty catches',
                    details=dict(file=csharp_dest,
-                                fingerprint=lang.
-                                file_hash(csharp_dest)))
+                                fingerprint=get_sha256(csharp_dest)))
     else:
         show_open('Code has empty catches',
                   details=dict(matches=vulns, total_vulns=len(vulns)))
@@ -188,7 +188,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code has "switch" with "default" clause',
                    details=dict(file=csharp_dest,
-                                fingerprint=lang.file_hash(csharp_dest)))
+                                fingerprint=get_sha256(csharp_dest)))
     else:
         show_open('Code does not have "switch" with "default" clause',
                   details=dict(matched=vulns,
@@ -277,8 +277,7 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
     if not vulns:
         show_close('Code has "if" with "else" clauses',
                    details=dict(file=csharp_dest,
-                                fingerprint=lang.
-                                file_hash(csharp_dest)))
+                                fingerprint=get_sha256(csharp_dest)))
     else:
         show_open('Code does not have "if" with "else" clauses',
                   details=dict(matched=vulns,

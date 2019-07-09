@@ -14,6 +14,7 @@ from fluidasserts.helper import lang
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
+from fluidasserts.utils.generic import get_sha256
 from fluidasserts.utils.decorators import track, level, notify
 
 
@@ -79,8 +80,7 @@ def is_header_x_powered_by_present(webconf_dest: str,
     else:
         show_close('Header "X-Powered-By" is not present',
                    details=dict(file=webconf_dest,
-                                fingerprint=lang.
-                                file_hash(webconf_dest)))
+                                fingerprint=get_sha256(webconf_dest)))
     return result
 
 
@@ -134,8 +134,7 @@ def has_ssl_disabled(apphostconf_dest: str, exclude: list = None) -> bool:
     else:
         show_close('SSL is enabled',
                    details=dict(file=apphostconf_dest,
-                                fingerprint=lang.
-                                file_hash(apphostconf_dest)))
+                                fingerprint=get_sha256(apphostconf_dest)))
     return result
 
 
@@ -183,8 +182,7 @@ def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
     else:
         show_close('Debug is disabled',
                    details=dict(file=webconf_dest,
-                                fingerprint=lang.
-                                file_hash(webconf_dest)))
+                                fingerprint=get_sha256(webconf_dest)))
     return result
 
 
@@ -231,6 +229,5 @@ def not_custom_errors(webconf_dest: str, exclude: list = None) -> bool:
     else:
         show_close('Custom errors are enabled',
                    details=dict(file=webconf_dest,
-                                fingerprint=lang.
-                                file_hash(webconf_dest)))
+                                fingerprint=get_sha256(webconf_dest)))
     return result
