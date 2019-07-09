@@ -29,6 +29,12 @@ def _url_encode(string: str) -> str:
     return urllib.parse.quote(string, safe='')
 
 
+async def _fetch_url(session, url) -> str:
+    """Return the result of a GET request to the URL."""
+    async with session.get(url) as response:
+        return await response.text()
+
+
 def _parse_snyk_vulns(html):
     """Parse Snyk HTML content for retrieve vulnerabilities."""
     soup = BeautifulSoup(html, 'html.parser')
@@ -104,6 +110,40 @@ def get_vulns_snyk(package_manager: str, package: str, version: str) -> tuple:
         raise ConnError
 
 
+async def get_vulns_ossindex_async(
+        package_manager: str, path: str, package: str, version: str) -> tuple:
+    """
+    Search vulnerabilities on given package_manager/package/version.
+
+    :param package_manager: Package manager.
+    :param package: Package name.
+    :param version: Package version.
+    """
+    if version:
+        url = 'https://ossindex.net/v2.0/package/{}/{}/{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package),
+            _url_encode(version))
+    else:
+        url = 'https://ossindex.net/v2.0/package/{}/{}'.format(
+            _url_encode(package_manager),
+            _url_encode(package))
+
+    async with aiohttp.ClientSession() as session:
+        text = await _fetch_url(session, url)
+
+    vuln_titles = tuple()
+    resp = json.loads(text)[0]
+    if resp['id'] != 0 and resp['vulnerability-matches'] > 0:
+        vulns = resp['vulnerabilities']
+        vuln_titles = tuple([x['title'], ", ".join(x['versions'])]
+                            for x in vulns)
+        vuln_titles = tuple(reduce(
+            lambda l, x: l.append(x) or l if x not in l else l,
+            vuln_titles, []))
+    return path, package, version, vuln_titles
+
+
 async def get_vulns_snyk_async(
         package_manager: str, path: str, package: str, version: str) -> tuple:
     """
@@ -113,10 +153,6 @@ async def get_vulns_snyk_async(
     :param package: Package name.
     :param version: Package version.
     """
-    async def fetch(session, url):
-        async with session.get(url) as response:
-            return await response.text()
-
     if version:
         url = 'https://snyk.io/vuln/{}:{}@{}'.format(
             _url_encode(package_manager),
@@ -127,5 +163,5 @@ async def get_vulns_snyk_async(
             _url_encode(package_manager),
             _url_encode(package))
     async with aiohttp.ClientSession() as session:
-        html = await fetch(session, url)
+        html = await _fetch_url(session, url)
     return path, package, version, _parse_snyk_vulns(html) if html else None
