@@ -12,10 +12,10 @@ import dns.query
 import dns.rdatatype
 import dns.resolver
 import dns.update
-import dns.zone
 from dns.zone import BadZone
 from dns.zone import NoNS
 from dns.zone import NoSOA
+from dns.zone import from_xfr
 
 
 # local imports
@@ -40,7 +40,7 @@ def is_xfr_enabled(domain: str, nameserver: str) -> bool:
 
     result = True
     try:
-        zone = dns.zone.from_xfr(axfr_query, relativize=False)
+        zone = from_xfr(axfr_query, relativize=False)
         if not str(zone.origin).rstrip('.'):
             show_close('Zone transfer not enabled on server',
                        details=dict(domain=domain, nameserver=nameserver))

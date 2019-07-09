@@ -1,1 +1,3 @@
-import fluidasserts
+from fluidasserts.utils import cli
+
+cli.main()

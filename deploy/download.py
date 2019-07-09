@@ -3,7 +3,6 @@
 from requirements_detector import find_requirements
 from pip._internal import main as pipmain
 import glob
-import os
 
 ARCHS = ['x86_64', 'i686', 'armv6l', 'armv7l']
 PLATFORMS = ['linux', 'manylinux1', 'win32']
