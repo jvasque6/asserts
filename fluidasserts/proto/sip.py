@@ -68,7 +68,7 @@ Max-Forwards: 70
 
 """
     request = request.format(source_ip=source_ip, source_port=source_port,
-                             dest_ip=server, dest_port=port)
+                             dest_ip=server)
     request = request.replace('\n', '\r\n')
 
     proto = None
