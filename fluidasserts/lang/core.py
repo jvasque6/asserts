@@ -250,16 +250,14 @@ def has_weak_cipher(code_dest: str, expected_text: str,
         return False
     else:
         for code_file, vulns in b64_matches.items():
-            if vulns:
-                show_open('Code has confidential data encoded in base64',
-                          details=dict(expected=expected_text,
-                                       file=code_file,
-                                       fingerprint=lang.
-                                       file_hash(code_file),
-                                       lines=str(vulns)[1:-1],
-                                       total_vulns=len(vulns)))
-        return True
-    return False
+            show_open('Code has confidential data encoded in base64',
+                      details=dict(expected=expected_text,
+                                   file=code_file,
+                                   fingerprint=lang.
+                                   file_hash(code_file),
+                                   lines=str(vulns)[1:-1],
+                                   total_vulns=len(vulns)))
+    return True
 
 
 @notify

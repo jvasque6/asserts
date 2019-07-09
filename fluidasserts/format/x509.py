@@ -83,7 +83,6 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
     :param port: Port to connect to.
     """
     result = True
-    has_sni = False
     try:
         with connect(site, port=port) as conn:
             __cert = conn.session.serverCertChain.x509List[0].bytes
@@ -114,15 +113,9 @@ def is_cert_cn_not_equal_to_site(site: str, port: int = PORT) -> bool:
 
     if (site.lower() != cert_cn and wc_cert != cert_cn and
             not site.endswith(domain)):
-        if has_sni:
-            msg = '{} CN not equals to site. However server supports SNI'
-            show_close(msg.format(cert_cn),
-                       details=dict(site=site, port=port, cn=cert_cn))
-            result = False
-        else:
-            show_open('{} CN not equals to site'.format(cert_cn),
-                      details=dict(site=site, port=port, cn=cert_cn))
-            result = True
+        show_open('{} CN not equals to site'.format(cert_cn),
+                  details=dict(site=site, port=port, cn=cert_cn))
+        result = True
     else:
         show_close('{} CN equals to site'.format(cert_cn),
                    details=dict(site=site, port=port, cn=cert_cn))
