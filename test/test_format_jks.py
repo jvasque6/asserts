@@ -31,6 +31,18 @@ def has_no_password_protection_open():
     assert jks.has_no_password_protection(NO_PWD_FILE)
 
 
+def use_password_open():
+    """Test if jks file is protected by a password from list."""
+    assert jks.use_password(PWD_DIR, 'password123')
+    assert jks.use_password(PWD_FILE, 'password123')
+
+
+def use_passwords_open():
+    """Test if jks file is protected by a password from list."""
+    assert jks.use_passwords(PWD_DIR, ['password123', 'test'])
+    assert jks.use_passwords(PWD_FILE, ['test', 'password123'])
+
+
 #
 # Close tests
 #
@@ -43,6 +55,20 @@ def has_no_password_protection_close():
     assert not jks.has_no_password_protection(NON_EXISTING_FILE)
 
 
+def use_password_close():
+    """Test if jks file is not protected by a password from list."""
+    assert not jks.use_password(PWD_DIR, 'this-is-not-the-pass')
+    assert not jks.use_password(PWD_FILE, 'this-is-not-the-pass')
+
+
+def use_passwords_close():
+    """Test if jks file is not protected by a password from list."""
+    assert not jks.use_passwords(PWD_DIR, [])
+    assert not jks.use_passwords(PWD_DIR, ['this-is-not-the-pass', ''])
+    assert not jks.use_passwords(PWD_FILE, [])
+    assert not jks.use_passwords(PWD_FILE, ['this-is-not-the-pass', 'test'])
+
+
 #
 # Unknown tests
 #
@@ -52,3 +78,22 @@ def has_no_password_protection_unknown():
     """Test if jks file does not exist."""
     assert not jks.has_no_password_protection(NON_EXISTING_DIR)
     assert not jks.has_no_password_protection(NON_EXISTING_FILE)
+
+
+def use_password_unknown():
+    """Test if jks file does not exist."""
+    assert not jks.use_password(NON_EXISTING_DIR, '')
+    assert not jks.use_password(NON_EXISTING_DIR, 'password123')
+    assert not jks.use_password(NON_EXISTING_DIR, 'this-is-not-the-pass')
+    assert not jks.use_password(NON_EXISTING_FILE, '')
+    assert not jks.use_password(NON_EXISTING_FILE, 'password123')
+    assert not jks.use_password(NON_EXISTING_FILE, 'this-is-not-the-pass')
+
+def use_passwords_unknown():
+    """Test if jks file does not exist."""
+    assert not jks.use_passwords(NON_EXISTING_DIR, [])
+    assert not jks.use_passwords(NON_EXISTING_DIR, ['password123'])
+    assert not jks.use_passwords(NON_EXISTING_DIR, ['this-is-not-the-pass'])
+    assert not jks.use_passwords(NON_EXISTING_FILE, [])
+    assert not jks.use_passwords(NON_EXISTING_FILE, ['password123'])
+    assert not jks.use_passwords(NON_EXISTING_FILE, ['this-is-not-the-pass'])
