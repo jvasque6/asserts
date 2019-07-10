@@ -40,13 +40,13 @@ def is_a_valid_user(ip_address: str, username: str,
     fingerprint = service.get_fingerprint(ip_address)
     result = False
     try:
-        ftp = FTP()
-        ftp.connect(ip_address, port)
-        ftp.login(username, password)
-        result = True
-        show_open('FTP Authentication {}:{}'.format(ip_address, port),
-                  details=dict(username=username, password=password,
-                               fingerprint=fingerprint))
+        with FTP() as ftp:
+            ftp.connect(ip_address, port)
+            ftp.login(username, password)
+            result = True
+            show_open('FTP Authentication {}:{}'.format(ip_address, port),
+                      details=dict(username=username, password=password,
+                                   fingerprint=fingerprint))
     except error_perm:
         show_close('FTP Authentication {}:{}'.format(ip_address, port),
                    details=dict(username=username, password=password,
@@ -59,8 +59,6 @@ def is_a_valid_user(ip_address: str, username: str,
                                   error=str(exc),
                                   fingerprint=fingerprint))
         result = False
-    finally:
-        ftp.close()
     return result
 
 

@@ -37,10 +37,21 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
     try:
         service = banner.SSHService(port)
         fingerprint = service.get_fingerprint(host)
-        ssh_obj = ssh.build_ssh_object()
-        ssh_obj.connect(host, port, username=username, password=password)
-        transport = ssh_obj.get_transport()
-
+        with ssh.build_ssh_object() as ssh_obj:
+            ssh_obj.connect(host, port, username=username, password=password)
+            transport = ssh_obj.get_transport()
+    except (paramiko.ssh_exception.NoValidConnectionsError,
+            socket.timeout) as exc:
+        show_unknown('Port closed',
+                     details=dict(host=host,
+                                  port=port,
+                                  error=str(exc)))
+        return False
+    except paramiko.ssh_exception.AuthenticationException:
+        show_close('SSH does not have insecure HMAC encryption algorithms',
+                   details=dict(host=host, port=port, fingerprint=fingerprint))
+        return False
+    else:
         if "-cbc" not in transport.remote_cipher:
             show_close('SSH does not have insecure CBC encryption algorithms',
                        details=dict(host=host,
@@ -56,18 +67,7 @@ def is_cbc_used(host: str, port: int = PORT, username: str = None,
                                    fingerprint=fingerprint))
             result = True
 
-        return result
-    except (paramiko.ssh_exception.NoValidConnectionsError,
-            socket.timeout) as exc:
-        show_unknown('Port closed',
-                     details=dict(host=host,
-                                  port=port,
-                                  error=str(exc)))
-        return False
-    except paramiko.ssh_exception.AuthenticationException:
-        show_close('SSH does not have insecure HMAC encryption algorithms',
-                   details=dict(host=host, port=port, fingerprint=fingerprint))
-        return False
+    return result
 
 
 @notify
@@ -87,10 +87,21 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
     try:
         service = banner.SSHService(port)
         fingerprint = service.get_fingerprint(host)
-        ssh_obj = ssh.build_ssh_object()
-        ssh_obj.connect(host, port, username=username, password=password)
-        transport = ssh_obj.get_transport()
-
+        with ssh.build_ssh_object() as ssh_obj:
+            ssh_obj.connect(host, port, username=username, password=password)
+            transport = ssh_obj.get_transport()
+    except (paramiko.ssh_exception.NoValidConnectionsError,
+            socket.timeout) as exc:
+        show_unknown('Port closed',
+                     details=dict(host=host,
+                                  port=port,
+                                  error=str(exc)))
+        return False
+    except paramiko.ssh_exception.AuthenticationException:
+        show_close('SSH does not have insecure HMAC encryption algorithms',
+                   details=dict(host=host, port=port, fingerprint=fingerprint))
+        return False
+    else:
         if "hmac-md5" not in transport.remote_cipher:
             show_close('SSH does not have insecure HMAC encryption algorithms',
                        details=dict(host=host,
@@ -106,18 +117,7 @@ def is_hmac_used(host: str, port: int = PORT, username: str = None,
                                    fingerprint=fingerprint))
             result = True
 
-        return result
-    except (paramiko.ssh_exception.NoValidConnectionsError,
-            socket.timeout) as exc:
-        show_unknown('Port closed',
-                     details=dict(host=host,
-                                  port=port,
-                                  error=str(exc)))
-        return False
-    except paramiko.ssh_exception.AuthenticationException:
-        show_close('SSH does not have insecure HMAC encryption algorithms',
-                   details=dict(host=host, port=port, fingerprint=fingerprint))
-        return False
+    return result
 
 
 @notify

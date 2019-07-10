@@ -8,7 +8,8 @@ This module enables connections via SSH.
 
 # standard imports
 import os
-from typing import Tuple
+from contextlib import contextmanager
+from typing import Tuple, Generator
 
 # 3rd party imports
 import paramiko
@@ -25,11 +26,13 @@ class ConnError(Exception):
     """
 
 
-def build_ssh_object() -> paramiko.client.SSHClient:
+@contextmanager
+def build_ssh_object() -> Generator[paramiko.client.SSHClient, None, None]:
     """Build a Paramiko SSHClient object."""
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    return ssh
+    ssh_conn = paramiko.SSHClient()
+    ssh_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    yield ssh_conn
+    ssh_conn.close()
 
 
 # pylint: disable=too-many-locals
@@ -43,22 +46,19 @@ def ssh_user_pass(server: str, username: str, password: str,
     :param password: Password for given user.
     :param command: Command to execute in SSH Session.
     """
-    ssh = build_ssh_object()
-
     out = False
     err = False
     try:
-        ssh.connect(server, username=username, password=password)
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
-        ssh_stdin.close()
-        out = ssh_stdout.read()[:-1]
-        err = ssh_stderr.read()[:-1]
+        with build_ssh_object() as ssh_conn:
+            ssh_conn.connect(server, username=username, password=password)
+            ssh_stdin, ssh_stdout, ssh_stderr = ssh_conn.exec_command(command)
+            ssh_stdin.close()
+            out = ssh_stdout.read()[:-1]
+            err = ssh_stderr.read()[:-1]
 
     except (paramiko.ssh_exception.NoValidConnectionsError,
             paramiko.ssh_exception.AuthenticationException) as exc:
         raise ConnError(exc)
-    finally:
-        ssh.close()
     return out, err
 
 
@@ -72,38 +72,35 @@ def ssh_with_config(server: str, username: str, config_file: str,
     :param config_file: Path to SSH connection config file.
     :param command: Command to execute in SSH Session.
     """
-    ssh = build_ssh_object()
-
     out = False
     err = False
+
+    ssh_config = paramiko.SSHConfig()
+    user_config_file = os.path.expanduser(config_file)
+    if os.path.exists(user_config_file):
+        with open(user_config_file) as ssh_file:
+            ssh_config.parse(ssh_file)
+
+    user_config = ssh_config.lookup(server)
+
+    rsa_key_file = os.path.expanduser(user_config['identityfile'][0])
+    if os.path.exists(rsa_key_file):
+        pkey = paramiko.RSAKey.from_private_key_file(rsa_key_file)
+
+    cfg = {'hostname': server, 'username': username, 'pkey': pkey}
+
+    for k in ('hostname', 'username', 'port'):
+        if k in user_config:
+            cfg[k] = user_config[k]
     try:
-        ssh_config = paramiko.SSHConfig()
-        user_config_file = os.path.expanduser(config_file)
-        if os.path.exists(user_config_file):
-            with open(user_config_file) as ssh_file:
-                ssh_config.parse(ssh_file)
-
-        user_config = ssh_config.lookup(server)
-
-        rsa_key_file = os.path.expanduser(user_config['identityfile'][0])
-        if os.path.exists(rsa_key_file):
-            pkey = paramiko.RSAKey.from_private_key_file(rsa_key_file)
-
-        cfg = {'hostname': server, 'username': username, 'pkey': pkey}
-
-        for k in ('hostname', 'username', 'port'):
-            if k in user_config:
-                cfg[k] = user_config[k]
-
-        ssh.connect(**cfg)
-        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(command)
-        ssh_stdin.close()
-        out = ssh_stdout.read()[:-1]
-        err = ssh_stderr.read()[:-1]
+        with build_ssh_object() as ssh_conn:
+            ssh_conn.connect(**cfg)
+            ssh_stdin, ssh_stdout, ssh_stderr = ssh_conn.exec_command(command)
+            ssh_stdin.close()
+            out = ssh_stdout.read()[:-1]
+            err = ssh_stderr.read()[:-1]
     except paramiko.SSHException as exc:
         raise ConnError(exc)
-    finally:
-        ssh.close()
     return out, err
 
 

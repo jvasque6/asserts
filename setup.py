@@ -74,7 +74,7 @@ setup(
         'requests==2.22.0',          # fluidasserts.proto.http
         'certifi==2019.3.9',         # fluidasserts.proto.ssl
         'ldap3==2.6',                # fluidasserts.proto.ldap
-        'paramiko==2.4.2',           # fluidasserts.helper.ssh_helper
+        'paramiko==2.6.0',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
         'beautifulsoup4==4.7.1',     # fluidasserts.helper.http_helper
         'dnspython==1.15.0',         # fluidasserts.proto.dns
