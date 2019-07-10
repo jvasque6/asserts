@@ -35,30 +35,29 @@ def has_dirlisting(server: str, share: str,
     :param \*args: Optional arguments for SMB connect.
     :param \*\*kwargs: Optional arguments for SMB connection.
     """
-    conn = SMBConnection.SMBConnection(user, password,
-                                       CLIENT_MACHINE_NAME, server,
-                                       domain=domain, use_ntlm_v2=True,
-                                       is_direct_tcp=True)
     try:
-        ret = conn.connect(server, port=445)
+        with SMBConnection.SMBConnection(user, password,
+                                         CLIENT_MACHINE_NAME, server,
+                                         domain=domain, use_ntlm_v2=True,
+                                         is_direct_tcp=True) as conn:
+
+            ret = conn.connect(server, port=445)
+            if not ret:
+                show_unknown('There was an error connecting to SMB',
+                             details=dict(server=server, domain=domain))
+                return False
+            conn.listPath(share, '/')
+            show_open('Directory listing is possible',
+                      details=dict(domain=domain,
+                                   user=user,
+                                   server=server,
+                                   share=share))
+            return True
     except OSError as exc:
         show_unknown('There was an error connecting to SMB',
                      details=dict(server=server, domain=domain,
                                   error=str(exc)))
         return False
-    if not ret:
-        show_unknown('There was an error connecting to SMB',
-                     details=dict(server=server, domain=domain))
-        return False
-    try:
-        conn.listPath(share, '/')
-        show_open('Directory listing is possible',
-                  details=dict(domain=domain,
-                               user=user,
-                               server=server,
-                               share=share))
-
-        return True
     except smb_structs.OperationFailure:
         show_close('Directory listing not possible',
                    details=dict(domain=domain,
@@ -66,8 +65,6 @@ def has_dirlisting(server: str, share: str,
                                 server=server,
                                 share=share))
         return False
-    finally:
-        conn.close()
 
 
 @notify
@@ -83,27 +80,25 @@ def is_anonymous_enabled(server: str,
     """
     user = 'anonymous'
     password = ''
-    conn = SMBConnection.SMBConnection(user, password,
-                                       CLIENT_MACHINE_NAME, server,
-                                       domain=domain, use_ntlm_v2=True,
-                                       is_direct_tcp=True)
     try:
-        ret = conn.connect(server, port=445)
+        with SMBConnection.SMBConnection(user, password,
+                                         CLIENT_MACHINE_NAME, server,
+                                         domain=domain, use_ntlm_v2=True,
+                                         is_direct_tcp=True) as conn:
+            ret = conn.connect(server, port=445)
+            if not ret:
+                show_close('Anonymous login not possible',
+                           details=dict(domain=domain, user=user,
+                                        server=server))
+                return False
+            show_open('Anonymous login enabled',
+                      details=dict(domain=domain, user=user, server=server))
+            return True
     except OSError as exc:
         show_unknown('There was an error connecting to SMB',
                      details=dict(server=server, domain=domain,
                                   error=str(exc)))
         return False
-    else:
-        if not ret:
-            show_close('Anonymous login not possible',
-                       details=dict(domain=domain, user=user, server=server))
-
-            return False
-        conn.close()
-        show_open('Anonymous login enabled',
-                  details=dict(domain=domain, user=user, server=server))
-        return True
 
 
 @notify
@@ -118,26 +113,26 @@ def is_signing_disabled(server, user, password, domain='WORKGROUP'):
     :param password: Password for given user.
     :param domain: The network domain/workgroup. Defaults to 'WORKGROUP'
     """
-    conn = SMBConnection.SMBConnection(user, password,
-                                       CLIENT_MACHINE_NAME, server,
-                                       domain=domain, use_ntlm_v2=True,
-                                       is_direct_tcp=True)
     try:
-        ret = conn.connect(server, port=445)
+        with SMBConnection.SMBConnection(user, password,
+                                         CLIENT_MACHINE_NAME, server,
+                                         domain=domain, use_ntlm_v2=True,
+                                         is_direct_tcp=True) as conn:
+            ret = conn.connect(server, port=445)
+            if not ret:
+                show_unknown('There was an error connecting to SMB',
+                             details=dict(server=server, domain=domain))
+                return False
+            if conn.is_signing_active:
+                show_close('SMB has signing active',
+                           details=dict(domain=domain, server=server,
+                                        user=user))
+                return False
+            show_open('SMB has signing disabled',
+                      details=dict(domain=domain, server=server, user=user))
+            return True
     except OSError as exc:
         show_unknown('There was an error connecting to SMB',
                      details=dict(server=server, domain=domain,
                                   error=str(exc)))
         return False
-    if not ret:
-        show_unknown('There was an error connecting to SMB',
-                     details=dict(server=server, domain=domain))
-        return False
-    if conn.is_signing_active:
-        show_close('SMB has signing active',
-                   details=dict(domain=domain, server=server, user=user))
-        return False
-    conn.close()
-    show_open('SMB has signing disabled',
-              details=dict(domain=domain, server=server, user=user))
-    return True
