@@ -19,7 +19,6 @@ from typing import Callable
 from fluidasserts import show_close
 from fluidasserts import show_open
 from fluidasserts import show_unknown
-from fluidasserts import show_metadata
 from fluidasserts import method_stats_set_owner
 from fluidasserts.utils.decorators import track, level, notify
 
@@ -116,15 +115,6 @@ def get_sha256(filename: str) -> dict:
     except (FileNotFoundError, IsADirectoryError):
         return None
     return sha256.hexdigest()
-
-
-def add_info(metadata: dict) -> bool:
-    """Print arbitrary info in the Asserts output.
-
-    :param metadata: Dict with data to be printed.
-    """
-    show_metadata(metadata)
-    return True
 
 
 def add_finding(finding: str) -> bool:

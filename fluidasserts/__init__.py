@@ -270,16 +270,6 @@ def show_unknown(message, details=None):
     print(message.as_yaml(), end='', flush=True)
 
 
-def show_metadata(message):
-    """Show unknown message."""
-    check_cli()
-    yaml_msg = yaml.safe_dump(message,
-                              default_flow_style=False,
-                              explicit_start=True,
-                              allow_unicode=True)
-    print(yaml_msg, end='', flush=True)
-
-
 # Set __version__
 try:
     _DIST = get_distribution('fluidasserts')
