@@ -89,6 +89,8 @@ def accepts_insecure_accept_header(url: str, *args, **kwargs) -> bool:
     expected_codes = [406, 415]
     if 'headers' in kwargs:
         kwargs['headers'].update({'Accept': '*/*'})
+    elif kwargs:
+        kwargs['headers'] = {'Accept': '*/*'}
     else:
         kwargs = {'headers': {'Accept': '*/*'}}
     try:
