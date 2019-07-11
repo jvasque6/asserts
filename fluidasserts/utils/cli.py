@@ -403,7 +403,7 @@ def exec_wrapper(exploit):
     lint_exploit(exploit)
     with stdout_redir() as stdout_result, stderr_redir() as stderr_result:
         code = compile(exploit, 'exploit', 'exec', optimize=0)
-        exec(code)
+        exec(code, dict(), dict())
     print(stderr_result.getvalue(), end='', file=sys.stderr)
     return stdout_result.getvalue()
 
