@@ -7,6 +7,7 @@
 # standard imports
 import os
 import sys
+import textwrap
 import argparse
 import contextlib
 from io import StringIO
@@ -307,14 +308,15 @@ def print_message(message, args):
 def show_banner(args):
     """Show Asserts banner."""
     enable_win_colors()
-    header = """# Fluid Asserts (v. {})
-#  ___
-# | >>|> fluid
-# |___|  attacks, we hack your software
-#
-# Loading attack modules ...
-#
-""".format(fluidasserts.__version__)
+    header = textwrap.dedent(f"""\
+        # Fluid Asserts (v. {fluidasserts.__version__})
+        #  ___
+        # | >>|> fluid
+        # |___|  attacks, we hack your software
+        #
+        # Loading attack modules ...
+        #
+        """)
 
     colorize_text(header, args.no_color)
 
@@ -381,12 +383,12 @@ def lint_exploit(exploit):
 
     if warnings:
         enable_win_colors()
-        message = """
----
-linting: warnings
-  {}
+        message = textwrap.dedent("""
+            ---
+            linting: warnings
+            {}
 
-""".format("\n  ".join(warnings))
+            """).format("\n  ".join(warnings))
         highlight(message, PropertiesLexer(),
                   TerminalFormatter(colorscheme=UNKNOWN_COLORS),
                   sys.stderr)
@@ -404,155 +406,155 @@ def exec_wrapper(exploit):
 
 def exec_http_package(urls):
     """Execute generic checks of HTTP package."""
-    template = """
-from fluidasserts.proto import http
-"""
+    template = textwrap.dedent("""\
+        from fluidasserts.proto import http
+        """)
     for url in urls:
-        template += """
-http.is_header_x_asp_net_version_present('__url__')
-http.is_header_x_powered_by_present('__url__')
-http.is_header_access_control_allow_origin_missing('__url__')
-http.is_header_cache_control_missing('__url__')
-http.is_header_content_security_policy_missing('__url__')
-http.is_header_content_type_missing('__url__')
-http.is_header_expires_missing('__url__')
-http.is_header_pragma_missing('__url__')
-http.is_header_server_present('__url__')
-http.is_header_x_content_type_options_missing('__url__')
-http.is_header_x_frame_options_missing('__url__')
-http.is_header_perm_cross_dom_pol_missing('__url__')
-http.is_header_x_xxs_protection_missing('__url__')
-http.is_header_hsts_missing('__url__')
-http.has_trace_method('__url__')
-http.has_delete_method('__url__')
-http.has_put_method('__url__')
-http.is_sessionid_exposed('__url__')
-http.is_version_visible('__url__')
-http.has_dirlisting('__url__')
-http.has_clear_viewstate('__url__')
-http.is_response_delayed('__url__')
-http.has_clear_viewstate('__url__')
-http.is_date_unsyncd('__url__')
-http.has_host_header_injection('__url__')
-""".replace('__url__', url)
+        template += textwrap.dedent("""
+            http.is_header_x_asp_net_version_present('__url__')
+            http.is_header_x_powered_by_present('__url__')
+            http.is_header_access_control_allow_origin_missing('__url__')
+            http.is_header_cache_control_missing('__url__')
+            http.is_header_content_security_policy_missing('__url__')
+            http.is_header_content_type_missing('__url__')
+            http.is_header_expires_missing('__url__')
+            http.is_header_pragma_missing('__url__')
+            http.is_header_server_present('__url__')
+            http.is_header_x_content_type_options_missing('__url__')
+            http.is_header_x_frame_options_missing('__url__')
+            http.is_header_perm_cross_dom_pol_missing('__url__')
+            http.is_header_x_xxs_protection_missing('__url__')
+            http.is_header_hsts_missing('__url__')
+            http.has_trace_method('__url__')
+            http.has_delete_method('__url__')
+            http.has_put_method('__url__')
+            http.is_sessionid_exposed('__url__')
+            http.is_version_visible('__url__')
+            http.has_dirlisting('__url__')
+            http.has_clear_viewstate('__url__')
+            http.is_response_delayed('__url__')
+            http.has_clear_viewstate('__url__')
+            http.is_date_unsyncd('__url__')
+            http.has_host_header_injection('__url__')
+            """).replace('__url__', url)
     return exec_wrapper(template)
 
 
 def exec_ssl_package(ip_addresses):
     """Execute generic checks of SSL package."""
-    template = """
-from fluidasserts.proto import ssl
-from fluidasserts.format import x509
-"""
+    template = textwrap.dedent("""\
+        from fluidasserts.proto import ssl
+        from fluidasserts.format import x509
+        """)
     for ip_addr in ip_addresses:
-        template += """
-ssl.is_pfs_disabled('__ip__')
-ssl.is_sslv3_enabled('__ip__')
-ssl.is_tlsv1_enabled('__ip__')
-ssl.is_tlsv11_enabled('__ip__')
-ssl.not_tls13_enabled('__ip__')
-ssl.has_poodle_tls('__ip__')
-ssl.has_poodle_sslv3('__ip__')
-ssl.has_breach('__ip__')
-ssl.allows_anon_ciphers('__ip__')
-ssl.allows_weak_ciphers('__ip__')
-ssl.has_beast('__ip__')
-ssl.has_heartbleed('__ip__')
-ssl.has_sweet32('__ip__')
-ssl.allows_modified_mac('__ip__')
-ssl.allows_insecure_downgrade('__ip__')
-ssl.tls_uses_cbc('__ip__')
-ssl.has_tls13_downgrade_vuln('__ip__')
-x509.is_cert_cn_not_equal_to_site('__ip__')
-x509.is_cert_inactive('__ip__')
-x509.is_cert_validity_lifespan_unsafe('__ip__')
-x509.is_sha1_used('__ip__')
-x509.is_md5_used('__ip__')
-x509.is_cert_untrusted('__ip__')
-""".replace('__ip__', ip_addr)
+        template += textwrap.dedent("""
+            ssl.is_pfs_disabled('__ip__')
+            ssl.is_sslv3_enabled('__ip__')
+            ssl.is_tlsv1_enabled('__ip__')
+            ssl.is_tlsv11_enabled('__ip__')
+            ssl.not_tls13_enabled('__ip__')
+            ssl.has_poodle_tls('__ip__')
+            ssl.has_poodle_sslv3('__ip__')
+            ssl.has_breach('__ip__')
+            ssl.allows_anon_ciphers('__ip__')
+            ssl.allows_weak_ciphers('__ip__')
+            ssl.has_beast('__ip__')
+            ssl.has_heartbleed('__ip__')
+            ssl.has_sweet32('__ip__')
+            ssl.allows_modified_mac('__ip__')
+            ssl.allows_insecure_downgrade('__ip__')
+            ssl.tls_uses_cbc('__ip__')
+            ssl.has_tls13_downgrade_vuln('__ip__')
+            x509.is_cert_cn_not_equal_to_site('__ip__')
+            x509.is_cert_inactive('__ip__')
+            x509.is_cert_validity_lifespan_unsafe('__ip__')
+            x509.is_sha1_used('__ip__')
+            x509.is_md5_used('__ip__')
+            x509.is_cert_untrusted('__ip__')
+            """).replace('__ip__', ip_addr)
     return exec_wrapper(template)
 
 
 def exec_dns_package(nameservers):
     """Execute generic checks of DNS package."""
-    template = """
-from fluidasserts.proto import dns
-"""
+    template = textwrap.dedent("""\
+        from fluidasserts.proto import dns
+        """)
     for nameserver in nameservers:
-        template += """
-dns.has_cache_snooping('__ip__')
-dns.has_recursion('__ip__')
-dns.can_amplify('__ip__')
-""".replace('__ip__', nameserver)
+        template += textwrap.dedent("""
+            dns.has_cache_snooping('__ip__')
+            dns.has_recursion('__ip__')
+            dns.can_amplify('__ip__')
+            """).replace('__ip__', nameserver)
     return exec_wrapper(template)
 
 
 def exec_lang_package(codes):
     """Execute generic checks of LANG package."""
-    template = """
-from fluidasserts.lang import csharp
-from fluidasserts.lang import dotnetconfig
-from fluidasserts.lang import html
-from fluidasserts.lang import java
-from fluidasserts.lang import javascript
-from fluidasserts.lang import python
-from fluidasserts.lang import rpgle
-from fluidasserts.lang import php
-from fluidasserts.proto import git
-from fluidasserts.sca import maven
-from fluidasserts.sca import nuget
-from fluidasserts.sca import pypi
-from fluidasserts.sca import npm
-"""
+    template = textwrap.dedent("""\
+        from fluidasserts.lang import csharp
+        from fluidasserts.lang import dotnetconfig
+        from fluidasserts.lang import html
+        from fluidasserts.lang import java
+        from fluidasserts.lang import javascript
+        from fluidasserts.lang import python
+        from fluidasserts.lang import rpgle
+        from fluidasserts.lang import php
+        from fluidasserts.proto import git
+        from fluidasserts.sca import maven
+        from fluidasserts.sca import nuget
+        from fluidasserts.sca import pypi
+        from fluidasserts.sca import npm
+        """)
     for code in codes:
-        template += """
-csharp.has_generic_exceptions('__code__')
-csharp.swallows_exceptions('__code__')
-csharp.has_switch_without_default('__code__')
-csharp.has_insecure_randoms('__code__')
-csharp.has_if_without_else('__code__')
-csharp.uses_md5_hash('__code__')
-csharp.uses_sha1_hash('__code__')
-csharp.uses_ecb_encryption_mode('__code__')
-csharp.uses_debug_writeline('__code__')
-csharp.uses_console_writeline('__code__')
-dotnetconfig.is_header_x_powered_by_present('__code__')
-dotnetconfig.has_ssl_disabled('__code__')
-dotnetconfig.has_debug_enabled('__code__')
-dotnetconfig.not_custom_errors('__code__')
-java.has_generic_exceptions('__code__')
-java.uses_catch_for_null_pointer_exception('__code__')
-java.uses_print_stack_trace('__code__')
-java.swallows_exceptions('__code__')
-java.has_switch_without_default('__code__')
-java.has_insecure_randoms('__code__')
-java.has_if_without_else('__code__')
-java.uses_md5_hash('__code__')
-java.uses_sha1_hash('__code__')
-java.uses_des_algorithm('__code__')
-java.has_log_injection('__code__')
-java.uses_system_exit('__code__')
-javascript.uses_console_log('__code__')
-javascript.uses_eval('__code__')
-javascript.uses_localstorage('__code__')
-javascript.has_insecure_randoms('__code__')
-javascript.swallows_exceptions('__code__')
-javascript.has_switch_without_default('__code__')
-javascript.has_if_without_else('__code__')
-python.has_generic_exceptions('__code__')
-python.swallows_exceptions('__code__')
-python.uses_insecure_functions('__code__')
-rpgle.has_dos_dow_sqlcod('__code__')
-rpgle.has_unitialized_vars('__code__')
-rpgle.has_generic_exceptions('__code__')
-rpgle.swallows_exceptions('__code__')
-php.has_preg_ce('__code__')
-git.has_insecure_gitignore('__code__')
-maven.project_has_vulnerabilities('__code__')
-nuget.project_has_vulnerabilities('__code__')
-pypi.project_has_vulnerabilities('__code__')
-npm.project_has_vulnerabilities('__code__')
-""".replace('__code__', code)
+        template += textwrap.dedent("""
+            csharp.has_generic_exceptions('__code__')
+            csharp.swallows_exceptions('__code__')
+            csharp.has_switch_without_default('__code__')
+            csharp.has_insecure_randoms('__code__')
+            csharp.has_if_without_else('__code__')
+            csharp.uses_md5_hash('__code__')
+            csharp.uses_sha1_hash('__code__')
+            csharp.uses_ecb_encryption_mode('__code__')
+            csharp.uses_debug_writeline('__code__')
+            csharp.uses_console_writeline('__code__')
+            dotnetconfig.is_header_x_powered_by_present('__code__')
+            dotnetconfig.has_ssl_disabled('__code__')
+            dotnetconfig.has_debug_enabled('__code__')
+            dotnetconfig.not_custom_errors('__code__')
+            java.has_generic_exceptions('__code__')
+            java.uses_catch_for_null_pointer_exception('__code__')
+            java.uses_print_stack_trace('__code__')
+            java.swallows_exceptions('__code__')
+            java.has_switch_without_default('__code__')
+            java.has_insecure_randoms('__code__')
+            java.has_if_without_else('__code__')
+            java.uses_md5_hash('__code__')
+            java.uses_sha1_hash('__code__')
+            java.uses_des_algorithm('__code__')
+            java.has_log_injection('__code__')
+            java.uses_system_exit('__code__')
+            javascript.uses_console_log('__code__')
+            javascript.uses_eval('__code__')
+            javascript.uses_localstorage('__code__')
+            javascript.has_insecure_randoms('__code__')
+            javascript.swallows_exceptions('__code__')
+            javascript.has_switch_without_default('__code__')
+            javascript.has_if_without_else('__code__')
+            python.has_generic_exceptions('__code__')
+            python.swallows_exceptions('__code__')
+            python.uses_insecure_functions('__code__')
+            rpgle.has_dos_dow_sqlcod('__code__')
+            rpgle.has_unitialized_vars('__code__')
+            rpgle.has_generic_exceptions('__code__')
+            rpgle.swallows_exceptions('__code__')
+            php.has_preg_ce('__code__')
+            git.has_insecure_gitignore('__code__')
+            maven.project_has_vulnerabilities('__code__')
+            nuget.project_has_vulnerabilities('__code__')
+            pypi.project_has_vulnerabilities('__code__')
+            npm.project_has_vulnerabilities('__code__')
+            """).replace('__code__', code)
     return exec_wrapper(template)
 
 
@@ -598,8 +600,8 @@ def check_boolean_env_var(var_name):
     if var_name in os.environ:
         accepted_values = ['true', 'false']
         if os.environ[var_name] not in accepted_values:
-            print(var_name + ' env variable is \
-set but with an unknown value. It must be "true" or "false".')
+            print((f'{var_name} env variable is set but with an '
+                   f'unknown value. It must be "true" or "false".'))
             sys.exit(-1)
 
 
@@ -635,11 +637,11 @@ def main():
     argparser.add_argument('-S', '--ssl', nargs='+', metavar='IP',
                            help='perform generic SSL checks over given IP')
     argparser.add_argument('-D', '--dns', nargs='+', metavar='NS',
-                           help='perform generic DNS checks \
-over given nameserver')
+                           help=('perform generic DNS checks '
+                                 'over given nameserver'))
     argparser.add_argument('-L', '--lang', nargs='+', metavar='FILE/DIR',
-                           help='perform static security checks over \
-given files or directories')
+                           help=('perform static security checks '
+                                 'over given files or directories'))
     argparser.add_argument('exploits', nargs='*', help='exploits to execute')
 
     args = argparser.parse_args()
