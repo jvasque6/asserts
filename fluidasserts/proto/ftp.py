@@ -43,6 +43,7 @@ def is_a_valid_user(ip_address: str, username: str,
         with FTP() as ftp:
             ftp.connect(ip_address, port)
             ftp.login(username, password)
+            ftp.makepasv()
             result = True
             show_open('FTP Authentication {}:{}'.format(ip_address, port),
                       details=dict(username=username, password=password,
