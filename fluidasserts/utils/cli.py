@@ -327,8 +327,10 @@ def stdout_redir():
     old = sys.stdout
     stdout = StringIO()
     sys.stdout = stdout
-    yield stdout
-    sys.stdout = old
+    try:
+        yield stdout
+    finally:
+        sys.stdout = old
 
 
 @contextlib.contextmanager
@@ -337,8 +339,10 @@ def stderr_redir():
     old = sys.stderr
     stderr = StringIO()
     sys.stderr = stderr
-    yield stderr
-    sys.stderr = old
+    try:
+        yield stderr
+    finally:
+        sys.stderr = old
 
 
 def lint_exploit(exploit):
