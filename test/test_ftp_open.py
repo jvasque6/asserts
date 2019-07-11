@@ -35,7 +35,6 @@ FTP_PORT = 21
 # Open tests
 #
 
-
 @pytest.mark.parametrize('get_mock_ip', ['ftp_weak'], indirect=True)
 def test_is_anonymous_enabled_open(get_mock_ip):
     """Servidor FTP vulnerable SI soporta conexion anonima?."""
@@ -49,18 +48,6 @@ def test_is_admin_enabled_open(get_mock_ip):
 
 
 @pytest.mark.parametrize('get_mock_ip', ['ftp_weak'], indirect=True)
-def test_user_without_password_open(get_mock_ip):
-    """Servidor FTP vulnerable SI autentica usuario sin clave?."""
-    assert ftp.user_without_password(get_mock_ip, NONPASS_USER)
-
-
-@pytest.mark.parametrize('get_mock_ip', ['ftp_weak'], indirect=True)
 def test_is_a_valid_user_open(get_mock_ip):
     """Servidor FTP vulnerable SI autentica a usuario adivinado?."""
     assert ftp.is_a_valid_user(get_mock_ip, GUESSED_USER, GUESSED_PASS)
-
-
-@pytest.mark.parametrize('get_mock_ip', ['ftp_weak'], indirect=True)
-def test_is_version_visible_open(get_mock_ip):
-    """Servidor FTP vulnerable SI muestra version?."""
-    assert ftp.is_version_visible(get_mock_ip)

@@ -88,31 +88,6 @@ class Service():
         """
 
 
-class FTPService(Service):
-    """FTP Service definition."""
-
-    def __init__(self, port: int = 21, is_active: bool = False,
-                 is_ssl: bool = False, payload: str = None) -> None:
-        """Build a new FTPService object."""
-        super(FTPService, self).__init__(port=port,
-                                         is_active=is_active,
-                                         is_ssl=is_ssl,
-                                         payload=payload)
-
-    def get_version(self, server: str) -> Optional[str]:
-        """
-        Get version.
-
-        :param server: Server to connect to.
-        """
-        banner = self.get_banner(server)
-        regex_match = re.search(r'220.(.*)', banner)
-        version = regex_match.group(1)
-        if len(version) < 3:
-            return None
-        return version
-
-
 class SMTPService(Service):
     """SMTP Service definition."""
 

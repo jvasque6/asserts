@@ -58,9 +58,3 @@ def test_user_without_password_close(get_mock_ip):
 def test_is_a_valid_user_close(get_mock_ip):
     """Servidor FTP vulnerable SI autentica a usuario adivinado?."""
     assert not ftp.is_a_valid_user(get_mock_ip, GUESSED_USER, GUESSED_PASS)
-
-
-@pytest.mark.parametrize('get_mock_ip', ['ftp_hard'], indirect=True)
-def test_is_version_visible_close(get_mock_ip):
-    """Servidor FTP vulnerable SI muestra version?."""
-    assert not ftp.is_version_visible(get_mock_ip)
