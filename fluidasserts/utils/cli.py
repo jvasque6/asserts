@@ -9,8 +9,10 @@ import os
 import sys
 import textwrap
 import argparse
+import itertools
 import contextlib
 from io import StringIO
+from typing import Dict, Tuple
 from timeit import default_timer as timer
 from multiprocessing import Pool, cpu_count
 
@@ -33,6 +35,28 @@ import fluidasserts
 
 
 OUTFILE = sys.stdout
+
+EXIT_CODES: Dict[str, int] = {
+    'closed': 0,
+    'open': 1,
+    'unknown': 0,
+
+    'config-error': 78,
+
+    'exploit-error': 1,
+    'exploit-not-found': 0,
+}
+
+RICH_EXIT_CODES: Dict[str, int] = {
+    'closed': 0,
+    'open': 101,
+    'unknown': 102,
+
+    'config-error': 78,
+
+    'exploit-error': 103,
+    'exploit-not-found': 104,
+}
 
 OPEN_COLORS = {
     Token: ('', ''),
@@ -191,6 +215,8 @@ def colorize(parsed_content):
                 style = CLOSE_COLORS
             elif node['status'] == 'UNKNOWN':
                 style = UNKNOWN_COLORS
+            elif node['status'] == 'ERROR':
+                style = OPEN_COLORS
         except KeyError:
             style = SUMMARY_COLORS
 
@@ -203,13 +229,11 @@ def colorize(parsed_content):
                   OUTFILE)
 
 
-def return_strict(condition):
+def exit_asserts(reason: str) -> None:
     """Return according to FA_STRICT value."""
-    if 'FA_STRICT' in os.environ:
-        if os.environ['FA_STRICT'] == 'true':
-            if condition:
-                return 1
-    return 0
+    if os.environ.get('FA_STRICT') == 'true':
+        sys.exit(EXIT_CODES[reason])
+    sys.exit(0)
 
 
 def get_parsed_output(content):
@@ -218,7 +242,7 @@ def get_parsed_output(content):
         ret = [x for x in yaml.safe_load_all(content) if x]
     except yaml.scanner.ScannerError:  # pragma: no cover
         print(content, flush=True)
-        sys.exit(return_strict(True))
+        exit_asserts('exploit-error')
     else:
         return ret
 
@@ -246,12 +270,19 @@ def get_total_unknown_checks(output_list):
                if 'status' in output and output['status'] == 'UNKNOWN')
 
 
+def get_total_error_checks(output_list):
+    """Get total error checks."""
+    return sum(1 for output in output_list
+               if 'status' in output and output['status'] == 'ERROR')
+
+
 def filter_content(parsed: list, args) -> list:
     """Show filtered content according to args."""
     result: list = [
         node
         for node in parsed
         if 'status' not in node
+        or (node.get('status') == 'ERROR')
         or (args.show_open and node.get('status') == 'OPEN')
         or (args.show_closed and node.get('status') == 'CLOSED')
         or (args.show_unknown and node.get('status') == 'UNKNOWN')]
@@ -398,12 +429,23 @@ def lint_exploit(exploit):
                   sys.stderr)
 
 
-def exec_wrapper(exploit):
-    """Execute exploit wrapper."""
-    lint_exploit(exploit)
-    with stdout_redir() as stdout_result, stderr_redir() as stderr_result:
-        code = compile(exploit, 'exploit', 'exec', optimize=0)
-        exec(code, dict(), dict())
+def exec_wrapper(exploit_name: str, exploit_content: str) -> str:
+    """Execute an exploit and handle its errors, propagate it's stdout."""
+    lint_exploit(exploit_content)
+    try:
+        with stdout_redir() as stdout_result, stderr_redir() as stderr_result:
+            code = compile(exploit_content, exploit_name, 'exec', optimize=0)
+            exec(code, dict(), dict())
+    except BaseException as exc:  # pylint: disable=broad-except
+        print(stderr_result.getvalue(), end='', file=sys.stderr)
+        print(stdout_result.getvalue(), end='', file=sys.stdout)
+        return yaml.safe_dump(dict(status='ERROR',
+                                   exploit=exploit_name,
+                                   exception=str(type(exc)),
+                                   message=str(exc)),
+                              default_flow_style=False,
+                              explicit_start=True,
+                              allow_unicode=True)
     print(stderr_result.getvalue(), end='', file=sys.stderr)
     return stdout_result.getvalue()
 
@@ -441,7 +483,7 @@ def exec_http_package(urls):
             http.is_date_unsyncd('__url__')
             http.has_host_header_injection('__url__')
             """).replace('__url__', url)
-    return exec_wrapper(template)
+    return exec_wrapper('built-in HTTP package', template)
 
 
 def exec_ssl_package(ip_addresses):
@@ -476,7 +518,7 @@ def exec_ssl_package(ip_addresses):
             x509.is_md5_used('__ip__')
             x509.is_cert_untrusted('__ip__')
             """).replace('__ip__', ip_addr)
-    return exec_wrapper(template)
+    return exec_wrapper('built-in SSL package', template)
 
 
 def exec_dns_package(nameservers):
@@ -490,7 +532,7 @@ def exec_dns_package(nameservers):
             dns.has_recursion('__ip__')
             dns.can_amplify('__ip__')
             """).replace('__ip__', nameserver)
-    return exec_wrapper(template)
+    return exec_wrapper('built-in DNS package', template)
 
 
 def exec_lang_package(codes):
@@ -559,13 +601,13 @@ def exec_lang_package(codes):
             pypi.project_has_vulnerabilities('__code__')
             npm.project_has_vulnerabilities('__code__')
             """).replace('__code__', code)
-    return exec_wrapper(template)
+    return exec_wrapper('built-in language package', template)
 
 
-def get_exploit_content(exploit_path: str) -> str:
+def get_exploit_content(exploit_path: str) -> Tuple[str, str]:
     """Read the exploit as a string."""
     with open(exploit_path) as exploit:
-        return exploit.read()
+        return exploit_path, exploit.read()
 
 
 def exec_exploits(exploit_paths: list, enable_multiprocessing: bool) -> str:
@@ -574,13 +616,13 @@ def exec_exploits(exploit_paths: list, enable_multiprocessing: bool) -> str:
         exploit_contents = map(get_exploit_content, exploit_paths)
         if enable_multiprocessing:
             with Pool(processes=cpu_count()) as agents:
-                results = agents.map(exec_wrapper, exploit_contents, 1)
+                results = agents.starmap(exec_wrapper, exploit_contents, 1)
         else:
-            results = map(exec_wrapper, exploit_contents)
+            results = itertools.starmap(exec_wrapper, exploit_contents)
         return "".join(results)
     except FileNotFoundError:
         print('Exploit not found')
-        sys.exit(return_strict(False))
+        exit_asserts('exploit-not-found')
 
 
 def get_content(args):
@@ -606,7 +648,7 @@ def check_boolean_env_var(var_name):
         if os.environ[var_name] not in accepted_values:
             print((f'{var_name} env variable is set but with an '
                    f'unknown value. It must be "true" or "false".'))
-            sys.exit(-1)
+            exit_asserts('config-error')
 
 
 def main():
@@ -627,6 +669,9 @@ def main():
                            action='store_true')
     argparser.add_argument('-ms', '--show-method-stats',
                            help='show method-level stats at the end',
+                           action='store_true')
+    argparser.add_argument('-eec', '--enrich-exit-codes',
+                           help='make the exit codes more expressive',
                            action='store_true')
     argparser.add_argument('-mp', '--multiprocessing',
                            help=('enable multiprocessing over '
@@ -654,7 +699,11 @@ def main():
     if not args.exploits and not args.http \
        and not args.ssl and not args.dns and not args.lang:
         argparser.print_help()
-        sys.exit(-1)
+        exit_asserts('config-error')
+
+    if args.enrich_exit_codes:
+        global EXIT_CODES
+        EXIT_CODES = RICH_EXIT_CODES
 
     check_boolean_env_var('FA_STRICT')
     check_boolean_env_var('FA_NOTRACK')
@@ -674,6 +723,7 @@ def main():
     open_checks = get_total_open_checks(parsed)
     closed_checks = get_total_closed_checks(parsed)
     unknown_checks = get_total_unknown_checks(parsed)
+    error_checks = get_total_error_checks(parsed)
     div_checks = total_checks if total_checks else 1
 
     final_message = {
@@ -681,6 +731,9 @@ def main():
             'test time': '%.4f seconds' % elapsed_time,
             'checks': {
                 'total': '{} ({}%)'.format(total_checks, '100'),
+                'errors':
+                    '{} ({:.2f}%)'.format(error_checks,
+                                          error_checks / div_checks * 100.0),
                 'unknown':
                     '{} ({:.2f}%)'.format(unknown_checks,
                                           unknown_checks / div_checks * 100.0),
@@ -721,4 +774,11 @@ def main():
             fd_out.write(result)
             fd_out.write(message)
 
-    sys.exit(return_strict(open_checks))
+    if error_checks:
+        exit_asserts('exploit-error')
+    elif unknown_checks:
+        exit_asserts('unknown')
+    elif open_checks:
+        exit_asserts('open')
+    else:
+        exit_asserts('closed')
