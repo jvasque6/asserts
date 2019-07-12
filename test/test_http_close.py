@@ -294,11 +294,17 @@ def test_a8_csrf_close(get_mock_ip):
 def test_access_control_allow_origin_close():
     """Header Access-Control-Allow-Origin establecido?."""
     assert not http.is_header_access_control_allow_origin_missing(
-        '%s/access_control_allow_origin/ok' % (BASE_URL))
+        f'{BASE_URL}/access_control_allow_origin/ok/1', headers={})
     assert not http.is_header_access_control_allow_origin_missing(
-        '%s/access_control_allow_origin/ok' % (NONEXISTANT_SERVICE))
+        f'{NONEXISTANT_SERVICE}/access_control_allow_origin/ok/1')
     assert not http.is_header_access_control_allow_origin_missing(
-        '%s/access_control_allow_origin/ok' % (BAD_FORMAT_SERVICE))
+        f'{BAD_FORMAT_SERVICE}/access_control_allow_origin/ok/1')
+    assert not http.is_header_access_control_allow_origin_missing(
+        f'{BASE_URL}/access_control_allow_origin/ok/2', headers={})
+    assert not http.is_header_access_control_allow_origin_missing(
+        f'{NONEXISTANT_SERVICE}/access_control_allow_origin/ok/2')
+    assert not http.is_header_access_control_allow_origin_missing(
+        f'{BAD_FORMAT_SERVICE}/access_control_allow_origin/ok/2')
 
 
 def test_cache_control_close():
@@ -313,22 +319,23 @@ def test_cache_control_close():
 
 def test_hsts_close():
     """Header Strict-Transport-Security establecido?."""
-    assert not http.is_header_hsts_missing(
-        '%s/hsts/ok' % (BASE_URL))
-    assert not http.is_header_hsts_missing(
-        '%s/hsts/ok' % (NONEXISTANT_SERVICE))
-    assert not http.is_header_hsts_missing(
-        '%s/hsts/ok' % (BAD_FORMAT_SERVICE))
+    assert not http.is_header_hsts_missing(f'{BASE_URL}/hsts/ok/1')
+    assert not http.is_header_hsts_missing(f'{BASE_URL}/hsts/ok/2')
+    assert not http.is_header_hsts_missing(f'{NONEXISTANT_SERVICE}/hsts/ok/1')
+    assert not http.is_header_hsts_missing(f'{NONEXISTANT_SERVICE}/hsts/ok/2')
+    assert not http.is_header_hsts_missing(f'{BAD_FORMAT_SERVICE}/hsts/ok/1')
+    assert not http.is_header_hsts_missing(f'{BAD_FORMAT_SERVICE}/hsts/ok/2')
 
 
 def test_basic_close():
     """Auth BASIC no habilitado?."""
-    assert not http.is_basic_auth_enabled(
-        '%s/basic/ok' % (BASE_URL))
-    assert not http.is_basic_auth_enabled(
-        '%s/basic/ok' % (NONEXISTANT_SERVICE))
-    assert not http.is_basic_auth_enabled(
-        '%s/basic/ok' % (BAD_FORMAT_SERVICE))
+    assert not http.is_basic_auth_enabled(f'{BASE_URL}/basic/ok')
+    assert not http.is_basic_auth_enabled(f'{NONEXISTANT_SERVICE}/basic/ok')
+    assert not http.is_basic_auth_enabled(f'{BAD_FORMAT_SERVICE}/basic/ok')
+
+    # this URL does not exist, but HTTPS is not vulnerable
+    # it's just for testing purposes
+    assert not http.is_basic_auth_enabled(f'https://localhost:5000/basic/ok')
 
 
 def test_put_ok():
@@ -353,9 +360,12 @@ def test_delete_ok():
 
 def test_put_close():
     """HTTP PUT Not Allowed."""
-    assert not http.has_put_method('%s/put_close' % (BASE_URL))
-    assert not http.has_put_method('%s/put_close' % (NONEXISTANT_SERVICE))
-    assert not http.has_put_method('%s/put_close' % (BAD_FORMAT_SERVICE))
+    assert not http.has_put_method(f'{BASE_URL}/put_close/1')
+    assert not http.has_put_method(f'{NONEXISTANT_SERVICE}/put_close/1')
+    assert not http.has_put_method(f'{BAD_FORMAT_SERVICE}/put_close/1')
+    assert not http.has_put_method(f'{BASE_URL}/put_close/2')
+    assert not http.has_put_method(f'{NONEXISTANT_SERVICE}/put_close/2')
+    assert not http.has_put_method(f'{BAD_FORMAT_SERVICE}/put_close/2')
 
 
 def test_trace_close():
@@ -596,6 +606,7 @@ def test_host_injection_close():
 
 def test_mixed_content_close():
     """Resource has mixed content?."""
+    assert not http.has_mixed_content(BASE_URL)
     assert not http.has_mixed_content(NONEXISTANT_SERVICE)
     assert not http.has_mixed_content(BAD_FORMAT_SERVICE)
     assert not http.has_mixed_content('https://google.com')

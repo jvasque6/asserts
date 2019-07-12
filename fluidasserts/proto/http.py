@@ -32,8 +32,10 @@ HDR_RGX = {
     'content-type': '^(\\s)*.+(\\/|-).+(\\s)*;(\\s)*charset.*$',
     'expires': '^\\s*0\\s*$',
     'pragma': '^\\s*no-cache\\s*$',
-    'strict-transport-security': '^\\s*max-age=\\s*\\d+;\
-    (\\s)*includesubdomains',
+    'strict-transport-security': (r'^\s*max-age\s*=\s*'
+                                  # 123 or "123" as a capture group
+                                  r'"?((?<!")\d+(?!")|(?<=")\d+(?="))"?'
+                                  r'\s*;\s*includeSubDomains'),
     'x-content-type-options': '^\\s*nosniff\\s*$',
     'x-frame-options': '^\\s*(deny|allow-from|sameorigin).*$',
     'server': '^[^0-9]*$',
@@ -231,14 +233,14 @@ def _has_method(url: str, method: str, *args, **kwargs) -> bool:
     result = True
     if 'allow' in is_method_present:
         if method in is_method_present['allow']:
-            show_open('HTTP Method {} enabled'.format(method),
+            show_open(f'HTTP Method {method} enabled',
                       details=dict(url=url))
         else:
-            show_close('HTTP Method {} disabled'.format(method),
+            show_close(f'HTTP Method {method} disabled',
                        details=dict(url=url))
             result = False
     else:
-        show_close('HTTP Method {} disabled'.format(method),
+        show_close(f'HTTP Method {method} disabled',
                    details=dict(url=url))
         result = False
     return result
@@ -290,8 +292,8 @@ def _has_insecure_header(url: str, header: str,     # noqa
                        details=dict(url=url, header=header, value=value,
                                     fingerprint=fingerprint))
             return False
-        show_close('HTTP header {} not present which is secure \
-by default'.format(header),
+        show_close((f'HTTP header {header} not present which is secure '
+                    'by default'),
                    details=dict(url=url, header=header,
                                 fingerprint=fingerprint))
         return False
@@ -315,35 +317,30 @@ by default'.format(header),
         return result
 
     if header == 'Strict-Transport-Security':
-        if header in headers_info:
-            value = headers_info[header]
-            if re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
-                hdr_attrs = value.split(';')
-                max_age = list(filter(lambda x: x.startswith('max-age'),
-                                      hdr_attrs))[0]
-                max_age_val = max_age.split('=')[1]
+        value = headers_info.get(header)
+        if value:
+            re_match = re.search(HDR_RGX[header.lower()], value)
+            if re_match:
+                max_age_val = re_match.groups()[0]
                 if int(max_age_val) >= 31536000:
-                    show_close('HTTP header {} is secure'.format(header),
+                    show_close(f'HTTP header {header} is secure',
                                details=dict(url=url,
                                             header=header,
                                             value=value,
                                             fingerprint=fingerprint))
                     result = False
                 else:
-                    show_open('{} HTTP header is insecure'.
-                              format(header),
+                    show_open(f'{header} HTTP header is insecure',
                               details=dict(url=url, header=header, value=value,
                                            fingerprint=fingerprint))
                     result = True
             else:
-                show_open('{} HTTP header is insecure'.
-                          format(header),
+                show_open(f'{header} HTTP header is insecure',
                           details=dict(url=url, header=header, value=value,
                                        fingerprint=fingerprint))
                 result = True
         else:
-            show_open('{} HTTP header not present'.
-                      format(header),
+            show_open(f'{header} HTTP header it not present',
                       details=dict(url=url, header=header,
                                    fingerprint=fingerprint))
             result = True
@@ -363,8 +360,7 @@ by default'.format(header),
                                    fingerprint=fingerprint))
             result = True
     else:
-        show_open('{} HTTP header not present'.
-                  format(header),
+        show_open(f'{header} HTTP header not present',
                   details=dict(url=url, header=header,
                                fingerprint=fingerprint))
         result = True

@@ -240,8 +240,22 @@ def test_cache_control_open():
 
 def test_hsts_open():
     """Header Strict-Transport-Security no establecido?."""
-    assert http.is_header_hsts_missing(
-        '%s/hsts/fail' % (BASE_URL))
+    assert http.is_header_hsts_missing(f'{BASE_URL}/hsts/fail/1')
+    assert http.is_header_hsts_missing(f'{BASE_URL}/hsts/fail/2')
+    assert http.is_header_hsts_missing(f'{BASE_URL}/hsts/fail/3')
+
+
+def test_is_header_pragma_missing_open():
+    """Header Strict-Transport-Security no establecido?."""
+    assert http.is_header_pragma_missing(f'{BASE_URL}/pragma/fail')
+
+
+def test_has_multiple_text_open():
+    """Header Strict-Transport-Security no establecido?."""
+    assert http.has_multiple_text(f'{BASE_URL}/pragma/fail', regex_list=[
+        'Pragma',
+        'FAIL',
+    ])
 
 
 def test_basic_open():

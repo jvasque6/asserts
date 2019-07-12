@@ -26,6 +26,7 @@ nuevos headers y funcione para más casos de prueba.
 
 # standard imports
 import time
+import datetime
 
 # 3rd party imports
 from flask import Flask
@@ -175,11 +176,18 @@ def brute_force_ok():
     return 'Login incorrect'
 
 
-@APP.route('/http/headers/access_control_allow_origin/ok')
-def access_control_allow_origin_ok():
+@APP.route('/http/headers/access_control_allow_origin/ok/1')
+def access_control_allow_origin_ok_1():
     """Header AC Allow Origin bien establecido."""
     resp = Response('Access-Control-Allow-Origin OK')
     resp.headers['Access-Control-Allow-Origin'] = 'https://fluid.la'
+    return resp
+
+
+@APP.route('/http/headers/access_control_allow_origin/ok/2')
+def access_control_allow_origin_ok_2():
+    """Header AC Allow Origin bien establecido."""
+    resp = Response('Access-Control-Allow-Origin OK')
     return resp
 
 
@@ -197,6 +205,13 @@ def cache_control_ok():
     resp = Response('Cache-Control OK')
     resp.headers[
         'Cache-Control'] = ('no-cache, no-store, must-revalidate')
+    return resp
+
+
+@APP.route('/http/headers/pragma/fail')
+def pragma_fail():
+    """Header para Control de Cache bien establecido."""
+    resp = Response('Pragma FAIL')
     return resp
 
 
@@ -258,20 +273,46 @@ def expires_fail():
     return resp
 
 
-@APP.route('/http/headers/hsts/ok')
-def hsts_ok():
+@APP.route('/http/headers/hsts/ok/1')
+def hsts_ok_1():
     """Header que define bien la implementacion de HSTS."""
     resp = Response('Expires OK')
-    resp.headers['Strict-Transport-Security'] = 'max-age=31536000; \
+    resp.headers['Strict-Transport-Security'] = 'max-age= 31536000; \
         includeSubDomains; preload'
     return resp
 
 
-@APP.route('/http/headers/hsts/fail')
-def hsts_fail():
+@APP.route('/http/headers/hsts/ok/2')
+def hsts_ok_2():
+    """Header que define bien la implementacion de HSTS."""
+    resp = Response('Expires OK')
+    resp.headers['Strict-Transport-Security'] = 'max-age= "31536000"; \
+        includeSubDomains; preload'
+    return resp
+
+
+@APP.route('/http/headers/hsts/fail/1')
+def hsts_fail_1():
     """Header que define mal implementacion de HSTS."""
     resp = Response('Expires FAIL')
-    resp.headers['Strict-Transport-Security'] = 'Fail'
+    return resp
+
+
+@APP.route('/http/headers/hsts/fail/2')
+def hsts_fail_2():
+    """Header que define mal implementacion de HSTS."""
+    resp = Response('Expires FAIL')
+    resp.headers['Strict-Transport-Security'] = 'max-age=31536000"; \
+        includeSubDomains; preload'
+    return resp
+
+
+@APP.route('/http/headers/hsts/fail/3')
+def hsts_fail_3():
+    """Header que define mal implementacion de HSTS."""
+    resp = Response('Expires FAIL')
+    resp.headers['Strict-Transport-Security'] = 'max-age=86400; \
+        includeSubDomains; preload'
     return resp
 
 
@@ -309,11 +350,17 @@ def basic_fail():
     return resp
 
 
-@APP.route('/http/headers/put_close', methods=['OPTIONS'])
-def put_close():
+@APP.route('/http/headers/put_close/1', methods=['OPTIONS'])
+def put_close_1():
     """Metodo PUT deshabilitado."""
     resp = Response("Method PUT not Allowed")
     resp.headers['allow'] = 'HEAD, OPTIONS, GET, POST, OPTIONS'
+    return resp
+
+@APP.route('/http/headers/put_close/2', methods=['OPTIONS'])
+def put_close_2():
+    """Metodo PUT deshabilitado."""
+    resp = Response("Method PUT not Allowed")
     return resp
 
 
@@ -530,6 +577,15 @@ def viewstate_encrypted_fail():
 def viewstate_encrypted_notfound():
     """Set ViewState not found."""
     resp = Response('Login successful')
+    return resp
+
+
+@APP.route('/http/headers/date/ok')
+def date_ok():
+    """Date actualizada."""
+    resp = Response()
+    resp.headers['Date'] = \
+        datetime.datetime.now().strftime('%a, %d %b %Y %H:%M:%S GMT')
     return resp
 
 
