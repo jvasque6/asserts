@@ -13,6 +13,9 @@ from functools import reduce
 
 
 # local imports
+from fluidasserts import show_close
+from fluidasserts import show_open
+from fluidasserts import show_unknown
 from fluidasserts.helper import http
 
 
@@ -165,3 +168,51 @@ async def get_vulns_snyk_async(
     async with aiohttp.ClientSession() as session:
         html = await _fetch_url(session, url)
     return path, package, version, _parse_snyk_vulns(html) if html else None
+
+
+def get_vulns_from_snyk(pkg_mgr: str, package: str,
+                        version: str = None) -> bool:
+    """
+    Search vulnerabilities on given package/version.
+
+    :param package: Package name.
+    :param version: Package version.
+    """
+    try:
+        vulns = get_vulns_snyk(pkg_mgr, package, version)
+        if vulns:
+            show_open('Software has vulnerabilities',
+                      details=dict(package=package, version=version,
+                                   vuln_num=len(vulns), vulns=vulns))
+            return True
+        show_close('Software doesn\'t have vulnerabilities',
+                   details=dict(package=package, version=version))
+        return False
+    except ConnError as exc:
+        show_unknown('Could not connect to SCA provider',
+                     details=dict(error=str(exc).replace(':', ',')))
+        return False
+
+
+def get_vulns_from_ossindex(pkg_mgr: str, package: str,
+                            version: str = None) -> bool:
+    """
+    Search vulnerabilities on given package/version.
+
+    :param package: Package name.
+    :param version: Package version.
+    """
+    try:
+        vulns = get_vulns_ossindex(pkg_mgr, package, version)
+        if vulns:
+            show_open('Software has vulnerabilities',
+                      details=dict(package=package, version=version,
+                                   vuln_num=len(vulns), vulns=vulns))
+            return True
+        show_close('Software doesn\'t have vulnerabilities',
+                   details=dict(package=package, version=version))
+        return False
+    except ConnError as exc:
+        show_unknown('Could not connect to SCA provider',
+                     details=dict(error=str(exc).replace(':', ',')))
+        return False

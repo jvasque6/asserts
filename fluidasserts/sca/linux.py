@@ -10,9 +10,6 @@
 
 # local imports
 from fluidasserts.helper import sca
-from fluidasserts import show_close
-from fluidasserts import show_open
-from fluidasserts import show_unknown
 from fluidasserts.utils.decorators import track, level, notify
 
 PACKAGE_MANAGER = 'linux'
@@ -28,17 +25,4 @@ def package_has_vulnerabilities(package: str, version: str = None) -> bool:
     :param package: Package name.
     :param version: Package version.
     """
-    try:
-        vulns = sca.get_vulns_snyk(PACKAGE_MANAGER, package, version)
-        if vulns:
-            show_open('Software has vulnerabilities',
-                      details=dict(package=package, version=version,
-                                   vuln_num=len(vulns), vulns=vulns))
-            return True
-        show_close('Software doesn\'t have vulnerabilities',
-                   details=dict(package=package, version=version))
-        return False
-    except sca.ConnError as exc:
-        show_unknown('Could not connect to SCA provider',
-                     details=dict(error=str(exc).replace(':', ',')))
-        return False
+    return sca.get_vulns_from_snyk(PACKAGE_MANAGER, package, version)
