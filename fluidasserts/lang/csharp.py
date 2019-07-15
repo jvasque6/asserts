@@ -66,6 +66,7 @@ def has_generic_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     Search for generic exceptions in a C# source file or package.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_catch = CaselessKeyword('catch')
     tk_generic_exc = CaselessKeyword('exception')
@@ -106,6 +107,7 @@ def swallows_exceptions(csharp_dest: str, exclude: list = None) -> bool:
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_catch = CaselessKeyword('catch')
     tk_word = Word(alphas)
@@ -155,6 +157,7 @@ def has_switch_without_default(csharp_dest: str, exclude: list = None) -> bool:
     See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
     switch_line = Optional('}') + switch + Optional('{')
@@ -207,6 +210,7 @@ def has_insecure_randoms(csharp_dest: str, exclude: list = None) -> bool:
     See `REQ.224 <https://fluidattacks.com/web/rules/224/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_new = Keyword('new')
     tk_var = Keyword('var')
@@ -248,6 +252,7 @@ def has_if_without_else(csharp_dest: str, exclude: list = None) -> bool:
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_if = CaselessKeyword('if')
     tk_else = CaselessKeyword('else')
@@ -296,6 +301,7 @@ def uses_md5_hash(csharp_dest: str, exclude: list = None) -> bool:
     See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'MD5.Create(), new MD5CryptoServiceProvider()'
     tk_md5 = CaselessKeyword('md5')
@@ -340,6 +346,7 @@ def uses_sha1_hash(csharp_dest: str, exclude: list = None) -> bool:
     See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = "new SHA1CryptoServiceProvider(), new SHA1Managed()"
     tk_new = CaselessKeyword('new')
@@ -376,6 +383,7 @@ def uses_ecb_encryption_mode(csharp_dest: str, exclude: list = None) -> bool:
     Check if code uses ECB as encryption mode.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = "Mode = CipherMode.ECB"
     tk_eq = Literal('=')
@@ -412,6 +420,7 @@ def uses_debug_writeline(csharp_dest: str, exclude: list = None) -> bool:
     Check if code uses Debug.WriteLine method.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = "Debug.WriteLine"
     tk_debug = CaselessKeyword('debug')
@@ -446,6 +455,7 @@ def uses_console_writeline(csharp_dest: str, exclude: list = None) -> bool:
     Check if code uses Console.WriteLine method.
 
     :param csharp_dest: Path to a C# source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = "Console.WriteLine"
     tk_console = CaselessKeyword('console')

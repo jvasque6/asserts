@@ -96,6 +96,7 @@ def _insecure_functions_in_dir(py_dest: str, exclude: list = None) -> bool:
     Search for insecure functions in dir.
 
     :param py_dest: Path to a Python script or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     if not exclude:
         exclude = []
@@ -138,6 +139,7 @@ def has_generic_exceptions(py_dest: str, exclude: list = None) -> bool:
     Search for generic exceptions in a Python script or package.
 
     :param py_dest: Path to a Python script or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_except = CaselessKeyword('except')
     generic_exception = tk_except + Literal(':')
@@ -172,6 +174,7 @@ def swallows_exceptions(py_dest: str, exclude: list = None) -> bool:
     or only contain comments or the ``pass`` statement.
 
     :param py_dest: Path to a Python script or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_except = CaselessKeyword('except')
     tk_word = Word(alphas) + Optional('.')
@@ -221,6 +224,7 @@ def uses_insecure_functions(py_dest: str, exclude: list = None) -> bool:
     Powered by Bandit.
 
     :param py_dest: Path to a Python script or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     try:
         open(py_dest)

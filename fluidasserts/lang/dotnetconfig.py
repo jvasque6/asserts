@@ -44,6 +44,7 @@ def is_header_x_powered_by_present(webconf_dest: str,
     Search for X-Powered-By headers in a Web.config source file or package.
 
     :param webconf_dest: Path to a Web.config source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_tag_s, _ = makeXMLTags('customHeaders')
     tk_add_tag, _ = makeXMLTags('add')
@@ -96,6 +97,7 @@ def has_ssl_disabled(apphostconf_dest: str, exclude: list = None) -> bool:
 
     :param apphostconf_dest: Path to an ``ApplicationHost.config``
                              source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_tag_s, _ = makeXMLTags('security')
     tk_access, _ = makeXMLTags('access')
@@ -149,6 +151,7 @@ def has_debug_enabled(webconf_dest: str, exclude: list = None) -> bool:
     or package.
 
     :param webconf_dest: Path to a Web.config source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_tag_s, _ = makeXMLTags('system.web')
     tk_compilation, _ = makeXMLTags('compilation')
@@ -196,6 +199,7 @@ def not_custom_errors(webconf_dest: str, exclude: list = None) -> bool:
     CWE-12: ASP.NET Misconfiguration: Missing Custom Error Page
 
     :param webconf_dest: Path to a Web.config source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_tag_s, _ = makeXMLTags('system.web')
     tk_custom_errors, _ = makeXMLTags('customErrors')

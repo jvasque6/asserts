@@ -32,6 +32,7 @@ def has_preg_ce(php_dest: str, exclude: list = None) -> bool:
     Search for preg_replace calls with '/e'.
 
     :param php_dest: Path to a PHP script or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_preg_func = CaselessKeyword('preg_replace')
     tk_quotes = oneOf(["'", '"'])

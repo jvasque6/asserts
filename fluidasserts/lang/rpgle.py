@@ -44,6 +44,7 @@ def has_dos_dow_sqlcod(rpg_dest: str, exclude: list = None) -> bool:
     Search for DoS for using ``DoW SQLCOD = <ZERO>``\ .
 
     :param rpg_dest: Path to a RPG source or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_dow = CaselessKeyword('dow')
     tk_sqlcod = CaselessKeyword('sqlcod')
@@ -79,6 +80,7 @@ def has_unitialized_vars(rpg_dest: str, exclude: list = None) -> bool:
     Search for unitialized variables.
 
     :param rpg_dest: Path to a RPG source or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_data = Keyword('D')
     tk_first = Word(alphas + "_", exact=1)
@@ -121,6 +123,7 @@ def has_generic_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     <https://fluidattacks.com/web/rules/161/>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_on = CaselessKeyword('on')
     tk_error = CaselessKeyword('error')
@@ -156,6 +159,7 @@ def swallows_exceptions(rpg_dest: str, exclude: list = None) -> bool:
     <https://fluidattacks.com/web/rules/075>`_.
 
     :param rpg_dest: Path to a RPG source or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_on = CaselessKeyword('on')
     tk_error = CaselessKeyword('error')

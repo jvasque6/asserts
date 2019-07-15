@@ -94,6 +94,7 @@ def has_generic_exceptions(java_dest: str, exclude: list = None) -> bool:
     See `CWE-396 <https://cwe.mitre.org/data/definitions/396.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     return _declares_catch_for_exceptions(
         java_dest=java_dest,
@@ -117,6 +118,7 @@ def uses_catch_for_null_pointer_exception(
     See `CWE-395 <https://cwe.mitre.org/data/definitions/395.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     return _declares_catch_for_exceptions(
         java_dest=java_dest,
@@ -141,6 +143,7 @@ def uses_print_stack_trace(java_dest: str, exclude: list = None) -> bool:
     See `CWE-209 <https://cwe.mitre.org/data/definitions/209.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     grammar = L_VAR_NAME + '.' + Keyword('printStackTrace')
     grammar.ignore(javaStyleComment)
@@ -175,6 +178,7 @@ def swallows_exceptions(java_dest: str, exclude: list = None) -> bool:
     See `CWE-391 <https://cwe.mitre.org/data/definitions/391.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     # Empty() grammar matches 'anything'
     # ~Empty() grammar matches 'not anything' or 'nothing'
@@ -209,6 +213,7 @@ def has_switch_without_default(java_dest: str, exclude: list = None) -> bool:
     See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
     switch_line = Optional(Literal('}')) + switch + Optional(Literal('{'))
@@ -262,6 +267,7 @@ def has_insecure_randoms(java_dest: str, exclude: list = None) -> bool:
     See `REQ.224 <https://fluidattacks.com/web/rules/224/>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     _java = Keyword('java')
     _util = Keyword('util')
@@ -311,6 +317,7 @@ def has_if_without_else(java_dest: str, exclude: list = None) -> bool:
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     args = nestedExpr(opener='(', closer=')')
 
@@ -370,6 +377,7 @@ def uses_insecure_cipher(java_dest: str, algorithm: str,
 
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'Cipher.getInstance("{}")'.format(algorithm.upper())
     op_mode = '/' + oneOf('CBC ECB', caseless=True)
@@ -411,6 +419,7 @@ def uses_insecure_hash(java_dest: str, algorithm: str,
 
     :param java_dest: Path to a Java source file or package.
     :param algorithm: Insecure algorithm.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'MessageDigest.getInstance("{}")'.format(algorithm.upper())
     tk_mess_dig = CaselessKeyword('messagedigest')
@@ -448,6 +457,7 @@ def uses_md5_hash(java_dest: str, exclude: list = None) -> bool:
     See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     result = uses_insecure_hash(java_dest, 'md5', exclude)
     return result
@@ -463,6 +473,7 @@ def uses_sha1_hash(java_dest: str, exclude: list = None) -> bool:
     See `REQ.150 <https://fluidattacks.com/web/rules/150/>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     result = uses_insecure_hash(java_dest, 'sha-1', exclude)
     return result
@@ -478,6 +489,7 @@ def uses_des_algorithm(java_dest: str, exclude: list = None) -> bool:
     See `REQ.149 <https://fluidattacks.com/web/rules/149/>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     result: bool = uses_insecure_cipher(java_dest, 'DES', exclude)
     return result
@@ -496,6 +508,7 @@ def has_log_injection(java_dest: str, exclude: list = None) -> bool:
     See `CWE-117 <https://cwe.mitre.org/data/definitions/117.html>`_.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     log_variable = CaselessKeyword('log')
     log_level = oneOf('trace debug info warn error fatal')
@@ -532,6 +545,7 @@ def uses_system_exit(java_dest: str, exclude: list = None) -> bool:
     Search for ``System.exit`` calls in a  or package.
 
     :param java_dest: Path to a Java source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'System.exit'
     sys_exit = Literal(method)

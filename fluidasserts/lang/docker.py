@@ -31,6 +31,7 @@ def not_pinned(file_dest: str, exclude: list = None) -> bool:
     Check if the Dockerfile uses a ``FROM:...latest`` (unpinned) base image.
 
     :param file_dest: Path to the Dockerfile to be tested.
+    :param exclude: Paths that contains any string from this list are ignored.
     :returns: True if unpinned (bad), False if pinned (good).
     """
     tk_from = Literal('FROM')

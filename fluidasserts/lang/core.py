@@ -36,6 +36,9 @@ def has_text(code_dest: str, expected_text: str, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -74,6 +77,9 @@ def has_not_text(code_dest: str, expected_text: str, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_text: Bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -112,6 +118,9 @@ def has_all_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -154,6 +163,9 @@ def has_any_text(code_dest: str, expected_list: list, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     # Remove duplicates
     expected_set = set(expected_list)
@@ -197,6 +209,9 @@ def has_not_any_text(code_dest: str,
     :param code_dest: Path to the file or directory to be tested.
     :param expected_list: List of bad text to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     # Remove duplicates
     expected_set = set(expected_list)
@@ -277,6 +292,9 @@ def has_weak_cipher(code_dest: str, expected_text: str,
 
     :param code_dest: Path to a code source file or package.
     :param expected_text: Text that might be in source file or package
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -318,7 +336,9 @@ def has_secret(code_dest: str, secret: str, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param secret: Secret to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
-    :param exclude: Files to exclude.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     if not lang_specs:
         lang_specs = LANGUAGE_SPECS
@@ -356,6 +376,9 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
     :param code_dest: Path to the file or directory to be tested.
     :param secrets_list: List of secrets to look for in the file.
     :param use_regex: Use regular expressions instead of literals to search.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
     """
     # Remove duplicates
     secrets_set = set(secrets_list)

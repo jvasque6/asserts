@@ -53,6 +53,7 @@ def uses_console_log(js_dest: str, exclude: list = None) -> bool:
     Search for ``console.log()`` calls in a JavaScript file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'Console.log()'
     tk_object = CaselessKeyword('console')
@@ -85,6 +86,7 @@ def uses_eval(js_dest: str, exclude: list = None) -> bool:
     Search for ``eval()`` calls in a JavaScript file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'eval()'
     tk_method = CaselessKeyword('eval')
@@ -116,6 +118,7 @@ def uses_localstorage(js_dest: str, exclude: list = None) -> bool:
     Search for ``localStorage`` calls in a JavaScript source file or directory.
 
     :param js_dest: Path to a JavaScript source file or directory.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'window.localStorage'
     tk_object = CaselessKeyword('localstorage')
@@ -151,6 +154,7 @@ def has_insecure_randoms(js_dest: str, exclude: list = None) -> bool:
     See `REQ.224 <https://fluidattacks.com/web/rules/224/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     method = 'Math.random()'
     tk_class = CaselessKeyword('math')
@@ -189,6 +193,7 @@ def swallows_exceptions(js_dest: str, exclude: list = None) -> bool:
     See `CWE-391 <https://cwe.mitre.org/data/definitions/391.html>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     # Empty() grammar matches 'anything'
     # ~Empty() grammar matches 'not anything' or 'nothing'
@@ -228,6 +233,7 @@ def has_switch_without_default(js_dest: str, exclude: list = None) -> bool:
     See `CWE-478 <https://cwe.mitre.org/data/definitions/478.html>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     switch = Keyword('switch') + nestedExpr(opener='(', closer=')')
     switch_block = Suppress(switch) + nestedExpr(opener='{', closer='}')
@@ -260,6 +266,7 @@ def has_if_without_else(js_dest: str, exclude: list = None) -> bool:
     See `REQ.161 <https://fluidattacks.com/web/rules/161/>`_.
 
     :param js_dest: Path to a JavaScript source file or package.
+    :param exclude: Paths that contains any string from this list are ignored.
     """
     tk_if = CaselessKeyword('if')
     tk_else = CaselessKeyword('else')
