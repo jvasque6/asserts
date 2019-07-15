@@ -26,13 +26,29 @@ class ConnError(Exception):
     """
 
 
+class AutoAddHostPolicy(object):
+    """
+    Policy for automatically adding the hostname and new host key.
+
+    Inspired on paramiko
+    """
+
+    def missing_host_key(self, client, hostname, key):
+        """Method called when there is no missing host key in the client."""
+        client._host_keys.add(hostname, key.get_name(), key)
+        if client._host_keys_filename is not None:
+            client.save_host_keys(client._host_keys_filename)
+
+
 @contextmanager
 def build_ssh_object() -> Generator[paramiko.client.SSHClient, None, None]:
     """Build a Paramiko SSHClient object."""
     ssh_conn = paramiko.SSHClient()
-    ssh_conn.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    yield ssh_conn
-    ssh_conn.close()
+    ssh_conn.set_missing_host_key_policy(AutoAddHostPolicy())
+    try:
+        yield ssh_conn
+    finally:
+        ssh_conn.close()
 
 
 # pylint: disable=too-many-locals
