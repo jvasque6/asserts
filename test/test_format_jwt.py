@@ -3,8 +3,6 @@
 """Test methods of fluidasserts.code.java."""
 
 # standard imports
-import io
-import sys
 import secrets
 import datetime
 
@@ -25,7 +23,7 @@ SECONDS_IN_24_HOURS = 86400
 
 UTCNOW = datetime.datetime.utcnow()
 DELTA_10_MIN = datetime.timedelta(seconds=SECONDS_IN_10_MIN)
-DELTA_24_MIN = datetime.timedelta(seconds=SECONDS_IN_24_HOURS)
+DELTA_24_HOURS = datetime.timedelta(seconds=SECONDS_IN_24_HOURS)
 
 NOT_A_TOKEN = 'this will Raise Errors'
 
@@ -39,8 +37,8 @@ def test_has_insecure_expiration_time_open():
     tests = [
         {},
         {'iat': UTCNOW},
-        {'exp': UTCNOW + DELTA_24_MIN},
-        {'iat': UTCNOW, 'exp': UTCNOW + DELTA_24_MIN},
+        {'exp': UTCNOW + DELTA_24_HOURS},
+        {'iat': UTCNOW, 'exp': UTCNOW + DELTA_24_HOURS},
     ]
     for claimset in tests:
         token = encode(claimset, KEY_STRONG, algorithm='HS256').decode()

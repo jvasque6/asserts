@@ -3,8 +3,7 @@ exceptions_open.py.
 
 This is a test module to check exceptions.
 """
-import xml.etree.ElementTree
-import os
+import pickle
 
 eval('print("a")')
 pickle.load('test')
