@@ -58,7 +58,6 @@ lint:
   script:
     - scons lint
     - overcommit -s && overcommit -s pre-commit && overcommit -r
-  retry: 2
   except:
     - master
     - schedules
@@ -67,7 +66,6 @@ bandit:
   stage: test
   script:
     - scons bandit
-  retry: 2
   except:
     - master
     - schedules
@@ -83,6 +81,8 @@ test:
     paths:
       - coverage.xml
       - coverage.html
+  except:
+    - master
   retry: 2
 
 fluidasserts:
@@ -112,7 +112,6 @@ coverage-report:
     - cat coverage.html |
         grep -Po '(?<=pc_cov">)\d+%' |
         xargs echo 'Coverage:'
-  retry: 2
   only:
     - merge_requests
 
