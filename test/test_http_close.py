@@ -610,3 +610,12 @@ def test_mixed_content_close():
     assert not http.has_mixed_content(NONEXISTANT_SERVICE)
     assert not http.has_mixed_content(BAD_FORMAT_SERVICE)
     assert not http.has_mixed_content('https://google.com')
+
+
+def test_has_reverse_tabnabbing_close():
+    """Check if site has reverse tabnabbing."""
+    assert not http.has_reverse_tabnabbing(BASE_URL)
+    assert not http.has_reverse_tabnabbing(NONEXISTANT_SERVICE)
+    assert not http.has_reverse_tabnabbing(BAD_FORMAT_SERVICE)
+    assert not http.has_reverse_tabnabbing(
+        f'{MOCK_SERVICE}/http/reverse_tabnabbing/ok/1')

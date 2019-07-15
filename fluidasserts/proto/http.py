@@ -9,9 +9,10 @@ from datetime import datetime
 from typing import Optional, List, Union
 
 # 3rd party imports
-from urllib.parse import parse_qsl
-from viewstate import ViewState, ViewStateException
+from bs4 import BeautifulSoup
 from pytz import timezone
+from viewstate import ViewState, ViewStateException
+from urllib.parse import parse_qsl
 import ntplib
 import requests
 
@@ -121,8 +122,7 @@ SQLI_ERROR_MSG = {
 
 def _get_links(html_page: str) -> List:
     """Extract links from page."""
-    from bs4 import BeautifulSoup
-    soup = BeautifulSoup(html_page)
+    soup = BeautifulSoup(html_page, features="html.parser")
     links = [x.get('href')
              for x in soup.findAll('a',
                                    attrs={'href':
@@ -1531,4 +1531,60 @@ def has_mixed_content(url: str, *args, **kwargs) -> bool:
         return True
     show_close('There is not mixed content in resource',
                details=dict(url=url, fingerprint=fingerprint))
+    return False
+
+
+@notify
+@level('low')
+@track
+def has_reverse_tabnabbing(url: str, *args, **kwargs) -> bool:
+    r"""
+    Check if resource has links vulnerable to a reverse tabnabbing.
+
+    :param url: URL to test.
+    :param \*args: Optional arguments for :class:`.HTTPSession`.
+    :param \*\*kwargs: Optional arguments for :class:`.HTTPSession`.
+    """
+    try:
+        with http.HTTPSession(url, *args, **kwargs) as sess:
+            html = sess.response.text
+            fingerprint = sess.get_fingerprint()
+    except http.ConnError as exc:
+        show_unknown('Could not connnect',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+    except http.ParameterError as exc:
+        show_unknown('An invalid parameter was passed',
+                     details=dict(url=url,
+                                  error=str(exc).replace(':', ',')))
+        return False
+
+    vulns, checks = [], []
+
+    http_re = re.compile("^http(s)?://")
+    html_obj = BeautifulSoup(html, features="html.parser")
+
+    for ahref in html_obj.findAll('a', attrs={'href': http_re}):
+        parsed: dict = {
+            'href': ahref.get('href'),
+            'target': ahref.get('target'),
+            'rel': ahref.get('rel'),
+        }
+        if parsed['href'] and parsed['target'] == '_blank' \
+                and (not parsed['rel'] or 'noopener' not in parsed['rel']):
+            vulns.append(parsed)
+        else:
+            checks.append(parsed)
+
+    if vulns:
+        show_open('There are a href tags succeptible to reverse tabnabbing.',
+                  details=dict(url=url,
+                               vulns=vulns,
+                               fingerprint=fingerprint))
+        return True
+    show_close('There are no a href tags succeptible to reverse tabnabbing.',
+               details=dict(url=url,
+                            checks=checks,
+                            fingerprint=fingerprint))
     return False

@@ -482,6 +482,7 @@ def exec_http_package(urls):
             http.has_clear_viewstate('__url__')
             http.is_date_unsyncd('__url__')
             http.has_host_header_injection('__url__')
+            has_reverse_tabnabbing('__url__')
             """).replace('__url__', url)
     return exec_wrapper('built-in HTTP package', template)
 

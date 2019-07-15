@@ -90,14 +90,22 @@ class HTTPSession():
         if self.headers is None:
             self.headers = dict()
         if 'User-Agent' not in self.headers:
-            self.headers['User-Agent'] = 'Mozilla/5.0 (X11; Linux x86_64; \
-rv:45.0) Gecko/20100101 Firefox/45.0'
+            self.headers['User-Agent'] = ('Mozilla/5.0 (X11; Linux x86_64; rv'
+                                          ':45.0) Gecko/20100101 Firefox/45.0')
         if 'Accept' not in self.headers:
             self.headers['Accept'] = '*/*'
         if 'Accept-Language' not in self.headers:
             self.headers['Accept-Language'] = 'en-US,en;q=0.5'
 
         self.do_request()
+
+    def __enter__(self):
+        """Context manager for this class."""
+        return self
+
+    def __exit__(self, *kwargs) -> None:
+        """Context manager clean up function."""
+        pass
 
     def do_request(self) -> Optional[requests.Response]:  # noqa
         """Do HTTP request."""

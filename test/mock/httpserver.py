@@ -613,6 +613,57 @@ def host_injection_ok():
     return resp
 
 
+@APP.route('/http/reverse_tabnabbing/ok/1', methods=['GET'])
+def http_reverse_tabnabbing_ok_1():
+    """Response for ."""
+    url: str = 'https://mathiasbynens.github.io/rel-noopener/malicious.html'
+    return Response(f"""
+        <html>
+            <body>
+                <li>
+                    <a href="{url}" target="_blank" rel="noopener noreferrer">
+                        Click me for a reverse tabnabbing
+                    </a>
+                </li>
+            </body>
+        </html>
+        """)
+
+
+@APP.route('/http/reverse_tabnabbing/fail/1', methods=['GET'])
+def http_reverse_tabnabbing_fail_1():
+    """Response for ."""
+    url: str = 'https://mathiasbynens.github.io/rel-noopener/malicious.html'
+    return Response(f"""
+        <html>
+            <body>
+                <li>
+                    <a href="{url}" target="_blank">
+                        Click me for a reverse tabnabbing
+                    </a>
+                </li>
+            </body>
+        </html>
+        """)
+
+
+@APP.route('/http/reverse_tabnabbing/fail/2', methods=['GET'])
+def http_reverse_tabnabbing_fail_2():
+    """Response for ."""
+    url: str = 'https://mathiasbynens.github.io/rel-noopener/malicious.html'
+    return Response(f"""
+        <html>
+            <body>
+                <li>
+                    <a href="{url}" target="_blank" rel='noreferrer'>
+                        Click me for a reverse tabnabbing
+                    </a>
+                </li>
+            </body>
+        </html>
+        """)
+
+
 @APP.route('/rest/access/fail')
 def rest_access_fail():
     """Recurso rest accesible."""
