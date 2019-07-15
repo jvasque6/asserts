@@ -10,5 +10,3 @@ RUN sed -i -e 's/pam_unix.so nullok/pam_unix.so nullok_secure/g' /etc/pam.d/base
     echo root:yoYeighoohoh1Equ | chpasswd && \
     echo nonpass:yoYeighoohoh1Equ | chpasswd && \
     echo guessed:yoYeighoohoh1Equ | chpasswd
-
-CMD /usr/sbin/vsftpd /etc/vsftpd/vsftpd.conf

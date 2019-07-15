@@ -15,7 +15,7 @@ from fluidasserts.format import pkcs12
 # Constants
 NO_PWD_FILE = 'test/static/format/pkcs12/no_pwd.p12'
 NON_EXISTING_FILE = 'test/static/format/pkcs12/does_not_exist.p12'
-PWD_FILE = 'test/static/format/pkcs12/pwd.12'
+PWD_FILE = 'test/static/format/pkcs12/pwd.p12'
 
 #
 # Open tests
