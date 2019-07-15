@@ -273,12 +273,6 @@ def _has_insecure_header(url: str, header: str,     # noqa
         return False
 
     if header == 'Access-Control-Allow-Origin':
-        if 'headers' in kwargs:
-            kwargs['headers'].update({'Origin':
-                                      'https://www.malicious.com'})
-        else:
-            kwargs = {'headers': {'Origin': 'https://www.malicious.com'}}
-
         if header in headers_info:
             value = headers_info[header]
             if not re.match(HDR_RGX[header.lower()], value, re.IGNORECASE):
