@@ -120,4 +120,6 @@ function functionBWithConsoleLog() {
             day = "Error";
         */
     }
+
+    let socket = new WebSocket("ws://javascript.info");
 }

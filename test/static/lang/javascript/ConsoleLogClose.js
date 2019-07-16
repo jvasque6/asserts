@@ -104,6 +104,8 @@ function functionBWithoutConsoleLog() {
     default:
         break;
     }
+
+    let socket = new WebSocket("wss://javascript.info");
 }
 
 function functionCWithoutConsoleLog() {

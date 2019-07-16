@@ -8,7 +8,7 @@ import os
 from base64 import b64encode
 
 # 3rd party imports
-# none
+from pyparsing import MatchFirst, QuotedString
 
 # local imports
 from fluidasserts import show_close
@@ -405,3 +405,48 @@ def has_any_secret(code_dest: str, secrets_list: list, use_regex: bool = False,
                            secrets_list=secrets_list,
                            used_regular_expressions=use_regex))
     return True
+
+
+@notify
+@level('medium')
+@track
+def uses_unencrypted_sockets(
+        code_dest: str, exclude: list = None, lang_specs: dict = None) -> bool:
+    """
+    Check if there are unencrypted web sockets URI schemes in code (`ws://`).
+
+    :param code_dest: Path to the file or directory to be tested.
+    :param exclude: Paths that contains any string from this list are ignored.
+    :param lang_specs: Specifications of the language, see
+                       fluidasserts.lang.java.LANGUAGE_SPECS for an example.
+    """
+    encrypted_re = re.compile(r'^wss://.*$', flags=re.I)
+    unencrypted_re = re.compile(r'^ws://.*$', flags=re.I)
+
+    encrypted_grammar = MatchFirst([QuotedString('"'), QuotedString("'")])
+    unencrypted_grammar = MatchFirst([QuotedString('"'), QuotedString("'")])
+
+    encrypted_grammar.addCondition(lambda x: encrypted_re.search(x[0]))
+    unencrypted_grammar.addCondition(lambda x: unencrypted_re.search(x[0]))
+
+    try:
+        unencrypted = lang.path_contains_grammar(
+            unencrypted_grammar, code_dest, LANGUAGE_SPECS, exclude)
+    except FileNotFoundError:
+        show_unknown('File does not exist', details=dict(code_dest=code_dest))
+        return False
+
+    if unencrypted:
+        show_open('Code uses web sockets over an unencrypted channel',
+                  details=dict(vulnerable_uris=unencrypted))
+        return True
+
+    encrypted = lang.path_contains_grammar(
+        encrypted_grammar, code_dest, LANGUAGE_SPECS, exclude)
+
+    if encrypted:
+        msg = 'Code uses web sockets over an encrypted channel'
+    else:
+        msg = 'Cose does not use web sockets'
+    show_close(msg, details=dict(code_dest=code_dest, checked_uris=encrypted))
+    return False

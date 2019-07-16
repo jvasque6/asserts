@@ -19,6 +19,8 @@ SECURE_CODE = CODE_DIR + 'secure.c'
 INSECURE_CODE = CODE_DIR + 'insecure.c'
 NON_EXISTANT_CODE = CODE_DIR + 'notexistant.c'
 
+SECURE_SOCKETS = 'test/static/lang/javascript/ConsoleLogClose.js'
+INSECURE_SOCKETS = 'test/static/lang/javascript/ConsoleLogOpen.js'
 
 #
 # Open tests
@@ -101,6 +103,12 @@ def test_has_any_secret_open():
     assert core.has_any_secret(INSECURE_CODE, ['root', 'password123'])
     assert core.has_any_secret(
         INSECURE_CODE, [r'ro{2}t', r'password\d{3}'], use_regex=True)
+
+
+def test_uses_unencrypted_sockets_open():
+    """Test if code uses unencrypted sockets."""
+    assert core.uses_unencrypted_sockets(INSECURE_SOCKETS)
+
 
 #
 # Closing tests
@@ -192,3 +200,9 @@ def test_has_any_secret_close():
     assert not core.has_any_secret(SECURE_CODE,
                                    [r'ro{2}t', r'password\d{3}'],
                                    use_regex=True)
+
+
+def test_uses_unencrypted_sockets_close():
+    """Test if code uses unencrypted sockets."""
+    assert not core.uses_unencrypted_sockets(SECURE_SOCKETS)
+    assert not core.uses_unencrypted_sockets(NON_EXISTANT_CODE)
