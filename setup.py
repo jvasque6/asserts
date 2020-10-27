@@ -81,7 +81,7 @@ setup(
         'tlslite-ng==0.8.0-alpha26',         # fluidasserts.proto.ssl
         'pyOpenSSL==19.0.0',         # fluidasserts.proto.ssl
         'cffi==1.12.3',              # fluidasserts.proto.ssl
-        'cryptography==2.7',         # fluidasserts.proto.ssl
+        'cryptography==3.2',         # fluidasserts.proto.ssl
         'bcrypt==3.1.6',             # fluidasserts.proto.ssl
         'pynacl==1.3.0',             # fluidasserts.proto.ssl
         'colorama==0.4.1',           # logging
