@@ -105,7 +105,7 @@ setup(
         'pyjwt==1.7.1',              # fluidasserts.format.jwt
         'pyjks==19.0.0',             # fluidasserts.format.jks
         'gitpython==2.1.11',         # fluidasserts.proto.git
-        'aiohttp==3.5.4',            # fluidasserts
+        'aiohttp==3.7.4',            # fluidasserts
     ],
     include_package_data=True,      # archivos a incluir en MANIFEST.in
     entry_points={
