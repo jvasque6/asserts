@@ -88,7 +88,7 @@ setup(
         'pysmb==1.1.27',             # fluidasserts.proto.smb
         'mixpanel==4.4.0',           # fluidasserts.utils.decorators
         'pytesseract==0.2.6',        # fluidasserts.format.captcha
-        'pillow==6.0.0',             # fluidasserts.format.captcha
+        'pillow==8.1.1',             # fluidasserts.format.captcha
         'pyparsing==2.3.1',          # fluidasserts.lang
         'bandit==1.6.0',             # fluidasserts.lang.python
         'oyaml==0.9',                # fluidasserts
