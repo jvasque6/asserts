@@ -70,7 +70,7 @@ setup(
     install_requires=[
         'configobj==5.0.6',          # fluidasserts
         'typed-ast==1.3.5',          # fluidasserts
-        'PyPDF2==1.26.0',            # fluidasserts.format.pdf
+        'PyPDF2==1.27.5',            # fluidasserts.format.pdf
         'requests==2.22.0',          # fluidasserts.proto.http
         'certifi==2019.3.9',         # fluidasserts.proto.ssl
         'ldap3==2.6',                # fluidasserts.proto.ldap
