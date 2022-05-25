@@ -102,7 +102,7 @@ setup(
         'python-dateutil==2.8.0',    # fluidasserts.cloud.aws
         'mysql-connector==2.2.9',    # fluidasserts.db.mysql_db
         'pycrypto==2.6.1; platform_system == "Linux"',
-        'pyjwt==1.7.1',              # fluidasserts.format.jwt
+        'pyjwt==2.4.0',              # fluidasserts.format.jwt
         'pyjks==19.0.0',             # fluidasserts.format.jks
         'gitpython==2.1.11',         # fluidasserts.proto.git
         'aiohttp==3.5.4',            # fluidasserts
