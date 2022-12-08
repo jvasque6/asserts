@@ -72,7 +72,7 @@ setup(
         'typed-ast==1.3.5',          # fluidasserts
         'PyPDF2==1.26.0',            # fluidasserts.format.pdf
         'requests==2.22.0',          # fluidasserts.proto.http
-        'certifi==2019.3.9',         # fluidasserts.proto.ssl
+        'certifi==2022.12.7',         # fluidasserts.proto.ssl
         'ldap3==2.6',                # fluidasserts.proto.ldap
         'paramiko==2.6.0',           # fluidasserts.helper.ssh_helper
         'pywinrm==0.3.0',            # fluidasserts.helper.winrm_helper
